@@ -1,0 +1,30 @@
+Title:
+Cloud protection and sample submission at Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This document explains how Microsoft Defender Antivirus uses cloud-delivered protection and automatic sample submission to rapidly classify and block new or unknown threats.  
+- When local detection can’t reach a verdict, Defender sends file metadata to Microsoft’s cloud; if still inconclusive, it may request the full file sample depending on the organization’s sample submission policy.  
+- It outlines “block at first sight” (BAFS), including synchronous vs. asynchronous cloud verdicting and how disabling sample submission effectively disables BAFS (limiting analysis to metadata).  
+- The article details configurable submission modes (send safe samples, prompt, send all, or do not send) and notes platform differences across Windows, macOS, and Linux.  
+- It provides examples of metadata fields sent (process context, behavioral signals, hashes, signer info) and clarifies privacy/compliance handling of submitted samples as customer data.  
+- Useful primarily for Blue Teams/SecOps and endpoint administrators tuning Defender for Endpoint protection vs. privacy/consent tradeoffs; also relevant to red teams for understanding cloud-verdict dependencies and telemetry surfaces.
+
+Technical Focus:
+- Cloud-delivered protection decision flow (metadata query → sample request → verdict)
+- Block at First Sight (BAFS) and detonation-based analysis
+- Automatic sample submission policy options and platform support differences
+- Metadata/telemetry fields (process tree, behavioral signals, hashes, signer info)
+- Privacy, data residency, and retention considerations for submitted samples
+
+Use Cases:
+- Configure Defender AV cloud protection and sample submission via Intune/GPO/ConfigMgr/PowerShell
+- Decide between “safe samples” vs. “all samples” to improve detection of macro/phishing payloads
+- Troubleshoot why BAFS/verdicting behavior changes when sample submission is disabled
+- Assess what endpoint metadata is transmitted to Microsoft for cloud classification
+- Set organizational policy balancing detection efficacy with consent/PII concerns
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, cloud-delivered protection, automatic sample submission, Block at First Sight, BAFS, metadata submission, file detonation, machine learning, heuristic detection, behavioral analysis, Intelligent Security Graph, Mark of the Web, PE attributes, Authenticode, SHA256, process injection, Intune, Group Policy, Configuration Manager, data residency

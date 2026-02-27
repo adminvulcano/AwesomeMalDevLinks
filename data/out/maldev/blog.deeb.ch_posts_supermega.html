@@ -1,0 +1,484 @@
+# https://blog.deeb.ch/posts/supermega/
+
+<!DOCTYPE html><html lang="en-us">
+
+
+<body>
+<div class="main">
+
+
+
+
+
+<div class="content-wrapper">
+    
+
+    <article class="post article-content main-content">
+        <h1 class="title"> Supermega </h1>
+        <div class="content"> <p>A shellcode loader laboratory for RedTeaming to experiment bypassing EDR.</p>
+<h2 id="intro">Intro</h2>
+<p>I needed a framework to implement my EXE-Injection technique
+Cordyceps. It should be able to:</p>
+<ul>
+<li>Have a list of <strong>input shellcodes</strong> (e.g. start calc, show MessageBox start CobaltStrike)</li>
+<li>Have a list of <strong>input EXE’s</strong></li>
+<li>Different <strong>loader implementations</strong> with individual techniques</li>
+<li>Allows rapid prototyping, development, and testing</li>
+</ul>
+<p>The solution was to use <a href="https://github.com/vxunderground/VXUG-Papers/blob/main/From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf">From C Project, through assembly, to shellcode</a> by hasharezade, for Vxunderground</p>
+<p>This blog article focuses on the function of SuperMega, without going
+too much into details of Cordyceps. Cordyceps attempts to integrate the
+payload as much as possible into nonmalicious EXE .text section to thwart detection.</p>
+<p>This is part of a three article series:</p>
+<ul>
+<li><a href="https://blog.deeb.ch/posts/supermega">Supermega</a> for an introduction on how to use the SuperMega loader laboratory (this)</li>
+<li>See <a href="https://blog.deeb.ch/posts/how-edr_works">How EDR works</a> for a discussion of EDR detection principles</li>
+<li>See <a href="https://blog.deeb.ch/posts/exe-injection">Cordyceps EXE Injection</a> for a discussion of Cordyceps approaches</li>
+</ul>
+<p>I published the source code at <a href="https://github.com/dobin/SuperMega">github.com/dobin/SuperMega</a>.</p>
+<h2 id="supermega-cordyceps-injection">SuperMega Cordyceps injection</h2>
+<p>Cordyceps injects shellcode into an existing executable.</p>
+<pre tabindex="0"><code>                  Injectable EXE 
+                  ┌─────────────┐
+                  │             │
+Shellcode         │             │
+┌───────┐         │             │
+│       │         │             │
+│       ├────────►│             │
+│       │         │             │
+└───────┘         │             │
+                  │             │
+                  └─────────────┘
+</code></pre><p>The input is a Payload (Shellcode, like CobaltStrike), and a non-malicious EXE file. The payload will be inserted somewhere in the injectable exe, and executed by the carrier (loader). The carrier is located somewhere in the .text section.</p>
+<p>There are many techniques and options on where to insert the payload
+and carrier, and how the carrier
+loads, decodes (decrypt), and invokes the payload.</p>
+<p>Here the carrier is injected into .text, and the payload into .rdata. The carrier
+references the payload:</p>
+<pre tabindex="0"><code>                        Injectable EXE 
+┌───────────┐           ┌─────────────┐
+│           │           │             │
+│ Carrier   ├──────────►│  .text      │
+│           │           │             │
+└────┬──────┘           │             │
+     │                  │             │
+┌────▼──────┐           │             │
+│           │           │             │
+│           │           │             │
+│ Payload   ├──────────►│  .rdata     │
+│           │           │             │
+│           │           │             │
+└───────────┘           │             │
+                        └─────────────┘
+</code></pre><h2 id="the-gui">The GUI</h2>
+<p><img src="https://blog.deeb.ch/supermega/supermega-gui.png" alt="SuperMega GUI"></p>
+<p>After selecting all the options, click “Build” to generate the infected executable.</p>
+<p>Once the infected exe is generated, it can be started locally
+by clicking “Start”. If a avred-server is configured, it can
+be executed remotely on that server instead (e.g. with an enabled, or different, EDR).</p>
+<h2 id="compile-c-to-shellcode">Compile C To Shellcode</h2>
+<p>The document “From C Project, through assembly, to shellcode” explains how to generate shellcode from C source code.
+It involves several steps:</p>
+<ul>
+<li>Write C code “normally”</li>
+<li>Compile that C into assembler-text</li>
+<li>Modify the assembler-text
+<ul>
+<li>Fixup string references</li>
+<li>Clean / remove all external dependencies</li>
+</ul>
+</li>
+<li>Assemble modified assembler-text into an EXE</li>
+<li>Extract the .code section from the EXE</li>
+<li>Result is a runnable shellcode</li>
+</ul>
+<pre tabindex="0"><code>┌───────────┐   ┌──────────┐   ┌───────────┐   ┌──────────┐   ┌───────────┐   ┌────────────┐ 
+│  .C       │   │ .C       │   │ .ASM      │   │ .ASM     │   │ .EXE      │   │ .BIN       │ 
+│  Loader   │   │ Loader   │   │ Loader    │   │ Loader   │   │ .text     │   │ Shellcode  │ 
+│           ├──►│          ├──►│           ├──►│          ├──►│           ├──►│            │ 
+│  Template │   │ Rendered │   │ Assembled │   │ Cleaned  │   │ Compiled  │   │ Shellcode  │ 
+│           │   │          │   │           │   │ Fixed    │   │           │   │            │ 
+└───────────┘   └──────────┘   └───────────┘   └──────────┘   └───────────┘   └────────────┘ 
+</code></pre><p>The reuslt of the individual phases are stored in log files in the project
+folder <code>projects/&lt;project name&gt;/</code>, starting with <code>log-*</code>.</p>
+<p><img src="https://blog.deeb.ch/supermega/logfiles-overview.png" alt="Logfiles Overview"></p>
+<ul>
+<li><code>supermega.log</code>: All log entries from SuperMega (the main log file)</li>
+<li><code>cmdoutput.log</code>: The output of externally executed programs (e.g. C compiler, linker, assembler)</li>
+<li><code>main_c_*</code>: C template, and its rendered counterpart</li>
+<li><code>carrier_*</code>: The assembly-text before- and after fixup and cleanup</li>
+</ul>
+<h3 id="example-loader-code-c-template">Example loader code (.c Template)</h3>
+<p>The C source code is jinja2 templated, so i can integrate different carrier,
+without depending on <code>#ifdef</code>.</p>
+<p><code>log-0-main_c_template.txt</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>supermega_payload;
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#75715e">// Alloc
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>dest <span style="color:#f92672">=</span> VirtualAlloc(NULL, {{PAYLOAD_LEN}}, <span style="color:#ae81ff">0x3000</span>, p_RW);
+
+    <span style="color:#75715e">// Decode
+</span><span style="color:#75715e"></span>    {{ plugin_decoder }}
+
+    <span style="color:#75715e">// Permissions
+</span><span style="color:#75715e"></span>	MyVirtualProtect(dest, {{PAYLOAD_LEN}}, p_RX, <span style="color:#f92672">&amp;</span>result);
+
+    <span style="color:#75715e">// Execute
+</span><span style="color:#75715e"></span>    (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span>(<span style="color:#f92672">*</span>)())(dest))();
+}
+</code></pre></div><p>With <code>plugin_decoder</code> for example being a 2-byte XOR decoder:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">"{{XOR_KEY2}}"</span>;
+    <span style="color:#66d9ef">for</span> ( <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> {{PAYLOAD_LEN}}; i<span style="color:#f92672">++</span> ) {
+        dest[i] <span style="color:#f92672">=</span> supermega_payload[i] <span style="color:#f92672">^</span> key[i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>];
+    }
+</code></pre></div><h3 id="rendered-c-template">Rendered .c Template</h3>
+<p><code>log-1-main_c_rendered.txt</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#75715e">// Alloc
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>dest <span style="color:#f92672">=</span> VirtualAlloc(NULL, <span style="color:#ae81ff">433</span>, <span style="color:#ae81ff">0x3000</span>, p_RW);
+
+    <span style="color:#75715e">// Decode
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">"</span><span style="color:#ae81ff">\xc1\x68</span><span style="color:#e6db74">"</span>;
+    <span style="color:#66d9ef">for</span> ( <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">433</span>; i<span style="color:#f92672">++</span> ) {
+        dest[i] <span style="color:#f92672">=</span> supermega_payload[i] <span style="color:#f92672">^</span> key[i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>];
+    }
+
+    <span style="color:#75715e">// Permissions
+</span><span style="color:#75715e"></span>	MyVirtualProtect(dest, <span style="color:#ae81ff">433</span>, p_RX, <span style="color:#f92672">&amp;</span>result);
+
+    <span style="color:#75715e">// Execute
+</span><span style="color:#75715e"></span>    (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span>(<span style="color:#f92672">*</span>)())(dest))();
+</code></pre></div><h3 id="asm-assembled">.asm Assembled</h3>
+<p><code>log-2-carrier_asm_orig.txt</code>:</p>
+<pre tabindex="0"><code>	mov	r9d, 4
+	mov	r8d, 12288				; 00003000H
+	mov	edx, 433				; 000001b1H
+	xor	ecx, ecx
+	call	QWORD PTR __imp_VirtualAlloc
+	mov	QWORD PTR dest$[rsp], rax
+
+...
+
+	movsxd	rax, DWORD PTR i$1[rsp]
+	mov	rcx, QWORD PTR supermega_payload
+	movsx	eax, BYTE PTR [rcx+rax]
+</code></pre><h3 id="asm-cleanup">.asm Cleanup</h3>
+<p><code>log-2-carrier_asm_final.txt</code>:</p>
+<pre tabindex="0"><code>	mov	r9d, 4
+	mov	r8d, 12288				; 00003000H
+	mov	edx, 433				; 000001b1H
+	xor	ecx, ecx
+	DB 0f8H, 0d8H, 0f3H, 0c5H, 075H, 085H ; IAT Reuse for VirtualAlloc
+	mov	QWORD PTR dest$[rsp], rax
+
+...
+
+	movsxd	rax, DWORD PTR i$1[rsp]
+	DB 099H, 04eH, 08bH, 0c3H, 015H, 02eH, 092H ; supermega_payload Payload
+	movsx	eax, BYTE PTR [rcx+rax]
+</code></pre><h3 id="injection-iat-reuse-and-rdata-insert">Injection, IAT-reuse and .rdata insert</h3>
+<h2 id="supermega-options">SuperMega Options</h2>
+<p><img src="https://blog.deeb.ch/supermega/supermega-options.png" alt="Logfiles Overview"></p>
+<p>Input:</p>
+<ul>
+<li>Payload: The shellcode (or DLL) to execute</li>
+<li>Injectable: Non-malicious EXE we use to inject ourselves into</li>
+</ul>
+<p>Options:</p>
+<ul>
+<li>Carrier: Which of the different carrier implementations to use
+<ul>
+<li>alloc_rw_rx: Alloc a RW region, copy shellcode, make it RX</li>
+<li>alloc_rw_rwx: Alloc a RW region, copy shellcode, make it RWX (for shikata-ga-nai)</li>
+<li>dll_loader_alloc: For DLL payload, alloc new region</li>
+<li>dll_loader_change: For DLL payload, change .text</li>
+<li>peb_walk: Oldschool, for testing</li>
+</ul>
+</li>
+<li>Carrier invoke:
+<ul>
+<li>change Entrypoint: Make PE entry-point point to our carrier (opsec unsafe)</li>
+<li>backdoor Entrypoint: Backdoor the function which is pointed to by the PE entry-point</li>
+</ul>
+</li>
+<li>Payload location:
+<ul>
+<li>.text</li>
+<li>.rdata</li>
+</ul>
+</li>
+<li>Add missing IAT entries: If you dont want to adjust shellcode based on imports of target EXE</li>
+</ul>
+<p>And lastly, the carrier Opotions:</p>
+<ul>
+<li>Encode: How to encrypt payload</li>
+<li>Guardrails: Execution Guardrails (edit it first)</li>
+<li>AntiEmulation: Anti AV emulation</li>
+<li>Decoy: start a program to show the user</li>
+<li>VirtualProtect: Special VirtualProtect implementations</li>
+</ul>
+<h2 id="using-cordyceps-for-exe-injection">Using Cordyceps for EXE Injection</h2>
+<pre tabindex="0"><code>      ┌─────────────┐                          
+      │             │                          
+      │             │            Memory Section
+      ├─────────────┤            ┌──────────┐  
+┌─────┤  Carrier    ├────────────►          │  
+│     │             │ Alloc      │ Payload  │  
+│     ├─────────────┤ Copy       │ Usable   │  
+│     │             │ Jump       │          │  
+│     │             │            │          │  
+│     ├─────────────┤            │          │  
+└────►│  Payload    │            └──────────┘  
+      │  Encrypted  │                          
+      ├─────────────┤                          
+      │             │                          
+      │             │                          
+      └─────────────┘                          
+</code></pre><p>The carrier (-shellcode) loads and executes the payload (-shellcode) into memory. In the case
+of exe’s, the carrier will be stored in the middle of the .text section.
+There are two options to jump to the carrier when the exe starts:</p>
+<ul>
+<li><code>change Entrypoint</code>: Overwrite the entry point address in the PE header, and point it to the new location</li>
+<li><code>hijack Main</code>: Use an existing jump inside the <code>main()</code> function</li>
+</ul>
+<pre tabindex="0"><code> Change Entrypoint                                    Backdoor Main                        
+                                                                                           
+┌─────────────────┐                                  ┌─────────────────┐                   
+│                 │ Header                           │                 │ Header            
+│                 │                                  │                 │                   
+│    EntryPoint   ├────────────┐                     │    EntryPoint   │                   
+│                 │            │                     │                 │                   
+├─────────────────┤            │                     ├─────────────────┤                   
+├─────────────────┤            │                     ├─────────────────┤                   
+│                 │ main()     │                     │                 │ main()            
+│                 │            │                     │                 │                   
+│                 │            │                     │                 ├────────────┐      
+├─────────────────┤            │                     ├─────────────────┤            │      
+│                 │            │                     │                 │            │      
+│                 │            │                     │                 │            │      
+├─────────────────┤            │                     ├─────────────────┤            │      
+│Carrier Shellcode│◄───────────┘                     │Carrier Shellcode│◄───────────┘      
+├─────────────────┤                                  ├─────────────────┤                   
+│                 │                                  │                 │                   
+│                 │                                  │                 │                   
+│                 │                                  │                 │                   
+│                 │                                  │                 │                   
+│                 │                                  │                 │                   
+└─────────────────┘                                  └─────────────────┘                   
+</code></pre><p><code>hijack Main</code> is way more opsec safe, and the original entry point of the
+exe is preserved. Also, the jump to the carrier is not located conveniently at a
+specific location where it can be scanned, but basically randomly inside <code>main()</code>, where it first needs to be found.</p>
+<p>Then a carrier implementation can be selected.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>peb_walk</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>alloc_rw_rwx</td>
+<td>Title</td>
+</tr>
+<tr>
+<td>alloc_rw_rx</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>change_rwx_rx</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>dll_loader_alloc</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>dll_loader_change</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>There are different carrier implementations,
+each using a different technique.</p>
+<h3 id="alloc-rw-rwx-and-alloc-rw-rx">alloc rw-&gt;rwx and alloc rw-&gt;rx</h3>
+<p>For example, the <code>alloc rw-&gt;rx</code> carrier
+will allocate memory with <code>VirtualAlloc</code> as read-write, copy over
+the shellcode, set it to read-execute, and jump to the shellcode.
+The copying can of course also involve a decoding routine for the
+shellcode, for example XOR. The payload can be stored in either
+.text or .rdata section.</p>
+<pre tabindex="0"><code>┌───────────────────┐                                       
+│      Hdr          │                                       
+├───────────────────┤                                       
+│                   │                                       
+│                   │                                       
+├───────────────────┤                                       
+│     .text         │                                       
+│                   ├─────────────┐                         
+│                   │             │  VirtualAlloc RW        
+│                   │             │                         
+│                   │             │  Copy                   
+├───────────────────┤             │                         
+│     .data         │             │  VirtualProtect RX / RWX
+│                   │             │                         
+├───────────────────┤             │  Jump                   
+│                   │             │                         
+│                   │             │                         
+│                   │             │                         
+├───────────────────┤             │                         
+│     Shellcode     │◄────────────┘                         
+│                   │                                       
+├───────────────────┤                                       
+│                   │                                       
+└───────────────────┘                                       
+</code></pre><p>This is the common <code>VirtualAlloc -&gt; Copy -&gt; VirtualProtect -&gt; jump</code>
+technique to start a shellcode. As all these calls come within an
+IMAGE section, it should be kinda trusted (OPSEC good). But the payload will
+then, as always, live in a PRIVATE section (OPSEC bad).</p>
+<h3 id="change-rwx-rx">change rwx-&gt;rx</h3>
+<p>There is the carrier called <code>change rwx-&gt;rx</code>, which will change the
+permission of the shellcode to <code>read-write-exec</code>, decode it, and
+then set it to <code>read-exec</code>. This will modify part of either the
+.text or .rdata section, wherever the payload is stored.</p>
+<pre tabindex="0"><code>┌───────────────────┐                                                  
+│      Hdr          │                                                  
+├───────────────────┤                                                  
+│                   │                                                  
+│                   │                                                  
+├───────────────────┤                    VirtualProtect(.text, rwx)    
+│     .text         ├─────────────────┐                                
+│                   │                 │  Copy                          
+│                   │                 │                                
+├───────────────────┤                 │  VirtualProtect(.text, rx)     
+│     .text: Changed│  ◄──────────────┘                                
+├───────────────────┤                                                  
+│                   │                    shellcode decoded! still image
+│                   │                                                  
+├───────────────────┤                                                  
+│                   │                                                  
+│                   │                                                  
+└───────────────────┘                                                  
+</code></pre><p>This can make the payload look like it’s living in an IMAGE section,
+which is OPSEC good. Scanners that compare .text section of
+memory and the origin file, like in the search for module stompers,
+will detect modified .text reliably. This takes some performance tho.</p>
+<p>As Cordyceps re-uses the IAT, if the carrier uses methods of DLL’s
+that not imported by the injectable exe, one possibility is
+to just patch the IAT. This allows the carrier to run on exe’s
+even if not all of its needed functions are available.
+Setting this option is OPSEC bad.</p>
+<h2 id="using-cordyceps-for-dll-injection">Using Cordyceps for DLL Injection</h2>
+<p>If the injectable is a DLL, there are several ways to invoke the
+carrier:</p>
+<ul>
+<li>Overwriting the entry point will exec it on DLL Load (instead DllMain)</li>
+<li>Putting it into DllMain() with code backdooring</li>
+<li>Putting it into an exported function with code backdooring</li>
+<li>Overwrite an exported function with the actual shellcode</li>
+</ul>
+<h2 id="using-cordyceps-to-load-a-dll">Using Cordyceps to load a DLL</h2>
+<p>It is possible to use the carrier <code>dll_loader</code>, and then select
+a DLL as payload (NOT as injectable!).</p>
+<p>The problem with loading shellcode is that the functionality never really exists
+as shellcode itself: The shellcode will just allocate another memory section and
+somehow load the actual functionality there, e.g. as (reflective) DLL.
+This memory region is PRIVATE, which is OPSEC-bad.</p>
+<p>The implemented DLL loader can be configured so that the payload stays in the
+.text section as IMAGE after decoding it, which should be OPSEC-good.</p>
+<p>This works by pre-loading the DLL into its in-memory form (considering RVA’s, and page aligning), and injecting that into a .text section.
+When the EXE starts, it will
+change the memory protection of the payload-DLL in-memory,
+perform relocations and IAT loading, and executes
+the DLL.</p>
+<pre tabindex="0"><code>                                                                               
+┌──────────────┐               ┌──────────────┐              ┌──────────────┐  
+│              │               │              │              │              │  
+├──────────────┤               ├──────────────┤              ├──────────────┤  
+│  .text       │               │  .text       │              │  .text       │  
+│              │               │              │              │              │  
+│              │               │              │              │              │  
+│              │               ├──────────────┤              ├──────────────┤  
+│              │               │ DLL .text    │              │ DLL .text    │  
+│              │               ├──────────────┤              ├──────────────┤  
+│              │ ────────────► │ DLL .rdata   │ ───────────► │ DLL .rdata   │  
+│              │ inject        ├──────────────┤  IAT load    ├──────────────┤  
+│              │ DLL preloaded │ DLL .data    │  Relocations │ DLL .data    │  
+│              │               │              │              │              │  
+├──────────────┤               ├──────────────┤              ├──────────────┤  
+│              │               │              │              │              │  
+│              │               │              │              │              │  
+│              │               │              │              │              │  
+│              │               │              │              │              │  
+│              │               │              │              │              │  
+└──────────────┘               └──────────────┘              └──────────────┘  
+    PE File                       PE File                       Process        
+                                                                               
+</code></pre><h2 id="testing">Testing</h2>
+<p>I try to test common usecases as integration tests.
+This is extremely important, as stuff can break very easily
+when refactoring, or working on core concepts.</p>
+<p>It works by just using a shellcode as carrier which creates
+the file <code>c:\temp\a</code>. The python script verifies after each
+invocation of the infected executable that this file exists.
+If not, something went wrong. That often means x64dbg time.</p>
+<p><img src="https://blog.deeb.ch/supermega/testerpy.png" alt="tester.py log output showing all works"></p>
+<h2 id="supermega--cordyceps-anti-detection-properties">SuperMega / Cordyceps Anti Detection Properties</h2>
+<ul>
+<li>file scanning:
+<ul>
+<li>Hard to signature</li>
+<li>payload encrypted</li>
+<li>loader written in C, easiy modifiable</li>
+<li>no loading of payload</li>
+<li>bypass!</li>
+</ul>
+</li>
+<li>Memory scanning:
+<ul>
+<li>carrier: bypass (same as file scanning)</li>
+<li>payload: no protection (has to protect itself)</li>
+</ul>
+</li>
+<li>behaviour:
+<ul>
+<li>carrier will use native DLL functions
+<ul>
+<li>from IMAGE (“trusted”)</li>
+<li>clean call stack
+<ul>
+<li>no AceLdr, TitanLdr, ThreadStackSpoofer, CallStackMasker, MoonWalking needed</li>
+</ul>
+</li>
+<li>it may not trigger memory scanning?</li>
+</ul>
+</li>
+<li>payload: no protection (is on its own)</li>
+</ul>
+</li>
+<li>no new threads (all origin from IMAGE)</li>
+<li>Machine learning bypass</li>
+</ul> </div>
+        
+
+
+
+    </article>
+</div>
+
+  
+
+</div> 
+
+
+
+
+</body></html>

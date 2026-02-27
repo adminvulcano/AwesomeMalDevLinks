@@ -1,0 +1,26 @@
+Title:
+Advanced technologies at the core of Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+This Microsoft Learn article outlines the “next-generation protection” architecture of Microsoft Defender Antivirus (MDAV) and how it combines on-device engines with cloud-based analysis for fast, layered prevention. It explains hybrid detection flows where unknown or suspicious content triggers metadata/file submission to cloud services for ML verdicts, reputation checks, deep file classification, and sandbox detonation. The write-up breaks down key client-side components (behavior monitoring, AMSI integration, memory scanning, heuristics, emulation, network and command-line scanning) and their cloud counterparts (ensemble ML, behavior-based ML, AMSI-paired ML, reputation, smart rules). It also positions MDAV within Defender for Endpoint and broader Microsoft Defender XDR, emphasizing signal sharing and pre-breach controls like Attack Surface Reduction (ASR). This is most useful for blue teams and security architects validating coverage and tuning controls, and for red teams/pentesters modeling likely detection points (AMSI, command line, emulation, cloud reputation). It’s interesting because it provides a relatively concrete map of where Defender can block across pre-execution, runtime, memory, and script inspection, including which parts are cloud-augmented.
+
+Technical Focus:
+- Hybrid client/cloud malware detection pipeline
+- AMSI-based script content inspection (PowerShell, JS, VBScript, VBA)
+- Behavior monitoring and behavior-sequence ML analysis
+- Memory scanning and memory attack protection concepts
+- Dynamic emulation/unpacking and sandbox detonation
+- Command-line scanning and cloud command-line ML
+
+Use Cases:
+- Validate and design Defender for Endpoint/MDAV layered prevention strategy
+- Identify likely detection choke points for adversary simulation (AMSI, command line, reputation, detonation)
+- Tune ASR rules (e.g., Office process injection) to reduce memory-injection risk
+- Explain to stakeholders how cloud protection and local engines cooperate for rapid verdicts
+- Map defensive telemetry/controls to ATT&CK-style attack chain stages
+
+Keywords:
+Microsoft Defender Antivirus, MDAV, Microsoft Defender for Endpoint, Defender XDR, next-generation protection, hybrid detection, cloud protection service, machine learning, ensemble classifiers, monotonic models, behavior monitoring, AMSI, Antimalware Scan Interface, PowerShell, Office macros, VBScript, JavaScript, memory scanning, emulation, sandbox detonation, reputation, SmartScreen, ASR rules, command-line scanning, network protection

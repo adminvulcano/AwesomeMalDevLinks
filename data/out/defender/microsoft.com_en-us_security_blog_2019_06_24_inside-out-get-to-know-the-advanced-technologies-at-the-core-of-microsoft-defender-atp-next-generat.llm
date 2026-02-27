@@ -1,0 +1,30 @@
+Title:
+Inside out: Get to know the advanced technologies at the core of Microsoft Defender ATP next generation protection
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post breaks down the detection and prevention engines that make up Windows Defender Antivirus “next-generation protection” within Microsoft Defender ATP (now Defender for Endpoint).  
+- It explains how Defender combines client-side real-time engines with cloud-delivered protection to rapidly classify unknown or suspicious files and behaviors.  
+- Techniques covered include multiple ML layers (metadata models, deep file-content classifiers, behavior sequence models), sandbox detonation, reputation systems (e.g., SmartScreen), and expert “smart rules.”  
+- It highlights script-focused detection via AMSI with paired client/cloud models to catch fileless and in-memory attacks across PowerShell, JavaScript, VBScript, and Office VBA.  
+- The article also outlines on-host components like behavior monitoring, memory scanning, emulation/unpacking to defeat packers, heuristics, and network inspection, and positions these alongside Attack Surface Reduction controls.  
+- Useful for defenders and EDR evaluators to understand Defender’s detection surfaces and where attackers are likely to be observed (pre-exec, runtime, script content, memory, network).
+
+Technical Focus:
+- Cloud-delivered protection and multi-engine AV/EDR architecture
+- Machine learning for malware classification (metadata, deep content, ensemble models)
+- Behavior-based detection (process trees, attack-chain technique triggers)
+- AMSI-based script inspection and fileless/in-memory detection
+- Emulation/unpacking, heuristics, and memory scanning
+- Reputation systems and sandbox detonation
+
+Use Cases:
+- Map likely Defender detection points for red team tradecraft (pre-exec vs runtime vs AMSI vs cloud)
+- Guide blue team tuning/validation of Defender protections (cloud protection, AMSI, ASR rules)
+- Build threat models for evasion research (packer/emulation resistance, script obfuscation limits)
+- Inform EDR evaluation and control coverage reviews (reputation, sandboxing, behavior analytics)
+
+Keywords:
+Microsoft Defender ATP, Microsoft Defender for Endpoint, Windows Defender Antivirus, next-generation protection, cloud protection service, machine learning, ensemble classifiers, monotonic models, behavior monitoring, process tree analysis, AMSI, Antimalware Scan Interface, PowerShell, VBScript, JavaScript, Office VBA macros, fileless attacks, in-memory attacks, sandbox detonation, SmartScreen, reputation, emulation engine, unpacking, heuristics, memory scanning, attack surface reduction, ASR rules, network protection

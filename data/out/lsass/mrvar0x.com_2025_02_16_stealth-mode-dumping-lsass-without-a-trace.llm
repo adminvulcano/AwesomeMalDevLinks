@@ -1,0 +1,29 @@
+Title:
+Stealth Mode: Dumping LSASS Without a Trace
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- Walkthrough of a PowerShell-based LSASS dumping approach aimed at evading common AV/EDR detections.  
+- It focuses on reducing behavioral and permission-based alerts by opening LSASS with minimal access rights (QUERY_INFORMATION + VM_READ) instead of full access.  
+- The technique uses in-memory C# (Add-Type) to dynamically define P/Invoke signatures for `OpenProcess` and `MiniDumpWriteDump`, attempting to bypass static signatures and some userland hooks.  
+- The resulting dump is Base64-encoded, compressed, and the original artifacts are deleted to reduce on-disk detection and forensic visibility; credentials are later extracted offline with `pypykatz`.  
+- Includes a brief list of endpoint products the author claims to have tested against and provides basic defensive mitigations (RunAsPPL, PowerShell logging, privilege restriction).  
+- Useful primarily for red teamers/pentesters validating credential access paths and for blue teams building detections around the sequence of actions rather than single indicators.
+
+Technical Focus:
+- LSASS memory dumping via `MiniDumpWriteDump` (dbghelp.dll)
+- PowerShell in-memory execution with embedded C# / P/Invoke (Add-Type)
+- Minimal process access rights (`PROCESS_QUERY_INFORMATION`, `PROCESS_VM_READ`)
+- Dump artifact obfuscation (Base64 encoding) and compression/cleanup
+- Offline credential extraction from minidumps using pypykatz
+
+Use Cases:
+- Credential access simulation in Windows enterprise environments
+- Testing EDR/AV detections for LSASS access + dump creation chains
+- Developing detections for suspicious PowerShell + P/Invoke + LSASS handle opens
+- Incident response validation: hunting for encoded/compressed dump artifacts and related telemetry
+
+Keywords:
+LSASS, credential dumping, MiniDumpWriteDump, dbghelp.dll, OpenProcess, PROCESS_VM_READ, PROCESS_QUERY_INFORMATION, PowerShell, Add-Type, C# in-memory, P/Invoke, API hooking evasion, RunAsPPL, base64, Compress-Archive, artifact cleanup, pypykatz, Windows Defender, EDR bypass, Sysmon logging

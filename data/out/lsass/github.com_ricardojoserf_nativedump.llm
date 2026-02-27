@@ -1,0 +1,31 @@
+Title:
+NativeDump — Dump LSASS via NTAPI by hand-crafting minimal Minidump files (no MiniDumpWriteDump)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- NativeDump is a Windows credential-access tool that dumps the LSASS process by manually constructing a valid Minidump file using only NTAPI calls from ntdll.dll, avoiding dbghelp!MiniDumpWriteDump.  
+- It solves the problem of common EDR detections around standard dump APIs and full-featured dump formats by generating a minimal dump containing only the streams required by Mimikatz/Pypykatz (SystemInfo, ModuleList, Memory64List).  
+- The repo documents the Minidump layout (header, stream directory, streams, memory regions) and how to populate required fields, including OS versioning and module base discovery.  
+- It uses NT primitives to enable SeDebugPrivilege, open LSASS, enumerate memory regions with NtQueryVirtualMemory, and read memory with NtReadVirtualMemory.  
+- Multiple “flavours” (C#, Python, Go, C/C++, BOF, etc.) include options like ntdll remapping/overwrite methods to reduce user-mode API hooking impact and optional remote exfiltration/encoding.  
+- Useful primarily for Red Teams and pentesters; also relevant to Blue Teams for understanding/detecting NTAPI-based dumping and handcrafted Minidump artifacts.
+
+Technical Focus:
+- NTAPI-only LSASS dumping (ntdll.dll)
+- Hand-crafted Minidump format (Header, Stream Directory, SystemInfo/ModuleList/Memory64List)
+- Memory region enumeration and collection (NtQueryVirtualMemory, NtReadVirtualMemory)
+- Privilege enablement via NT token APIs (SeDebugPrivilege)
+- Module base/address discovery (NtQueryInformationProcess + memory reads)
+- Evasion tradecraft: avoiding MiniDumpWriteDump, ntdll remap/overwrite, remote dump byte exfiltration
+
+Use Cases:
+- Dump LSASS credentials for offline parsing with Mimikatz/Pypykatz
+- Evaluate/evade detections focused on dbghelp MiniDumpWriteDump usage
+- Build custom dumpers in alternative languages/BOFs for operator flexibility
+- Exfiltrate dump content without writing a full dump to disk (branch-dependent)
+- Defensive research: create detections for NTAPI-based dumping and minimal Minidump anomalies
+
+Keywords:
+LSASS, lsass.exe, Minidump, MDMP, MiniDumpWriteDump bypass, NTAPI, ntdll.dll, NtOpenProcess, NtReadVirtualMemory, NtQueryVirtualMemory, NtQueryInformationProcess, NtAdjustPrivilegesToken, NtOpenProcessToken, SeDebugPrivilege, Memory64ListStream, ModuleListStream, SystemInfoStream, API hooking bypass, ntdll unhooking, Mimikatz, Pypykatz, BOF, EDR evasion, PPL (Protected Process Light)

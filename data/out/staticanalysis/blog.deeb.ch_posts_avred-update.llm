@@ -1,0 +1,29 @@
+Title:
+Avred Update: Advances in Reversing Microsoft Defender Signature Format
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post summarizes new reverse-engineering findings about Microsoft Defender’s signature database format and explains how they clarify Avred’s earlier detection behaviors.  
+- It highlights that Defender signatures are composed of multiple weighted sub-rules and a score threshold; a detection triggers when accumulated sub-rule weights exceed the threshold.  
+- This model explains “non-dominant” matches (multiple sub-rules contributing) versus “dominant” matches (a single sub-rule weight meeting/exceeding the threshold).  
+- The post also details wildcard/placeholder constructs in signatures, showing that rules are not purely byte-exact and can tolerate variations (e.g., NOPs/register changes) via wildcard types.  
+- It references `WdFilter.sys` as the kernel minifilter responsible for file scanning and provides examples translating wildcard constructs into YARA-like patterns.  
+- Useful for malware analysts, red teamers, and detection engineers trying to understand Defender signature robustness and why naive byte-tweaks may fail.
+
+Technical Focus:
+- Microsoft Defender signature database reverse engineering
+- Weighted sub-rule scoring and threshold-based triggering
+- Wildcard/placeholder encoding (90 01–90 05 types)
+- YARA-style representation of proprietary signature logic
+- Windows Defender scanning path via `WdFilter.sys` minifilter
+
+Use Cases:
+- Explaining/triaging why specific binaries trigger Defender detections
+- Designing more realistic signature-evasion experiments (and understanding their limits)
+- Building tooling to parse/approximate Defender signature logic
+- Creating defensive test cases to validate signature resilience to minor mutations
+
+Keywords:
+Microsoft Defender, Windows Defender, signature database, reverse engineering, avred, WdFilter.sys, minifilter driver, sub-rules, scoring threshold, weighted rules, dominant match, non-dominant match, wildcards, byte patterns, 90 01, 90 02, 90 03, 90 04, 90 05, YARA

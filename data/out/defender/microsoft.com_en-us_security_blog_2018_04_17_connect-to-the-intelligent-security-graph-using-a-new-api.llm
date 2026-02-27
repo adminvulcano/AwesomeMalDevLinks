@@ -1,0 +1,31 @@
+Title:
+Connect to the Intelligent Security Graph using a new API
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post announces the public preview of the Microsoft Graph Security API, exposing security signals from Microsoft’s Intelligent Security Graph via a unified REST interface.  
+- It targets the integration problem of correlating high-volume alerts and contextual data across many security products and workflows, reducing custom connector effort.  
+- The API provides a standard schema to retrieve and correlate alerts (initially from Azure Security Center and Azure AD Identity Protection) and is positioned to expand with additional providers and capabilities (e.g., security inventory and response actions).  
+- It also introduces high-volume alert streaming to SIEMs through integration with Azure Monitor.  
+- The content is most useful for SecOps engineers, SIEM/SOAR integrators, MSSPs, and security product partners building ingestion, enrichment, and automation pipelines.  
+- It’s notable as an early step toward a centralized, programmatic security data plane across Microsoft services using Microsoft Graph authentication and entities.
+
+Technical Focus:
+- Microsoft Graph Security API (REST) and unified security schema  
+- Intelligent Security Graph (signal/threat intel aggregation)  
+- Alert retrieval, normalization, and correlation across providers  
+- SIEM ingestion via Azure Monitor high-volume streaming  
+- Integration patterns for dashboards, ticketing, and automation (SOAR-like workflows)  
+- Partner ecosystem enablement (bidirectional integration concepts)
+
+Use Cases:
+- Build custom SOC dashboards that aggregate Microsoft security alerts with context
+- Stream Microsoft-origin alerts into a SIEM for centralized correlation and retention
+- Enrich alerts with identity/device/business context from other Microsoft Graph entities
+- Sync alert status/ownership with ITSM/ticketing systems and automate triage steps
+- Develop partner security products that consume/publish signals into Microsoft’s ecosystem
+
+Keywords:
+Microsoft Graph, Graph Security API, Intelligent Security Graph, REST API, security alerts, alert correlation, unified schema, Azure Security Center, Azure AD Identity Protection, Intune, Azure Information Protection, Azure Monitor, SIEM, SOC dashboard, SOAR, ITSM integration, threat intelligence enrichment, incident response automation, RSA Conference 2018

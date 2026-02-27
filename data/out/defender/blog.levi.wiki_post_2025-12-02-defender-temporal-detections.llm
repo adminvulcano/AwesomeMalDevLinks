@@ -1,0 +1,28 @@
+Title:
+Temporal-Behavioural Detections & Whitelists (Microsoft Defender)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post documents an observed “temporal” caching effect in Microsoft Defender (Defender for Individuals and MDE) where behavioral verdicts appear to persist across subsequent executions of similar process behavior.  
+- The author shows that after a successful LSASS dump using a “deconditioning” variant (string obfuscation, anti-emulation, and dumping non-critical processes first), a “standard” variant may also run without behavioral blocking shortly afterward.  
+- Once a behavioral alert is triggered (e.g., by moving the binary to a non-excluded directory), Defender begins blocking/hanging subsequent executions, and this “known bad behavior” classification seems to apply across variants of the same tool.  
+- The post suggests the cache decays over time (~1 hour) and notes that disabling “send samples to Microsoft” and Cloud Delivered Protection can affect repeatability and cross-system correlation via metadata.  
+- Useful for red teamers and security researchers doing EDR evaluation/reproducible testing, and for defenders to understand potential statefulness and test-environment pitfalls.
+
+Technical Focus:
+- Microsoft Defender/MDE behavioral detection statefulness (temporal caching)
+- LSASS dumping behavior and runtime blocking/hanging
+- Deconditioning strategies (pre-dumps, anti-emulation, string obfuscation)
+- Defender exclusions and their impact on runtime vs file-based actions
+- Cloud Delivered Protection and local/cloud metadata correlation
+
+Use Cases:
+- Reproducing Defender behavioral detections reliably in lab testing
+- Designing EDR bypass experiments while accounting for cached verdicts
+- Building test harnesses/VM reset workflows for malware/EDR research
+- Understanding why “variant A affects variant B” outcomes occur during iterative testing
+
+Keywords:
+Microsoft Defender, Microsoft Defender for Endpoint, MDE, behavioral detection, temporal cache, whitelist, known-bad behavior, LSASS dump, credential dumping, anti-emulation, string obfuscation, deconditioning, Defender exclusions, Cloud Delivered Protection, sample submission, metadata correlation, EDR testing, EDR introspection, DetonatorAgent

@@ -1,0 +1,31 @@
+Title:
+Detonating a bad rabbit: Windows Defender Antivirus and layered machine learning defenses
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how Windows Defender Antivirus uses a layered detection pipeline combining local ML/heuristics with cloud-based analysis to detect new malware quickly while managing false positives.  
+- It uses the 2017 Bad Rabbit (Ransom:Win32/Tibbar.A) outbreak as a case study showing how an initial cloud DNN verdict (81.6% malicious) was insufficient to block due to confidence thresholds.  
+- The sample was then automatically detonated in a sandbox; dynamic behavior telemetry (registry/file/process/network activity) plus static features fed a stronger ML model that raised confidence to 90.7% and enabled blocking within 14 minutes.  
+- The article highlights “detonation-based” ML classification as a backstop when first-sight classification is inconclusive, and describes how once the cloud “learns” a sample, hash/metadata can drive rapid future blocks.  
+- It also notes configurable enterprise controls (cloud block level, extended timeout) and complementary ransomware mitigations like Controlled Folder Access and Defender Exploit Guard.  
+- Useful primarily for Blue Teams/Defenders and security engineers designing detection pipelines; also relevant to red teams for understanding cloud/behavioral detection escalation paths.
+
+Technical Focus:
+- Layered AV detection architecture (local + cloud)
+- ML classifiers (binary vs multi-class) and confidence thresholds
+- Automated sandbox detonation / dynamic analysis telemetry
+- Feature engineering from static + runtime behaviors
+- Cloud protection tuning (block level, extended timeout)
+- Ransomware mitigations (Controlled Folder Access, Exploit Guard)
+
+Use Cases:
+- Designing or evaluating multi-stage malware detection pipelines with acceptable FP/FN tradeoffs
+- Understanding how “first-seen” malware is escalated from static/metadata checks to detonation
+- Tuning Defender cloud protection aggressiveness in enterprise environments
+- Building detection/hunting logic around sandbox-observed behaviors (process injection, registry/file changes, network)
+- Ransomware defense-in-depth planning (CFA/ASR/Exploit protection/Network protection)
+
+Keywords:
+Windows Defender Antivirus, Microsoft Defender, cloud protection service, layered defenses, machine learning, deep neural network, DNN, multi-class classifier, confidence threshold, false positives, dynamic analysis, sandbox detonation, emulation, static features, behavioral telemetry, ransomware, Bad Rabbit, Ransom:Win32/Tibbar.A, Controlled Folder Access, Windows Defender Exploit Guard, Attack Surface Reduction, cloud block level, cloud extended timeout

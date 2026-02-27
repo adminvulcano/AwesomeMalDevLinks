@@ -1,0 +1,31 @@
+Title:
+Microsoft Defender Antivirus and non-Microsoft antivirus solutions without Defender for Endpoint
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn article explains how Microsoft Defender Antivirus behaves when installed alongside third-party AV/antimalware on endpoints that are not onboarded to Microsoft Defender for Endpoint (especially not Plan 2).  
+- It clarifies that Defender Antivirus will not run in passive mode unless the device is onboarded to MDE (Plan 1/2/Business), and on Windows client OS it is automatically disabled when a non-Microsoft AV registers via Windows Security Center.  
+- For Windows Server, it notes Defender may need to be disabled/uninstalled manually (e.g., via `Uninstall-WindowsFeature Windows-Defender`) when using a third-party AV, and provides guidance to re-enable Defender if the third-party AV is removed.  
+- The doc provides a PowerShell command to verify Defender-related services and filter drivers (WinDefend, WdFilter, WdNisSvc, etc.) and what “enabled vs disabled” states look like.  
+- It also answers operational questions: disabled Defender components cannot receive intelligence/engine/platform updates, and manual service start-type manipulation is unsupported.  
+- Useful for endpoint/security administrators and blue teams validating AV coexistence; also relevant to red teams for accurately understanding expected Defender telemetry/driver presence in mixed-AV environments.
+
+Technical Focus:
+- Defender Antivirus active vs disabled state (non-MDE devices)
+- Windows Security Center (WSC) AV registration behavior
+- Windows Server feature removal (`Uninstall-WindowsFeature Windows-Defender`)
+- Defender services and drivers (WinDefend, WdFilter, WdBoot, WdNisSvc, WdNisDrv)
+- Update limitations when Defender is disabled (intelligence/engine/platform)
+- MDE feature gating (passive mode, EDR in block mode)
+
+Use Cases:
+- Validate whether Defender is actually running when a third-party AV is installed
+- Troubleshoot “Defender disabled” vs “passive mode” expectations during MDE migrations
+- Audit server builds for Defender feature presence/removal and required re-enable steps
+- Confirm driver/service state via PowerShell during incident response or compliance checks
+- Plan coexistence strategy for Defender AV + non-Microsoft AV across client/server fleets
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, MDE Plan 2, passive mode, disabled mode, Windows Security Center, WSC API, WinDefend, WdFilter, WdBoot, WdNisSvc, WdNisDrv, Network Inspection System, mini-filter driver, Uninstall-WindowsFeature, Windows Server 2016, Windows 10, Windows 11, EDR in block mode, security intelligence update, platform update, engine update

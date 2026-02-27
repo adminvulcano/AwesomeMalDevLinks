@@ -1,0 +1,549 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Advanced technologies at the core of Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Advanced technologies at the core of Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/adv-tech-of-mdav.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/adv-tech-of-mdav.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/adv-tech-of-mdav.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fadv-tech-of-mdav%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fadv-tech-of-mdav%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fadv-tech-of-mdav%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fadv-tech-of-mdav%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Advanced%20technologies%20at%20the%20core%20of%20Microsoft%20Defender%20Antivirus%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fadv-tech-of-mdav%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="advanced-technologies-at-the-core-of-microsoft-defender-antivirus">Advanced technologies at the core of Microsoft Defender Antivirus</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2, Microsoft Defender for Business, Microsoft Defender for Individuals</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p>Microsoft Defender Antivirus and the multiple engines that lead to the advanced detection and prevention technologies under the hood to detect and stop a wide range of threats and attacker techniques at multiple points, as depicted in the following diagram:</p>
+<p><span class="mx-imgBorder">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/next-gen-protection-engines.png" alt="Diagram depicting next generation protection engines and how they work between the cloud and the client device." data-linktype="relative-path">
+</span>
+</p>
+<p>Many of these engines are built into the client and provide advanced protection against most threats in real time.</p>
+<p>These next-generation protection engines provide <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/intelligence/top-scoring-industry-antivirus-tests" data-linktype="absolute-path">industry-best</a> detection and blocking capabilities and ensure that protection is:</p>
+<ul>
+<li><strong>Accurate</strong>: Threats both common and sophisticated, many which are designed to try to slip through protections, are detected and blocked.</li>
+<li><strong>Real-time</strong>: Threats are prevented from getting on to devices, stopped in real-time at first sight, or detected and remediated in the least possible time (typically within a few milliseconds).</li>
+<li><strong>Intelligent</strong>: Through the power of the cloud, machine learning (ML), and Microsoft's industry-leading optics, protection is enriched and made even more effective against new and unknown threats.</li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#hybrid-detection-and-protection" aria-label="Section titled: Hybrid detection and protection"></a><h2 id="hybrid-detection-and-protection" class="heading-anchor">Hybrid detection and protection</h2></div>
+<p>Microsoft Defender Antivirus does hybrid detection and protection. What this means is, detection and protection occur on the client device first, and works with the cloud for newly developing threats, which results in faster, more effective detection and protection.</p>
+<p>When the client encounters unknown threats, it sends metadata or the file itself to the cloud protection service, where more advanced protections examine new threats on the fly and integrate signals from multiple sources.</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Hybrid detection and protection" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>On the client</th>
+<th>In the cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Machine learning (ML) engine</strong> <br> A set of light-weight machine learning models make a verdict within milliseconds. These models include specialized models and features that are built for specific file types commonly abused by attackers. Examples include models built for portable executable (PE) files, PowerShell, Office macros, JavaScript, PDF files, and more.</td>
+<td><strong>Metadata-based ML engine</strong>  <br> Specialized ML models, which include file type-specific models, feature-specific models, and adversary-hardened <a href="https://www.microsoft.com/security/blog/2019/07/25/new-machine-learning-model-sifts-through-the-good-to-unearth-the-bad-in-evasive-malware/" data-linktype="external">monotonic models</a>, analyze a featurized description of suspicious files sent by the client. Stacked ensemble classifiers combine results from these models to make a real-time verdict to allow or block files pre-execution.</td>
+</tr>
+<tr>
+<td><strong>Behavior monitoring engine</strong> <br> The behavior monitoring engine monitors for potential attacks post-execution. It observes process behaviors, including behavior sequence at runtime, to identify and block certain types of activities based on predetermined rules.</td>
+<td><strong>Behavior-based ML engine</strong> <br> Suspicious behavior sequences and advanced attack techniques are monitored on the client as triggers to analyze the process tree behavior using real-time cloud ML models. Monitored attack techniques span the attack chain, from exploits, elevation, and persistence all the way through to lateral movement and exfiltration.</td>
+</tr>
+<tr>
+<td><strong>Memory scanning engine</strong> <br> This engine scans the memory space used by a running process to expose malicious behavior that could be hiding through code obfuscation.</td>
+<td><strong>Antimalware Scan Interface (AMSI)-paired ML engine</strong> <br> Pairs of client-side and cloud-side models perform advanced analysis of scripting behavior pre- and post-execution to catch advanced threats like fileless and in-memory attacks. These models include a pair of models for each of the scripting engines covered, including PowerShell, JavaScript, VBScript, and Office VBA macros. Integrations include both dynamic content calls and/or behavior instrumentation on the scripting engines.</td>
+</tr>
+<tr>
+<td><strong>AMSI integration engine</strong> <br> Deep in-app integration engine enables detection of fileless and in-memory attacks through <a href="https://learn.microsoft.com/en-us/windows/desktop/AMSI/antimalware-scan-interface-portal" data-linktype="absolute-path">AMSI</a>, defeating code obfuscation. This integration blocks malicious behavior of scripts client-side.</td>
+<td><strong>File classification ML engine</strong> <br> Multi-class, deep neural network classifiers examine full file contents, provides an extra layer of defense against attacks that require more analysis. Suspicious files are held from running and submitted to the cloud protection service for classification. Within seconds, full-content deep learning models produce a classification and reply to the client to allow or block the file.</td>
+</tr>
+<tr>
+<td><strong>Heuristics engine</strong> <br> Heuristic rules identify file characteristics that have similarities with known malicious characteristics to catch new threats or modified versions of known threats.</td>
+<td><strong>Detonation-based ML engine</strong> <br> Suspicious files are detonated in a sandbox. Deep learning classifiers analyze the observed behaviors to block attacks.</td>
+</tr>
+<tr>
+<td><strong>Emulation engine</strong> <br> The emulation engine dynamically unpacks malware and examines how they would behave at runtime. The dynamic emulation of the content and scanning both the behavior during emulation and the memory content at the end of emulation defeat malware packers and expose the behavior of polymorphic malware.</td>
+<td><strong>Reputation ML engine</strong> <br> Domain-expert reputation sources and models from across Microsoft are queried to block threats that are linked to malicious or suspicious URLs, domains, emails, and files. Sources include Windows Defender SmartScreen for URL reputation models and Defender for Office 365 for email attachment expert knowledge, among other Microsoft services through the Microsoft Intelligent Security Graph.</td>
+</tr>
+<tr>
+<td><strong>Network engine</strong> <br> Network activities are inspected to identify and stop malicious activities from threats.</td>
+<td><strong>Smart rules engine</strong> <br> Expert-written smart rules identify threats based on researcher expertise and collective knowledge of threats.</td>
+</tr>
+<tr>
+<td><strong>CommandLine scanning engine</strong> <br> This engine scans the commandlines of all processes before they execute. If the commandline for a process is found to be malicious it is blocked from execution.</td>
+<td><strong>CommandLine ML engine</strong> <br> Multiple advanced ML models scan the suspicious commandlines in the cloud. If a commandline is found to be malicious, cloud sends a signal to the client to block the corresponding process from starting.</td>
+</tr>
+</tbody>
+</table></div>
+<p>For more information, see <a href="https://www.microsoft.com/security/blog/2023/09/20/microsoft-365-defender-demonstrates-100-percent-protection-coverage-in-the-2023-mitre-engenuity-attck-evaluations-enterprise/" data-linktype="external">Microsoft 365 Defender demonstrates 100 percent protection coverage in the 2023 MITRE Engenuity ATT&amp;CK® Evaluations: Enterprise</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#how-next-generation-protection-works-with-other-defender-for-endpoint-capabilities" aria-label="Section titled: How next-generation protection works with other Defender for Endpoint capabilities"></a><h2 id="how-next-generation-protection-works-with-other-defender-for-endpoint-capabilities" class="heading-anchor">How next-generation protection works with other Defender for Endpoint capabilities</h2></div>
+<p>Together with <a href="https://learn.microsoft.com/en-us/defender-endpoint/overview-attack-surface-reduction" data-linktype="relative-path">attack surface reduction</a>, which includes advanced capabilities like hardware-based isolation, application control, exploit protection, network protection, controlled folder access, attack surface reduction rules, and network firewall, <a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows" data-linktype="relative-path">next-generation protection</a> engines deliver Microsoft Defender for Endpoint's prebreach capabilities, stopping attacks before they can infiltrate devices and compromise networks.</p>
+<p>As part of Microsoft's defense-in-depth solution, the superior performance of these engines accrues to the <a href="https://www.microsoft.com/security/business/endpoint-security/microsoft-defender-endpoint" data-linktype="external">Microsoft Defender for Endpoint</a> unified endpoint protection, where antivirus detections and other next-generation protection capabilities enrich endpoint detection and response, automated investigation and remediation, advanced hunting, threat and vulnerability management, managed threat hunting service, and other capabilities.</p>
+<p>These protections are further amplified through <a href="https://www.microsoft.com/security/business/siem-and-xdr/microsoft-defender-xdr" data-linktype="external">Microsoft Defender XDR</a>, Microsoft's comprehensive, end-to-end security solution for the modern workplace. Through <a href="https://techcommunity.microsoft.com/t5/Security-Privacy-and-Compliance/Announcing-Microsoft-Threat-Protection/ba-p/262783" data-linktype="external">signal-sharing and orchestration of remediation across Microsoft's security technologies</a>, Microsoft Defender XDR secures identities, endpoints, email and data, apps, and infrastructure.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#memory-protection-and-memory-scanning" aria-label="Section titled: Memory protection and memory scanning"></a><h2 id="memory-protection-and-memory-scanning" class="heading-anchor">Memory protection and memory scanning</h2></div>
+<p>Microsoft Defender Antivirus (MDAV) provides memory protection with different engines:</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Memory protection and memory scanning" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th style="text-align: left;">Client</th>
+<th style="text-align: left;">Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Behavior Monitoring</td>
+<td style="text-align: left;">Behavior-based Machine Learning</td>
+</tr>
+<tr>
+<td style="text-align: left;">Antimalware Scan Interface(AMSI) integration</td>
+<td style="text-align: left;">AMSI-paired Machine Learning</td>
+</tr>
+<tr>
+<td style="text-align: left;">Emulation</td>
+<td style="text-align: left;">Detonation-based Machine Learning</td>
+</tr>
+<tr>
+<td style="text-align: left;">Memory scanning</td>
+<td style="text-align: left;">N/A</td>
+</tr>
+</tbody>
+</table></div>
+<p>An additional layer to help prevent memory-based attacks is to use the Attack Surface Reduction (ASR) rule – <strong>Block Office applications from injecting code into other processes</strong>. For more information see, <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference#block-office-applications-from-injecting-code-into-other-processes" data-linktype="relative-path">Block Office applications from injecting code into other processes</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#frequently-asked-questions" aria-label="Section titled: Frequently asked questions"></a><h2 id="frequently-asked-questions" class="heading-anchor">Frequently asked questions</h2></div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#how-many-malware-threats-does-microsoft-defender-antivirus-block-per-month" aria-label="Section titled: How many malware threats does Microsoft Defender Antivirus block per month?"></a><h3 id="how-many-malware-threats-does-microsoft-defender-antivirus-block-per-month" class="heading-anchor">How many malware threats does Microsoft Defender Antivirus block per month?</h3></div>
+<p><a href="https://www.microsoft.com/security/blog/2019/05/14/executing-vision-microsoft-threat-protection/" data-linktype="external">Five billion threats on devices every month</a>.</p>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#how-does-microsoft-defender-antivirus-memory-protection-help" aria-label="Section titled: How does Microsoft Defender Antivirus memory protection help?"></a><h3 id="how-does-microsoft-defender-antivirus-memory-protection-help" class="heading-anchor">How does Microsoft Defender Antivirus memory protection help?</h3></div>
+<p>See <a href="https://www.microsoft.com/security/blog/2017/11/13/detecting-reflective-dll-loading-with-windows-defender-atp/" data-linktype="external">Detecting reflective DLL loading with Windows Defender for Endpoint</a> to learn about one way Microsoft Defender Antivirus memory attack protection helps.</p>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#do-you-all-focus-your-detectionspreventions-in-one-specific-geographic-area" aria-label="Section titled: Do you all focus your detections/preventions in one specific geographic area?"></a><h3 id="do-you-all-focus-your-detectionspreventions-in-one-specific-geographic-area" class="heading-anchor">Do you all focus your detections/preventions in one specific geographic area?</h3></div>
+<p>No, we are in all the geographical regions (Americas, EMEA, and APAC).</p>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#do-you-all-focus-on-specific-industries" aria-label="Section titled: Do you all focus on specific industries?"></a><h3 id="do-you-all-focus-on-specific-industries" class="heading-anchor">Do you all focus on specific industries?</h3></div>
+<p>We focus on every industry.</p>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#do-your-detectionprotection-require-a-human-analyst" aria-label="Section titled: Do your detection/protection require a human analyst?"></a><h3 id="do-your-detectionprotection-require-a-human-analyst" class="heading-anchor">Do your detection/protection require a human analyst?</h3></div>
+<p>When you're pen-testing, you should demand where no human analysts are engaged on detect/protect, to see how the actual antivirus engine (prebreach) efficacy truly is, and a separate one where human analysts are engaged. You can add <a href="https://learn.microsoft.com/en-us/defender-xdr/dex-xdr-overview" data-linktype="absolute-path">Microsoft Defender Experts for XDR</a> a managed extended detection and response service to augment your SOC.</p>
+<p>The <em><strong>continuous iterative enhancement</strong></em> each of these engines to be increasingly effective at catching the latest strains of malware and attack methods. These enhancements show up in consistent <a href="https://learn.microsoft.com/en-us/defender-xdr/top-scoring-industry-tests" data-linktype="absolute-path">top scores in industry tests</a>, but more importantly, translate to <a href="https://www.microsoft.com/security/blog/2018/03/07/behavior-monitoring-combined-with-machine-learning-spoils-a-massive-dofoil-coin-mining-campaign/" data-linktype="external">threats and malware outbreaks</a> stopped and <a href="https://www.microsoft.com/security/blog/2018/03/22/why-windows-defender-antivirus-is-the-most-deployed-in-the-enterprise/" data-linktype="external">more customers protected</a>.</p>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/implement-endpoint-protection-use-microsoft-defender-endpoint/?source=recommendations">
+						Implement endpoint protection by using Microsoft Defender for Endpoint - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			This module examines how Microsoft Defender for Endpoint helps enterprise networks prevent, detect, investigate, and respond to advanced threats by using endpoint behavioral sensors, cloud security analytics, and threat intelligence. MS-102
+		</p>
+	
+		</div>
+	<!---->
+		<div class="position-relative margin-top-sm">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Certification
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/?source=recommendations">
+						Microsoft Certified: Security Operations Analyst Associate - Certifications
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Investigate, search for, and mitigate threats using Microsoft Sentinel, Microsoft Defender for Cloud, and Microsoft 365 Defender.
+		</p>
+	
+		</div>
+	<!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2025-01-24T08:00:00.000Z" data-article-date-source="calculated" class="">01/24/2025</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

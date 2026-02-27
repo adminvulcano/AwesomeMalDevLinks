@@ -1,0 +1,29 @@
+Title:
+MemoryModule — Load a DLL from Memory (In-Memory PE/DLL Loader)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- MemoryModule is a C/C++ library that implements loading a Windows DLL directly from an in-memory buffer rather than from a file path.  
+- It solves the limitation of `LoadLibrary`/`LoadLibraryEx`, which require the DLL to exist on disk, avoiding “write-to-temp-then-load” workarounds.  
+- The project effectively reimplements key parts of the Windows PE loader: mapping sections, applying relocations, resolving imports, and calling the module entry point, exposing an API similar to `LoadLibrary` plus extended hooks.  
+- It’s useful for red teams, pentesters, malware developers, and also defenders/researchers who need to understand or emulate reflective/in-memory loading behavior.  
+- It’s interesting because it provides a well-known reference implementation for in-memory PE loading and is commonly used as a building block for fileless execution and custom loaders.
+
+Technical Focus:
+- PE (Portable Executable) parsing and manual mapping
+- Import Address Table (IAT) resolution and dependency loading
+- Base relocations and image rebasing
+- Section mapping, memory protections, and loader-like initialization
+- Custom alloc/free and API surface (`MemoryLoadLibraryEx`, `MemoryGetProcAddress`)
+
+Use Cases:
+- Build custom in-memory DLL loaders for payload staging without touching disk
+- Implement reflective-loading style execution in implants or red team tooling
+- Embed plugins/resources as raw DLL bytes inside an executable
+- Research/detect manual-mapping behaviors by studying a canonical implementation
+- Unit-test PE loading edge cases (exports, high addresses, malformed input)
+
+Keywords:
+MemoryModule, in-memory DLL loading, manual mapping, reflective loader, PE format, Portable Executable, LoadLibraryEx, MemoryLoadLibraryEx, MemoryGetProcAddress, IAT, import resolution, base relocations, section mapping, VirtualAlloc, VirtualProtect, DllMain, fileless execution, Windows loader internals, C/C++ loader library

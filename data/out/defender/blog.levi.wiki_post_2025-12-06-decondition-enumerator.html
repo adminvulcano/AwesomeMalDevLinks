@@ -1,0 +1,70 @@
+# https://blog.levi.wiki/post/2025-12-06-decondition-enumerator
+
+<!DOCTYPE html><html lang="en">
+
+<body>
+    
+
+    <div id="main">
+        
+
+        <main>
+            
+<article>
+    <h1>Decondition Enumerator</h1>
+
+<p>This is a continuation of the earlier <a href="https://blog.levi.wiki/post/2025-12-05-decondition-everything">Decondition Everything</a> post.</p>
+
+<h2>Cooldown Time</h2>
+
+<p>I.e. when the cache is reset after <code>a_pi == Detected</code> (known bad) or <code>a_pi == cutoff</code> (deconditioned).<br>
+From testing: can be as little as <b>5-15 minutes</b></p>
+
+<h2>How does the Process Identification work?</h2>
+
+<h3>Test-Conduction</h3>
+
+<ul>
+<li>Define a single difference between <code>A.exe</code> and <code>A'.exe</code></li>
+<li>execute <code>A.exe</code> to be detected, i.e. no deconditioning</li>
+<li>then execute <code>A'.exe</code> with deconditioning
+<ul>
+<li>if also detected =&gt; <code>PI(A.exe) == PI(A'.exe)</code> --&gt; expected</li>
+<li>if not detected =&gt; <code>PI(A.exe) != PI(A'.exe)</code> --&gt; unexpected, may give a hint how PI works</li>
+</ul></li>
+<li>example:</li>
+</ul>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">.\</span><span class="n">LsassReader</span><span class="p">\</span><span class="n">tested</span><span class="p">\</span><span class="n">LsassReader-compile1</span><span class="p">.</span><span class="n">exe</span>
+<span class="p">&gt;</span> <span class="n">no</span> <span class="n">decon</span>
+<span class="p">&gt;</span> <span class="n">detected</span>
+
+<span class="p">.\</span><span class="n">LsassReader</span><span class="p">\</span><span class="n">tested</span><span class="p">\</span><span class="n">LsassReader-compile2</span><span class="p">.</span><span class="n">exe</span> <span class="n">20</span>
+<span class="p">&gt;</span> <span class="n">20</span> <span class="n">rounds</span> <span class="n">of</span> <span class="n">decon</span>
+<span class="p">&gt;</span> <span class="n">still</span> <span class="n">detected</span> <span class="p">--&gt;</span> <span class="n">same</span> <span class="n">PI</span> <span class="p">--&gt;</span> <span class="n">expected</span>
+</code></pre>
+</div>
+
+<h3>Test-Files</h3>
+
+<p>Tested exe files see <a href="https://github.com/cailllev/Decondition-Enumerator/tree/master/LsassReader/tested">Decondition-Enumerator/LsassReader/tested/</a>.</p>
+
+<h3>Test-Results</h3>
+
+<ul>
+<li>Exe Name different: PI same</li>
+<li>Compile Date different: PI same</li>
+<li>Imphash (+SSDeep +TLSH) different: PI same</li>
+<li>???</li>
+</ul>
+
+</article>
+
+        </main>
+
+        
+    </div>
+<div height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" data-original-tag="iframe"></div>
+
+</body></html>

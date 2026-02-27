@@ -1,0 +1,31 @@
+Title:
+100+ Kernel Bugs in 30 Days: High-Scale Driver Vulnerability Research with Agent Swarms
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- The post describes an automated, agent-based pipeline for large-scale vulnerability research on Windows third-party kernel drivers (.sys), focusing on unintentional memory corruption rather than “known-bad” backdoored drivers.  
+- The authors scraped ~1.8k driver binaries, prioritized 202 “high-risk” targets via attack-surface heuristics, and used a multi-agent LLM workflow (decompile/triage/audit) to generate structured findings.  
+- They built a VM + kernel-debugging validation loop (including QEMU virtual devices) to load drivers, exercise IOCTL interfaces, and iteratively produce PoCs that trigger crashes and confirm bugs.  
+- Results: 521 potential issues across 158 unique binaries; they estimate a high false-positive rate (~60% even among high-confidence items) but still project 100+ likely exploitable user→kernel LPE-class bugs on Windows 11 x64.  
+- The write-up highlights common bug classes in IOCTL handlers (arbitrary read/write, heap overflows, UAF) and discusses real-world impact including BYOVD risk and KASLR bypass via info leaks.  
+- It’s most useful for kernel exploit researchers/red teams (methodology) and defenders/PSIRTs (scale implications, IOC hash list, blocklist gaps), and it’s notable for showing how cheap closed-loop agentic auditing can be.
+
+Technical Focus:
+- Windows kernel driver attack surface analysis (IOCTL dispatch, METHOD_NEITHER, device ACLs)
+- LLM/agent-swarm assisted reverse engineering and decompilation-driven auditing
+- Memory corruption classes in kernel-mode code (heap/stack overflow, UAF, type confusion, integer overflow)
+- VM-based validation harness with kernel debugging + crash dump triage
+- QEMU device emulation to satisfy driver initialization and expose IOCTLs
+- BYOVD and vulnerable driver ecosystem / blocklist limitations
+
+Use Cases:
+- Automating triage and auditing of large driver corpora for LPE candidates
+- Building closed-loop “audit → PoC → crash → refine” pipelines for kernel bug validation
+- Defensive hunting: checking enterprise fleets for vulnerable driver presence via published hashes
+- Prioritizing drivers for manual RE based on IOCTL complexity and unsafe handler patterns
+- Informing driver blocklist/certificate revocation discussions and PSIRT intake scaling
+
+Keywords:
+Windows kernel drivers, .sys, IOCTL, DeviceIoControl, IRP_MJ_DEVICE_CONTROL, METHOD_NEITHER, KMDF, WDK, memory corruption, arbitrary read, arbitrary write, heap overflow, stack overflow, use-after-free, type confusion, integer overflow, local privilege escalation, KASLR bypass, BYOVD, Microsoft vulnerable driver blocklist, LOLDrivers, QEMU, kernel debugging, crash dump analysis, agent swarms, LLM-assisted reverse engineering, CVE-2025-65001

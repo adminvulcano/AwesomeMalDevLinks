@@ -1,0 +1,25 @@
+Title:
+Wonka — Kerberos Ticket Extraction from LSA Cache (Windows)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Wonka is a Windows C# tool that extracts Kerberos tickets directly from the Local Security Authority (LSA) cache across active logon sessions. It solves the problem of programmatically enumerating sessions and retrieving in-memory Kerberos ticket material without relying on interactive tooling. The workflow includes elevating/impersonating SYSTEM (via a winlogon token), registering as a logon process with LSA, enumerating logon sessions, and querying the Kerberos authentication package for tickets. Output includes detailed ticket metadata and Base64-encoded ticket blobs suitable for downstream use. It’s primarily useful for red teams and penetration testers performing credential access and lateral movement validation, and for defenders/researchers studying LSA/Kerberos ticket exposure paths. The interesting aspect is its direct use of LSA APIs (vs. higher-level wrappers) and automated multi-session ticket harvesting.
+
+Technical Focus:
+- LSA interaction via Win32/LSA APIs (LSA logon process registration, auth package calls)
+- Kerberos ticket enumeration/extraction from LSA cache
+- SYSTEM impersonation / token manipulation (OpenProcessToken, winlogon token)
+- Logon session discovery (LsaEnumerateLogonSessions)
+- Base64 encoding/export of ticket blobs
+- .NET 7 single-file build/deployment
+
+Use Cases:
+- Extract Kerberos tickets for post-exploitation validation in Windows/AD environments
+- Collect tickets from multiple active logon sessions on a compromised host
+- Generate Base64 ticket material for analysis or controlled replay/testing workflows
+- Research/detectability testing of LSA-based ticket extraction techniques
+
+Keywords:
+Kerberos, LSA, LSASS, Local Security Authority, LsaRegisterLogonProcess, LsaEnumerateLogonSessions, LsaCallAuthenticationPackage, OpenProcessToken, SYSTEM impersonation, winlogon, logon sessions, ticket cache, credential access, Windows internals, C#, .NET 7, Base64 ticket export, Active Directory, post-exploitation, lateral movement

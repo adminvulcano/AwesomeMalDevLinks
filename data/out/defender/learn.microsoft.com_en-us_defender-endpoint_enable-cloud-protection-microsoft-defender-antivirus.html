@@ -1,0 +1,672 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Turn on cloud protection in Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Turn on cloud protection in Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fenable-cloud-protection-microsoft-defender-antivirus%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fenable-cloud-protection-microsoft-defender-antivirus%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fenable-cloud-protection-microsoft-defender-antivirus%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fenable-cloud-protection-microsoft-defender-antivirus%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Turn%20on%20cloud%20protection%20in%20Microsoft%20Defender%20Antivirus%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fenable-cloud-protection-microsoft-defender-antivirus%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="turn-on-cloud-protection-in-microsoft-defender-antivirus">Turn on cloud protection in Microsoft Defender Antivirus</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2, Microsoft Defender Antivirus</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Cloud protection in Microsoft Defender Antivirus</a> delivers accurate, real-time, and intelligent protection. Cloud protection should be enabled by default.</p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p><a href="https://learn.microsoft.com/en-us/defender-endpoint/prevent-changes-to-security-settings-with-tamper-protection" data-linktype="relative-path">Tamper protection</a> helps keep cloud protection and other security settings from being changed. As a result, when tamper protection is enabled, any changes made to <a href="https://learn.microsoft.com/en-us/defender-endpoint/prevent-changes-to-security-settings-with-tamper-protection#what-happens-when-tamper-protection-is-turned-on" data-linktype="relative-path">tamper-protected settings</a> are ignored. If you must make changes to a device and those changes are blocked by tamper protection, we recommend using <a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-troubleshooting-mode" data-linktype="relative-path">troubleshooting mode</a> to temporarily disable tamper protection on the device. Note that after troubleshooting mode ends, any changes made to tamper-protected settings are reverted to their configured state.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#prerequistes" aria-label="Section titled: Prerequistes"></a><h2 id="prerequistes" class="heading-anchor">Prerequistes</h2></div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#supported-operating-systems" aria-label="Section titled: Supported operating systems"></a><h3 id="supported-operating-systems" class="heading-anchor">Supported operating systems</h3></div>
+<ul>
+<li>Windows</li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#why-cloud-protection-should-be-turned-on" aria-label="Section titled: Why cloud protection should be turned on"></a><h2 id="why-cloud-protection-should-be-turned-on" class="heading-anchor">Why cloud protection should be turned on</h2></div>
+<p>Microsoft Defender Antivirus cloud protection helps protect against malware on your endpoints and across your network. We recommend keeping cloud protection turned on, because certain security features and capabilities in Microsoft Defender for Endpoint only work when cloud protection is enabled.</p>
+<p><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path"><img src="https://learn.microsoft.com/en-us/defender-endpoint/media/mde-cloud-protection.png#lightbox" alt="alt-text=&quot;Diagram showing things that depend on cloud protection" data-linktype="relative-path"></a></p>
+<p>The following table summarizes the features and capabilities that depend on cloud protection: <br><br></p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Why cloud protection should be turned on" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Feature/Capability</th>
+<th>Subscription requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Checking against metadata in the cloud</strong>. The Microsoft Defender Antivirus cloud service uses machine learning models as an extra layer of defense. These machine learning models include metadata, so when a suspicious or malicious file is detected, its metadata is checked. <br><br>To learn more, see <a href="https://www.microsoft.com/security/blog/2019/06/24/inside-out-get-to-know-the-advanced-technologies-at-the-core-of-microsoft-defender-atp-next-generation-protection/" data-linktype="external">Blog: Get to know the advanced technologies at the core of Microsoft Defender for Endpoint next-generation protection</a></td>
+<td>Microsoft Defender for Endpoint Plan 1 or Plan 2 (Standalone or included in a plan like Microsoft 365 E3 or E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission" data-linktype="relative-path">Cloud protection and sample submission</a></strong>. Files and executables can be sent to the Microsoft Defender Antivirus cloud service for detonation and analysis. Automatic sample submission relies on cloud protection, although it can also be configured as a standalone setting.<br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission" data-linktype="relative-path">Cloud protection and sample submission in Microsoft Defender Antivirus</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 1 or Plan 2 (Standalone or included in a plan like Microsoft 365 E3 or E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/prevent-changes-to-security-settings-with-tamper-protection" data-linktype="relative-path">Tamper protection</a></strong>. Tamper protection helps protect against unwanted changes to your organization's security settings. <br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/prevent-changes-to-security-settings-with-tamper-protection" data-linktype="relative-path">Protect security settings with tamper protection</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 2 (Standalone or included in a plan like Microsoft 365 E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus" data-linktype="relative-path">Block at first sight</a></strong> <br>Block at first sight detects new malware and blocks it within seconds. When a suspicious or malicious file is detected, block at first sight capabilities queries the cloud protection backend and applies heuristics, machine learning, and automated analysis of the file to determine whether it's a threat.<br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#what-is-block-at-first-sight" data-linktype="relative-path">What is "block at first sight"?</a></td>
+<td>Microsoft Defender for Endpoint Plan 1 or Plan 2 (Standalone or included in a plan like Microsoft 365 E3 or E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-updates#security-intelligence-updates" data-linktype="relative-path">Emergency signature updates</a></strong>. When malicious content is detected, emergency signature updates and fixes are deployed. Rather than wait for the next regular update, you can receive these fixes and updates within minutes. <br><br>To learn more about updates, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-updates" data-linktype="relative-path">Microsoft Defender Antivirus security intelligence and product updates</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 2 (Standalone or included in a plan like Microsoft 365 E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/edr-in-block-mode" data-linktype="relative-path">Endpoint detection and response (EDR) in block mode</a></strong>. EDR in block mode provides extra protection when Microsoft Defender Antivirus isn't the primary antivirus product on a device. EDR in block mode remediates artifacts found during EDR-generated scans that the non-Microsoft, primary antivirus solution might have missed. When enabled for devices with Microsoft Defender Antivirus as the primary antivirus solution, EDR in block mode provides the added benefit of automatically remediating artifacts identified during EDR-generated scans. <br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/edr-in-block-mode" data-linktype="relative-path">EDR in block mode</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 2 (Standalone or included in a plan like Microsoft 365 E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction" data-linktype="relative-path">Attack surface reduction rules</a></strong>. ASR rules are intelligent rules that you can configure to help stop malware. Certain rules require cloud protection to be turned on in order to function fully. These rules include: <br>- Block executable files from running unless they meet a prevalence, age, or trusted list criteria <br>- Use advanced protection against ransomware <br>- Block untrusted programs from running from removable drives <br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction" data-linktype="relative-path">Use attack surface reduction rules to prevent malware infection</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 1 or Plan 2 (Standalone or included in a plan like Microsoft 365 E3 or E5)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/indicators-overview" data-linktype="relative-path">Indicators of compromise (IoCs)</a></strong>. In Defender for Endpoint, IoCs can be configured to define the detection, prevention, and exclusion of entities. Examples: <br>"Allow" indicators can be used to define exceptions to antivirus scans and remediation actions.<br>"Alert and block" indicators can be used to prevent files or processes from executing. <br><br>To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/indicators-overview" data-linktype="relative-path">Create indicators</a>.</td>
+<td>Microsoft Defender for Endpoint Plan 2 (Standalone or included in a plan like Microsoft 365 E5)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#methods-to-configure-cloud-protection" aria-label="Section titled: Methods to configure cloud protection"></a><h2 id="methods-to-configure-cloud-protection" class="heading-anchor">Methods to configure cloud protection</h2></div>
+<p>You can turn Microsoft Defender Antivirus cloud protection on or off by using one of several methods, such as:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#turn-on-cloud-protection-in-microsoft-defender-antivirus" data-linktype="self-bookmark">Turn on cloud protection in Microsoft Defender Antivirus</a>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#why-cloud-protection-should-be-turned-on" data-linktype="self-bookmark">Why cloud protection should be turned on</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#methods-to-configure-cloud-protection" data-linktype="self-bookmark">Methods to configure cloud protection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-microsoft-intune-to-turn-on-cloud-protection" data-linktype="self-bookmark">Use Microsoft Intune to turn on cloud protection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-group-policy-to-turn-on-cloud-protection" data-linktype="self-bookmark">Use Group Policy to turn on cloud protection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-powershell-cmdlets-to-turn-on-cloud-protection" data-linktype="self-bookmark">Use PowerShell cmdlets to turn on cloud protection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-windows-management-instruction-wmi-to-turn-on-cloud-protection" data-linktype="self-bookmark">Use Windows Management Instrumentation (WMI) to turn on cloud protection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#turn-on-cloud-protection-on-individual-clients-with-the-windows-security-app" data-linktype="self-bookmark">Turn on cloud protection on individual clients with the Windows Security app</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#see-also" data-linktype="self-bookmark">See also</a></li>
+</ul>
+</li>
+</ul>
+<p>You can also use <a href="https://learn.microsoft.com/en-us/mem/configmgr/protect/deploy-use/defender-advanced-threat-protection" data-linktype="absolute-path">Configuration Manager</a>. And, you can turn cloud protection on or off on individual endpoints by using the <a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#turn-on-cloud-protection-on-individual-clients-with-the-windows-security-app" data-linktype="self-bookmark">Windows Security app</a>.</p>
+<p>For more information about the specific network-connectivity requirements to ensure your endpoints can connect to the cloud protection service, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-network-connections-microsoft-defender-antivirus" data-linktype="relative-path">Configure and validate network connections</a>.</p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>In Windows 10 and Windows 11, there is no difference between the <strong>Basic</strong> and <strong>Advanced</strong> reporting options described in this article. This is a legacy distinction and choosing either setting results in the same level of cloud protection. There is no difference in the type or amount of information that is shared. For more information on what we collect, see the <a href="https://go.microsoft.com/fwlink/?linkid=521839" data-linktype="external">Microsoft Privacy Statement</a>.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-microsoft-intune-to-turn-on-cloud-protection" aria-label="Section titled: Use Microsoft Intune to turn on cloud protection"></a><h2 id="use-microsoft-intune-to-turn-on-cloud-protection" class="heading-anchor">Use Microsoft Intune to turn on cloud protection</h2></div>
+<ol>
+<li><p>Go to the Intune admin center (<a href="https://intune.microsoft.com/" data-linktype="external">https://intune.microsoft.com</a>) and sign in.</p>
+</li>
+<li><p>Choose <strong>Endpoint security</strong> &gt; <strong>Antivirus</strong>.</p>
+</li>
+<li><p>In the <strong>AV policies</strong> section, either select an existing policy, or choose <strong>+ Create Policy</strong>.</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Table 2" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Task</th>
+<th>Steps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a new policy</td>
+<td>1. For <strong>Platform</strong>, select <strong>Windows</strong>. <br><br>2. For <strong>Profile</strong>, select <strong>Microsoft Defender Antivirus</strong>.<br><br>3. On the <strong>Basics</strong> page, specify a name and description for the policy, and then choose <strong>Next</strong>.<br><br>4. In the <strong>Defender</strong> section, find <strong>Allow Cloud Protection</strong>, and set it to <strong>Allowed</strong>.<br><br>5. Scroll down to <strong>Submit Samples Consent</strong>, and select one of the following settings:<br>- <strong>Send all samples automatically</strong><br>- <strong>Send safe samples automatically</strong><br><br>6. On the <strong>Scope tags</strong> step, if your organization is using <a href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/scope-tags" data-linktype="absolute-path">scope tags</a>, select the tags you want to use, and then choose <strong>Next</strong>.<br><br>7. On the <strong>Assignments</strong> step, select the groups, users, or devices that you want to apply this policy to, and then choose <strong>Next</strong>.<br><br>8. On the <strong>Review + create</strong> step, review the settings for your policy, and then choose <strong>Create</strong>.</td>
+</tr>
+<tr>
+<td>Edit an existing policy</td>
+<td>1. Select the policy that you want to edit.<br><br>2. Under <strong>Configuration settings</strong>, choose <strong>Edit</strong>.<br><br>3. In the <strong>Defender</strong> section, find <strong>Allow Cloud Protection</strong>, and set it to <strong>Allowed</strong>.<br><br>4. Scroll down to <strong>Submit Samples Consent</strong>, and select one of the following settings:<br>- <strong>Send all samples automatically</strong><br>- <strong>Send safe samples automatically</strong><br><br>5. Select <strong>Review + save</strong>.</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>To learn more about Microsoft Defender Antivirus settings in Intune, see <a href="https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-antivirus-policy" data-linktype="absolute-path">Antivirus policy for endpoint security in Intune</a>.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-group-policy-to-turn-on-cloud-protection" aria-label="Section titled: Use Group Policy to turn on cloud protection"></a><h2 id="use-group-policy-to-turn-on-cloud-protection" class="heading-anchor">Use Group Policy to turn on cloud protection</h2></div>
+<ol>
+<li><p>On your Group Policy management device, open the <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc731212(v=ws.11)" data-linktype="absolute-path">Group Policy Management Console</a>, right-click the Group Policy Object you want to configure and select <strong>Edit</strong>.</p>
+</li>
+<li><p>In the <strong>Group Policy Management Editor</strong>, go to <strong>Computer configuration</strong>.</p>
+</li>
+<li><p>Select <strong>Administrative templates</strong>.</p>
+</li>
+<li><p>Expand the tree to <strong>Windows components</strong> &gt; <strong>Microsoft Defender Antivirus &gt; MAPS</strong></p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>MAPS settings are equal to cloud-delivered protection.</p>
+</div>
+</li>
+<li><p>Double-click <strong>Join Microsoft MAPS</strong>. Ensure the option is turned on and set to <strong>Basic MAPS</strong> or <strong>Advanced MAPS</strong>. Select <strong>OK</strong>.</p>
+<p>You can choose to send basic or additional information about detected software:</p>
+<ul>
+<li><p>Basic MAPS: Basic membership sends basic information to Microsoft about malware and potentially unwanted software that has been detected on your device. Information includes where the software came from (like URLs and partial paths), the actions taken to resolve the threat, and whether the actions were successful.</p>
+</li>
+<li><p>Advanced MAPS: In addition to basic information, advanced membership sends detailed information about malware and potentially unwanted software, including the full path to the software, and detailed information about how the software has affected your device.</p>
+</li>
+</ul>
+</li>
+<li><p>Double-click <strong>Send file samples when further analysis is required</strong>. Ensure that the first option is set to <strong>Enabled</strong> and that the other options are set to either:</p>
+<ul>
+<li><strong>Send safe samples</strong> (1)</li>
+<li><strong>Send all samples</strong> (3)</li>
+</ul>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>The <strong>Send safe samples</strong> (1) option means that most samples are sent automatically. Files that are likely to contain personal information prompt the user for additional confirmation.
+Setting the option to <strong>Always Prompt</strong> (0) lowers the protection state of the device. Setting it to <strong>Never send</strong> (2) means that the <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus" data-linktype="relative-path">Block at First Sight</a> feature of Microsoft Defender for Endpoint won't work.</p>
+</div>
+</li>
+<li><p>Select <strong>OK</strong>.</p>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-powershell-cmdlets-to-turn-on-cloud-protection" aria-label="Section titled: Use PowerShell cmdlets to turn on cloud protection"></a><h2 id="use-powershell-cmdlets-to-turn-on-cloud-protection" class="heading-anchor">Use PowerShell cmdlets to turn on cloud protection</h2></div>
+<p>The following cmdlets can turn on cloud protection:</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-0" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="PowerShell"><code class="lang-PowerShell"><span><span class="hljs-pscommand">Set-MpPreference</span><span class="hljs-parameter"> -MAPSReporting</span> Advanced
+<span class="hljs-pscommand">Set-MpPreference</span><span class="hljs-parameter"> -SubmitSamplesConsent</span> SendAllSamples
+</span></code></pre>
+<p>For more information on how to use PowerShell with Microsoft Defender Antivirus, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/use-powershell-cmdlets-microsoft-defender-antivirus" data-linktype="relative-path">Use PowerShell cmdlets to configure and run Microsoft Defender Antivirus</a> and <a href="https://learn.microsoft.com/en-us/powershell/module/defender/" data-linktype="absolute-path">Microsoft Defender Antivirus cmdlets</a>. <a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender" data-linktype="absolute-path">Policy CSP - Defender</a> also has more information specifically on <a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#defender-submitsamplesconsent" data-linktype="absolute-path">-SubmitSamplesConsent</a>.</p>
+<div class="alert is-primary">
+<p class="alert-title"><span class="docon docon-status-info-outline" aria-hidden="true"></span> Important</p>
+<p>You can set <strong>-SubmitSamplesConsent</strong> to <code>SendSafeSamples</code> (the default, recommended setting), <code>NeverSend</code>, or <code>AlwaysPrompt</code>.
+The <code>SendSafeSamples</code> setting means that most samples are sent automatically. Files that are likely to contain personal information result in a prompt for the user to continue, and require confirmation.
+The <code>NeverSend</code> and <code>AlwaysPrompt</code> settings lower the protection level of the device. Furthermore, the <code>NeverSend</code> setting means that the <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus" data-linktype="relative-path">Block at First Sight</a> feature of Microsoft Defender for Endpoint won't work.</p>
+</div>
+<p><a name="use-windows-management-instruction-wmi-to-turn-on-cloud-protection"></a></p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#use-windows-management-instrumentation-wmi-to-turn-on-cloud-protection" aria-label="Section titled: Use Windows Management Instrumentation (WMI) to turn on cloud protection"></a><h2 id="use-windows-management-instrumentation-wmi-to-turn-on-cloud-protection" class="heading-anchor">Use Windows Management Instrumentation (WMI) to turn on cloud protection</h2></div>
+<p>Use the <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/defender/set-msft-mppreference" data-linktype="absolute-path"><strong>Set</strong> method of the <strong>MSFT_MpPreference</strong></a> class for the following properties:</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-1" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			WMI
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="WMI"><code class="lang-WMI">MAPSReporting
+SubmitSamplesConsent
+</code></pre>
+<p>For more information about allowed parameters, see <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/defender/windows-defender-wmiv2-apis-portal" data-linktype="absolute-path">Windows Defender WMIv2 APIs</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#turn-on-cloud-protection-on-individual-clients-with-the-windows-security-app" aria-label="Section titled: Turn on cloud protection on individual clients with the Windows Security app"></a><h2 id="turn-on-cloud-protection-on-individual-clients-with-the-windows-security-app" class="heading-anchor">Turn on cloud protection on individual clients with the Windows Security app</h2></div>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>If the <strong>Configure local setting override for reporting Microsoft MAPS</strong> Group Policy setting is set to <strong>Disabled</strong>, then the <strong>Cloud-based protection</strong> setting in Windows Settings are greyed out and unavailable. Changes made through a Group Policy Object must first be deployed to individual endpoints before the setting is updated in Windows Settings.</p>
+</div>
+<ol>
+<li><p>Open the Windows Security app by selecting the shield icon in the task bar, or by searching the start menu for <strong>Windows Security</strong>.</p>
+</li>
+<li><p>Select the <strong>Virus &amp; threat protection</strong> tile (or the shield icon on the left menu bar), and then, under <strong>Virus &amp; threat protection settings</strong>, select <strong>Manage settings</strong>.</p>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender/media/wdav-protection-settings-wdsc.png#lightbox" data-linktype="absolute-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender/media/wdav-protection-settings-wdsc.png" alt="The Virus &amp; threat protection settings" data-linktype="absolute-path">
+</a>
+</span>
+</p>
+</li>
+<li><p>Confirm that <strong>Cloud-based Protection</strong> and <strong>Automatic sample submission</strong> are switched to <strong>On</strong>.</p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>If automatic sample submission has been configured with Group Policy, then the setting is greyed out and unavailable.</p>
+</div>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#see-also" aria-label="Section titled: See also"></a><h2 id="see-also" class="heading-anchor">See also</h2></div>
+<ul>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Use Microsoft cloud protection in Microsoft Defender Antivirus</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/mem/configmgr/protect/deploy-use/defender-advanced-threat-protection" data-linktype="absolute-path">Configuration Manager: Microsoft Defender for Endpoint</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/use-powershell-cmdlets-microsoft-defender-antivirus" data-linktype="relative-path">Use PowerShell cmdlets to manage Microsoft Defender Antivirus</a></p>
+</li>
+</ul>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>If you're looking for Antivirus related information for other platforms, see:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/mac-preferences" data-linktype="relative-path">Set preferences for Microsoft Defender for Endpoint on macOS</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-mac" data-linktype="relative-path">Microsoft Defender for Endpoint on Mac</a></li>
+<li><a href="https://learn.microsoft.com/en-us/mem/intune/protect/antivirus-microsoft-defender-settings-macos" data-linktype="absolute-path">macOS Antivirus policy settings for Microsoft Defender Antivirus for Intune</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/linux-preferences" data-linktype="relative-path">Set preferences for Microsoft Defender for Endpoint on Linux</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux" data-linktype="relative-path">Microsoft Defender for Endpoint on Linux</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/android-configure" data-linktype="relative-path">Configure Defender for Endpoint on Android features</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/ios-configure-features" data-linktype="relative-path">Configure Microsoft Defender for Endpoint on iOS features</a></li>
+</ul>
+</div>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/set-up-microsoft-defender-cloud/?source=recommendations">
+						Set up Microsoft Defender for Cloud - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Discover how to leverage Microsoft Defender for Cloud through the Azure portal to ensure the security of your Azure services and workloads, offering continuous threat detection and prevention.
+		</p>
+	
+		</div>
+	<!----><!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2025-10-20T08:00:00.000Z" data-article-date-source="calculated" class="">10/20/2025</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

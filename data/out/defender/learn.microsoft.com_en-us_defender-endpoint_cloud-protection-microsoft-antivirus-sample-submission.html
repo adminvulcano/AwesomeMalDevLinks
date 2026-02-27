@@ -1,0 +1,613 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Cloud protection and sample submission at Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Cloud protection and sample submission at Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fcloud-protection-microsoft-antivirus-sample-submission%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fcloud-protection-microsoft-antivirus-sample-submission%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fcloud-protection-microsoft-antivirus-sample-submission%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fcloud-protection-microsoft-antivirus-sample-submission%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Cloud%20protection%20and%20sample%20submission%20at%20Microsoft%20Defender%20Antivirus%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fcloud-protection-microsoft-antivirus-sample-submission%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="cloud-protection-and-sample-submission-at-microsoft-defender-antivirus">Cloud protection and sample submission at Microsoft Defender Antivirus</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p>Microsoft Defender Antivirus uses many intelligent mechanisms for detecting malware. One of the most powerful capabilities is the ability to apply the power of the cloud to detect malware and perform rapid analysis. Cloud protection and automatic sample submission work together with Microsoft Defender Antivirus to help protect against new and emerging threats.</p>
+<p>If a suspicious or malicious file is detected, a sample is sent to the cloud service for analysis while Microsoft Defender Antivirus blocks the file. As soon as a determination is made, which happens quickly, the file is either released or blocked by Microsoft Defender Antivirus.</p>
+<p>This article provides an overview of cloud protection and automatic sample submission at Microsoft Defender Antivirus. To learn more about cloud protection, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Cloud protection and Microsoft Defender Antivirus</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#prerequisites" aria-label="Section titled: Prerequisites"></a><h2 id="prerequisites" class="heading-anchor">Prerequisites</h2></div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#supported-operating-systems" aria-label="Section titled: Supported operating systems"></a><h3 id="supported-operating-systems" class="heading-anchor">Supported operating systems</h3></div>
+<ul>
+<li>Windows</li>
+<li>macOS</li>
+<li>Linux</li>
+<li>Windows Server</li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#how-cloud-protection-and-sample-submission-work-together" aria-label="Section titled: How cloud protection and sample submission work together"></a><h2 id="how-cloud-protection-and-sample-submission-work-together" class="heading-anchor">How cloud protection and sample submission work together</h2></div>
+<p>To understand how cloud protection works together with sample submission, it can be helpful to understand how Defender for Endpoint protects against threats. The Microsoft Intelligent Security Graph monitors threat data from a vast network of sensors. Microsoft layers cloud-based machine-learning models that can assess files based on signals from the client and the vast network of sensors and data in the Intelligent Security Graph. This approach gives Defender for Endpoint the ability to block many never-before-seen threats.</p>
+<p>The following image depicts the flow of cloud protection and sample submission with Microsoft Defender Antivirus:</p>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender-endpoint/media/cloud-protection-flow.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/cloud-protection-flow.png" alt="Cloud-delivered protection flow" data-linktype="relative-path">
+</a>
+</span>
+</p>
+<p>Microsoft Defender Antivirus and cloud protection automatically block most new, never-before-seen threats at first sight by using the following methods:</p>
+<ol>
+<li><p>Lightweight client-based machine-learning models, blocking new and unknown malware.</p>
+</li>
+<li><p>Local behavioral analysis, stopping file-based and file-less attacks.</p>
+</li>
+<li><p>High-precision antivirus, detecting common malware through generic and heuristic techniques.</p>
+</li>
+<li><p>Advanced cloud-based protection is provided for cases when Microsoft Defender Antivirus running on the endpoint needs more intelligence to verify the intent of a suspicious file.</p>
+<ol>
+<li><p>In the event Microsoft Defender Antivirus can't make a clear determination, file metadata is sent to the cloud protection service. Often within milliseconds, the cloud protection service can determine based on the metadata as to whether the file is malicious or not a threat.</p>
+<ul>
+<li>The cloud query of file metadata can be a result of behavior, mark of the web, or other characteristics where a clear verdict isn't determined.</li>
+<li>A small metadata payload is sent, with the goal of reaching a verdict of malware or not a threat. The metadata doesn't include personal data, such as personally identifiable information (PII). Information such as filenames, are hashed.</li>
+<li>Can be synchronous or asynchronous. For synchronous, the file doesn't open until the cloud renders a verdict. For asynchronous, the file opens while cloud protection performs its analysis.</li>
+<li>Metadata can include PE attributes, static file attributes, dynamic and contextual attributes, and more (see <a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#examples-of-metadata-sent-to-the-cloud-protection-service" data-linktype="self-bookmark">Examples of metadata sent to the cloud protection service</a>).</li>
+</ul>
+</li>
+<li><p>After examining the metadata, if Microsoft Defender Antivirus cloud protection can't reach a conclusive verdict, it can request a sample of the file for further inspection. This request honors the setting configuration for sample submission, as described in the following table:</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Table 1" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Send safe samples automatically</strong></td>
+<td>- Safe samples are samples considered to not commonly contain PII data. Examples include <code>.bat</code>, <code>.scr</code>, <code>.dll</code>, and <code>.exe</code>. <br>- If file is likely to contain PII, the user gets a request to allow file sample submission.<br>- This option is the default configuration on Windows, macOS, and Linux.</td>
+</tr>
+<tr>
+<td><strong>Always Prompt</strong></td>
+<td>- If configured, the user is always prompted for consent before file submission<br>- This setting isn't available in macOS and Linux cloud protection</td>
+</tr>
+<tr>
+<td><strong>Send all samples automatically</strong></td>
+<td>- If configured, all samples are sent automatically<br>- If you would like sample submission to include macros embedded in Word docs, you must choose <strong>Send all samples automatically</strong><br>- "Send all samples automatically" is the equivalent to the "Enable" setting in macOS policy</td>
+</tr>
+<tr>
+<td><strong>Do not send</strong></td>
+<td>- Prevents "block at first sight" based on file sample analysis<br>- "Don't send" is the equivalent to the "Disabled" setting in macOS policy and "None" setting in Linux policy.<br>- Metadata is sent for detections even when sample submission is disabled</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li><p>After files are submitted to cloud protection, the submitted files can be <strong>scanned</strong>, <strong>detonated</strong>, and processed through <strong>big data analysis</strong> <strong>machine-learning</strong> models to reach a verdict. Turning off cloud-delivered protection limits analysis to only what the client can provide through local machine-learning models, and similar functions.</p>
+</li>
+</ol>
+</li>
+</ol>
+<div class="alert is-primary">
+<p class="alert-title"><span class="docon docon-status-info-outline" aria-hidden="true"></span> Important</p>
+<p><a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus" data-linktype="relative-path">Block at first sight (BAFS)</a> provides detonation and analysis to determine whether a file or process is safe. BAFS can delay the opening of a file momentarily until a verdict is reached. If you disable sample submission, BAFS is also disabled, and file analysis is limited to metadata only. We recommend keeping sample submission and BAFS enabled. To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#what-is-block-at-first-sight" data-linktype="relative-path">What is "block at first sight"?</a></p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#cloud-protection-levels" aria-label="Section titled: Cloud protection levels"></a><h2 id="cloud-protection-levels" class="heading-anchor">Cloud protection levels</h2></div>
+<p>Cloud protection is enabled by default at Microsoft Defender Antivirus. We recommend that you keep cloud protection enabled, although you can configure the protection level for your organization. See <a href="https://learn.microsoft.com/en-us/defender-endpoint/specify-cloud-protection-level-microsoft-defender-antivirus" data-linktype="relative-path">Specify the cloud-delivered protection level for Microsoft Defender Antivirus</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#sample-submission-settings" aria-label="Section titled: Sample submission settings"></a><h2 id="sample-submission-settings" class="heading-anchor">Sample submission settings</h2></div>
+<p>In addition to configuring your cloud protection level, you can configure your sample submission settings. You can choose from several options:</p>
+<ul>
+<li><strong>Send safe samples automatically</strong>  (the default behavior)</li>
+<li><strong>Send all samples automatically</strong></li>
+<li><strong>Do not send samples</strong></li>
+</ul>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>Using the <code>Send all samples automatically</code> option provides for better security, because phishing attacks are used for a high amount of <a href="https://attack.mitre.org/tactics/TA0001/" data-linktype="external">initial access attacks</a>.
+For information about configuration options using Intune, Configuration Manager, Group Policy, or PowerShell, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Turn on cloud protection at Microsoft Defender Antivirus</a>.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#examples-of-metadata-sent-to-the-cloud-protection-service" aria-label="Section titled: Examples of metadata sent to the cloud protection service"></a><h2 id="examples-of-metadata-sent-to-the-cloud-protection-service" class="heading-anchor">Examples of metadata sent to the cloud protection service</h2></div>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender-endpoint/media/cloud-protection-metadata-sample.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/cloud-protection-metadata-sample.png" alt="The examples of metadata sent to cloud protection in the Microsoft Defender Antivirus portal" data-linktype="relative-path">
+</a>
+</span>
+</p>
+<p>The following table lists examples of metadata sent for analysis by cloud protection:</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Examples of metadata sent to the cloud protection service" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Machine attributes</td>
+<td style="text-align: left;"><code>OS version</code> <br> <code>Processor</code> <br> <code>Security settings</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Dynamic and contextual attributes</td>
+<td style="text-align: left;"><strong>Process and installation</strong> <br> <code>ProcessName</code> <br> <code>ParentProcess</code> <br> <code>TriggeringSignature</code> <br> <code>TriggeringFile</code> <br> <code>Download IP and url</code> <br> <code>HashedFullPath</code> <br> <code>Vpath</code> <br> <code>RealPath</code> <br> <code>Parent/child relationships</code> <br><br><strong>Behavioral</strong> <br> <code>Connection IPs</code> <br> <code>System changes</code> <br> <code>API calls</code> <br> <code>Process injection</code> <br><br><strong>Locale</strong> <br> <code>Locale setting</code> <br> <code>Geographical location</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Static file attributes</td>
+<td style="text-align: left;"><strong>Partial and full hashes</strong> <br> <code>ClusterHash</code> <br> <code>Crc16</code> <br> <code>Ctph</code> <br> <code>ExtendedKcrcs</code> <br> <code>ImpHash</code> <br> <code>Kcrc3n</code> <br> <code>Lshash</code> <br> <code>LsHashs</code> <br> <code>PartialCrc1</code> <br> <code>PartialCrc2</code> <br> <code>PartialCrc3</code> <br> <code>Sha1</code> <br> <code>Sha256</code> <br><br><strong>File properties</strong> <br><code>FileName</code> <br> <code>FileSize</code> <br><br> <strong>Signer information</strong> <br> <code>AuthentiCodeHash</code> <br> <code>Issuer</code> <br> <code>IssuerHash</code> <br> <code>Publisher</code> <br> <code>Signer</code> <br> <code>SignerHash</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#samples-are-treated-as-customer-data" aria-label="Section titled: Samples are treated as customer data"></a><h2 id="samples-are-treated-as-customer-data" class="heading-anchor">Samples are treated as customer data</h2></div>
+<p>If you're wondering what happens with sample submissions, Defender for Endpoint treats all file samples as customer data. Microsoft honors both the geographical and data retention choices your organization selected when onboarding to Defender for Endpoint.</p>
+<p>In addition, Defender for Endpoint received multiple compliance certifications, demonstrating continued adherence to a sophisticated set of compliance controls:</p>
+<ul>
+<li>ISO 27001</li>
+<li>ISO 27018</li>
+<li>SOC I, II, III</li>
+<li>PCI</li>
+</ul>
+<p>For more information, see the following resources:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-compliance-offerings" data-linktype="absolute-path">Azure Compliance Offerings</a></li>
+<li><a href="https://servicetrust.microsoft.com/" data-linktype="external">Service Trust Portal</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/data-storage-privacy" data-linktype="relative-path">Microsoft Defender for Endpoint data storage and privacy</a></li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#other-file-sample-submission-scenarios" aria-label="Section titled: Other file sample submission scenarios"></a><h2 id="other-file-sample-submission-scenarios" class="heading-anchor">Other file sample submission scenarios</h2></div>
+<p>There are two more scenarios where Defender for Endpoint might request a file sample that isn't related to the cloud protection at Microsoft Defender Antivirus. These scenarios are described in the following table:</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Other file sample submission scenarios" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th style="text-align: left;">Scenario</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Manual file sample collection in the Microsoft Defender portal</td>
+<td style="text-align: left;">When onboarding devices to Defender for Endpoint, you can configure settings for <a href="https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response" data-linktype="relative-path">endpoint detection and response (EDR)</a>. For example, there's a setting to enable sample collections from the device, which can easily be confused with the sample submission settings described in this article. <br><br>The EDR setting controls file sample collection from devices when requested through the Microsoft Defender portal, and is subject to the roles and permissions already established. This setting can allow or block file collection from the endpoint for features such as deep analysis in the Microsoft Defender portal. If this setting isn't configured, the default is to enable sample collection. <br><br>Learn about Defender for Endpoint configuration settings, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/onboard-client" data-linktype="relative-path">Onboard Windows and Mac client devices to Microsoft Defender for Endpoint</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Automated investigation and response content analysis</td>
+<td style="text-align: left;">When <a href="https://learn.microsoft.com/en-us/defender-endpoint/automated-investigations" data-linktype="relative-path">automated investigations</a> are running on devices (when configured to run automatically in response to an alert or manually run), files that are identified as suspicious can be collected from the endpoints for further inspection. If necessary, the file content analysis feature for automated investigations can be disabled in the Microsoft Defender portal. <br><br> The file extension names can also be modified to add or remove extensions for other file types that are automatically submitted during an automated investigation. <br><br> To learn more, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/manage-automation-file-uploads" data-linktype="relative-path">Manage automation file uploads</a>.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#see-also" aria-label="Section titled: See also"></a><h2 id="see-also" class="heading-anchor">See also</h2></div>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/next-generation-protection" data-linktype="relative-path">Next-generation protection overview</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux" data-linktype="relative-path">Microsoft Defender for Endpoint on Linux</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-mac" data-linktype="relative-path">Microsoft Defender for Endpoint on Mac</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/mtd" data-linktype="relative-path">Microsoft Defender for Endpoint - Mobile Threat Defense</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-remediation-microsoft-defender-antivirus" data-linktype="relative-path">Configure remediation for Microsoft Defender Antivirus detections</a></li>
+</ul>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/set-up-microsoft-defender-cloud/?source=recommendations">
+						Set up Microsoft Defender for Cloud - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Discover how to leverage Microsoft Defender for Cloud through the Azure portal to ensure the security of your Azure services and workloads, offering continuous threat detection and prevention.
+		</p>
+	
+		</div>
+	<!---->
+		<div class="position-relative margin-top-sm">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Certification
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/?source=recommendations">
+						Microsoft Certified: Security Operations Analyst Associate - Certifications
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Investigate, search for, and mitigate threats using Microsoft Sentinel, Microsoft Defender for Cloud, and Microsoft 365 Defender.
+		</p>
+	
+		</div>
+	<!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2025-10-20T08:00:00.000Z" data-article-date-source="calculated" class="">10/20/2025</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

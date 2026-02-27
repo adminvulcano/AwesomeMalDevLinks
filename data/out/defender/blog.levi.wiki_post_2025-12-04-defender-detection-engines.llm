@@ -1,0 +1,26 @@
+Title:
+EDR Detection Engines (Defender Scanning Engines)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post outlines a practical model of how Microsoft Defender (and similar EDRs) detect malware using four engines: signature, sandbox/emulation, memory scanning, and behavior analysis. It breaks detection into phases (on-disk/pre-execution vs. runtime) and explains how emulation may run briefly, then memory is scanned for known-bad patterns before execution is allowed. At runtime, behavior detection is described as primarily driven by telemetry such as ETW events (with syscall hooking noted as older/obsolete), potentially triggering additional memory scans. The author links prior maldev research and frames evasion as needing to address each engine without “overfancy” techniques that reintroduce detectable artifacts. Useful for red teamers and malware developers trying to reason about why payloads are caught, and for defenders to understand where detections can be placed.
+
+Technical Focus:
+- Static/signature detection (hashes, imphash, YARA-like rules)
+- Sandbox/emulation with time cutoffs
+- Memory scanning of (emulated and live) processes
+- Behavior detection via ETW telemetry (vs. syscall hooks)
+- Pre-execution caching / reputation decisions
+- Evasion themes: loaders, string obfuscation, anti-emulation, “deconditioning”
+
+Use Cases:
+- Map a payload’s detection point (disk vs emulation vs memory vs behavior) to guide debugging
+- Design staged execution to avoid early emulation cutoffs triggering detection
+- Reduce static indicators (imports/strings) via loaders/obfuscation
+- Anticipate behavior-based triggers that cause follow-on memory scans
+- Build defensive detections aligned to each engine (static, sandbox, memory, telemetry)
+
+Keywords:
+Microsoft Defender, EDR, detection engines, signature-based detection, hash, imphash, YARA, sandbox, emulation, time cutoff, memory scanning, runtime scanning, behavior detection, ETW, syscall hooking, loader, string obfuscation, anti-emulation, evasion, telemetry

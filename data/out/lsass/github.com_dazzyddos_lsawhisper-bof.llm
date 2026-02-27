@@ -1,0 +1,26 @@
+Title:
+LSA Whisperer BOF (lsawhisper-bof)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+LSA Whisperer BOF is a Cobalt Strike Beacon Object File port of Evan McBroom’s LSA Whisperer that interacts with Windows authentication packages via the LSA untrusted/trusted client interface. It performs credential- and token-related operations by calling `LsaCallAuthenticationPackage` rather than opening/reading/injecting into the LSASS process, making it relevant even when LSASS runs as PPL and/or Credential Guard is enabled. The BOFs implement modules for MSV1_0 (DPAPI credential key recovery, strong credential keys, NTLMv1 response generation), Kerberos (ticket listing/dumping/purging), and CloudAP (Entra ID/AAD and AD FS SSO cookie extraction plus cloud status queries). Targeting other logon sessions is supported via LUID selection and typically requires SYSTEM/`SeTcbPrivilege`. It’s primarily useful for red teams and pentesters needing post-compromise credential material and SSO artifacts with reduced LSASS memory-touching telemetry. The project is interesting because it operationalizes “legitimate” LSA client APIs to access high-value auth data without classic LSASS dumping techniques.
+
+Technical Focus:
+- LSA client APIs (`LsaConnectUntrusted`, `LsaRegisterLogonProcess`, `LsaCallAuthenticationPackage`)
+- MSV1_0 authentication package protocol messages (DPAPI cred keys, NTLM challenge/response)
+- Kerberos ticket cache interaction and `.kirbi` extraction (incl. session keys)
+- CloudAP/AAD plugin interfaces for Entra ID / device / AD FS SSO cookies
+- Logon session targeting via LUID and privilege requirements (`SeTcbPrivilege`)
+- Operating under PPL/Credential Guard constraints without LSASS memory access
+
+Use Cases:
+- Recover DPAPI credential keys (including “strong” keys on Win10+) for offline DPAPI masterkey decryption (e.g., SharpDPAPI workflows)
+- Dump cached Kerberos tickets to base64 `.kirbi` blobs for lateral movement or service access
+- Selectively purge Kerberos tickets (optionally by server) to shape authentication behavior during ops
+- Extract Entra ID (Azure AD) SSO cookies / device SSO cookies / AD FS enterprise SSO cookies from cloud-joined endpoints
+- Generate NTLMv1 responses with operator-chosen challenges for downgrade/cracking scenarios (where not blocked)
+
+Keywords:
+LSA, LsaCallAuthenticationPackage, LSASS, PPL, Credential Guard, MSV1_0, Kerberos, ticket cache, .kirbi, session keys, DPAPI, credkey, strong credential key, NTLMv1, LUID, SeTcbPrivilege, CloudAP, Entra ID, Azure AD, SSO cookie, AD FS, Cobalt Strike, BOF, Aggressor Script, logon sessions

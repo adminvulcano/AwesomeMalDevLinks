@@ -1,0 +1,229 @@
+# https://blog.levi.wiki/post/2025-12-05-decondition-everything
+
+<!DOCTYPE html><html lang="en">
+
+<body>
+    
+
+    <div id="main">
+        
+
+        <main>
+            
+<article>
+    <h1>Decondition Everything</h1>
+
+<h2>Alternate Titles</h2>
+
+<ul>
+<li>Cross-Process Deconditioning</li>
+<li>Reversing Defenders Behavioural Engine</li>
+<li>Bypass Every EDR if you find the correct Rule</li>
+<li>This is why your malware gets detected</li>
+</ul>
+
+<h2>Acknowlegdements</h2>
+
+<p>The following theory and pseudo-code is based on my and <a href="https://blog.deeb.ch/">Dobins</a> experience and exchange on the matter.</p>
+
+<h2>TL;DR</h2>
+
+<h3>LSASS Dumping</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1">// usual dumping</span>
+<span class="n">MiniDumpWriteDump</span><span class="p">(</span><span class="n">lsassHandle</span><span class="p">,</span><span class="w"> </span><span class="n">lsassPID</span><span class="p">,</span><span class="w"> </span><span class="n">outHandle</span><span class="p">,</span><span class="w"> </span><span class="n">MiniDumpWithFullMemory</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span><span class="w"> </span><span class="c1">// blocked </span>
+
+<span class="c1">// deconditioning</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MiniDumpWriteDump</span><span class="p">(</span><span class="n">explorerHandle</span><span class="p">,</span><span class="w"> </span><span class="n">explorerPID</span><span class="p">,</span><span class="w"> </span><span class="n">outHandle</span><span class="p">,</span><span class="w"> </span><span class="n">MiniDumpWithFullMemory</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span><span class="w"> </span><span class="c1">// ok </span>
+<span class="p">}</span>
+<span class="n">MiniDumpWriteDump</span><span class="p">(</span><span class="n">lsassHandle</span><span class="p">,</span><span class="w"> </span><span class="n">lsassPID</span><span class="p">,</span><span class="w"> </span><span class="n">outHandle</span><span class="p">,</span><span class="w"> </span><span class="n">MiniDumpWithFullMemory</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span><span class="w"> </span><span class="c1">// ok --&gt; profit</span>
+</code></pre>
+</div>
+
+<h3>Shellcode Injection</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1">// usual injection</span>
+<span class="n">LPVOID</span><span class="w"> </span><span class="n">remAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VirtualAllocEx</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">shellcode</span><span class="p">),</span><span class="w"> </span><span class="p">...);</span>
+<span class="n">WriteProcessMemory</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="n">remAddr</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">shellcode</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<span class="n">CreateRemoteThread</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">remAddr</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span><span class="w"> </span><span class="c1">// EDR likely scans memory, detects the malicious shellcode</span>
+
+<span class="c1">// deconditioning (SirAllocALot)</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">VirtualAllocEx</span><span class="p">();</span><span class="w"> </span><span class="n">WriteProcessMemory</span><span class="p">(</span><span class="n">beningShellcode</span><span class="p">);</span><span class="w"> </span><span class="n">CreateRemoteThread</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">LPVOID</span><span class="w"> </span><span class="n">remAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VirtualAllocEx</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">shellcode</span><span class="p">),</span><span class="w"> </span><span class="p">...);</span>
+<span class="n">WriteProcessMemory</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="n">remAddr</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">shellcode</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<span class="n">CreateRemoteThread</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">remAddr</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span><span class="w"> </span><span class="c1">// no more scans</span>
+</code></pre>
+</div>
+
+<h2>Related Work</h2>
+
+<p>If you don't know what a behavioural engine or behavioural tracking is, have a look at <a href="https://blog.levi.wiki/post/2025-12-04-defender-detection-engines">Detection Engines</a> first.<br>
+If you do not believe the results, see <a href="https://blog.levi.wiki/post/2025-12-02-defender-temporal-detections">Temporal Detections</a> where the observations stem from.<br></p>
+
+<h2>My Work</h2>
+
+<h3>Remarks</h3>
+
+<ol>
+<li>A.exe and A'.exe are lsass dumpers.</li>
+<li>A.exe and A'.exe are compiled at the same time, same machine, same import function, and share most of their code.</li>
+<li>EDRs have some "process identification" mechanism. This might be <code>hash(code_section)</code>, <code>imphash(x.exe)</code> or <code>metadata(x.exe)</code>. This allows to store only the identifier for lookups.</li>
+</ol>
+
+<h3>Definitions</h3>
+
+<ol>
+<li>Process identification is defined as <code>PI(x.exe)</code>, for now it does not matter how it works exactly.</li>
+<li>Deconditioning means "doing a similar, but non malicious action". In the context of lsass dumping this means dumping non-critical processes. In the context of running injected malicious shellcode this means running benign shellcode like <code>xor eax, eax; ret</code>.</li>
+</ol>
+
+<h3>Observations regarding Decon and PI</h3>
+
+<ol>
+<li>A.exe is executed, it deconditions MDE (dump 20 other procs), then A.exe dumps lsass. -&gt; <b>works</b> -&gt; expected</li>
+<li>A'.exe is executed, directly dumps lsass. -&gt; <b>works</b> -&gt; unexpected!</li>
+<li><i>Wait some time (~1h), or let A'.exe raise a non-behaviour alert (i.e. signature, memory, ..., does not matter how).</i></li>
+<li>A'.exe is executed again, directly dumps lsass. -&gt; <b>blocked</b> -&gt; expected</li>
+<li>A.exe is executed again, deconditioning, then dumps lsass.exe -&gt; <b>blocked</b> -&gt; unexpected!</li>
+</ol>
+
+<h3>Lemmas</h3>
+
+<ol>
+<li>From the remarks it follows that <code>A.exe != A'.exe</code></li>
+<li>But from observations it follows that <code>PI(A.exe) == PI(A'.exe)</code></li>
+</ol>
+
+<h3>Claims</h3>
+
+<ol>
+<li>Defender has a cutoff for tracking behaviours, like process dumping (else observation 1 would not dump lsass)</li>
+<li>Defender uses a form of process identification (else observation 2 would not match result in observation 1, and 5 not 4)</li>
+</ol>
+
+<h2>New Behavior Tracking Theory</h2>
+
+<p>This is pseudo-code and based only on the above.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Rule</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>      <span class="c1"># lsass-dump</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="c1"># open_proc, open_file</span>
+    <span class="n">trigger</span><span class="p">:</span> <span class="n">func</span>  <span class="c1"># proc == lsass</span>
+
+<span class="n">anti_lsass_dump</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">(</span><span class="s2">"lsass-dump"</span><span class="p">,</span> <span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">open_proc</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">open_file</span><span class="p">],</span> <span class="n">event</span><span class="o">.</span><span class="n">target_proc</span> <span class="o">==</span> <span class="n">lsass</span><span class="p">)</span>
+<span class="o">...</span>
+
+<span class="n">rules</span> <span class="o">=</span> <span class="p">[</span><span class="n">anti_lass_dump</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># caching of all processed events (detection results) for performance increase</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_rules_based_on_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">filter</span><span class="p">(</span><span class="n">rules</span><span class="p">:</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">input</span> <span class="o">==</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">PI</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">imphash</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">code</span><span class="p">)</span> <span class="c1"># or metadata(process.file) or hash(process.code)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">behaviour_handler</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="n">process_identity</span> <span class="o">=</span> <span class="n">PI</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">process</span><span class="p">)</span>
+
+    <span class="c1"># which behaviour rules are subscribed to this event, e.g. event open process -&gt; lsass-dump</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="n">get_rules_based_on_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">process_identity</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="c1"># previously detected</span>
+            <span class="k">return</span> <span class="n">true</span> <span class="c1"># ALERT!</span>
+
+        <span class="k">elif</span> <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">process_identity</span><span class="p">]</span><span class="o">++</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">process_identity</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># store as known bad</span>
+                <span class="k">return</span> <span class="n">true</span> <span class="c1"># ALERT!</span>
+            <span class="c1"># else: rule checked but no suspicious action found, continue</span>
+
+<span class="c1"># example, "A.exe" opens a proc, but non malicious</span>
+<span class="n">a_pi</span> <span class="o">=</span> <span class="n">PI</span><span class="p">(</span><span class="s2">"a.exe"</span><span class="p">)</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">anti_lsass_dump</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">a_pi</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1"># repeat 10x</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">anti_lsass_dump</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">a_pi</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1"># now (speculated) cutoff is reached, anti_lsass_dump on a_pi will always return non malicious</span>
+</code></pre>
+</div>
+
+<h2>Conclusions</h2>
+
+<ol>
+<li>If your malware is detected when doing X, find the associated rule and decondition it</li>
+<li>??</li>
+<li>??</li>
+<li>Profit</li>
+</ol>
+
+<h2>Further Research</h2>
+
+<ul>
+<li>Do the cache cutoffs depend on [rule] and [process_identity], or only on rule? It should depend on both, else A.exe can decondition the EDR, and EVERY proc on the system is now whitelisted for proc dumping.</li>
+<li>Can the exact PI function be found? Is it really imphash?</li>
+<li>Find more rules besides this <code>anti_lsass_dump</code> and <a href="https://github.com/dobin/SuperMega?tab=readme-ov-file#anti-emulation">C2 Loaders (SirAllocALot)</a> </li>
+</ul>
+
+<h3>Decontitioner Project</h3>
+
+<ul>
+<li>May get more insights with dedicated <a href="https://github.com/cailllev/Deconditioner-Enumerator">Deconditioner Enumerator</a></li>
+<li>see also the follow-up <a href="https://blog.levi.wiki/post/2025-12-06-decondition-enumerator">blog post</a></li>
+</ul>
+
+<h2>Ammendments</h2>
+
+<ul>
+<li>The <code>PI(A.exe)</code> seems to be more complex. Further testing has revealed the following behaviour:
+<ul>
+<li>A.exe was behaviourally detected at some point, meaning as soon as A.exe had a process handle open to lsass, all further dumps were blocked (also non-lsass procs).</li>
+<li>Only after changing an encrypted string (the outfile for the dump) <b>lsass could be dumped again</b>. Let's call this B.exe
+<ul>
+<li>From this follows: <code>PI(B.exe) != PI(A.exe)</code>, else B.exe would also be blocked just as A'.exe, because <code>PI(A.exe) == PI(A'.exe)</code></li>
+</ul></li>
+<li>But now all previous A.exe and A'.exe are <b>again able to dump lsass</b>.
+<ul>
+<li>And from this follow: <code>PI(B.exe) == PI(A.exe)</code>, contradicting the earlier statement.</li>
+</ul></li>
+<li>This could mean there are different process identifier functions, or layers to it.
+<ul>
+<li>Maybe the cutoffs are only per rule, and not per rule+PI. This could clear all known-bad PIs per rule, while still blocking similar exes as long as the cache was not cleared.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<div class="codehilite">
+<pre><span></span><code>    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">process_identity</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="c1"># previously detected</span>
+            <span class="k">return</span> <span class="n">true</span> <span class="c1"># ALERT!</span>
+
+        <span class="k">elif</span> <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">++</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span> <span class="c1"># instead of cache[r.name][process_identity]</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">process_identity</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># store as known bad</span>
+                <span class="k">return</span> <span class="n">true</span> <span class="c1"># ALERT!</span>
+            <span class="c1"># else: rule checked but no suspicious action found, continue</span>
+</code></pre>
+</div>
+
+</article>
+
+        </main>
+
+        
+    </div>
+
+<div height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" data-original-tag="iframe"></div>
+</body></html>

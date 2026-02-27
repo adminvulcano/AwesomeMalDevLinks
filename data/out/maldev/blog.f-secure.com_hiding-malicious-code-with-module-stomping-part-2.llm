@@ -5,26 +5,25 @@ Type:
 Blog Post
 
 Short Summary (4–8 sentences max):
-- This post explains “module stomping,” a Windows in-memory code injection technique where an attacker loads a legitimate DLL/module and overwrites its mapped image with malicious code to blend into normal module-backed memory.  
-- It focuses on the practical implementation details and tradeoffs of stomping a module versus more common injection approaches (e.g., allocating fresh RWX memory), with the goal of reducing suspicious memory artifacts and improving stealth against EDR heuristics.  
-- The article discusses how to select a target module, map/load it, change protections, overwrite sections, and transfer execution while keeping the module’s presence and metadata plausible.  
-- It highlights constraints such as size/section layout, relocations, imports, page protections, and stability issues that arise when replacing a PE image in-place.  
-- Useful for red teamers, pentesters, and malware developers building stealthy loaders, and for blue teams looking to understand and detect module-backed memory tampering.  
-- It’s interesting because it targets a common detection gap: code executing from memory regions that appear to belong to signed/legitimate modules.
+- This post continues F-Secure’s research into “module stomping,” a Windows in-memory evasion technique where an attacker loads a legitimate DLL/module and overwrites its mapped image with malicious code.  
+- It focuses on practical implementation details and tradeoffs versus classic process injection patterns (e.g., RWX allocations, remote thread creation) that are commonly monitored by EDR.  
+- The technique aims to make malicious code appear to originate from a legitimate, signed module and to reduce suspicious memory artifacts by reusing existing module-backed regions.  
+- It discusses Windows loader/PE considerations (sections, protections, relocations/imports) and how to execute the stomped payload reliably.  
+- Useful for red teamers, implant developers, and malware analysts evaluating stealthy in-memory execution, and for blue teams building detections around anomalous module memory and image integrity.  
+- It’s interesting because it highlights detection gaps when defenders over-rely on “new memory allocation + execute” heuristics and don’t validate module-backed memory content.
 
 Technical Focus:
-- Module stomping / module-backed memory tampering
-- Windows PE loading internals (sections, relocations, imports)
-- Virtual memory protections (VirtualProtect/NtProtectVirtualMemory)
-- In-memory payload staging and execution transfer
-- EDR evasion heuristics around RWX and private allocations
-- Detection considerations for modified mapped images
+- Module stomping / DLL image overwrite
+- Windows PE loading semantics (sections, relocations, imports)
+- Memory protection changes (VirtualProtect) and executable mappings
+- Thread start / execution transfer (e.g., APC/thread context/entrypoint redirection)
+- EDR detection surface: module-backed memory integrity vs allocation-based heuristics
 
 Use Cases:
-- Stealthier in-memory execution by overwriting a loaded DLL’s image
-- Building custom loaders that avoid obvious RWX/private executable regions
-- Red team tradecraft research on injection alternatives and their artifacts
-- Defensive engineering: hunting for mismatched module contents vs on-disk images
+- Develop stealthier in-memory payload execution that blends into legitimate module mappings
+- Compare module stomping against process hollowing, reflective loading, and classic shellcode injection
+- Create detection logic for “image-backed region modified” and mismatched PE headers/sections
+- Build lab PoCs to test EDR telemetry around module loads and post-load memory writes
 
 Keywords:
-module stomping, process injection, Windows internals, PE format, DLL, mapped image, section overwrite, relocations, import table, VirtualProtect, NtProtectVirtualMemory, CreateRemoteThread, shellcode, in-memory loader, EDR evasion, memory forensics, image vs private memory, reflective loading, tamper detection
+module stomping, process injection, Windows loader, DLL, PE format, image mapping, VirtualProtect, WriteProcessMemory, memory forensics, EDR evasion, code cave, section permissions, relocations, IAT, entry point, APC, thread context, signed module, image integrity, in-memory execution

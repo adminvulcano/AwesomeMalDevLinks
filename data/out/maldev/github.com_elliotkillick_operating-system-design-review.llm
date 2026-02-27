@@ -2,30 +2,31 @@ Title:
 Operating System Design Review: A systematic analysis of modern systems architecture
 
 Type:
-Research Paper (GitHub Repository)
+Documentation (GitHub repository / long-form research write-up)
 
 Short Summary (4–8 sentences max):
-- This repository is a long-form research write-up analyzing modern operating system architecture with a heavy emphasis on user-mode loaders and concurrency, comparing Windows (10/11), Linux (glibc), and some macOS behavior.  
-- It reverse engineers and documents internal Windows loader mechanisms (NTDLL) such as parallel DLL loading, work queues, loader worker threads, loader events, and module state transitions.  
-- A major theme is why Windows DLL initialization/finalization (`DllMain`, constructors/destructors, thread attach/detach) is fragile, including deadlocks, lock hierarchy issues, and the systemic impact of lazy/delay loading and monolithic DLL dependency graphs.  
-- The paper contrasts Windows design choices with ELF/glibc loader behavior (e.g., init/fini arrays, symbol scope rules, `dlopen`/`dlsym`) and discusses implications for correctness, performance, and security.  
-- It includes traces, WinDbg workflows, and code experiments to reproduce and study loader behavior and edge cases.  
-- Useful for reverse engineers, exploit developers, red teamers doing Windows internals work, and blue team/EDR engineers who need accurate mental models of loader-driven execution and race/deadlock conditions.
+- This repository is a large research write-up comparing modern OS user-mode architecture, centered on loaders/linkers and concurrency, with deep reverse engineering of the Windows loader (NTDLL) and comparisons to glibc/ELF and some macOS behavior.  
+- It documents Windows “parallel loader” internals (work queues, loader worker threads, events, locks) and module lifetime state transitions (LDR_DDAG_STATE), with traces, WinDbg workflows, and supporting code/data.  
+- A major theme is how Windows’ DLL ecosystem (circular dependencies, delay/lazy loading, DLL search order) and loader-lock semantics create correctness, deadlock, and security liabilities (e.g., DllMain constraints, destructor ordering hazards, timing windows).  
+- It also argues that Windows thread lifecycle practices (process exit via NtTerminateProcess, DLL thread notifications, TLS/FLS patterns) lead to unsafe teardown behavior (“process meltdown”) and hard-to-reason-about shutdown states.  
+- Useful for reverse engineers, Windows internals researchers, exploit developers, and defenders who need to understand loader behavior, module initialization edge cases, and where architectural quirks create attack surface or reliability issues.  
+- Interesting because it combines practical reversing artifacts (traces, pseudocode, experiments) with cross-OS design comparisons and concrete failure modes tied to real Windows primitives.
 
 Technical Focus:
-- Windows loader internals (NTDLL Ldr* / Ldrp*), parallel DLL loading, work queues, loader worker threads  
-- Loader synchronization primitives (critical sections, auto-reset events), lock hierarchy, deadlock patterns (ABBA/ABA)  
-- Module lifecycle and dependency graph state (`LDR_DDAG_NODE`, `LDR_DDAG_STATE`, `LDR_DATA_TABLE_ENTRY`, PEB/TEB)  
-- DLL initialization/finalization semantics (`DllMain`, TLS callbacks, constructors/destructors, `DLL_THREAD_ATTACH/DETACH`)  
-- Cross-OS dynamic linking comparison (PE vs ELF, `LoadLibrary/GetProcAddress` vs `dlopen/dlsym`, init/fini arrays)  
-- Lazy/delay loading and its correctness/security implications
+- Windows loader internals (NTDLL Ldrp* functions, parallel loading, loader locks/events)
+- Module dependency graphs and state machines (LDR_DDAG_NODE / LDR_DDAG_STATE)
+- DLL initialization/finalization semantics (DllMain, constructors/destructors, TLS/FLS callbacks)
+- Delay loading / lazy loading mechanics and failure modes
+- Thread lifecycle and process teardown behavior (RtlExitUserProcess, NtTerminateProcess)
+- Cross-OS loader/linker comparison (PE vs ELF, LoadLibrary vs dlopen, symbol resolution)
 
 Use Cases:
-- Reverse engineering Windows loader behavior for implant stability and safe module initialization
-- Debugging and reproducing loader deadlocks/crashes caused by `DllMain`, COM, or thread lifecycle interactions
-- Building more reliable DLL injection/hijacking/hooking approaches by understanding loader constraints
-- Developing detections/telemetry around suspicious module load patterns and loader-worker activity
-- Comparing PE/ELF loader semantics when porting tooling or designing cross-platform loaders/runtime components
+- Reverse engineer Windows loader behavior for reliability/security research
+- Identify deadlock-prone patterns involving loader lock, COM apartments, and DllMain
+- Analyze DLL load/unload ordering bugs and lazy-load side effects in complex apps
+- Build or validate loader emulation/compat layers (Wine/ReactOS gaps, parallel loading)
+- Develop detections/hardening guidance around DLL search order and load-time injection risks
+- Support exploit research involving module loading timing, IAT patch windows, and teardown races
 
 Keywords:
-Windows loader, NTDLL, LdrpQueueWork, LdrpWorkQueue, LdrpDrainWorkQueue, LdrpProcessWork, loader lock, critical section, NtSetEvent, NtWaitForSingleObject, auto-reset event, LDR_DDAG_NODE, LDR_DDAG_STATE, LDR_DATA_TABLE_ENTRY, PEB, TEB, DllMain, DLL_PROCESS_ATTACH, DLL_THREAD_ATTACH, delay load, lazy loading, LoadLibrary, GetProcAddress, glibc loader, ELF, dlopen, dlsym, init_array, fini_array, COM apartment lock, WinDbg, ReactOS, Wine
+Windows loader, NTDLL, LdrpQueueWork, LdrpWorkQueue, LdrpWorkQueueLock, LdrpLoadCompleteEvent, LdrpWorkCompleteEvent, LdrpProcessWork, LDR_DDAG_NODE, LDR_DDAG_STATE, PEB, TEB, loader lock, DllMain, DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH, delay load, lazy loading, LoadLibrary, GetProcAddress, GetModuleHandle, dlopen, dlsym, glibc loader, ELF, TLS, FLS, COM, NtTerminateProcess, RtlExitUserProcess, DLL hijacking, WinSxS, activation contexts

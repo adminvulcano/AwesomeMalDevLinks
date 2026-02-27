@@ -5,24 +5,22 @@ Type:
 Blog Post
 
 Short Summary (4–8 sentences max):
-- This post continues F-Secure’s analysis of how attackers abuse Windows’ built-in `net.exe`/`net1.exe` commands for reconnaissance and lateral movement in Active Directory environments.  
-- It focuses on detection engineering: how to distinguish legitimate administrative usage from attacker “living off the land” activity using command-line patterns, parent/child process context, and execution frequency.  
-- The article discusses telemetry sources and practical hunting logic for common `net` operations (e.g., user/group enumeration, domain queries, share/session listing) and how adversaries chain these commands during discovery.  
-- It is primarily useful for Blue Teams, threat hunters, and SOC analysts building detections in SIEM/EDR, but also helps red teams understand what `net` usage tends to be high-signal.  
-- The key value is translating a ubiquitous Windows admin tool into actionable detection opportunities without relying solely on brittle string matching.
+This post continues F-Secure’s analysis of how attackers abuse the Windows `net.exe`/`net1.exe` utilities (“living off the land”) for discovery and lateral movement preparation. It focuses on detection opportunities that distinguish legitimate administrative usage from attacker tradecraft by correlating process execution context, command-line patterns, and follow-on activity. The article discusses telemetry sources (e.g., Windows event logs/Sysmon/EDR) and how to build higher-fidelity detections around `net` commands used for user/group enumeration, domain queries, and share/session inspection. It emphasizes behavioral detection and correlation rather than simple string-matching, to reduce false positives in enterprise environments. This is primarily useful for Blue Teams and detection engineers, but also helps red teamers understand what `net` usage is likely to trigger alerts. It’s interesting because `net` is ubiquitous and noisy, so practical detection guidance requires careful context and chaining.
 
 Technical Focus:
-- Windows LOLBins (`net.exe`, `net1.exe`) abuse
-- Active Directory / domain discovery via `net` commands
-- Process creation telemetry and command-line analytics
-- Behavioral baselining and anomaly detection for admin tooling
-- Detection rule design (hunting queries, alert tuning)
+- Windows `net.exe` / `net1.exe` LOLBin abuse
+- Command-line analytics and suspicious argument patterns
+- Process ancestry/parent-child relationships (e.g., Office → cmd → net)
+- Log/telemetry correlation (Windows Security logs, Sysmon, EDR)
+- Discovery and enumeration tradecraft in AD environments
+- Detection engineering and false-positive reduction
 
 Use Cases:
 - Build SIEM/EDR detections for suspicious `net` command execution
-- Hunt for AD reconnaissance sequences preceding credential theft or lateral movement
-- Reduce false positives by adding context (parent process, user, host role, time patterns)
-- Create purple-team test cases to validate monitoring coverage for `net.exe` activity
+- Hunt for AD discovery activity preceding credential theft or lateral movement
+- Create correlation rules tying `net` usage to unusual parent processes or remote execution
+- Baseline legitimate admin `net` usage to tune alert thresholds
+- Red-team validation of defensive coverage for common enumeration commands
 
 Keywords:
-net.exe, net1.exe, Windows LOLBins, living-off-the-land, process creation, command-line logging, Sysmon, Windows Security Event ID 4688, Active Directory discovery, domain enumeration, net user, net group, net localgroup, net view, net share, net session, threat hunting, detection engineering, SIEM, EDR
+net.exe, net1.exe, Windows LOLBins, living-off-the-land, command-line detection, process lineage, Sysmon, Windows Security Event Log, SIEM, EDR telemetry, Active Directory discovery, user enumeration, group enumeration, domain reconnaissance, share enumeration, session enumeration, detection engineering, threat hunting, false positives

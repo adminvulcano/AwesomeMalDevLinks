@@ -1,0 +1,617 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Enable block at first sight to detect malware in seconds - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Enable block at first sight to detect malware in seconds - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fconfigure-block-at-first-sight-microsoft-defender-antivirus%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fconfigure-block-at-first-sight-microsoft-defender-antivirus%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fconfigure-block-at-first-sight-microsoft-defender-antivirus%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fconfigure-block-at-first-sight-microsoft-defender-antivirus%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Enable%20block%20at%20first%20sight%20to%20detect%20malware%20in%20seconds%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fconfigure-block-at-first-sight-microsoft-defender-antivirus%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="turn-on-block-at-first-sight">Turn on block at first sight</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p>This article describes an antivirus/antimalware feature known as "block at first sight", and describes how to enable block at first sight for your organization.</p>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>This article is intended for enterprise admins and IT Pros who manage security settings for organizations. If you aren't an enterprise admin or IT Pro but you have questions about block at first sight, see the <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#not-an-enterprise-admin-or-it-pro" data-linktype="self-bookmark">Not an enterprise admin or IT Pro?</a> section.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#prerequisites" aria-label="Section titled: Prerequisites"></a><h2 id="prerequisites" class="heading-anchor">Prerequisites</h2></div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#supported-operating-systems" aria-label="Section titled: Supported operating systems"></a><h3 id="supported-operating-systems" class="heading-anchor">Supported operating systems</h3></div>
+<ul>
+<li>Windows</li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#what-is-block-at-first-sight" aria-label="Section titled: What is &quot;block at first sight&quot;?"></a><h2 id="what-is-block-at-first-sight" class="heading-anchor">What is "block at first sight"?</h2></div>
+<p>Block at first sight is a threat protection feature of next-generation protection that detects new malware and blocks it within seconds. Block at first sight is enabled when certain security settings are enabled:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Cloud protection</a> is turned on;</li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission" data-linktype="relative-path">Sample submission</a> is configured for samples to be sent automatically; and</li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-updates" data-linktype="relative-path">Microsoft Defender Antivirus is up to date</a> on devices.</li>
+</ul>
+<p>In most enterprise organizations, the settings needed to enable block at first sight are configured with Microsoft Defender Antivirus deployments. See <a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Turn on cloud protection in Microsoft Defender Antivirus</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#how-it-works" aria-label="Section titled: How it works"></a><h2 id="how-it-works" class="heading-anchor">How it works</h2></div>
+<p>When Microsoft Defender Antivirus encounters a suspicious but undetected file, it queries our cloud protection backend. The cloud backend applies heuristics, machine learning, and automated analysis of the file to determine whether the files are malicious or not a threat.</p>
+<p>Microsoft Defender Antivirus uses multiple detection and prevention technologies to deliver accurate, intelligent, and real-time protection.</p>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender-endpoint/media/microsoft-defender-atp-next-generation-protection-engines.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/microsoft-defender-atp-next-generation-protection-engines.png" alt="The list of Microsoft Defender Antivirus engines" data-linktype="relative-path">
+</a>
+</span>
+</p>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>To learn more, see <a href="https://www.microsoft.com/security/blog/2019/06/24/inside-out-get-to-know-the-advanced-technologies-at-the-core-of-microsoft-defender-atp-next-generation-protection/" data-linktype="external">(Blog) Get to know the advanced technologies at the core of Microsoft Defender for Endpoint next-generation protection</a>.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#a-few-things-to-know-about-block-at-first-sight" aria-label="Section titled: A few things to know about block at first sight"></a><h2 id="a-few-things-to-know-about-block-at-first-sight" class="heading-anchor">A few things to know about block at first sight</h2></div>
+<ul>
+<li><p>Block at first sight can block nonportable executable files (such as JS, VBS, or macros) and executable files, running the <a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-updates" data-linktype="relative-path">latest Defender antimalware platform</a> on Windows or Windows Server.</p>
+</li>
+<li><p>Block at first sight only uses the cloud protection backend for executable files and nonportable executable files that are downloaded from the Internet, or that originate from the Internet zone. A hash value of the <code>.exe</code> file is checked via the cloud backend to determine if the file is a previously undetected file.</p>
+</li>
+<li><p>If the cloud backend is unable to make a determination, Microsoft Defender Antivirus locks the file and uploads a copy to the cloud. The cloud performs more analysis to reach a determination before it either allows the file to run or blocks it in all future encounters, depending on whether it determines the file to be malicious or not a threat.</p>
+</li>
+<li><p>In many cases, this process can reduce the response time for new malware from hours to seconds.</p>
+</li>
+<li><p>You can <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-cloud-block-timeout-period-microsoft-defender-antivirus" data-linktype="relative-path">specify how long a file should be prevented from running</a> while the cloud-based protection service analyzes the file. And, you can <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-security-center/wdsc-customize-contact-information" data-linktype="absolute-path">customize the message displayed on users' desktops</a> when a file is blocked. You can change the company name, contact information, and message URL.</p>
+</li>
+</ul>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#turn-on-block-at-first-sight-with-microsoft-intune" aria-label="Section titled: Turn on block at first sight with Microsoft Intune"></a><h2 id="turn-on-block-at-first-sight-with-microsoft-intune" class="heading-anchor">Turn on block at first sight with Microsoft Intune</h2></div>
+<ol>
+<li><p>In the Microsoft Intune admin center (<a href="https://intune.microsoft.com/" data-linktype="external">https://intune.microsoft.com</a>), go to <strong>Endpoint security</strong> &gt; <strong>Antivirus</strong>.</p>
+</li>
+<li><p>Select an existing policy, or create a new policy using the <strong>Microsoft Defender Antivirus</strong> profile type. In our example, we selected <strong>Windows 10, Windows 11, or Windows Server</strong> for the platform.</p>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender-endpoint/media/intune-mdav-policy.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/intune-mdav-policy.png" alt="Screenshot of new MDAV policy creation in Intune." data-linktype="relative-path">
+</a>
+</span>
+</p>
+</li>
+<li><p>Set <strong>Allow cloud protection</strong> to <strong>Allowed. Turns on Cloud Protection</strong>.
+<span class="mx-imgBorder">
+<img src="https://learn.microsoft.com/en-us/defender-endpoint/media/intune-mdav-cpallowed.png" alt="Screenshot of Cloud Protection set to allowed in Intune." data-linktype="relative-path">
+</span>
+</p>
+</li>
+<li><p>Scroll down to <strong>Submit Samples Consent</strong>, and select one of the following settings:</p>
+<ul>
+<li><strong>Send all samples automatically</strong></li>
+<li><strong>Send safe samples automatically</strong></li>
+</ul>
+</li>
+<li><p>Apply the Microsoft Defender Antivirus profile to a group, such as <strong>All users</strong>, <strong>All devices</strong>, or <strong>All users and devices</strong>.</p>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#turn-on-block-at-first-sight-with-group-policy" aria-label="Section titled: Turn on block at first sight with Group Policy"></a><h2 id="turn-on-block-at-first-sight-with-group-policy" class="heading-anchor">Turn on block at first sight with Group Policy</h2></div>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>We recommend using Intune or Microsoft Configuration Manager to turn on block at first sight.</p>
+</div>
+<ol>
+<li><p>On your Group Policy management computer, open the <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc731212(v=ws.11)" data-linktype="absolute-path">Group Policy Management Console</a>, right-click the Group Policy Object you want to configure and select <strong>Edit</strong>.</p>
+</li>
+<li><p>Using the <strong>Group Policy Management Editor</strong> go to <strong>Computer configuration</strong> &gt; <strong>Administrative templates</strong> &gt; <strong>Windows Components</strong> &gt; <strong>Microsoft Defender Antivirus</strong> &gt; <strong>MAPS</strong>.</p>
+</li>
+<li><p>In the MAPS section, double-click <strong>Configure the 'Block at First Sight' feature</strong>, and set it to <strong>Enabled</strong>, and then select <strong>OK</strong>.</p>
+<div class="alert is-primary">
+<p class="alert-title"><span class="docon docon-status-info-outline" aria-hidden="true"></span> Important</p>
+<p>Setting to <strong>Always prompt (0)</strong> lowers the protection state of the device. Setting to <strong>Never send (2)</strong> means block at first sight won't function.</p>
+</div>
+</li>
+<li><p>In the MAPS section, double-click <strong>Send file samples when further analysis is required</strong>, and set it to <strong>Enabled</strong>. Under <strong>Send file samples when further analysis is required</strong>, select <strong>Send all samples</strong>, and then select <strong>OK</strong>.</p>
+</li>
+<li><p>Redeploy your Group Policy Object across your network as you usually do.</p>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#confirm-block-at-first-sight-is-enabled-on-individual-client-devices" aria-label="Section titled: Confirm block at first sight is enabled on individual client devices"></a><h2 id="confirm-block-at-first-sight-is-enabled-on-individual-client-devices" class="heading-anchor">Confirm block at first sight is enabled on individual client devices</h2></div>
+<p>You can confirm that block at first sight is enabled on individual client devices using the Windows Security app. Block at first sight is automatically enabled as long as <strong>Cloud-delivered protection</strong> and <strong>Automatic sample submission</strong> are both turned on.</p>
+<ol>
+<li><p>Open the Windows Security app.</p>
+</li>
+<li><p>Select <strong>Virus &amp; threat protection</strong>, and then, under <strong>Virus &amp; threat protection settings</strong>, select <strong>Manage Settings</strong>.</p>
+<p><span class="mx-imgBorder">
+<a href="https://learn.microsoft.com/en-us/defender/media/wdav-protection-settings-wdsc.png#lightbox" data-linktype="absolute-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="https://learn.microsoft.com/en-us/defender/media/wdav-protection-settings-wdsc.png" alt="The Virus &amp; threat protection settings label in the Windows Security app" data-linktype="absolute-path">
+</a>
+</span>
+</p>
+</li>
+<li><p>Confirm that <strong>Cloud-delivered protection</strong> and <strong>Automatic sample submission</strong> are both turned on.</p>
+</li>
+</ol>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<ul>
+<li>If the prerequisite settings are configured and deployed using Group Policy, the settings described in this section are greyed-out and unavailable for use on individual endpoints.</li>
+<li>Changes made through a Group Policy Object must first be deployed to individual endpoints before the setting gets updated in Windows Settings.</li>
+</ul>
+</div>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#turn-off-block-at-first-sight" aria-label="Section titled: Turn off block at first sight"></a><h2 id="turn-off-block-at-first-sight" class="heading-anchor">Turn off block at first sight</h2></div>
+<div class="alert is-danger">
+<p class="alert-title"><span class="docon docon-status-failure-outline" aria-hidden="true"></span> Caution</p>
+<p>Turning off block at first sight lowers the protection state of your devices and your network. We don't recommend disabling block at first sight protection permanently.</p>
+</div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#turn-off-block-at-first-sight-with-microsoft-intune" aria-label="Section titled: Turn off block at first sight with Microsoft Intune"></a><h3 id="turn-off-block-at-first-sight-with-microsoft-intune" class="heading-anchor">Turn off block at first sight with Microsoft Intune</h3></div>
+<ol>
+<li><p>Go to the Microsoft Intune admin center (<a href="https://intune.microsoft.com/" data-linktype="external">https://intune.microsoft.com</a>) and sign in.</p>
+</li>
+<li><p>Go to <strong>Endpoint security</strong> &gt; <strong>Antivirus</strong>, and then select your Microsoft Defender Antivirus policy.</p>
+</li>
+<li><p>Under <strong>Manage</strong>, choose <strong>Properties</strong>.</p>
+</li>
+<li><p>Next to <strong>Configuration settings</strong>, choose <strong>Edit</strong>.</p>
+</li>
+<li><p>Set <strong>Allow cloud protection</strong> to <strong>Not allowed. Turns off Cloud Protection</strong>.</p>
+</li>
+<li><p>Review and save your settings.</p>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#turn-off-block-at-first-sight-with-group-policy" aria-label="Section titled: Turn off block at first sight with Group Policy"></a><h3 id="turn-off-block-at-first-sight-with-group-policy" class="heading-anchor">Turn off block at first sight with Group Policy</h3></div>
+<ol>
+<li><p>On your Group Policy management computer, open the <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc731212(v=ws.11)" data-linktype="absolute-path">Group Policy Management Console</a>, right-click the Group Policy Object you want to configure, and then select <strong>Edit</strong>.</p>
+</li>
+<li><p>Using the <strong>Group Policy Management Editor</strong>, go to <strong>Computer configuration</strong> and select <strong>Administrative templates</strong>.</p>
+</li>
+<li><p>Expand the tree through <strong>Windows components</strong> &gt; <strong>Microsoft Defender Antivirus</strong> &gt; <strong>MAPS</strong>.</p>
+</li>
+<li><p>Double-click <strong>Configure the 'Block at First Sight' feature</strong> and set the option to <strong>Disabled</strong>.</p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>Disabling block at first sight doesn't disable or alter the prerequisite group policies.</p>
+</div>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#not-an-enterprise-admin-or-it-pro" aria-label="Section titled: Not an enterprise admin or IT Pro?"></a><h2 id="not-an-enterprise-admin-or-it-pro" class="heading-anchor">Not an enterprise admin or IT Pro?</h2></div>
+<p>If you aren't an enterprise admin or an IT Pro, but you have questions about block at first sight, this section is for you. Block at first sight is a threat protection feature that detects and blocks malware within seconds. Although there isn't a specific setting called "Block at first sight," the feature is enabled when certain settings are configured on your device.</p>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#how-to-manage-block-at-first-sight-on-or-off-on-your-own-device" aria-label="Section titled: How to manage block at first sight on or off on your own device"></a><h3 id="how-to-manage-block-at-first-sight-on-or-off-on-your-own-device" class="heading-anchor">How to manage block at first sight on or off on your own device</h3></div>
+<p>If you have a personal device that isn't managed by an organization, you might be wondering how to turn block at first sight on or off. You can use the Windows Security app to manage block at first sight.</p>
+<ol>
+<li><p>On your Windows 10 or Windows 11 computer, open the Windows Security app.</p>
+</li>
+<li><p>Select <strong>Virus &amp; threat protection</strong>.</p>
+</li>
+<li><p>Under <strong>Virus &amp; threat protection settings</strong>, select <strong>Manage settings</strong>.</p>
+</li>
+<li><p>Take one of the following steps:</p>
+<ul>
+<li><p>To enable block at first sight, make sure that both <strong>Cloud-delivered protection</strong> and <strong>Automatic sample submission</strong> are both turned on.</p>
+</li>
+<li><p>To disable block at first sight, turn off <strong>Cloud-delivered protection</strong> or <strong>Automatic sample submission</strong>.</p>
+<div class="alert is-danger">
+<p class="alert-title"><span class="docon docon-status-failure-outline" aria-hidden="true"></span> Caution</p>
+<p>Turning off block at first sight lowers the level of protection for your device. We don't recommend permanently disabling block at first sight.</p>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#see-also" aria-label="Section titled: See also"></a><h2 id="see-also" class="heading-anchor">See also</h2></div>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows" data-linktype="relative-path">Microsoft Defender Antivirus in Windows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus" data-linktype="relative-path">Enable cloud-delivered protection</a></li>
+<li><a href="https://support.microsoft.com/windows/stay-protected-with-windows-security-2ae0363d-0ada-c064-8b56-6a39afb6a963" data-linktype="external">Stay protected with Windows Security</a></li>
+<li><a href="https://learn.microsoft.com/en-us/defender-endpoint/onboarding" data-linktype="relative-path">Onboard to Microsoft Defender for Endpoint</a></li>
+</ul>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/set-up-microsoft-defender-cloud/?source=recommendations">
+						Set up Microsoft Defender for Cloud - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Discover how to leverage Microsoft Defender for Cloud through the Azure portal to ensure the security of your Azure services and workloads, offering continuous threat detection and prevention.
+		</p>
+	
+		</div>
+	<!---->
+		<div class="position-relative margin-top-sm">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Certification
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/credentials/certifications/modern-desktop/?source=recommendations">
+						Microsoft 365 Certified: Endpoint Administrator Associate - Certifications
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Plan and execute an endpoint deployment strategy, using essential elements of modern management, co-management approaches, and Microsoft Intune integration.
+		</p>
+	
+		</div>
+	<!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2025-10-20T08:00:00.000Z" data-article-date-source="calculated" class="">10/20/2025</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

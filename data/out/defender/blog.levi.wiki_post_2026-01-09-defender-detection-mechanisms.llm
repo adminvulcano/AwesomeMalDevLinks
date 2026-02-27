@@ -1,0 +1,31 @@
+Title:
+Defender’s different Detection Mechanisms
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post analyzes Microsoft Defender for Endpoint (MDE) behavior by interpreting ETW logs collected with the author’s EDRi (EDR-Introspection) framework, which monitors MsMpEng.exe activity.  
+- It compares four test attacks (Cobalt Strike loader and LSASS dumper, each with/without bypass techniques) to identify which are detected and what Defender does in response (e.g., on-disk detection vs. runtime freezing after LSASS access/MiniDumpWriteDump).  
+- The core contribution is a mapping of recurring Microsoft-Antimalware-Engine ETW events (stream scan, emulation, MetaStore operations, cloud/SpyNet reporting) into a consistent sequence that approximates Defender’s decision pipeline.  
+- It highlights that emulation-related memory allocation/protection changes occur inside MsMpEng and that MsMpEng’s process memory reads are preceded by NtOpenProcess calls observable in Kernel-Audit ETW, with “desiredaccess” providing strong hints about the next action.  
+- The author proposes that defenders/attackers could predict MDE actions using only Kernel-Audit-API-Calls ETW, enabling “AURA/BITE” malware concepts (inferring EDR intent from access patterns).  
+- Useful for red teamers and security researchers studying Defender internals/telemetry, and for blue teamers validating what ETW signals reveal about EDR behavior.
+
+Technical Focus:
+- ETW telemetry analysis (Microsoft-Antimalware-Engine, Kernel-Audit-API-Calls)
+- MsMpEng.exe introspection and ntdll hooking (EDRi framework)
+- Defender emulation/heuristics pipeline (stream scan, UfsScanFile/UfsScanProc, MOAC)
+- MetaStore identifier storage/query and hash extraction (GetHashes)
+- SpyNet/Microsoft cloud verdict reporting
+- Process access rights (“desiredaccess”) correlation to subsequent NtQueryInformationProcess behavior
+
+Use Cases:
+- Reverse-engineer and model Defender/MDE detection workflow from ETW traces
+- Identify which stage triggers detection (disk/static vs. emulation vs. behavior/memory)
+- Build detections around suspicious MsMpEng access patterns (process opens, memory reads)
+- Evaluate bypass techniques (obfuscation, “deconditioning”) against Defender responses
+- Research “EDR intent inference” via access-rights telemetry (AURA/BITE hypothesis)
+
+Keywords:
+Microsoft Defender for Endpoint, MDE, MsMpEng.exe, ETW, Microsoft-Antimalware-Engine, Microsoft-Windows-Kernel-Audit-API-Calls, PsOpenProcess, desiredaccess, NtOpenProcess, NtQueryInformationProcess, UfsScanFile, UfsScanProc, MOAC, MetaStore, SpyNet, GetHashes, emulation, heuristics, MiniDumpWriteDump, LSASS dumping, Cobalt Strike loader, ntdll hooking, EDRi, EDR-Introspection, AURA malware, BITE malware

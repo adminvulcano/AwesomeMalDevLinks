@@ -1,0 +1,31 @@
+Title:
+Client behavioral blocking (Microsoft Defender for Endpoint)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Defender for Endpoint document describes “client behavioral blocking,” a Windows endpoint capability that detects suspicious behaviors locally and uses cloud-backed ML classification to block malicious artifacts in near real time.  
+- It focuses on stopping attacks both pre-execution and post-execution by monitoring suspicious activity, collecting process trees, and submitting behavior signals to Microsoft’s cloud protection service for rapid verdicting.  
+- When malicious behavior is confirmed, the related artifact (file/app) is blocked and remediation can occur automatically, with alerts surfaced in the Microsoft Defender portal.  
+- Detections are mapped to MITRE ATT&CK tactics and use a consistent naming scheme (e.g., `Behavior:Win32/DefenseEvasion.*!ml`) to indicate the observed attack stage.  
+- The page also outlines prerequisites and related controls that strengthen coverage (onboarding, EDR in block mode, ASR rules, next-gen AV protection, and security baselines).  
+- It’s most useful for Blue Teams/SecOps and defenders validating endpoint prevention posture and understanding how Defender’s behavior-based blocking and feedback-loop protections operate.
+
+Technical Focus:
+- Behavior-based detection and blocking on endpoints
+- Cloud protection + machine learning artifact classification
+- Process tree telemetry and near-real-time verdicting
+- MITRE ATT&CK-aligned detection naming conventions
+- EDR in block mode and Attack Surface Reduction (ASR) integration
+- Automated remediation and alerting in Microsoft Defender portal
+
+Use Cases:
+- Validate and harden Defender for Endpoint prevention configuration (EDR block mode, ASR, baselines)
+- Interpret behavior-based detection names and map them to ATT&CK tactics during investigations
+- Triage blocked activity using process trees and associated alerts in Defender portal
+- Assess organizational readiness for stopping fileless/in-memory and post-compromise behaviors
+- Build detection engineering playbooks around Defender behavioral alerts and containment
+
+Keywords:
+Microsoft Defender for Endpoint, Microsoft Defender Antivirus, client behavioral blocking, behavioral blocking, cloud protection, machine learning, process tree, artifact blocking, automated remediation, EDR in block mode, Attack Surface Reduction, ASR rules, next-generation protection, MITRE ATT&CK, Behavior:Win32, alerts queue, Microsoft Defender portal, feedback-loop blocking, fileless attacks, in-memory attacks

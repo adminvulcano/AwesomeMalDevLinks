@@ -1,0 +1,27 @@
+Title:
+Supermega — A shellcode loader laboratory for Red Team EDR bypass experimentation (Cordyceps EXE/DLL injection)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+Supermega is a framework/lab to rapidly prototype and test different Windows shellcode “carrier” (loader) implementations and injection strategies aimed at bypassing EDR. It supports combining multiple input payloads (shellcode/DLL) with multiple benign “injectable” EXEs, then producing an “infected” executable where a carrier stub in `.text` loads/decodes/executes a payload placed in `.text` or `.rdata`. The workflow leverages a C→ASM→EXE→shellcode pipeline (inspired by hasherezade’s paper) with templated C (jinja2) and logged intermediate artifacts to ease iteration and debugging. Techniques discussed include entrypoint modification vs backdooring/hijacking code paths (e.g., inside `main()`), IAT reuse/patching, memory permission transitions (RW→RX, RW→RWX, RWX→RX), and keeping payloads in IMAGE-backed sections to improve OPSEC against memory scanners. It also covers a DLL “in-memory form” loader that performs relocations and import resolution to avoid PRIVATE executable memory regions. Useful primarily for Red Teamers, pentesters, and offensive security researchers building/testing loaders and studying EDR detection boundaries.
+
+Technical Focus:
+- PE file modification (entrypoint change, code backdooring/hijack inside `main`, section placement)
+- Shellcode loader patterns (VirtualAlloc/VirtualProtect, execute-from-memory)
+- IAT reuse and optional IAT patching
+- Payload encoding/decoding (e.g., XOR) and templated loader generation (C/jinja2 → ASM cleanup)
+- IMAGE vs PRIVATE memory tradeoffs; section permission changes (RWX→RX) / “module stomping”-adjacent considerations
+- DLL preloading/in-memory mapping (relocations, import resolution) from an injected IMAGE section
+
+Use Cases:
+- Build and compare multiple loader variants against different EDR products/configurations
+- Generate “carrier” shellcode from C templates for quick iteration and customization
+- Experiment with payload placement in `.text` vs `.rdata` and different invocation methods (entrypoint vs hijack)
+- Test OPSEC tradeoffs: PRIVATE RX regions vs modified IMAGE sections and their detectability
+- Prototype DLL-loading approaches that keep execution in IMAGE-backed memory
+- Regression/integration testing of loader changes using automated execution checks
+
+Keywords:
+Supermega, Cordyceps, shellcode loader, EDR bypass, PE injection, EXE infection, DLL injection, .text section, .rdata section, entrypoint patching, code cave, main hijack, VirtualAlloc, VirtualProtect, RWX to RX, RW to RX, IAT reuse, IAT patching, payload encryption, XOR decoder, IMAGE vs PRIVATE memory, relocations, import resolution, reflective loading, anti-emulation, guardrails

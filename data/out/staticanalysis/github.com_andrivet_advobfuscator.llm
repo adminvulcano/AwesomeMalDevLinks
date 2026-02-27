@@ -1,0 +1,26 @@
+Title:
+ADVobfuscator (C++20 compile-time obfuscation library)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+ADVobfuscator is a C++20 header-based library that performs compile-time generation of obfuscated/encrypted constants and code constructs without external tooling or compiler modifications. It targets the common reverse-engineering problem of plaintext strings and static data being easily recoverable from binaries by transforming them at compile time and decoding at runtime. The repo includes mechanisms for obfuscated strings/byte blocks, AES-128 compile-time encryption (with some compiler limitations), compile-time random generation, and a compile-time finite state machine approach to obfuscate function calls. It is primarily useful for red team tool developers, malware developers, and software protectors who want to raise static analysis cost and reduce obvious indicators in binaries. It’s interesting because it leverages modern C++ metaprogramming/constexpr to push obfuscation into the compilation pipeline, making it portable across toolchains (GCC/Clang/MSVC) when built in Release mode.
+
+Technical Focus:
+- C++20 constexpr/metaprogramming for compile-time transformations
+- Compile-time string and byte-array obfuscation
+- AES-128 compile-time encryption/decryption patterns
+- Compile-time PRNG / randomization for per-build variance
+- Finite State Machine (FSM) techniques to obfuscate control flow / calls
+- Toolchain/optimization constraints (Release-only behavior)
+
+Use Cases:
+- Hide sensitive strings (URLs, mutex names, commands, registry paths) from static extraction
+- Obfuscate embedded configuration blobs or shellcode-like byte arrays in C++ implants/tools
+- Add per-build variability to reduce signature stability across compiled artifacts
+- Increase reverse-engineering effort for proprietary agents or red team payload components
+- Demonstrate/teach modern C++ compile-time obfuscation techniques via examples/tests
+
+Keywords:
+C++20, constexpr, template metaprogramming, compile-time obfuscation, string obfuscation, data obfuscation, AES-128, AES string, std::array, compile-time random, PRNG, finite state machine, control-flow obfuscation, static analysis resistance, reverse engineering, GCC, Clang, MSVC, Release build, CMake

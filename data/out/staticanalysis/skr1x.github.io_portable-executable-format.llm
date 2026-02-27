@@ -1,31 +1,26 @@
 Title:
-Portable Executable (PE) Format Deep Dive (Headers, Sections, RVA Translation) + Homemade PE Parser
+Portable Executable (PE) Format Deep Dive (Headers, Sections, Data Directories) + Homemade PE Parser
 
 Type:
 Blog Post
 
 Short Summary (4–8 sentences max):
-- This write-up is a detailed walkthrough of the Windows Portable Executable (PE) format, motivated by the author’s earlier failure to run an EXE purely from memory (reflective loading) using basic injection APIs.  
-- It explains how a PE is laid out on disk and how it is mapped in memory, focusing on the DOS header/stub, NT headers, optional header fields (ImageBase, EntryPoint, SizeOfImage), data directories, and section headers.  
-- The post drills into key loader-relevant structures: Import Table/IAT resolution, Export Table parsing (DLLs), and Base Relocation processing when the image is not loaded at its preferred base.  
-- A practical RVA→file offset conversion method is provided, including C code to locate the containing section and compute the real file offset.  
-- It culminates in building a simple PE parser that prints headers, sections, imports/exports, and relocations, with example outputs for an EXE, a DLL, and ntdll.dll.  
-- Useful for red teamers, malware developers, reverse engineers, and defenders who need to understand manual mapping/reflective loading prerequisites and what artifacts loaders rely on.
+This write-up is a detailed walkthrough of the Windows Portable Executable (PE) format motivated by a failed attempt to run an EXE purely from memory (reflective loading). It explains how a PE is laid out on disk and how key metadata is used by the Windows loader, focusing on DOS/NT/Optional headers, section headers, and core data directories. The author breaks down import resolution (INT/IAT thunks), exports (primarily for DLLs), and base relocations (IMAGE_BASE_RELOCATION blocks and entry types like IMAGE_REL_BASED_DIR64). It also covers RVA-to-file-offset translation using section table metadata (VirtualAddress, VirtualSize, PointerToRawData). The post culminates in building a simple PE parser using winnt.h structures and demonstrates output against a sample EXE, a sample DLL, and ntdll.dll. Useful for red teamers/malware developers implementing loaders/injectors and for reverse engineers needing a practical PE-structure refresher.
 
 Technical Focus:
-- PE header structures (IMAGE_DOS_HEADER, IMAGE_NT_HEADERS, IMAGE_OPTIONAL_HEADER)
-- Data directories (Import, Export, Base Reloc, IAT) and their parsing
-- Import resolution via thunks (OriginalFirstThunk/FirstThunk) and IAT patching
-- Base relocations (IMAGE_BASE_RELOCATION, relocation entries, IMAGE_REL_BASED_DIR64)
-- Section table semantics (VirtualAddress, RawData pointers, characteristics/protections)
-- RVA/VA vs file offset translation logic
+- PE headers: IMAGE_DOS_HEADER, IMAGE_NT_HEADERS, IMAGE_OPTIONAL_HEADER (PE32+)
+- Data directories: Import Table, Export Table, Base Relocation Table, IAT
+- Import resolution internals: IMAGE_IMPORT_DESCRIPTOR, IMAGE_THUNK_DATA, INT vs IAT
+- Relocations: IMAGE_BASE_RELOCATION blocks, relocation entry parsing, IMAGE_REL_BASED_DIR64
+- Sections and memory mapping metadata: IMAGE_SECTION_HEADER, characteristics/protections
+- Address translation: RVA/VA/ImageBase concepts and RVA→Raw File Offset conversion
 
 Use Cases:
-- Implementing or debugging reflective PE loading / manual mapping loaders
-- Writing PE parsing tooling for triage, malware analysis, or build verification
-- Understanding why naive WriteProcessMemory + CreateRemoteThread execution fails for full EXEs
-- Extracting imported APIs/DLL dependencies and exported symbols from binaries
-- Validating relocation coverage and loader behavior when ImageBase differs
+- Implementing reflective PE loading / custom in-memory loaders
+- Writing PE parsing utilities for triage, tooling, or implant staging
+- Reverse engineering PE layout issues (entry point, imports, relocations)
+- Validating/inspecting imports/exports/relocs for malware analysis
+- Debugging process injection approaches that fail due to improper mapping
 
 Keywords:
-PE format, Portable Executable, IMAGE_DOS_HEADER, IMAGE_NT_HEADERS64, IMAGE_OPTIONAL_HEADER64, DataDirectory, IMAGE_IMPORT_DESCRIPTOR, IAT, thunk, OriginalFirstThunk, FirstThunk, IMAGE_EXPORT_DIRECTORY, IMAGE_BASE_RELOCATION, IMAGE_REL_BASED_DIR64, section headers, RVA, VA, file offset, manual mapping, reflective loading, winnt.h
+Portable Executable, PE32+, IMAGE_DOS_HEADER, e_lfanew, IMAGE_NT_HEADERS64, IMAGE_OPTIONAL_HEADER64, ImageBase, AddressOfEntryPoint, RVA, VA, section alignment, file alignment, IMAGE_SECTION_HEADER, data directories, IMAGE_IMPORT_DESCRIPTOR, Import Address Table, IAT, OriginalFirstThunk, FirstThunk, IMAGE_THUNK_DATA64, GetProcAddress, LoadLibraryW, IMAGE_EXPORT_DIRECTORY, IMAGE_BASE_RELOCATION, IMAGE_REL_BASED_DIR64, reflective loading, WriteProcessMemory, CreateRemoteThread, CreateProcess

@@ -1,0 +1,26 @@
+Title:
+HolyGrail — BYOVD Hunter for Prioritizing Windows Drivers
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+HolyGrail is a Rust-based static analysis tool that helps identify Windows kernel drivers (.sys) that are good candidates for Bring Your Own Vulnerable Driver (BYOVD) abuse. It aims to reduce manual triage by scanning drivers for kernel imports and characteristics commonly used in BYOVD exploitation chains (e.g., memory/MDL primitives, section mapping, cross-process read/write, process control, and device I/O). The tool also checks candidates against Microsoft Windows 10/11 Driver Block Policies (version/hash/certificate) and flags drivers listed in LoLDrivers. It provides “comms hints” by looking for device interfaces that could enable a simple user-mode IOCTL bridge. This is primarily useful for red teams and security researchers hunting loadable, less-known drivers with useful primitives, and secondarily for defenders auditing fleets for BYOVD exposure. Its value is in combining import-based capability heuristics with real-world allow/block signals (Blocklist + LoLDrivers) to prioritize analysis.
+
+Technical Focus:
+- BYOVD candidate discovery and driver triage
+- Static analysis of kernel imports and driver capabilities
+- Microsoft Driver Block Rules (Win10/Win11) matching (version/hash/cert)
+- LoLDrivers dataset correlation
+- Device objects / IOCTL interface discovery (“comms path” hints)
+- Windows kernel primitives (MDL, section/VM mapping, cross-process R/W)
+
+Use Cases:
+- Rapidly triage large collections of .sys files to find BYOVD-relevant primitives
+- Identify drivers likely to load on Win10/Win11 without block policy issues
+- Filter out well-known/flagged drivers by checking LoLDrivers presence
+- Support manual reverse engineering by prioritizing high-signal driver candidates
+- Defensive auditing: detect risky third-party drivers deployed in an environment
+
+Keywords:
+BYOVD, Bring Your Own Vulnerable Driver, Windows kernel, driver.sys, kernel imports, IOCTL, device object, MDL, section mapping, virtual memory mapping, cross-process read write, process termination, Microsoft Driver Blocklist, Windows 10, Windows 11, LoLDrivers, Authenticode, certificate hash, Rust, static analysis

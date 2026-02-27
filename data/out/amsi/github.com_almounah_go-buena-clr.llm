@@ -1,0 +1,24 @@
+Title:
+go-buena-clr — Good CLR Host with Native Patchless AMSI Bypass
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+go-buena-clr is a Go implementation of a “good” .NET CLR host based on Joshua Magri’s “Being a Good CLR Host” technique, built on top of Ne0nd0g’s go-clr. It focuses on hosting the CLR via custom hosting interfaces (notably `IHostControl`) to implement `ProvideAssembly`, enabling assembly loading via `Load_2` instead of `Load_3`. This design is used to bypass AMSI scanning “natively” without patching AMSI in memory (avoiding common behavioral detections around AMSI patching). The repo includes an example (“BuenaVillage”) that embeds a .NET tool (e.g., Rubeus) and executes it with arguments through the custom host. It’s primarily useful for red teamers/pentesters and offensive tool developers who need in-process .NET execution with reduced AMSI friction. It’s interesting because it leverages CLR hosting semantics rather than direct AMSI tampering or breakpoint-based bypasses.
+
+Technical Focus:
+- CLR hosting from Go via COM interfaces (`ICLRMetaHost`, `ICLRRuntimeHost`, `IHostControl`)
+- Custom `ProvideAssembly` implementation to control assembly resolution/loading
+- .NET in-memory execution (embedded assembly bytes, entrypoint invocation)
+- AMSI bypass via alternate assembly load path (`Load_2` vs `Load_3`)
+- Interop details: GUIDs, HRESULT handling, SAFEARRAY/VARIANT marshaling
+
+Use Cases:
+- Execute embedded .NET tradecraft tools (e.g., Rubeus) from a Go loader
+- Build custom implants/loaders that run managed payloads without AMSI memory patching
+- Research/demonstrate CLR hosting-based AMSI evasion techniques
+- Integrate .NET execution into C2 agents written in Go
+
+Keywords:
+Go, CLR hosting, .NET, IHostControl, ProvideAssembly, ICLRMetaHost, ICLRRuntimeHost, AppDomain, Assembly.Load, Load_2, Load_3, AMSI, AMSI bypass, patchless bypass, in-memory execution, COM interop, GUID, HRESULT, SAFEARRAY, Rubeus

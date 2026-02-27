@@ -1,0 +1,26 @@
+Title:
+Next-generation protection overview (Microsoft Defender for Endpoint)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+This Microsoft Learn page summarizes “next-generation protection” capabilities in Microsoft Defender for Endpoint, centered on Microsoft Defender Antivirus. It explains how Defender addresses modern polymorphic malware using local and cloud ML models, behavior analysis, and heuristics to detect threats early (including potentially unwanted/unsafe apps). The article highlights key components: real-time behavior-based protection, cloud-delivered protection for rapid emerging-threat blocking, and frequent security/product updates. It also points to configuration guidance for Defender Antivirus features and notes cross-platform references (macOS, Linux, Android, iOS). A practical section calls out performance impacts of AV scanning and recommends using the Defender Antivirus Performance Analyzer PowerShell tool to identify scan hotspots. Useful primarily for defenders/endpoint administrators and blue teams planning or tuning Defender deployments.
+
+Technical Focus:
+- Behavior-based and heuristic real-time protection (file/process monitoring)
+- Cloud-delivered protection and cloud ML inference
+- Local ML models and predictive detection
+- Defender Antivirus security intelligence/product update mechanisms
+- Performance tuning via Defender Antivirus Performance Analyzer (PowerShell)
+- Cross-platform Defender for Endpoint configuration references
+
+Use Cases:
+- Baseline understanding of Defender for Endpoint “next-gen” AV protections for enterprise endpoints
+- Configure and validate real-time and cloud-delivered protection settings
+- Tune Defender Antivirus performance by identifying high-cost paths/processes/extensions
+- Map Defender capabilities across Windows, macOS, Linux, Android, and iOS deployments
+- Support security operations documentation and control selection for endpoint protection
+
+Keywords:
+Microsoft Defender for Endpoint, Microsoft Defender Antivirus, next-generation protection, real-time protection, behavior monitoring, heuristics, machine learning, cloud-delivered protection, polymorphic malware, predictive detection, unsafe applications, security intelligence updates, product updates, Performance Analyzer, PowerShell, endpoint protection, macOS Defender, Linux Defender, Intune antivirus policy, Microsoft 365 Business Premium

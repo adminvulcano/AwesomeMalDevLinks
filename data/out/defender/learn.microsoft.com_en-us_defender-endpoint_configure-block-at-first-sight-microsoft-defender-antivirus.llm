@@ -1,0 +1,31 @@
+Title:
+Turn on block at first sight (Microsoft Defender Antivirus / Microsoft Defender for Endpoint)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn article explains “Block at first sight” (BAFS), a Microsoft Defender Antivirus next-gen protection feature that rapidly blocks previously unseen malware using cloud-delivered analysis.  
+- It addresses the gap between local signature/heuristic detection and emerging threats by querying Microsoft’s cloud backend and optionally uploading suspicious samples for automated analysis.  
+- The write-up details prerequisites (cloud protection enabled, automatic sample submission, up-to-date Defender platform) and clarifies that BAFS primarily applies to Internet-originated executables and certain non-PE content (JS/VBS/macros).  
+- It covers operational behavior such as temporarily preventing execution (“cloud block timeout”) while the cloud makes a determination, and notes that response time can drop from hours to seconds.  
+- Configuration guidance is provided for enterprise deployment via Microsoft Intune and Group Policy, plus verification steps on endpoints via Windows Security settings.  
+- Useful mainly for Blue Teams/endpoint admins, but also relevant to Red Teams for understanding cloud-based execution gating and where “Mark-of-the-Web/Internet Zone” provenance affects detonation.
+
+Technical Focus:
+- Microsoft Defender Antivirus cloud-delivered protection (MAPS)
+- Automatic sample submission and cloud backend automated analysis
+- Internet Zone / Mark-of-the-Web (MOTW) influence on scanning decisions
+- Cloud block timeout / execution lock while verdict is pending
+- Intune Endpoint Security (Antivirus policy) configuration
+- Group Policy settings under Defender Antivirus \> MAPS
+
+Use Cases:
+- Deploying BAFS enterprise-wide via Intune to reduce time-to-block for new malware
+- Hardening endpoints by enforcing cloud protection + automatic sample submission
+- Validating endpoint posture (confirming cloud-delivered protection and sample submission are enabled)
+- Tuning user impact by adjusting cloud block timeout and customizing block notifications
+- Assessing attacker tradecraft constraints around Internet-originated payload execution
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, Block at First Sight, BAFS, cloud-delivered protection, MAPS, automatic sample submission, cloud backend, machine learning, heuristics, automated analysis, Mark-of-the-Web, Internet Zone, non-PE files, JS, VBS, macros, Intune Endpoint security, Group Policy, cloud block timeout

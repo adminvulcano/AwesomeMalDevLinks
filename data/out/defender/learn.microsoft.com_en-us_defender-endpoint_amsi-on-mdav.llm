@@ -1,0 +1,30 @@
+Title:
+Anti-malware Scan Interface (AMSI) integration with Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Defender for Endpoint documentation explains how AMSI is used by Microsoft Defender Antivirus to detect fileless and script-based threats by scanning content at execution time.  
+- It focuses on how AMSI improves visibility into obfuscated or in-memory payload delivery via built-in Windows scripting hosts (notably PowerShell, WSH, JScript/VBScript) and .NET assembly loads.  
+- The article outlines common fileless techniques (reflective DLL injection, memory exploits, script-based loaders, WMI persistence) and maps them to Defender capabilities like script scanning via AMSI, WMI repository scanning, and enhanced memory scanning/behavior monitoring.  
+- It lists supported OS versions and scripting/runtime coverage (including Microsoft 365 Apps macro/script surfaces) and notes gaps (no Python/Perl AMSI support).  
+- It provides enablement guidance: AMSI protection is effectively enabled by turning on Defender “script scanning” via policy (including MDM Policy CSP).  
+- It also points to complementary hardening controls (WDAC/AppLocker with Constrained Language Mode, ASR rules, and HVCI) to reduce fileless attack success.
+
+Technical Focus:
+- AMSI content scanning pipeline and Defender script scanning
+- PowerShell/WSH/JScript/VBScript inspection and deobfuscation visibility
+- .NET assembly scanning (Framework 4.8+) and in-memory execution patterns
+- WMI repository scanning and WMI-based persistence detection
+- Memory scanning/behavioral detection for reflective injection and kernel-memory threats
+- Hardening with WDAC/AppLocker (Constrained Language Mode), ASR, and HVCI
+
+Use Cases:
+- Enable/validate AMSI-backed script scanning in Defender-managed Windows fleets
+- Assess detection coverage for PowerShell/WSH-based post-exploitation and fileless tradecraft
+- Build defensive baselines combining AMSI + WDAC/ASR/HVCI against in-memory loaders
+- Identify scripting/runtime blind spots (e.g., Python/Perl) for risk management and monitoring
+
+Keywords:
+AMSI, Microsoft Defender Antivirus, Microsoft Defender for Endpoint, script scanning, fileless malware, PowerShell, Windows Script Host, wscript.exe, cscript.exe, JScript, VBScript, .NET Framework 4.8, WMI, WMI persistence, reflective DLL injection, in-memory execution, obfuscation, WDAC, AppLocker, Constrained Language Mode, Attack Surface Reduction, HVCI, virtualization-based security, EternalBlue, DoublePulsar

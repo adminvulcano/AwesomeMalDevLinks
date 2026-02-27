@@ -5,26 +5,27 @@ Type:
 Blog Post
 
 Short Summary (4–8 sentences max):
-- Microsoft describes updates to Windows Event Tracing for Windows (ETW) and Security-Auditing events to better attribute “who initiated” certain security-relevant actions.  
-- The problem addressed is event provenance ambiguity (acting deputy vs causal process), where the process writing/logging the event (often SYSTEM/kernel/LSASS) is not the process that triggered the action.  
-- Updated event schemas add initiating-process fields to the event payload, specifically Process ID and Process Start Key (a boot-unique sequence identifier), and bump event versions accordingly.  
-- The post highlights nine enhanced events covering service installation, scheduled task operations, audit policy changes, and event log clearing, improving correlation and timelines for DFIR and detection engineering.  
-- It demonstrates correlating scheduled task creation (4698) with process creation (4688) to validate the initiating process chain (e.g., cmd.exe → schtasks.exe) rather than relying on the header ExecutionProcessID.  
-- Useful primarily for Blue Team/DFIR/detection engineers and security product builders collecting Windows telemetry; also relevant to red teams for understanding improved visibility around persistence and log tampering.
+- Microsoft describes updates to Windows security-relevant ETW-backed event schemas to improve attribution of “who initiated” certain actions.  
+- The problem addressed is misleading provenance where the process that *logs* an event (e.g., SYSTEM/LSASS as an “acting deputy”) differs from the process that *caused* the action, creating gaps for DFIR and detection engineering.  
+- Updated events now include additional payload fields (not just header) such as initiating/client Process ID and Process Start Key (a boot-unique sequence number) to correlate actions to the true originating process.  
+- The post highlights specific Security-Auditing and Eventlog provider events (service install, scheduled task operations, audit policy changes, and log clearing) that now carry these fields.  
+- It shows how to interpret the new data by correlating a scheduled task creation event (4698) with process creation (4688) to validate parent/child relationships and provenance.  
+- Useful for Blue Teams (DFIR, detection engineering, SIEM/EDR telemetry consumers) and also for Red Teams to understand improved visibility around persistence and log-tampering actions.
 
 Technical Focus:
-- ETW event schema/versioning and payload templates  
-- Initiating process attribution (ClientProcessID / ParentProcessID) vs ExecutionProcessID  
-- Process Start Key (boot-unique process instance identifier)  
-- Windows Security Auditing event IDs (4688, 4697–4702, 4719, 1102, 104)  
-- Correlation/timelining of security events for provenance validation  
-- ETW collection via Event Viewer and Win32 APIs (StartTraceA, EnableTraceEx2)
+- Event Tracing for Windows (ETW) event schema/versioning
+- Event provenance / “acting deputy” vs causal process attribution
+- Process Start Key and Process ID correlation across boots
+- Windows Security Auditing event IDs (4688, 4697–4702, 4719)
+- Event log clearing telemetry (1102, 104) via Microsoft-Windows-Eventlog provider
+- ETW control/collection APIs (StartTraceA, EnableTraceEx2)
 
 Use Cases:
-- Build higher-fidelity detections for scheduled task persistence and service installation with correct initiating process attribution
-- Investigate audit policy changes and event log clearing with better provenance for incident response timelines
-- Improve SIEM/EDR parsers to ingest new payload fields and reduce false attribution to SYSTEM/LSASS
-- Validate parent/child process chains by correlating 4698 (task created) with 4688 (process creation)
+- Build higher-fidelity detections for scheduled task persistence and service installation by attributing initiating process
+- Investigate audit policy changes (4719) with reliable initiating process context
+- Detect and triage log clearing attempts (1102/104) with process provenance
+- Improve timeline correlation in DFIR by linking security events to process creation telemetry (4688)
+- Validate SIEM parsing/mapping to ensure payload fields are ingested (not only header fields)
 
 Keywords:
-ETW, Event Tracing for Windows, Windows Security Auditing, event provenance, acting deputy, causal process, Process Start Key, ClientProcessID, ParentProcessID, ExecutionProcessID, Event Viewer, StartTraceA, EnableTraceEx2, evntrace.h, event schema versioning, 4688, 4697, 4698, 4699, 4700, 4701, 4702, 4719, 1102, 104, scheduled tasks, schtasks.exe, lsass.exe, audit policy change, log clearing, DFIR, detection engineering, MITRE ATT&CK T1053.005
+ETW, Event Tracing for Windows, Windows Security Auditing, Microsoft-Windows-Eventlog, event schema, event versioning, process provenance, acting deputy, ClientProcessID, ParentProcessID, Process Start Key, ExecutionProcessID, Event Viewer, StartTraceA, EnableTraceEx2, event 4688, event 4698, event 4719, event 1102, scheduled tasks, SchTasks.exe, lsass.exe, audit policy change, log clearing, DFIR, detection engineering, MITRE ATT&CK T1053.005

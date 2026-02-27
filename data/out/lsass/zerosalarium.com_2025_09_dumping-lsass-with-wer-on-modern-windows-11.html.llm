@@ -1,0 +1,24 @@
+Title:
+Dumping LSASS With WER On Modern Windows 11
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post describes using Windows Error Reporting (WER) as a method to generate an LSASS memory dump on modern Windows 11 systems. It focuses on how to trigger and control WER crash-dump behavior to obtain credential material without relying on classic LSASS dumping tools that are commonly detected. The write-up discusses relevant Windows components and configuration points that influence dump creation (e.g., WER local dumps, dump types, and process targeting) and the practical constraints imposed by modern protections. It is primarily useful for red teamers and pentesters looking for alternative credential access paths, and for defenders wanting to understand and detect WER-abuse tradecraft. The key value is showing a “living-off-the-land” dumping workflow that blends into legitimate crash-handling mechanisms.
+
+Technical Focus:
+- Windows Error Reporting (WER) crash dump generation
+- LSASS process dumping on Windows 11
+- WER LocalDumps configuration (registry/policies)
+- Dump types (mini/full) and dump file handling
+- Interaction with modern protections (e.g., PPL/Credential Guard) and operational constraints
+
+Use Cases:
+- Generate LSASS dumps via built-in Windows crash reporting mechanisms
+- Credential access workflows that avoid common LSASS dumping binaries/signatures
+- Tradecraft development for stealthier memory acquisition on Windows 11
+- Defensive detection engineering around WER dump creation and LSASS targeting
+
+Keywords:
+Windows 11, LSASS, WER, Windows Error Reporting, LocalDumps, crash dump, memory dump, credential dumping, registry, dump type, minidump, fulldump, PPL, RunAsPPL, Credential Guard, LSA, process crash, forensic artifacts, detection engineering

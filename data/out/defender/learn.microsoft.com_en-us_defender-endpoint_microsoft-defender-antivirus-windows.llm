@@ -1,0 +1,31 @@
+Title:
+Microsoft Defender Antivirus in Windows Overview
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn page provides an overview of Microsoft Defender Antivirus on Windows 10/11 and Windows Server, and how it integrates with Microsoft Defender for Endpoint (MDE) for next-gen endpoint protection.  
+- It explains core protection capabilities such as anomaly detection, cloud-delivered ML-driven detections, and behavioral/process-tree based blocking (including fileless threats).  
+- The document clarifies interoperability with third-party AV via active, passive, and disabled modes, including requirements for passive mode when onboarded to MDE.  
+- It lists key Defender processes/services (e.g., MsMpEng.exe/WinDefend, MdCoreSvc, WdNisSvc/NisSrv.exe) and utilities (MpCmdRun.exe) useful for operational verification and troubleshooting.  
+- It details how to check Defender state via Windows Security UI and PowerShell (Get-MpComputerStatus), including AMRunningMode values like Normal, Passive, EDR Block Mode, and SxS Passive Mode.  
+- It highlights important operational changes on Windows Server (platform 4.18.2208.0+) where “Turn off Windows Defender” GPO may result in passive mode post-onboarding, and notes tamper protection constraints and ForceDefenderPassiveMode behavior.  
+
+Technical Focus:
+- Cloud-delivered protection & Intelligent Security Graph
+- Anomaly detection and ML-based malware prevention
+- Behavioral blocking, process trees, and fileless threat detection
+- Defender operational modes (Active/Passive/Disabled, EDR Block Mode, SxS passive)
+- Windows services/processes mapping (WinDefend, MdCoreSvc, WdNisSvc; MsMpEng.exe, NisSrv.exe)
+- Administration/telemetry via PowerShell (Get-MpComputerStatus) and policy controls (GPO, registry, tamper protection)
+
+Use Cases:
+- Validate Defender AV runtime mode and posture on endpoints/servers during assessments
+- Identify Defender components/processes to understand monitoring/attack surface and expected telemetry
+- Plan coexistence with third-party AV using passive mode and limited periodic scanning
+- Troubleshoot performance and scanning impact using Defender performance analyzer guidance
+- Verify policy effects (GPO/registry) and tamper protection implications in managed environments
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, MDE, Windows 10, Windows 11, Windows Server, anomaly detection, cloud-delivered protection, machine learning, Intelligent Security Graph, behavioral blocking, process tree, fileless malware, WinDefend, MsMpEng.exe, MdCoreSvc, WdNisSvc, NisSrv.exe, MpCmdRun.exe, Get-MpComputerStatus, AMRunningMode, EDR in block mode, ForceDefenderPassiveMode, tamper protection, Group Policy, passive mode, limited periodic scanning, platform version 4.18.2208.0

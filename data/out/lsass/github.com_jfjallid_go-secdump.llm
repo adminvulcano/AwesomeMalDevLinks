@@ -1,0 +1,27 @@
+Title:
+go-secdump — Remote Windows Registry Secrets Dumper (SAM/SECURITY/LSA/DCC2)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+go-secdump is a Go-based tool for remotely extracting credential material from Windows registry hives, including SAM NTLM hashes, LSA secrets, and cached domain credentials (DCC2), without deploying an agent and without writing hive files to disk. It communicates over SMB to the Remote Registry service and reads required keys directly from memory. The key challenge—restricted access to SAM/SECURITY (SYSTEM-only)—is handled primarily by asserting SeBackupPrivilege via the BaseRegOpenKey request, avoiding DACL tampering; optional DACL modification/backup/restore is available as a fallback. It also supports NTLM relay mode (SMB listener) to use relayed administrative sessions for dumping, and can operate through a SOCKS5 proxy for pivoting/relay workflows. This is useful for red teams and pentesters needing remote credential extraction and for defenders studying Remote Registry/SMB-based secret dumping tradecraft.
+
+Technical Focus:
+- Remote Registry access over SMB (MS-RRP) via go-smb
+- SAM/SECURITY hive secret extraction (NTLM hashes, LSA secrets)
+- SeBackupPrivilege assertion in BaseRegOpenKey (no DACL changes)
+- Optional registry key DACL modification, backup, and restoration
+- NTLM relaying to SMB and session reuse for dumping
+- SOCKS5 proxy support for pivoting/ntlmrelayx integration
+
+Use Cases:
+- Remote dumping of local account NTLM hashes from SAM
+- Extracting LSA secrets (e.g., DPAPI_SYSTEM, NL$KM, machine account secrets)
+- Pulling cached domain logons (DCC2) for offline cracking/analysis
+- Post-compromise credential access without dropping binaries/agents on target
+- NTLM relay-based credential dumping when direct creds aren’t available
+- Pivoted dumping through SOCKS (e.g., via Impacket ntlmrelayx SOCKS)
+
+Keywords:
+go-secdump, SMB, Remote Registry, MS-RRP, SAM hive, SECURITY hive, LSA secrets, NTLM hash, DCC2, cached domain credentials, SeBackupPrivilege, BaseRegOpenKey, DACL, WriteDACL, DPAPI_SYSTEM, NL$KM, NTLM relay, SOCKS5, go-smb, Impacket secretsdump

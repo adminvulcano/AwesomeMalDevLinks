@@ -1,0 +1,747 @@
+# https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days
+
+<!DOCTYPE html><html lang="en">
+
+    <body class="" style="pointer-events: auto;">
+        
+
+        
+
+        
+
+        
+
+        <div id="entry"><div src="https://substack.com/session-attribution-frame" width="0" height="0" class="visitedSurfacesIFrame-yy8AJL" data-original-tag="iframe">
+        
+        
+        
+        <link rel="preconnect" href="https://substackcdn.com/">
+        
+
+        
+            <title data-rh="true"></title>
+            
+            
+            
+            
+        
+
+        
+
+        
+
+        
+        <link rel="preload" as="style" href="https://substackcdn.com/bundle/theme/sessionAttributionFrame.d41d8cd98f00b204e980.css">
+        
+        
+        
+
+        
+            
+                <link rel="stylesheet" type="text/css" href="https://substackcdn.com/bundle/static/css/sessionAttributionFrame.08773717.css">
+            
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <link rel="canonical" href="https://substack.com/session-attribution-frame">
+        
+
+        
+
+        
+
+        
+
+        
+            
+                <link rel="shortcut icon" href="https://substackcdn.com/icons/substack/favicon.ico" sizes="32x32">
+            
+        
+            
+                <link rel="icon" href="https://substackcdn.com/icons/substack/icon.svg" type="image/svg+xml">
+            
+        
+            
+                <link rel="apple-touch-icon" href="https://substackcdn.com/icons/substack/apple-touch-icon.png">
+            
+        
+            
+        
+            
+        
+            
+        
+
+        
+
+        
+
+        
+            
+
+        
+        
+          
+        
+        
+
+        
+
+        
+            <link rel="stylesheet" href="https://substackcdn.com/bundle/theme/sessionAttributionFrame.d41d8cd98f00b204e980.css">
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+    
+
+    
+        
+
+        
+
+        
+
+        
+
+        <div id="entry"></div>
+
+        
+            
+            
+        
+
+
+        
+        
+        
+        
+        
+        
+
+        
+        
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+        
+        
+
+        
+            <!-- Datadog Analytics -->
+            
+            <!-- End Datadog Analytics -->
+
+            <!-- Cloudflare Web Analytics -->
+            
+            <!-- End Cloudflare Web Analytics -->
+        
+
+        <!-- Fallback tracking pixels -->
+        
+
+        
+
+        
+
+
+        
+
+        
+
+        
+        
+    <div height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" data-original-tag="iframe"></div>
+
+</div><div id="main" class="main typography use-theme-bg"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div data-testid="navbar" class="main-menu"><div class="mainMenuContent-DME8DR" style="position: fixed;"><div style="position: relative; height: 71px;" class="pencraft pc-display-flex pc-gap-12 pc-paddingLeft-20 pc-paddingRight-20 pc-justifyContent-space-between pc-alignItems-center pc-reset border-bottom-detail-k1F6C4 topBar-pIF0J1"><div style="flex-basis: 0px; flex-grow: 1;" class="logoContainer-p12gJb"><div class="pencraft pc-display-flex pc-gap-40 pc-alignItems-center pc-reset"><a href="https://substack.com/?utm_content=island-substack-logo" class="pencraft pc-display-flex pc-width-20 pc-height-20 pc-justifyContent-center pc-alignItems-center pc-reset" tabindex="-1"><svg role="img" style="transform: scale(1.4);" width="16" height="18" viewBox="0 0 16 18" fill="#ff6719" stroke-width="1.8" stroke="none" xmlns="http://www.w3.org/2000/svg"><g><title></title><path d="M16 4H0V6H16V4Z"></path><path d="M0 8V18L7.9993 13.534L16 18V8H0Z"></path><path d="M16 0H0V2H16V0Z"></path></g></svg></a></div></div><div style="flex-grow: 0;" class="titleContainer-DJYq5v"><h1 class="pencraft pc-reset font-pub-headings-FE5byy reset-IxiVJZ title-oOnUGd"><a href="https://ydinkin.substack.com/" class="pencraft pc-display-contents pc-reset">Yaron Dinkin</a></h1></div><div style="flex-basis: 0px; flex-grow: 1;" class="pencraft pc-display-flex pc-justifyContent-flex-end pc-alignItems-center pc-reset"><div class="buttonsContainer-SJBuep"><div class="pencraft pc-display-flex pc-gap-8 pc-justifyContent-flex-end pc-alignItems-center pc-reset navbar-buttons"><div class="pencraft pc-display-flex pc-gap-4 pc-reset"><span data-state="closed"><button type="button" aria-label="Search" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_md-gCDS3o priority_tertiary-rlke8z" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></span><button type="button" aria-label="Share Publication" id="radix-P0-4" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_md-gCDS3o priority_tertiary-rlke8z" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" x2="12" y1="2" y2="15"></line></svg></button></div><button type="button" data-testid="noncontributor-cta-button" class="pencraft pc-reset pencraft buttonBase-GK1x3M buttonText-X0uSmG buttonStyle-r7yGCK priority_primary-RfbeYt size_md-gCDS3o" tabindex="0">Subscribe</button><button data-native="true" type="button" data-href="https://substack.com/sign-in?redirect=%2Fp%2F200-kernel-bugs-in-30-days&amp;for_pub=ydinkin" class="pencraft pc-reset pencraft buttonBase-GK1x3M buttonText-X0uSmG buttonStyle-r7yGCK priority_tertiary-rlke8z size_md-gCDS3o" tabindex="0">Sign in</button></div></div></div></div></div><div style="height: 72px;"></div></div></div><div><div aria-label="Post" role="main" class="single-post-container"><div class="container"><div class="single-post"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><article class="typography newsletter-post post"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div role="dialog" aria-label="Subscribe modal" class="pencraft pc-display-flex pc-flexDirection-column pc-boxShadow-xl pc-reset bg-primary-zk6FDl border-detail-EGrm7T pc-borderRadius-md subscribeDialog-ApxQJS" style="top: 1592px; left: 959.5px; position: absolute;"><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-20 pc-padding-20 pc-position-relative pc-reset"><button tabindex="0" type="button" aria-label="close" title="Close" class="pencraft pc-position-absolute pc-reset pencraft closeButton-YU1ngO absolute-ecQ0HE iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_quaternary-kpMibu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button><div class="pencraft pc-alignSelf-center pc-reset"><div class="pencraft pc-display-flex pc-width-64 pc-height-64 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 64px;"><div title="User" class="pencraft pc-display-flex pc-width-64 pc-height-64 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 64px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!qwjj!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!qwjj!,w_128,h_128,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 128w, https://substackcdn.com/image/fetch/$s_!qwjj!,w_192,h_192,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 192w" sizes="64px"><img src="https://substackcdn.com/image/fetch/$s_!qwjj!,w_64,h_64,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png" alt="User's avatar" width="64" height="64" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-4 pc-justifyContent-center pc-alignItems-center pc-reset align-center-y7ZD4w"><div class="pencraft pc-reset color-primary-zABazT line-height-24-jnGwiv font-text-qe4AeH size-17-JHHggF weight-semibold-uqA4FV reset-IxiVJZ">Discover more from Yaron Dinkin</div></div><form><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-8 pc-reset"><div class="pencraft pc-display-flex pc-minWidth-0 pc-position-relative pc-reset flex-auto-j3S2WA"><input placeholder="Enter your email..." type="text" class="input-y4v6N4 inputText-pV_yWb"></div><button tabindex="0" type="submit" class="pencraft pc-reset pencraft buttonBase-GK1x3M buttonText-X0uSmG buttonStyle-r7yGCK priority_primary-RfbeYt size_md-gCDS3o">Subscribe</button><div class="pencraft pc-display-flex pc-flexDirection-column pc-opacity-80 pc-paddingTop-8 pc-reset"><div class="visibility-check"></div><label class="pencraft pc-display-flex pc-gap-12 pc-justifyContent-center pc-alignItems-center pc-reset tosCheckbox-XbLWCT"><div class="pencraft pc-reset color-secondary-ls1g8s align-center-y7ZD4w line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ">By subscribing, you agree Substack's <a href="https://substack.com/tos" target="_blank" class="pencraft pc-reset reset-IxiVJZ" style="text-decoration: underline;">Terms of Use</a>, and acknowledge its <a href="https://substack.com/ccpa#personal-data-collected" target="_blank" class="pencraft pc-reset reset-IxiVJZ" style="text-decoration: underline;">Information Collection Notice</a> and <a href="https://substack.com/privacy" target="_blank" class="pencraft pc-reset reset-IxiVJZ" style="text-decoration: underline;">Privacy Policy</a>.</div></label></div></div></form></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-padding-16 pc-reset border-top-detail-bzjFmN"><span class="pencraft pc-reset color-secondary-ls1g8s align-center-y7ZD4w line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ">Already have an account? <a class="pencraft pc-reset cursor-pointer-LYORKw color-accent-BVX_7M decoration-hover-underline-ClDVRM reset-IxiVJZ">Sign in</a></span></div></div></div><div role="region" aria-label="Post header" class="post-header"><h1 dir="auto" class="post-title published title-X77sOw">100+ Kernel Bugs in 30 Days</h1><h3 dir="auto" class="subtitle subtitle-HEEcLo">High-Scale Driver Vulnerability Research with Agent Swarms</h3><div aria-label="Post UFI" role="region" class="pencraft pc-display-flex pc-flexDirection-column pc-paddingBottom-16 pc-reset"><div class="pencraft pc-display-flex pc-paddingTop-16 pc-paddingBottom-16 pc-justifyContent-space-between pc-alignItems-center pc-reset"><div class="pencraft pc-display-flex pc-gap-12 pc-alignItems-center pc-reset byline-wrapper"><div class="pencraft pc-display-flex pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-row pc-gap-8 pc-alignItems-center pc-justifyContent-flex-start pc-reset"><div style="--scale: 36px; --offset: 9px; --border-width: 4.5px;" class="pencraft pc-display-flex pc-flexDirection-row pc-alignItems-center pc-justifyContent-flex-start pc-reset ltr-qDBmby"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/@ydinkin" aria-label="View Yaron Dinkin's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-36 pc-height-36 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB" style="--scale: 36px;"><div title="Yaron Dinkin" class="pencraft pc-display-flex pc-width-36 pc-height-36 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 36px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!qwjj!,w_36,h_36,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 36w, https://substackcdn.com/image/fetch/$s_!qwjj!,w_72,h_72,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 72w, https://substackcdn.com/image/fetch/$s_!qwjj!,w_108,h_108,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png 108w" sizes="36px"><img src="https://substackcdn.com/image/fetch/$s_!qwjj!,w_36,h_36,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf93ffd0-bc34-47dc-bef5-f67364a7cd9a_144x144.png" alt="Yaron Dinkin's avatar" width="36" height="36" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/@eyalkraft" aria-label="View Eyal Kraft's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-36 pc-height-36 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB overlap-q75iOo last-JfNEJ_" style="--scale: 36px;"><div title="Eyal Kraft" class="pencraft pc-display-flex pc-width-36 pc-height-36 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 36px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!Ht_h!,w_36,h_36,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 36w, https://substackcdn.com/image/fetch/$s_!Ht_h!,w_72,h_72,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 72w, https://substackcdn.com/image/fetch/$s_!Ht_h!,w_108,h_108,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 108w" sizes="36px"><img src="https://substackcdn.com/image/fetch/$s_!Ht_h!,w_36,h_36,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png" alt="Eyal Kraft's avatar" width="36" height="36" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span></div></div></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset"><div class="pencraft pc-reset color-pub-primary-text-NyXPlw line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA"><span style="min-width: 0px;" data-state="closed"><a href="https://substack.com/@ydinkin" class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ">Yaron Dinkin</a></span> and <span style="min-width: 0px;" data-state="closed"><a href="https://substack.com/@eyalkraft" class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ">Eyal Kraft</a></span></div><div class="pencraft pc-display-flex pc-gap-4 pc-reset"><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA">Feb 23, 2026</div></div></div></div></div><div class="pencraft pc-display-flex pc-gap-16 pc-paddingTop-16 pc-paddingBottom-16 pc-justifyContent-space-between pc-alignItems-center pc-reset flex-grow-rzmknG border-top-detail-themed-k9TZAY border-bottom-detail-themed-Ua9186 post-ufi"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><div class="like-button-container post-ufi-button style-button"><button type="button" aria-label="Like (9)" aria-pressed="false" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="#000000" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg><div class="label">9</div></button></div><button type="button" aria-label="View comments (2)" data-href="https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days/comments" class="pencraft pc-reset pencraft post-ufi-button style-button post-ufi-comment-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="#000000" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></g></svg><div class="label">2</div></button><button type="button" id="radix-P0-27" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><path d="M21 3V8M21 8H16M21 8L18 5.29962C16.7056 4.14183 15.1038 3.38328 13.3879 3.11547C11.6719 2.84766 9.9152 3.08203 8.32951 3.79031C6.74382 4.49858 5.39691 5.65051 4.45125 7.10715C3.5056 8.5638 3.00158 10.2629 3 11.9996M3 21V16M3 16H8M3 16L6 18.7C7.29445 19.8578 8.89623 20.6163 10.6121 20.8841C12.3281 21.152 14.0848 20.9176 15.6705 20.2093C17.2562 19.501 18.6031 18.3491 19.5487 16.8925C20.4944 15.4358 20.9984 13.7367 21 12" stroke-linecap="round" stroke-linejoin="round"></path></g></svg><div class="label">4</div></button></div><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button type="button" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><div class="label">Share</div></button></div></div></div></div><div class="visibility-check"></div><div><button tabindex="0" type="button" aria-label="Table of Contents" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-P0-41" data-state="closed" class="pencraft pc-position-fixed pc-reset showFocus-sk_vEm pencraft trigger-V8d1vI fixed-n4RrZu"><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-12 pc-paddingLeft-8 pc-paddingRight-8 pc-paddingTop-12 pc-paddingBottom-12 pc-alignItems-flex-end pc-reset"><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw"></div><div class="line-DsYVXw"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw indent-1-vdeuvl"></div><div class="line-DsYVXw"></div><div class="line-DsYVXw active-Yh0Zwm"></div><div class="line-DsYVXw"></div></div></button><div class="available-content"><div dir="auto" class="body markup"><h4 class="header-anchor-post">TL;DR<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§tldr" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/tldr" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><p><strong>We used AI agents to reverse engineer Windows kernel drivers to find zero-days. It worked better than expected. Which is bad.</strong></p><div class="captioned-image-container"><figure><a target="_blank" href="https://substackcdn.com/image/fetch/$s_!69zh!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png" data-component-name="Image2ToDOM" rel="nofollow ugc noopener" class="image-link image2 is-viewable-img can-restack"><div class="image2-inset can-restack"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!69zh!,w_424,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png 424w, https://substackcdn.com/image/fetch/$s_!69zh!,w_848,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png 848w, https://substackcdn.com/image/fetch/$s_!69zh!,w_1272,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png 1272w, https://substackcdn.com/image/fetch/$s_!69zh!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png 1456w" sizes="100vw"><img src="https://substackcdn.com/image/fetch/$s_!69zh!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png" width="524" height="349.4532967032967" data-attrs="{&quot;src&quot;:&quot;https://substack-post-media.s3.amazonaws.com/public/images/b80bdc16-283c-4636-acee-50b2a1ee40a6_1536x1024.png&quot;,&quot;srcNoWatermark&quot;:null,&quot;fullscreen&quot;:null,&quot;imageSize&quot;:null,&quot;height&quot;:971,&quot;width&quot;:1456,&quot;resizeWidth&quot;:524,&quot;bytes&quot;:null,&quot;alt&quot;:&quot;BSOD chaos in toyland&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;href&quot;:null,&quot;belowTheFold&quot;:false,&quot;topImage&quot;:true,&quot;internalRedirect&quot;:null,&quot;isProcessing&quot;:false,&quot;align&quot;:null,&quot;offset&quot;:false}" alt="BSOD chaos in toyland" title="BSOD chaos in toyland" fetchpriority="high" class="sizing-normal"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image"><svg role="img" style="height:20px;width:20px" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><g><title></title><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p><em>(This blog post was written by hand, and edited with AI assistance.)</em><span> </span></p><p><span>Frontier LLMs have already proven themselves for security audits of open source projects. AI-powered researchers found tens </span><em>(maybe hundreds?)</em><span> of critical CVEs human researchers missed for years.</span></p><p><span style="min-width: 0px;" data-state="closed"><a href="https://open.substack.com/users/465243607-eyal-kraft?utm_source=mentions" target="_blank" rel="noopener" data-attrs="{&quot;name&quot;:&quot;Eyal Kraft&quot;,&quot;id&quot;:465243607,&quot;type&quot;:&quot;user&quot;,&quot;url&quot;:null,&quot;photo_url&quot;:&quot;https://substack-post-media.s3.amazonaws.com/public/images/05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png&quot;,&quot;uuid&quot;:&quot;1f4c49af-77e8-4e34-8603-64c79360fd50&quot;}" data-component-name="MentionUser" class="mention-pnpTE1">Eyal Kraft</a></span><span> and I had an even bigger concern: what about all those targets no one has </span><em>ever</em><span> looked at? There are literally TBs of binaries running on millions of machines across the world no human researcher has ever bothered to look at. Most likely no one ever will.</span></p><p><span>We decided to put agent swarms to the test by building a simple harness to perform binary zero-day research at scale. We targeted Windows Kernel Drivers. Thousands of third-party </span><code>.sys</code><span> files ship on every OEM machine, each one cryptographically signed by both its vendor and MSFT, with questionable code quality.</span></p><p><span>To date, most security research and mitigation efforts around Windows drivers focused on intentionally malicious or rootkit-style drivers, binaries that expose unsafe APIs like </span><code>MmMapIoSpace</code><span> or raw MSR/port I/O as a deliberate backdoor. Microsoft’s </span><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules" rel="nofollow ugc noopener">vulnerable driver blocklist</a><span> and community projects like </span><a href="https://www.loldrivers.io/" rel="nofollow ugc noopener">LOLDrivers</a><span> catalog these known-bad drivers and prevent them from being loaded. But this misses an entire class of vulnerabilities: unintentional memory corruption bugs inside otherwise legitimate drivers. These aren’t backdoors, but rather your garden-variety bugs written by legitimate vendors. No blocklist catches them because no one has ever audited their code, and preventing them from loading will prevent you from using your GPU, keyboard, or webcam.</span></p><p><span>To do this in a cost-effective manner, we built an autonomous platform that scrapes drivers from all over the internet, catalogs and labels them, decompiles them, and uses agent swarms to identify memory corruption vulnerabilities with minimal token use and maximum plain-old-python. By using SLMs for much of the analysis, the entire project cost us only </span><strong>$600 USD</strong><span>, roughly </span><strong>$3 per analyzed target</strong><span>.</span></p><p><span>From a dataset of over </span><strong>1,873 binaries</strong><span>, we found </span><strong>521 potential vulnerabilities</strong><span> across </span><strong>158 unique driver binaries</strong><span> from dozens of vendors. Of those, we manually confirmed and reported 15 to vendors including </span><strong>Lenovo, Fujitsu, IBM, Intel, AMD, Silicom, NVIDIA, and Dell</strong><span>. They were, unsurprisingly, unresponsive. Despite most confirming the vulnerability exists (screenshots and/or video proof was always provided), to date, only one vulnerability was patched and assigned a CVE (</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65001" rel="nofollow ugc noopener">CVE-2025-65001</a><span>, we’d like to thank Fujitsu PSIRT for their handling of our submission).</span></p><p><span>It’s also important to note none of the PSIRTs saw it as their responsibility to alert MSFT of these vulnerable drivers to add them to the </span><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules" rel="nofollow ugc noopener">vulnerable driver blocklist</a><span> or revoke their certificate.</span></p><p><span>After 90+ days of responsibly waiting for a fix on all submissions, we are publishing the full set of analyzed driver hashes so defenders can check whether affected binaries are present in their environments. If you’re a vendor, customer, or security professional interested in more details, you’re welcome to contact us at </span><a href="mailto:hi@hexaplex.ai" rel="nofollow ugc noopener">hi@hexaplex.ai</a><span>.</span></p><h3 class="header-anchor-post">Methodology<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§methodology" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/methodology" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h3><p>Our flow runs a five-stage pipeline:</p><ol><li><p><strong>Scrape:</strong><span> We covered both the </span><a href="https://www.catalog.update.microsoft.com/" rel="nofollow ugc noopener">MSFT update catalog</a><span>, OEM sites, and public driver repositories. Overall, we collected </span><strong>1,654 different drivers</strong><span> across </span><strong>1,873 unique binary versions</strong><span>.</span></p></li></ol><ol start="2"><li><p><strong>Preprocess:</strong><span> CAB extraction, PE metadata analysis, and catalog signature parsing. This stage computes hashes, identifies driver entry points, and ranks targets by attack surface indicators (IOCTL dispatch complexity, number of device objects, presence of </span><code>METHOD_NEITHER</code><span> handlers). To focus our analysis, we filtered out drivers requiring complex setups (mostly non USB/PCIe devices) and old versions (Sorry, WinXP users...).</span></p></li></ol><ol start="3"><li><p><strong>Analyze:</strong><span> The core loop. For each target, we launch an audit harness </span><em>(today, we’d probably just use ClaudeCode / OpenClaw with custom skills)</em><span>. A council of LLM agents then iteratively audit the binary:</span></p><ol><li><p><strong>Decompilation Agent</strong><span> renames unnamed functions, deduces functionality, recovers dynamic calls, using contextual inference so auditors can follow the logic</span></p></li><li><p><strong>Attack Surface Agent</strong><span> identifies functions worth auditing based on the decompiled code</span></p></li><li><p><strong>Code Audit Agent</strong><span> inspects each target function for memory corruption bugs, walking the recovered call graph to understand data flow</span></p></li></ol><p></p><p>Findings are written as structured JSON with bug type, severity, confidence, impact assessment, and the decompiled code path.</p><p></p><p>We used a mix of models via OpenRouter, optimizing for vulnerabilities per token rather than per-model accuracy. On average, each target costs roughly $3 in API calls.</p></li><li><p><strong>Virtualize:</strong><span> </span><em>(This became the bottleneck once we had a queue of 100+ findings).</em><span> We created a custom VM-based harness for loading drivers on kernel-debugged Windows machines controlled by agents. Some drivers require custom USB/PCIe devices we obviously don’t have on hand. We customized QEMU to expose virtual devices, and used LLMs to virtualize enough of the initialization handshake for drivers to load and expose their IOCTL interfaces.</span></p></li><li><p><strong>Validate:</strong><span> Using our harness, we can iteratively create Python PoC scripts per finding, effectively performing guided fuzzing until the machine crashes. The BSOD crash dump is then analyzed to confirm the vulnerability indeed triggered correctly (we found many hallucinated reports where the fuzzer successfully caused a crash, without actually exploiting the finding - causing a sneaky false positive we had to debug manually).</span></p></li><li><p><strong>Report:</strong><span> We manually validated the automated report, running our PoC script on a “real” Windows 11 machine and ensuring the vulnerability description is comprehensive and factually correct. We then submitted it to the PSIRT ourselves. Note that we did not actually weaponize most vulnerabilities into full LPE exploits, but instead gauged the likelihood of it being exploitable in real-world scenarios based on our experience.</span></p></li></ol><p><span>Of the 1,654 drivers in our dataset, we selected </span><strong>202 high-risk drivers</strong><span> for full analysis based on preprocessing heuristics. The remaining drivers are queued for future passes.</span></p><h3 class="header-anchor-post">Results<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§results" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/results" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h3><h4 class="header-anchor-post">Dataset overview<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§dataset-overview" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/dataset-overview" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><ul><li><p>Total binaries collected: 1,873</p></li><li><p>Total unique drivers: 1,654</p></li><li><p>Binaries analyzed: 202</p></li><li><p>Total findings: 521</p></li><li><p>Unique binaries with findings: 158</p></li><li><p>Findings manually confirmed and reported: 15</p></li><li><p>Vendors notified: 8</p></li><li><p><span>CVEs assigned: 1 (</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65001" rel="nofollow ugc noopener">CVE-2025-65001</a><span>)</span></p></li><li><p>Total project cost: ~$600</p></li><li><p>Cost per target: ~$3</p></li><li><p>Cost per bug: ~$4</p></li></ul><h4 class="header-anchor-post">Bug type distribution<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§bug-type-distribution" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/bug-type-distribution" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><ul><li><p>Arbitrary Read: 144 (27.6%)</p></li><li><p>Heap Overflow: 111 (21.3%)</p></li><li><p>Other: 82 (15.7%)</p></li><li><p>Integer Overflow: 33 (6.3%)</p></li><li><p>Stack Overflow: 26 (5.0%)</p></li><li><p>Arbitrary Write: 92 (17.7%)</p></li><li><p>Use-After-Free: 22 (4.2%)</p></li><li><p>Type Confusion: 11 (2.1%)</p></li></ul><p><span>Arbitrary memory access bugs (read + write) account for </span><strong>45.3%</strong><span> of all findings, unsurprising given that IOCTL handlers routinely copy data between user and kernel buffers with no bounds checking. Most of those stem from either heap buffer mishandling or faulty deserialization logic.</span></p><h4 class="header-anchor-post">Severity and confidence<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§severity-and-confidence" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/severity-and-confidence" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><ul><li><p>Critical: 149 (28.6%)</p></li><li><p>High: 220 (42.2%)</p></li><li><p>Medium: 149 (28.6%)</p></li><li><p>Low: 3 (0.6%)</p></li></ul><p><span>The agent provided severity and confidence ratings. </span><strong>70.8%</strong><span> of findings are rated High or Critical, with </span><strong>78.7%</strong><span> of findings having High confidence, 19.6% Medium, and only 1.7% Low.</span></p><h4 class="header-anchor-post">False positive rate<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§false-positive-rate" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/false-positive-rate" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><p><span>After manual analysis, we estimate the false positive rate at approximately </span><strong>60%</strong><span> </span><strong>of critical/high confidence findings</strong><span>. Most are real code patterns where the bug exists but exploitation is impractical (e.g., an OOB read that can only leak padding bytes, or a write that requires special system conditions). Adjusting for this, we estimate </span><strong>over 100 of the 521 findings</strong><span> </span><strong>represent genuinely exploitable user→kernel local privilege escalation</strong><span> on current Windows 11 x64 systems.</span></p><h4 class="header-anchor-post">Impact themes<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§impact-themes" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/impact-themes" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><p>To reduce hallucination rate, the agent was asked to propose maximum impact of vulnerability exploitation for each reported finding. The most common impact categories across findings (categories overlap, a single finding can cause both DoS and privilege escalation):</p><ul><li><p><strong>Denial of Service:</strong><span> System crash via kernel bugcheck (BSOD). The dominant impact across nearly all findings, since any kernel memory corruption is at minimum a reliability issue.</span></p></li><li><p><strong>Information Disclosure:</strong><span> Kernel memory leak via uninitialized buffers or OOB reads, often sufficient for KASLR bypass.</span></p></li><li><p><strong>Privilege Escalation:</strong><span> Arbitrary kernel read/write primitives enabling token manipulation or kernel code execution.</span></p></li><li><p><strong>Code Execution</strong><span>: Heap overflow or use-after-free conditions exploitable for arbitrary kernel code execution via pool shaping.</span></p></li></ul><h4 class="header-anchor-post">Notable Vulnerability Patterns<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§notable-vulnerability-patterns" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/notable-vulnerability-patterns" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><p><span>As an example, AMD’s Crash Defender driver (</span><code>amdfendr.sys</code><span>) exposes a world-writable device that supports sending IOCTLs with proprietary operation codes. Those operations on the device access internal transport queue descriptors without proper size validations, allowing heap corruption. With pool grooming, this is a path to arbitrary kernel data access, or even kernel code execution. Even without it, it’s a reliable BSOD from any user account.</span><br><br><span>The driver ships on Windows AMD systems, including AWS EC2 Windows AMIs with AMD instances. meaning the attack surface extends to cloud workloads.</span></p><div class="captioned-image-container"><figure><a target="_blank" href="https://substackcdn.com/image/fetch/$s_!TV9H!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png" data-component-name="Image2ToDOM" rel="nofollow ugc noopener" class="image-link image2 can-restack"><div class="image2-inset can-restack"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!TV9H!,w_424,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png 424w, https://substackcdn.com/image/fetch/$s_!TV9H!,w_848,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png 848w, https://substackcdn.com/image/fetch/$s_!TV9H!,w_1272,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png 1272w, https://substackcdn.com/image/fetch/$s_!TV9H!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png 1456w" sizes="100vw"><img src="https://substackcdn.com/image/fetch/$s_!TV9H!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png" width="1192" height="266" data-attrs="{&quot;src&quot;:&quot;https://substack-post-media.s3.amazonaws.com/public/images/ed217d79-22cd-45b3-adeb-5276c935546c_1192x266.png&quot;,&quot;srcNoWatermark&quot;:null,&quot;fullscreen&quot;:null,&quot;imageSize&quot;:null,&quot;height&quot;:266,&quot;width&quot;:1192,&quot;resizeWidth&quot;:null,&quot;bytes&quot;:null,&quot;alt&quot;:null,&quot;title&quot;:null,&quot;type&quot;:null,&quot;href&quot;:null,&quot;belowTheFold&quot;:true,&quot;topImage&quot;:false,&quot;internalRedirect&quot;:null,&quot;isProcessing&quot;:false,&quot;align&quot;:null,&quot;offset&quot;:false}" alt="" loading="lazy" class="sizing-normal"></picture><div></div></div></a></figure></div><p>The same common binary exploitation patterns account for the majority of findings. It is unclear whether it is because driver dev teams skip modern security tooling entirely, or because the highly polymorphic nature of both WDK and KMDF makes pre-LLM static analysis unfeasible.</p><h4 class="header-anchor-post">Reported Vulnerabilities<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§reported-vulnerabilities" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/reported-vulnerabilities" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h4><p>We manually confirmed and reported 15 vulnerabilities to 8 vendors, all with CVSS ratings of 7+. All have been under disclosure for over 90 days.</p><p><strong>Average CVSS across reported findings: 8.2 (High)</strong></p><p><span>Most bugs are exploitable from a standard, unprivileged user account. Most require nothing more than opening the device handle (often world-accessible) and sending a sequence of </span><code>DeviceIoControl</code><span> calls. Windows drivers are MSFT-signed, meaning they can be side-loaded on any Windows machine via Bring Your Own Vulnerable Driver (BYOVD) attacks even if the associated product was never installed (requiring admin privileges and therefore making the LPE a more restrictive admin→kernel).</span></p><h3 class="header-anchor-post">PSIRT response<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§psirt-response" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/psirt-response" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h3><p>Response from vendor PSIRTs has been disappointing. Several vendors rejected our reports outright despite video proof-of-concept demonstrations of exploitation. Others acknowledged that the products containing these drivers have reached End-of-Life, but have not revoked the driver signing certificates, leaving the BYOVD attack surface intact on every Windows machine.</p><p><span>To date, only </span><strong>Fujitsu PSIRT</strong><span> has successfully patched and assigned a CVE (</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65001" rel="nofollow ugc noopener">CVE-2025-65001</a><span>). We continue to monitor and will update if additional CVEs are assigned.</span></p><h3 class="header-anchor-post">Takeaways<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§takeaways" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/takeaways" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h3><ol><li><p><strong>Agent-assisted binary vulnerability research works, and it’s cheap.</strong><span> $600 and a few weeks produced an agentic loop that would take a human team years of focused reverse engineering. The per-bug cost of $4 means any motivated attacker can afford to scan the entire Windows driver ecosystem.</span></p></li><li><p><strong>Agentic flows require closed loops. </strong><span>Although we performed this research before Opus-4.6 and GPT-5.3, the biggest performance leap was achieved by “closing the loop” and giving the agent direct feedback on exploitation success using our VM-based kernel-debugging harness. Agents that can try to bugcheck the machine over-and-over again are tomorrow’s fuzzers, and </span><strong>with enough compute they’re 100x more dangerous in the wrong hands.</strong></p></li><li><p><strong>The Windows kernel driver ecosystem is in worse shape than most people assume.</strong><span> Third-party kernel drivers remain one of the last bastions of C code running in kernel-mode with minimal security review. Code signing guarantees authenticity, not security. Our 60% false positive rate still leaves over 100 likely-exploitable privilege escalation bugs across mainstream vendor drivers from companies like AMD, Intel, NVIDIA, Dell, Lenovo, and IBM.</span></p></li><li><p><strong>PSIRT processes are not built for this volume.</strong><span> Most vendor security teams are structured to handle a handful of reports per quarter from human researchers. When an automated system produces dozens of valid findings across multiple product lines simultaneously, the existing intake processes fail. Reports get rejected, misrouted, or deprioritized. The gap between discovery rate and remediation rate will only widen as these tools improve.</span></p></li><li><p><strong>We’re publishing our hash list for customers to defend themselves.</strong><span> We’re past responsible disclosure timelines, so we’re making IOCs publicly available in a safe manner. If you’re a PSIRT, CERT, or security team that needs more information, contact us at </span><a href="mailto:hi@hexaplex.ai" rel="nofollow ugc noopener">hi@hexaplex.ai</a><span> and we’ll figure it out.</span></p></li></ol><h3 class="header-anchor-post">Appendix: Driver Hashes (IOCs)<div class="pencraft pc-display-flex pc-alignItems-center pc-position-absolute pc-reset header-anchor-parent"><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div id="§appendix-driver-hashes-iocs" class="pencraft pc-reset header-anchor offset-top"></div><button type="button" aria-label="Link" data-href="https://ydinkin.substack.com/i/188916866/appendix-driver-hashes-iocs" class="pencraft pc-reset pencraft iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-S63h9o" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button></div></div></h3><p><span>The hashes below are “double-hashed”, each value is </span><code>SHA256(SHA256(file_bytes))</code><span>. We publish them this way so attackers can’t use this list to look up and download vulnerable binaries from VirusTotal or similar services. If you have a driver file on disk, you can check it against this list locally. We will provide comprehensive IOCs directly to PSIRTs, CERTs, and security teams upon request. Contact us at </span><a href="mailto:hi@hexaplex.ai" rel="nofollow ugc noopener">hi@hexaplex.ai</a><span>.</span></p><p>To check a driver on your system:</p><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-8 pc-reset bg-primary-zk6FDl outline-detail-vcQLyr pc-borderRadius-sm sizing-border-box-DggLA4 container-KfNFl_"><div class="pencraft pc-display-flex pc-flexDirection-column pc-position-relative pc-reset flex-grow-rzmknG hoverTarget-UvGaad"><div data-line-numbers="true" class="pencraft pc-display-flex pc-flexDirection-column pc-reset overflow-auto-7WTsTi scrollBar-hidden-HcAIpI code-G_k53t"><pre class="shiki shiki-themes github-light-default github-dark-default" style="background-color:#ffffff;--shiki-dark-bg:#0d1117;color:#1f2328;--shiki-dark:#e6edf3" tabindex="0"><code><span class="line"><span># Linux / macOS</span></span>
+<span class="line"><span>sha256sum driver.sys | awk ‘{print $1}’ | tr -d ‘\n’ | sha256sum | awk ‘{print $1}’</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># PowerShell</span></span>
+<span class="line"><span>$h = (Get-FileHash driver.sys -Algorithm SHA256).Hash.ToLower(); $b = [System.Text.Encoding]::UTF8.GetBytes($h); $s = [System.Security.Cryptography.SHA256]::Create(); $d = $s.ComputeHash($b); ($d | ForEach-Object { $_.ToString(”x2”) }) -join “”</span></span></code></pre></div><button tabindex="0" type="button" aria-label="x" aria-pressed="false" data-state="off" class="pencraft pc-reset pencraft toggle-qPLOMm animate-Rwg7DP button-xI4m2l hoverChild-iT6tA_ iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-outline-MgyjoK"><div class="pencraft pc-display-flex pc-justifyContent-center pc-alignItems-center pc-reset content-PO04C_ on-oX6ZaQ"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg></div><div class="pencraft pc-display-flex pc-justifyContent-center pc-alignItems-center pc-reset content-PO04C_ off-Pr96yj"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></div></button></div></div><p>Full list:</p><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-8 pc-reset bg-primary-zk6FDl outline-detail-vcQLyr pc-borderRadius-sm sizing-border-box-DggLA4 container-KfNFl_"><div class="pencraft pc-display-flex pc-flexDirection-column pc-position-relative pc-reset flex-grow-rzmknG hoverTarget-UvGaad"><div data-line-numbers="true" class="pencraft pc-display-flex pc-flexDirection-column pc-reset overflow-auto-7WTsTi scrollBar-hidden-HcAIpI code-G_k53t"><pre class="shiki shiki-themes github-light-default github-dark-default" style="background-color:#ffffff;--shiki-dark-bg:#0d1117;color:#1f2328;--shiki-dark:#e6edf3" tabindex="0"><code><span class="line"><span>f5518872b73ee8df067ab93a5a3f3e50474d619b26207da65ca6329e6553a8c0</span></span>
+<span class="line"><span>bff265e5e5bc595057c734126ce2b3605bf2cf4ce129b223174f809d4f4c3dbe</span></span>
+<span class="line"><span>0001c402add3ecfaf03cd70b9cacc1c9b679ebf51630264c6157fd6fac432918</span></span>
+<span class="line"><span>1740e9ad3f9e29d59b75acee49288e9a2f5cb20f787a1be230f9c94091850cbc</span></span>
+<span class="line"><span>3db22ada94df04f003ce92a936510f1265e0ccc5d751d5d620d2734da0e0f3d5</span></span>
+<span class="line"><span>69f62eb881ff203acc0969911cb4c51c3f57539b999cc95560daeb96105680a4</span></span>
+<span class="line"><span>43122f13e27189408a9366f890d15fd6e69dfc3f1a6a0a7afb53be292947335d</span></span>
+<span class="line"><span>2e2497d54f1894f8e692cc294f9871ab57f148db69aed4270fc02c038be38193</span></span>
+<span class="line"><span>f848b02daccf967907697bc9e251c8e523c003e3d3c70a00666c629dd7896168</span></span>
+<span class="line"><span>8bf115e6814b4918a4c28c96975c9a274e259fab6eeb0abac6c99ab578db3622</span></span>
+<span class="line"><span>b641de06167ab0ace9a9486fccecbe54ef3bbc7dcb25dbd74d69059d83fc872e</span></span>
+<span class="line"><span>8f418bafa65d6a35023132bc9ca306a1aa7fc85cc64385e5b2c16f7f82f9e36f</span></span>
+<span class="line"><span>167585faabac13f7a43c6660651fece580ae5b8d19d3583e6774060c92fc636c</span></span>
+<span class="line"><span>7b564f798c818414f4ef0bf111df6695ba96e77f079e3b7fab330a590181404c</span></span>
+<span class="line"><span>263cc8ffcde041af197761bf439cc30f62c162d2160a54bf5eafb07b840063cb</span></span>
+<span class="line"><span>a4e1020c079124beeff920bf14e7e88dcb1a32a84296e088f6fdaf8a54c3bbcf</span></span>
+<span class="line"><span>6b3284100f4a94d487fe76cb062ec404ed96bf03da5ca63bae64cf357e06df9c</span></span>
+<span class="line"><span>e2b82a29494e628b416862ac85556266723e862f605198c9a647b4c68be8e67b</span></span>
+<span class="line"><span>14180c0ad1278dc68bcd1d2bd5c090953f251c31735fd813ecdf48653f393c31</span></span>
+<span class="line"><span>f33f51590913e9c1b384e11824190934fe5ce1bed2c816340673255abd5b1c7e</span></span>
+<span class="line"><span>fd92d31c1daa8849f10f00ded6746f52128d321c96c5cdec2fab48a3566f353a</span></span>
+<span class="line"><span>dfa97b9b8a4257627a3081540098eda93a6939f4726b8a33764286431561783a</span></span>
+<span class="line"><span>61ea52ca06e7c714d13361f8fedef0e6db0134eb41c182858379a69c559c0118</span></span>
+<span class="line"><span>6e207b2399c8545819bd2a3f0361bdc3b81f8964d40875541f10988cd83a8961</span></span>
+<span class="line"><span>d7a05e9b3d9ad28ffe7dd4297972b1b513ddf3a1463d733bf70d2a721e87266b</span></span>
+<span class="line"><span>30d968cc95df5a4f20cffa0b461bba411f888caed09813fe773f73cf97c69d17</span></span>
+<span class="line"><span>d75ee2ec08266737ff776970fec1af4ad33a6e1a5c503087879cb914ea6c2ba0</span></span>
+<span class="line"><span>eac89c954b31577e5bf429f40aafb74a6482ed59d7e341034d9248ba0a6a43e8</span></span>
+<span class="line"><span>d8b9276c00a5232d242d1294773d9df1ba15366ec7fca96d937437a09e42c68d</span></span>
+<span class="line"><span>f8735230e2c9192e02b5b7ad1c95509cb69562c7a1388330896c7a1d3d6565c8</span></span>
+<span class="line"><span>726d74c97e437a674e42d1bcbacd433e467529678619d0d3b3840a097c9293d6</span></span>
+<span class="line"><span>ddddb96dffbc5cfaad5847112996d2bfc50d75d088ac29c2d4a2bb02695e673b</span></span>
+<span class="line"><span>13a1bb718618b221153a309e167e941133cccb5d27c54766d08b91eeaffa91d9</span></span>
+<span class="line"><span>d9e3b5bf65de9a6cd12837f7904b8d5a3ffaf346a899b57154fe382c86e3ae5e</span></span>
+<span class="line"><span>8f030fe5541b3f1a4f0e6738decb6baca52b7fdca27241928addad2fb386dc86</span></span>
+<span class="line"><span>eecf03717f35c05eff82546a828fe658c81ab85b5781aef6c1770a7b46731a22</span></span>
+<span class="line"><span>064e28cc2e3cb07db853cb98d968f00f67fbd7070afb56c723f6661c74edb6bf</span></span>
+<span class="line"><span>52cd8365be18992213f45d563474cfc8cb584566ac3e33cd136cb1ceff16820e</span></span>
+<span class="line"><span>4b18e765bcf2435894a6055958c8d150f302d998e1d846c4808b85a95f32fda6</span></span>
+<span class="line"><span>03acd199834846b016b04e604496788100f8f90c2a50e5db55aaf44705218cd6</span></span>
+<span class="line"><span>bca6885b24498cacbc259f5c6fc65bab5691c3b3be0f1d162cfcfeea19d82a7a</span></span>
+<span class="line"><span>1b47869ac08a94888a256e418a615aa3cbb6698d19748b528a7917cf3c91e76b</span></span>
+<span class="line"><span>76fc2ea6378ded4a84d7565af278b6055ffab52de9c27d2a80fb0493e5de6cbf</span></span>
+<span class="line"><span>3fd21ea96af68f88cc86421ac98379a24ef1c7661ee8aba3475704a37a366753</span></span>
+<span class="line"><span>2630fd79567406e9ca9bddfa2c03ee9b4c8cf475090a8567cf1efa6a287c785e</span></span>
+<span class="line"><span>d28adf2219a6684f10a9c287a974b998a58893682ae26824330a32d0985d47f4</span></span>
+<span class="line"><span>6dc7398197418d3caa51441599e7b15fdba119af8766f23f4409862567b11bd9</span></span>
+<span class="line"><span>2fab7bc7ef6423f1ea08fc1ad947c9cefe4199ab641802e77777c03c97fa1321</span></span>
+<span class="line"><span>e1ef1c9568b3722d30580429efcbf6ce8e7e3d61c4d972a3c8ea161caff016fc</span></span>
+<span class="line"><span>ff91351f33b683f8612ce9bdd6a402a9344300a83b869347d5390a2106c856b6</span></span>
+<span class="line"><span>f827900e8ada4bc97eb24959f26ebc9ed4794cb67cb218af49d13e6ee19685a1</span></span>
+<span class="line"><span>94aaaaf6854ea08c122c9b60d8245ae0cc7ededec74846c79bd7e7924e26f6f8</span></span>
+<span class="line"><span>9f6901adeb0750eae4634e6d0c8539d5d7338b306d6bc7dd55be00994631f595</span></span>
+<span class="line"><span>2f5248763ae1af1d58cc4a9a6486f3d06a42cc1f9980c0cbb709ae1a7fc1ddee</span></span>
+<span class="line"><span>63aaac65243ac25e24ba733e3961a0d545b23323ceb26721290247df2854f399</span></span>
+<span class="line"><span>c2d6f6b6177431ca7ea2ba511dfd6c5f5fb04a84b6b519c1c7a7740749185ceb</span></span>
+<span class="line"><span>f5070463de6a1d06d4bfa99267df265819d80089a89c61843450d171ef5270f9</span></span>
+<span class="line"><span>c74c38036737b9aa867309765ef8d1b29ac4219bc21d2242d9656851c72f1f13</span></span>
+<span class="line"><span>dbbdd1ea3246e04c7b80f8966e502dc7e891a36700f08bbbcd3b94a2cc6c94df</span></span>
+<span class="line"><span>44641b4c1362b3f57fd36685dc59668416422696ca7f8e8a164a2e034174e3a0</span></span>
+<span class="line"><span>afbf7fc92861087b857f3340e2b3aa4a423701cb53e7cf70c2fecd6f458e49a0</span></span>
+<span class="line"><span>b05689300c51a95224d2dd9722f4b66482f750c7f4f7280598a1a9174b98060d</span></span>
+<span class="line"><span>2f0389c4e5fc28c80a882a3232343a25f7f7b01121dfc4d609db42cff6de6faf</span></span>
+<span class="line"><span>11c5d708eee5d09054d453b89b67eee5423e779ac8772bc4af0d99b7736cd4dd</span></span>
+<span class="line"><span>066337bf10204c1dfe29d99ccd4c2cd9cb0d5091038a4518819aa5b735e7533d</span></span>
+<span class="line"><span>7a67749b345da15af072b109541469d0c9b94c9e0f77abb3e38618f6130b03db</span></span>
+<span class="line"><span>54b54ce4a35148708a17b4060cec53db85d2740baf3b0ddb14f6052e3be2a339</span></span>
+<span class="line"><span>a86effaf5796fadbbdff31d0666697a27ff6d7de84eefe3d09bfb71e39302ea4</span></span>
+<span class="line"><span>882922c05adc4e54b29002e039b09e3054267050c2e2acddf2a30fee8b363594</span></span>
+<span class="line"><span>736bbabb5d15cd335f319e58192140e340b031834cc88652201de6c3815dafb5</span></span>
+<span class="line"><span>a1fc19e554fa5ce739f9de3eec5809a8719886b65f7caa4e382d2f31f3f14c35</span></span>
+<span class="line"><span>bb14a75ac4bbc6d0e470b7adf98f2cca40539e5a560a52151b391c635ff1c1d7</span></span>
+<span class="line"><span>581d477d118bf87f1aafd1be937ab9db71c3a594216c910413c2e8c171fb69ab</span></span>
+<span class="line"><span>c01d45f5691b4d08adb461b34237f9ef995e37443a74eb5ffbedcdf00ffe5243</span></span>
+<span class="line"><span>c9fde1bed82f51b9a63b299af7bd2551833d53cd5fcc4325da9df97602810405</span></span>
+<span class="line"><span>45bc2bf7c77a2e68f7971f14ab526f8864ad975f330f46f086add8976ff391a5</span></span>
+<span class="line"><span>6c7af8c9d28fb1260a354a4b9e3b9f0dcd61c1b7b5b74a52607aba9578708c6d</span></span>
+<span class="line"><span>36aac1cff790804b5dba09576b00c351ec9a3a55487de629dabebce7b524c204</span></span>
+<span class="line"><span>2ac47f11582786861dd2e21e3166d0df257098e6793d783a7f5c1953102c7a42</span></span>
+<span class="line"><span>defebc60860dd33553c10e3e0a89d3c7489a5c6c6048759d2b4bd6252b3aa9bd</span></span>
+<span class="line"><span>9a19b927a781f7bcd6ce45d2861e3cfeb9a2cb540151c52cac35781d06d80f38</span></span>
+<span class="line"><span>794392a5bf4c5bbe055c7a464b31939894ad2dc8d2685c9e170683144c2a650b</span></span>
+<span class="line"><span>cc7db83737f52f3942ffb3f5b3230b9ce70dddd8fb71f563306175149b8912e1</span></span>
+<span class="line"><span>7dcf02e1efc4040d0c8eab9b48993b47dc4d016cbf5a0555a6727c0c180bf3ba</span></span>
+<span class="line"><span>d4f8ca287ff2ca574e0e61bc0440c3899a7b7508dc6cfa4644ee0429c2816030</span></span>
+<span class="line"><span>a222156ad96181ed3c7e5b8f96ebe4942dd88adb3bbb1c494f0e2a24e1f946a5</span></span>
+<span class="line"><span>d0e67b68747b11d47d77c4d96ae33107f8bc9174f73023bc4fe2398620962fe0</span></span>
+<span class="line"><span>672556b9545bbb8403e3c3af40313a26a658b18731e27478c220691057aa4053</span></span>
+<span class="line"><span>89a3e2b734714c3ceb0589949c8932af9e2dcb4b427fe97b78ac3ecc2a930e69</span></span>
+<span class="line"><span>90a7120991391b4be3fb5c774cdd83ce4d5266900b385b4fc97e40772274cf4d</span></span>
+<span class="line"><span>ce94839da4a2a92151c7e1a81475de847fc7b840472d9eebd8c9d2f1f7ed33db</span></span>
+<span class="line"><span>545cb7f66b7de34411f8d4c0eaca30678b3eef8cda34a190d44fb6097be9eb59</span></span>
+<span class="line"><span>a6ebc4553a83d91fbcb57168f9cf0bd06acefde0a9c6f0b21112a6a314a3bf6e</span></span>
+<span class="line"><span>20a8f132946e6c40208e8797e4214a3c35fb2ad3506c287679ef3b421460a99a</span></span>
+<span class="line"><span>7583260faba805fd08a156088df0000f463777fc6e9f98271f1f9824c02c4481</span></span>
+<span class="line"><span>f7286ae800bf46dd3c876617aa3d6f3345a4d00138bccae05ee3b3dfcccfd368</span></span>
+<span class="line"><span>a1c4d865419ff619ea4ca2a3304757426590b05b6b909f3d1d0dc5093232a014</span></span>
+<span class="line"><span>b5bb1adff986dc603a21d7f95dd14b7a0e2cdc87e9be756306ed1d0ef48e1796</span></span>
+<span class="line"><span>f700ce792ca57b74563e34207a1be2d866c9df74510cd6a9462e62d62dc2ee8f</span></span>
+<span class="line"><span>3456b5ad6c936f60d7e76eb9b7116b2491ae6e5748d30e0d90451da3f0c0a9e2</span></span>
+<span class="line"><span>5a9b580375cb3ae51656b0729783434d7ffb2133e6696971c66bcd4ed1fb9d3d</span></span>
+<span class="line"><span>473201c93b0eeaea7560ea067c6273ec1ebc94d6bf4e7667b69b93cd834b00dd</span></span>
+<span class="line"><span>5a0d5649b886b52d77dc275fbd6e583e8627b149e48338d612cae82b1e7fcd3d</span></span>
+<span class="line"><span>bcd1418282d998071a822c873e29d47461d2916ab906bdf693e8800a7e280110</span></span>
+<span class="line"><span>cc3d1df5f1a0d7f9d50678a7b02968842af4ffbf957f0837c5632df0562d71d5</span></span>
+<span class="line"><span>4a99f768b598ca64918f796a4cf0b1ac4eb484cee616652e49ffe8b53d2c0e7d</span></span>
+<span class="line"><span>c1f4f0e0e303b203994b660794f0fefcb5b23fa4a5af8ab72100f0e9ecad7c5a</span></span>
+<span class="line"><span>302e5791f74462c16048551e55e085743f4cae1de1b468c856f2e33e52794a1a</span></span>
+<span class="line"><span>7aa27d7a8f8d214df71c1d0331e570144e3136ded18382f62dbef3c8ae04b72c</span></span>
+<span class="line"><span>886fabaad2357cb8df6ba79ed32e5644455826f4d73c1889a74ffbe344aa20de</span></span>
+<span class="line"><span>142550e835d6839eb53645501671ffa1aaf3dd119c98d87ab19570b572cdc30e</span></span>
+<span class="line"><span>3de1bfefa2a6fd28237ed1acae053081ebe9832aa337e8d6356bc86ddc905b18</span></span>
+<span class="line"><span>a3b5daf9b74b4c9fd6de8e01c5751dc20e1dfd1ddf887d9b2029d1edac2a6155</span></span>
+<span class="line"><span>a02acdd074b5bfeaa841c34834a1f433ad5768bbac2a59f4f89b835f80840bc2</span></span>
+<span class="line"><span>37a4f94e4e811af5b320a5eb9b4c717abdb31ddc3356e68905da2c73086ac4e9</span></span>
+<span class="line"><span>6288822f04f8abe45f7c1145efaed90220d08a9f602c486499459599de8b5606</span></span>
+<span class="line"><span>7c0cc1790fc5f5c3e09c7b88b0800d3b60016d69976a5646a3bdd43284415f29</span></span>
+<span class="line"><span>daa7c2ffac63f52e0cc5360a24b9d686fb9fdfe24e5d3a89a6b53751690e41e7</span></span>
+<span class="line"><span>119cd51bd88c85f2babc441a2ad23fdefcbff3137bb20fa5e316f737ddbca969</span></span>
+<span class="line"><span>4a4506e4c5ae5d618e7402c4cdf1742143316055247f8b6c396508323dd5bd07</span></span>
+<span class="line"><span>aa95e38abb02f9130f7151f188913b0a07b1bda647b9166b9ac6671c96a012be</span></span>
+<span class="line"><span>1f5907b03eb16e2ca64e253b5e93785937e35d5394bb21102335f85f0ffbe532</span></span>
+<span class="line"><span>34c7ad67417737df93c486645d92ac3b6cdd4a89962369dea4d07603dc0770eb</span></span>
+<span class="line"><span>a37215f7c178bb0b71f4219c54a7a2aec4252b1a4bdbd5fc533035708e52dd0c</span></span>
+<span class="line"><span>e60afb30b323ac44f935589921cdbb6d8082afb6fe69e85eac8964f28d063e08</span></span>
+<span class="line"><span>6a6be30cd89c2276d4a5320803de6d7f8d075d85b9f628f71b33bcd7642b2f0f</span></span>
+<span class="line"><span>121cedbdf3fc308f6734be53fde698ca9158ba46fc118064238f38324c68d559</span></span>
+<span class="line"><span>094b6d64c792ad3ce638e525bbcd045e13680026e1cebde2dc1e0f335c834e16</span></span>
+<span class="line"><span>8fffdd3cd4ef6e98926334c9c1b59cf30c27f0b1b0376ee7e8d13ca7a3635463</span></span>
+<span class="line"><span>5f1af0018fcbb599f115d62531b1b1c5df7935f6a1de57c9628d57035a3c241b</span></span>
+<span class="line"><span>11b63161b5e5f3a37dea4c16725ea4214b4b89e137b8c550758828f26d6e5063</span></span>
+<span class="line"><span>70bb9000831e00b37e36bb337e4064a852ace3528409202626ed1e39a3fba0a9</span></span>
+<span class="line"><span>1671191ff7b876b2fbdf2fc63a8e8566d21d29e1134f51b65cee9a3c18b08026</span></span>
+<span class="line"><span>756ddb9181dd991074bbd68a8df7c48ead8e0cb950bcb2342eca024fbbfe24ef</span></span>
+<span class="line"><span>c0bf8afc8d061e3da5b8593dc24bc1cfe86e138b87cab3674d39981196815d29</span></span>
+<span class="line"><span>0c7d181e350328b9e7d0e7e57e75f2905b2cd7c3f0a950103b81ba5203e93d6c</span></span>
+<span class="line"><span>7f3b8b4fec4138490e59f5529a9e63bc7aeb2d0c840bf8a19e1b7ba05f14f623</span></span>
+<span class="line"><span>7b3137e5962c729903d5c80815e09600489d989db854b5d1244a2bb6ed4efaf8</span></span>
+<span class="line"><span>192f70a0e34f8e10c4871494a5c4157e20d437f240eced81dca0a9508dea8222</span></span>
+<span class="line"><span>a266dde07e0cfccd48aacb4737582c7855dc5430142a8c93fb18940406733294</span></span>
+<span class="line"><span>480c835cce8a4589d02da3104aabd21dd205fc13c09b579250f2fa838cf59c1f</span></span>
+<span class="line"><span>5415f7f1d27b044ee2508c33f9130389b4c813ba8aff1159446b7878f98bfea9</span></span>
+<span class="line"><span>851552076ed14bc9e92968df9937d55bc4536a348f7bd49f24df3705ea3bb296</span></span>
+<span class="line"><span>77eb25431bb9813a4355c733f10b02e2e38a4426a26ddfce3931a4fa1cb412c0</span></span>
+<span class="line"><span>02db103174351f58b7f4a30205eece3acc5d4fd134200d17638a811750e217e4</span></span>
+<span class="line"><span>60df4d36f4ee4c2c8e360d5606ef8c56c33d08a85a9c24ce7b4285e4121b441f</span></span>
+<span class="line"><span>b2069a78812d01e63388db34bbf0174ac787996f76ee7ef2210fa7b8c5c2edd3</span></span>
+<span class="line"><span>94be5699f73227d3170de3c16fe9654241a054e28e6dc7952f409a6602bc148e</span></span>
+<span class="line"><span>616d2015e428ddadebdffea571d5e384dd2ceb25fa36b63ffbedcd734b7dd861</span></span>
+<span class="line"><span>55713fbb9eecf735f25b23e1cb9c28b8c36cdc0193906f1cf41d91f701f2fe5f</span></span>
+<span class="line"><span>cfc81ad7402dd137baf7b53058af9c8d372b5e9149480abb43757e4a568a2958</span></span>
+<span class="line"><span>4735d2db86a7c27565b0463948f506463b5cdb11a8dd9a89adee91552b071c20</span></span>
+<span class="line"><span>9e2b6e6792e56c4ce14011c365963b80449aa8245fc08790b4c9b5cfea856e19</span></span>
+<span class="line"><span>5262442d370ce096a706eaf43181b3e2ca77625085b3e831d881565e0b7633e6</span></span>
+<span class="line"><span>062ed83ffc3b8ac543914d58826b6de6d62e92d098f0774cce924f44e0800eae</span></span>
+<span class="line"><span>c03a63e11b7ee84aae78aae0cc7073c94457e7ecbe9732966f97e761780338f3</span></span>
+<span class="line"><span>7aeff559b2ae04d30eb1dc173dbced58b01d56e62001b3a60fdc0e01cdb681a3</span></span>
+<span class="line"><span>a7e7ff920364f6307b92955acaf5b4e097b9a9f7cd90f94b8439c48ba0e414cd</span></span></code></pre></div><button tabindex="0" type="button" aria-label="x" aria-pressed="false" data-state="off" class="pencraft pc-reset pencraft toggle-qPLOMm animate-Rwg7DP button-xI4m2l hoverChild-iT6tA_ iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_secondary-outline-MgyjoK"><div class="pencraft pc-display-flex pc-justifyContent-center pc-alignItems-center pc-reset content-PO04C_ on-oX6ZaQ"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg></div><div class="pencraft pc-display-flex pc-justifyContent-center pc-alignItems-center pc-reset content-PO04C_ off-Pr96yj"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></div></button></div></div><div class="subscription-widget-wrap"><div class="subscription-widget show-subscribe"><div class="preamble"><p>Thanks for reading! Subscribe for free to receive new posts and updates.</p></div><div data-component-name="SubscribeWidget" class="subscribe-widget"><div class="pencraft pc-display-flex pc-justifyContent-center pc-reset"><div class="container-IpPqBD"><form action="https://ydinkin.substack.com/api/v1/free?nojs=true" method="post" class="form form-M5sC90" novalidate=""><div class="sideBySideWrap-vGXrwP"><div class="emailInputWrapper-QlA86j"><div class="pencraft pc-display-flex pc-minWidth-0 pc-position-relative pc-reset flex-auto-j3S2WA"><input name="email" placeholder="Type your email..." type="email" class="pencraft emailInput-OkIMeB input-y4v6N4 inputText-pV_yWb"></div></div><button type="submit" disabled="" class="pencraft pc-reset pencraft rightButton primary subscribe-btn button-VFSdkv buttonBase-GK1x3M" tabindex="0"><span class="button-text ">Subscribe</span></button></div><div id="error-container"></div></form><div class="animationWrapper-QRL6aQ"></div></div></div></div></div></div></div></div><div class="visibility-check"></div><div class="pencraft pc-display-flex pc-paddingTop-16 pc-paddingBottom-16 pc-reset border-top-detail-themed-k9TZAY"><div class="pencraft pc-display-flex pc-gap-16 pc-alignItems-center pc-reset color-secondary-ls1g8s"><div class="pencraft pc-display-flex pc-flexDirection-row pc-gap-8 pc-alignItems-center pc-justifyContent-flex-start pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-row pc-alignItems-center pc-justifyContent-flex-start pc-reset rtl-zsi3Q8" style="--scale: 32px; --offset: 8px; --border-width: 4px;"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/1071876-dagelf" aria-label="View dagelf's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB" style="--scale: 32px;"><div title="dagelf" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!t9lZ!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!t9lZ!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!t9lZ!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!t9lZ!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png" alt="dagelf's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/433817627-patchmeifucan" aria-label="View PatchMeIfUCan's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB overlap-q75iOo" style="--scale: 32px;"><div title="PatchMeIfUCan" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!f9QU!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3d04d88c-d6c7-4b97-b0cf-bfb8e760decc_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!f9QU!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3d04d88c-d6c7-4b97-b0cf-bfb8e760decc_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!f9QU!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3d04d88c-d6c7-4b97-b0cf-bfb8e760decc_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!f9QU!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3d04d88c-d6c7-4b97-b0cf-bfb8e760decc_144x144.png" alt="PatchMeIfUCan's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/268496432-phu-thuy-may-tinh" aria-label="View Phù Thủy Máy Tính's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB overlap-q75iOo" style="--scale: 32px;"><div title="Phù Thủy Máy Tính" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!1kkV!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff45120a8-2a9b-4b9f-84cc-4b6852545216_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!1kkV!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff45120a8-2a9b-4b9f-84cc-4b6852545216_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!1kkV!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff45120a8-2a9b-4b9f-84cc-4b6852545216_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!1kkV!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff45120a8-2a9b-4b9f-84cc-4b6852545216_144x144.png" alt="Phù Thủy Máy Tính's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/7366447-gibran-iqbal" aria-label="View Gibran Iqbal's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB overlap-q75iOo" style="--scale: 32px;"><div title="Gibran Iqbal" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!FkLd!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F4c68ecc7-b673-4836-90d6-f62b969f3a90_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!FkLd!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F4c68ecc7-b673-4836-90d6-f62b969f3a90_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!FkLd!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F4c68ecc7-b673-4836-90d6-f62b969f3a90_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!FkLd!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F4c68ecc7-b673-4836-90d6-f62b969f3a90_144x144.png" alt="Gibran Iqbal's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/222028251-anythingcomputery" aria-label="View AnythingComputery's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6 avatar-u8q6xB overlap-q75iOo last-JfNEJ_" style="--scale: 32px;"><div title="AnythingComputery" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!LERE!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F80a7cfac-d76e-4109-8368-f50f56ee550d_480x360.png 32w, https://substackcdn.com/image/fetch/$s_!LERE!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F80a7cfac-d76e-4109-8368-f50f56ee550d_480x360.png 64w, https://substackcdn.com/image/fetch/$s_!LERE!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F80a7cfac-d76e-4109-8368-f50f56ee550d_480x360.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!LERE!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F80a7cfac-d76e-4109-8368-f50f56ee550d_480x360.png" alt="AnythingComputery's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span></div></div><div class="pencraft pc-reset color-secondary-ls1g8s line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ"><div class="pencraft pc-display-flex pc-gap-4 pc-alignItems-center pc-reset"><a class="pencraft pc-reset cursor-pointer-LYORKw color-secondary-ls1g8s decoration-hover-underline-ClDVRM reset-IxiVJZ">9 Likes</a>∙<div class="pencraft pc-reset color-secondary-ls1g8s line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ"><a href="https://substack.com/note/p-188916866/restacks?utm_source=substack&amp;utm_content=facepile-restacks" class="pencraft pc-reset color-secondary-ls1g8s decoration-hover-underline-ClDVRM reset-IxiVJZ">4 Restacks</a></div></div></div></div></div><div class="post-footer"><div class="pencraft pc-display-flex pc-gap-16 pc-paddingTop-16 pc-paddingBottom-16 pc-justifyContent-space-between pc-alignItems-center pc-reset flex-grow-rzmknG border-top-detail-themed-k9TZAY border-bottom-detail-themed-Ua9186 post-ufi"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><div class="like-button-container post-ufi-button style-button"><button type="button" aria-label="Like (9)" aria-pressed="false" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="#000000" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg><div class="label">9</div></button></div><button type="button" aria-label="View comments (2)" data-href="https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days/comments" class="pencraft pc-reset pencraft post-ufi-button style-button post-ufi-comment-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="#000000" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></g></svg><div class="label">2</div></button><button type="button" id="radix-P0-57" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><svg role="img" style="height: 20px; width: 20px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="icon"><g><title></title><path d="M21 3V8M21 8H16M21 8L18 5.29962C16.7056 4.14183 15.1038 3.38328 13.3879 3.11547C11.6719 2.84766 9.9152 3.08203 8.32951 3.79031C6.74382 4.49858 5.39691 5.65051 4.45125 7.10715C3.5056 8.5638 3.00158 10.2629 3 11.9996M3 21V16M3 16H8M3 16L6 18.7C7.29445 19.8578 8.89623 20.6163 10.6121 20.8841C12.3281 21.152 14.0848 20.9176 15.6705 20.2093C17.2562 19.501 18.6031 18.3491 19.5487 16.8925C20.4944 15.4358 20.9984 13.7367 21 12" stroke-linecap="round" stroke-linejoin="round"></path></g></svg><div class="label">4</div></button></div><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button type="button" class="pencraft pc-reset pencraft post-ufi-button style-button has-label with-border" tabindex="0"><div class="label">Share</div></button></div></div></div><div class="post-contributor-footer"><div class="container-border"></div><div data-user-id="465243607" class="post-contributor-bio"><table cellpadding="0" cellspacing="0" class="post-contributor-bio-table"><tbody><tr class="post-contributor-bio-table-row"><td class="post-contributor-bio-userhead-cell post-contributor-bio-userhead-cell-web"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/@eyalkraft?utm_source=byline" aria-label="View Eyal Kraft's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-52 pc-height-52 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6" style="--scale: 52px;"><div title="Eyal Kraft" class="pencraft pc-display-flex pc-width-52 pc-height-52 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 52px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!Ht_h!,w_52,h_52,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 52w, https://substackcdn.com/image/fetch/$s_!Ht_h!,w_104,h_104,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 104w, https://substackcdn.com/image/fetch/$s_!Ht_h!,w_156,h_156,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png 156w" sizes="52px"><img src="https://substackcdn.com/image/fetch/$s_!Ht_h!,w_52,h_52,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F05827702-49bc-4ffe-8d86-657d8d1341b2_144x144.png" alt="Eyal Kraft's avatar" width="52" height="52" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span></td><td class="post-contributor-bio-body-cell post-contributor-bio-body-cell-web"><div class="post-contributor-bio-body"><div class="post-contributor-bio-preamble">A guest post by</div><table cellpadding="0" cellspacing="0" class="post-contributor-bio-body-table"><tbody><tr class="post-contributor-bio-body-table-row"><td class="post-contributor-bio-copy-cell"><div class="pencraft pc-display-flex pc-gap-4 pc-paddingBottom-4 pc-alignItems-center pc-reset"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/@eyalkraft?utm_campaign=guest_post_bio&amp;utm_medium=web" data-native="true" class="post-contributor-bio-title no-margin">Eyal Kraft</a></span></div><div class="post-contributor-bio-text">AI &amp; Cybersecurity</div></td><td class="post-contributor-bio-controls-cell post-contributor-bio-controls-cell-web"><div class="post-contributor-bio-controls"><a href="https://eyalkraft.substack.com/subscribe?" data-native="true" class="post-contributor-bio-subscribe-button button primary"><span class="post-contributor-bio-subscribe-button-label">Subscribe to Eyal</span></a></div></td></tr></tbody></table></div></td></tr></tbody></table></div></div></div></article></div></div></div><div class="pencraft pc-display-contents pc-reset pubTheme-yiXxQA"><div class="visibility-check"></div><div id="discussion" class="pencraft pc-display-flex pc-flexDirection-column pc-gap-16 pc-paddingTop-32 pc-paddingBottom-32 pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-32 pc-reset container"><h4 class="pencraft pc-reset line-height-24-jnGwiv font-display-nhmvtD size-20-P_cSRT weight-bold-DmI9lw reset-IxiVJZ">Discussion about this post</h4><div class="pencraft pc-alignSelf-flex-start pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-column pc-position-relative pc-minWidth-0 pc-reset bg-primary-zk6FDl outline-detail-vcQLyr pc-borderRadius-sm overflow-hidden-WdpwT6"><div dir="ltr" data-orientation="horizontal" class="pencraft pc-display-flex pc-flexDirection-column pc-reset flex-grow-rzmknG"><div style="outline: none;" aria-label="Select discussion type" role="tablist" aria-orientation="horizontal" data-orientation="horizontal" class="pencraft pc-display-flex pc-gap-4 pc-padding-4 pc-position-relative pc-reset cursor-default-flE2S1 pc-borderRadius-sm overflow-auto-7WTsTi scrollBar-hidden-HcAIpI" tabindex="0"><button type="button" role="tab" aria-selected="true" aria-controls="radix-P0-71-content-comments" data-state="active" id="radix-P0-71-trigger-comments" data-orientation="horizontal" data-radix-collection-item="" class="pencraft pc-reset flex-auto-j3S2WA pencraft segment-j4TeZ4 buttonBase-GK1x3M buttonText-X0uSmG buttonStyle-r7yGCK priority_quaternary-kpMibu size_sm-G3LciD" tabindex="-1">Comments</button><button type="button" role="tab" aria-selected="false" aria-controls="radix-P0-71-content-restacks" data-state="inactive" id="radix-P0-71-trigger-restacks" data-orientation="horizontal" data-radix-collection-item="" class="pencraft pc-reset flex-auto-j3S2WA pencraft segment-j4TeZ4 buttonBase-GK1x3M buttonText-X0uSmG buttonStyle-r7yGCK priority_quaternary-kpMibu size_sm-G3LciD" tabindex="-1">Restacks</button><div class="pencraft pc-position-absolute pc-height-32 pc-reset bg-secondary-UUD3_J pc-borderRadius-xs sizing-border-box-DggLA4 highlight-U002IP" style="--highlight-width: 80.4375px; --highlight-x: 0px;"></div></div></div><div class="pencraft pc-display-flex pc-alignItems-center pc-reset arrowButtonContainer-O4uSiH arrowButtonOverlaidContainer-t10AyH left-Tg8vqp"><div class="overlay-zrMCxn primary-lv_sOW"></div></div><div class="pencraft pc-display-flex pc-alignItems-center pc-reset arrowButtonContainer-O4uSiH arrowButtonOverlaidContainer-t10AyH right-i3oWGi"><div class="overlay-zrMCxn primary-lv_sOW"></div></div></div></div></div><div class="single-post-section comments-section"><div class="container"><div class="visibility-check"></div><div data-test-id="comment-input" class="pencraft pc-display-flex pc-reset flex-grow-rzmknG"><form class="form-CkZ7Kt"><div style="--scale: 32px;" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj"><div style="--scale: 32px;" title="User" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!TnFC!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack.com%2Fimg%2Favatars%2Fdefault-light.png 32w, https://substackcdn.com/image/fetch/$s_!TnFC!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack.com%2Fimg%2Favatars%2Fdefault-light.png 64w, https://substackcdn.com/image/fetch/$s_!TnFC!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack.com%2Fimg%2Favatars%2Fdefault-light.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!TnFC!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack.com%2Fimg%2Favatars%2Fdefault-light.png" alt="User's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-8 pc-reset flex-grow-rzmknG"><textarea name="body" placeholder="Write a comment..." aria-label="Write a comment..." rows="4" class="pencraft input-qHk4bN autogrowing-_ipn9Y textarea-GbEjRX inputText-pV_yWb" style="height: auto;"></textarea><div data-state="closed" class="pencraft pc-display-flex pc-flexDirection-column pc-reset overflow-hidden-WdpwT6"></div></div></form></div><div class="comment-list post-page-root-comment-list"><div class="comment-list-items"><div class="comment"><div id="comment-220136536" class="comment-anchor"></div><div id="comment-220136536-reply" class="comment-anchor"></div><div role="article" aria-label="Comment by sase" class="pencraft pc-display-flex pc-gap-12 pc-paddingBottom-12 pc-reset comment-content"><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/468051257-sase?utm_source=comment" aria-label="View sase's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6" style="--scale: 32px;"><div title="sase" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!chgW!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf5c78e1-8d30-4115-9e18-01c5cb611a34_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!chgW!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf5c78e1-8d30-4115-9e18-01c5cb611a34_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!chgW!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf5c78e1-8d30-4115-9e18-01c5cb611a34_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!chgW!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fdf5c78e1-8d30-4115-9e18-01c5cb611a34_144x144.png" alt="sase's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset flex-grow-rzmknG"><div class="pencraft pc-display-flex pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-4 pc-reset"><div class="pencraft pc-display-flex pc-minWidth-0 pc-gap-8 pc-alignItems-center pc-height-20 pc-reset line-height-20-t4M0El font-text-qe4AeH size-15-Psle70 weight-regular-mUq6Gb"><div class="pencraft pc-display-flex pc-minWidth-0 pc-gap-8 pc-alignItems-center pc-reset flex-grow-rzmknG"><div class="pencraft pc-display-flex pc-gap-6 pc-reset color-primary-zABazT line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ"><span class="pencraft pc-reset line-height-20-t4M0El font-text-qe4AeH size-15-Psle70 weight-medium-fw81nC reset-IxiVJZ"><span style="min-width: 0px;" data-state="closed"><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a href="https://substack.com/profile/468051257-sase?utm_source=substack-feed-item" data-native="true" class="link-LIBpto" showback="true">sase</a></span></span> </span></div><a data-native="true" href="https://substack.com/note/c-220136536" rel="nofollow" title="Feb 26, 2026, 1:18 PM" class="pencraft pc-reset color-secondary-ls1g8s decoration-hover-underline-ClDVRM reset-IxiVJZ"><span class="pencraft pc-reset color-secondary-ls1g8s line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ">20h</span></a></div></div></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset flex-grow-rzmknG"></div><div class="pencraft pc-display-flex pc-reset triggerContainer-eX588u"><button type="button" aria-label="Ellipsis" id="radix-P0-84" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="pencraft pc-reset pencraft trigger-j08Uop iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_quaternary-kpMibu" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></div></div><div class="comment-body expanded"><p><span>which model bro ? no mention</span></p></div><div class="pencraft pc-display-flex pc-gap-16 pc-paddingTop-8 pc-justifyContent-flex-start pc-alignItems-center pc-reset comment-actions withShareButton-hQzuEn"><span class="pencraft pc-reset color-pub-secondary-text-hGQ02T decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="like-button"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><div class="pencraft pc-display-flex pc-reset reaction-container"><svg role="img" width="24" height="24" viewBox="0 0 24 24" fill="#000000" stroke-width="1.8" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="animation"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg><svg role="img" width="16" height="16" viewBox="0 0 24 24" fill="transparent" stroke-width="2" stroke="var(--color-fg-secondary-themed)" xmlns="http://www.w3.org/2000/svg" style="height: 16px; width: 16px;"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="transparent" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg></div><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA like-count">Like</div></div></a></span><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="pencraft pc-reset link-_X6et2 link-LIBpto"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA">Reply</div></div></a></span><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="pencraft pc-reset link-_X6et2 link-LIBpto"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" x2="12" y1="2" y2="15"></line></svg><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA">Share</div></div></a></span></div><div data-state="closed" class="pencraft pc-display-flex pc-flexDirection-column pc-reset overflow-hidden-WdpwT6"></div></div></div></div><div class="comment"><div id="comment-219599615" class="comment-anchor"></div><div id="comment-219599615-reply" class="comment-anchor"></div><div role="article" aria-label="Comment by dagelf" class="pencraft pc-display-flex pc-gap-12 pc-paddingBottom-12 pc-reset comment-content"><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset"><span data-state="closed" style="min-width: 0px;"><a href="https://substack.com/profile/1071876-dagelf?utm_source=comment" aria-label="View dagelf's profile" class="pencraft pc-display-contents pc-reset"><div tabindex="0" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA animate-XFJxE4 outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 pressable-sm-YIJFKJ showFocus-sk_vEm container-TAtrWj interactive-UkK0V6" style="--scale: 32px;"><div title="dagelf" class="pencraft pc-display-flex pc-width-32 pc-height-32 pc-justifyContent-center pc-alignItems-center pc-position-relative pc-reset bg-secondary-UUD3_J flex-auto-j3S2WA outline-detail-vcQLyr pc-borderRadius-full overflow-hidden-WdpwT6 sizing-border-box-DggLA4 container-TAtrWj" style="--scale: 32px;"><picture><source type="image/webp" srcset="https://substackcdn.com/image/fetch/$s_!t9lZ!,w_32,h_32,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 32w, https://substackcdn.com/image/fetch/$s_!t9lZ!,w_64,h_64,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 64w, https://substackcdn.com/image/fetch/$s_!t9lZ!,w_96,h_96,c_fill,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png 96w" sizes="32px"><img src="https://substackcdn.com/image/fetch/$s_!t9lZ!,w_32,h_32,c_fill,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb874903-cb5a-43ed-b520-34e01ec12d99_144x144.png" alt="dagelf's avatar" width="32" height="32" draggable="false" class="img-OACg1c object-fit-cover-u4ReeV pencraft pc-reset"></picture></div></div></a></span></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset flex-grow-rzmknG"><div class="pencraft pc-display-flex pc-reset"><div class="pencraft pc-display-flex pc-flexDirection-column pc-gap-4 pc-reset"><div class="pencraft pc-display-flex pc-minWidth-0 pc-gap-8 pc-alignItems-center pc-height-20 pc-reset line-height-20-t4M0El font-text-qe4AeH size-15-Psle70 weight-regular-mUq6Gb"><div class="pencraft pc-display-flex pc-minWidth-0 pc-gap-8 pc-alignItems-center pc-reset flex-grow-rzmknG"><div class="pencraft pc-display-flex pc-gap-6 pc-reset color-primary-zABazT line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ"><span class="pencraft pc-reset line-height-20-t4M0El font-text-qe4AeH size-15-Psle70 weight-medium-fw81nC reset-IxiVJZ"><span style="min-width: 0px;" data-state="closed"><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a href="https://substack.com/profile/1071876-dagelf?utm_source=substack-feed-item" data-native="true" class="link-LIBpto" showback="true">dagelf</a></span></span> </span></div><a data-native="true" href="https://substack.com/note/c-219599615" rel="nofollow" title="Feb 25, 2026, 11:44 AM" class="pencraft pc-reset color-secondary-ls1g8s decoration-hover-underline-ClDVRM reset-IxiVJZ"><span class="pencraft pc-reset color-secondary-ls1g8s line-height-20-t4M0El font-text-qe4AeH size-13-hZTUKr weight-regular-mUq6Gb reset-IxiVJZ">2d</span></a></div></div></div><div class="pencraft pc-display-flex pc-flexDirection-column pc-reset flex-grow-rzmknG"></div><div class="pencraft pc-display-flex pc-reset triggerContainer-eX588u"><button type="button" aria-label="Ellipsis" id="radix-P0-87" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="pencraft pc-reset pencraft trigger-j08Uop iconButton-mq_Et5 iconButtonBase-dJGHgN buttonBase-GK1x3M buttonStyle-r7yGCK size_sm-G3LciD priority_quaternary-kpMibu" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></div></div><div class="comment-body expanded"><p><span>Phew no hits.</span></p></div><div class="pencraft pc-display-flex pc-gap-16 pc-paddingTop-8 pc-justifyContent-flex-start pc-alignItems-center pc-reset comment-actions withShareButton-hQzuEn"><span class="pencraft pc-reset color-pub-secondary-text-hGQ02T decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="like-button"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><div class="pencraft pc-display-flex pc-reset reaction-container"><svg role="img" width="24" height="24" viewBox="0 0 24 24" fill="#000000" stroke-width="1.8" stroke="#000" xmlns="http://www.w3.org/2000/svg" class="animation"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg><svg role="img" width="16" height="16" viewBox="0 0 24 24" fill="transparent" stroke-width="2" stroke="var(--color-fg-secondary-themed)" xmlns="http://www.w3.org/2000/svg" style="height: 16px; width: 16px;"><g><title></title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="transparent" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></g></svg></div><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA like-count">Like</div></div></a></span><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="pencraft pc-reset link-_X6et2 link-LIBpto"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA">Reply</div></div></a></span><span class="pencraft pc-reset decoration-hover-underline-ClDVRM reset-IxiVJZ"><a class="pencraft pc-reset link-_X6et2 link-LIBpto"><div class="pencraft pc-display-flex pc-gap-6 pc-alignItems-center pc-reset"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-fg-secondary-themed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" x2="12" y1="2" y2="15"></line></svg><div class="pencraft pc-reset color-pub-secondary-text-hGQ02T line-height-20-t4M0El font-meta-MWBumP size-11-NuY2Zx weight-medium-fw81nC transform-uppercase-yKDgcq reset-IxiVJZ meta-EgzBVA">Share</div></div></a></span></div><div data-state="closed" class="pencraft pc-display-flex pc-flexDirection-column pc-reset overflow-hidden-WdpwT6"></div></div></div></div></div></div></div></div></div><div class="visibility-check"></div><div class="pencraft pc-display-contents pc-reset pubInvertedTheme-U483dz"><div class="pencraft pc-display-flex pc-flexDirection-column pc-alignItems-center pc-justifyContent-center pc-padding-48 pc-mobile-padding-24 pc-reset bg-primary-zk6FDl container-jsOc9L"><div class="pencraft pc-display-flex pc-flexDirection-column pc-alignItems-center pc-gap-24 pc-flexWrap-wrap pc-reset content-jLbYeh"><h3 class="pencraft pc-reset color-primary-zABazT align-center-y7ZD4w line-height-28-s562kJ font-display-nhmvtD size-24-lFU3ly weight-semibold-uqA4FV reset-IxiVJZ">Ready for more?</h3><div class="container-IpPqBD"><form action="https://ydinkin.substack.com/api/v1/free?nojs=true" method="post" class="form form-M5sC90" novalidate=""><div class="sideBySideWrap-vGXrwP"><div class="emailInputWrapper-QlA86j"><div class="pencraft pc-display-flex pc-minWidth-0 pc-position-relative pc-reset flex-auto-j3S2WA"><input name="email" placeholder="Type your email..." type="email" class="pencraft emailInput-OkIMeB emailInputOnAccentBackground-TfaCGr input-y4v6N4 inputText-pV_yWb"></div></div><button type="submit" disabled="" class="pencraft pc-reset pencraft rightButton primary subscribe-btn button-VFSdkv buttonOnAccentBackground-vmEt94 buttonBase-GK1x3M" tabindex="0"><span class="button-text ">Subscribe</span></button></div><div id="error-container"></div></form><div class="animationWrapper-QRL6aQ"></div></div></div></div></div></div></div></div><div class="footer-wrap publication-footer"><div class="visibility-check"></div></div></div><div class="pencraft pc-display-contents pc-reset pubAccentTheme-rgl9Hv"></div><div role="region" aria-label="Notifications (F8)" style="pointer-events: none;" tabindex="-1"><ol style="--offset: 0px; z-index: 1000;" class="viewport-_BM4Bg" tabindex="-1"></ol></div><div></div>
+            
+        </div>
+
+        
+            
+            
+        
+
+
+        
+        
+        
+        
+        
+        
+
+        
+        
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+        
+        
+
+        
+            <!-- Datadog Analytics -->
+            
+            <!-- End Datadog Analytics -->
+
+            <!-- Cloudflare Web Analytics -->
+            
+            <!-- End Cloudflare Web Analytics -->
+        
+
+        <!-- Fallback tracking pixels -->
+        
+
+        
+
+        
+
+
+        
+
+        
+
+        
+        
+    <div height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" data-original-tag="iframe"></div>
+
+</body></html>

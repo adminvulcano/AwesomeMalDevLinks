@@ -1,0 +1,623 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Behavior monitoring in Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Behavior monitoring in Microsoft Defender Antivirus - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/behavior-monitor.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/behavior-monitor.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/behavior-monitor.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fbehavior-monitor%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fbehavior-monitor%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fbehavior-monitor%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fbehavior-monitor%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Behavior%20monitoring%20in%20Microsoft%20Defender%20Antivirus%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fbehavior-monitor%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="behavior-monitoring-in-microsoft-defender-antivirus">Behavior monitoring in Microsoft Defender Antivirus</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2, Microsoft Defender for Business, Microsoft Defender for Individuals</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p>Behavior monitoring is a critical detection and protection functionality of Microsoft Defender Antivirus.</p>
+<p>Monitors process behavior to detect and analyze potential threats based on the behavior of applications, services, and files. Rather than relying solely on signature-based detection (which identifies known malware patterns), behavior monitoring focuses on observing how software behaves in real-time. Here's what it entails:</p>
+<ol>
+<li><p>Real-Time Threat Detection:</p>
+<ul>
+<li>Continuously observe processes, file system activities, and interactions within the system.</li>
+<li>Defender Antivirus can identify patterns associated with malware or other threats. For example, it looks for processes making unusual changes to existing files, modifying or creating automatic startup registry (ASEP) keys, and other alterations to the file system or structure.</li>
+</ul>
+</li>
+<li><p>Dynamic Approach:</p>
+</li>
+</ol>
+<ul>
+<li><p>Unlike static, signature-based detection, behavior monitoring adapts to new and evolving threats.</p>
+</li>
+<li><p>Microsoft Defender Antivirus uses predefined patterns, and observes how software behaves during execution.  For malware that doesn't fit any predefined pattern, Microsoft Defender Antivirus uses anomaly detection.</p>
+</li>
+<li><p>If a program shows suspicious behavior (for example, attempting to modify critical system files), Microsoft Defender Antivirus can take action to prevent further harm, and revert some previous malware actions.</p>
+</li>
+</ul>
+<p>Behavior monitoring enhances Defender Antivirus's ability to proactively detect emerging threats by focusing on real-time actions and behaviors rather than relying solely on known signatures.</p>
+<p>The following features depend on behavior monitoring.</p>
+<p><strong>Anti-malware</strong>:</p>
+<ul>
+<li>Indicators, File hash, allow/block</li>
+</ul>
+<p><strong>Network Protection</strong>:</p>
+<ul>
+<li>Indicators, IP address/URL, allow/block</li>
+<li>Web Content Filtering, allow/block</li>
+</ul>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>Behavior monitoring is protected by tamper protection.</p>
+</div>
+<p>To temporarily disable behavior monitoring in order to remove it out of the picture, you want to first enable Troubleshooting mode, disable Tamper Protection, and then disable behavior monitoring.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#change-the-behavior-monitoring-policy" aria-label="Section titled: Change the behavior monitoring policy"></a><h2 id="change-the-behavior-monitoring-policy" class="heading-anchor">Change the behavior monitoring policy</h2></div>
+<p>The following table shows the different ways to configure behavior monitoring.</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Change the behavior monitoring policy" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Management tool</th>
+<th>Name</th>
+<th>Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security Settings Management</td>
+<td>Allow behavior monitoring</td>
+<td>This article</td>
+</tr>
+<tr>
+<td>Intune</td>
+<td>Allow behavior monitoring</td>
+<td><a href="https://learn.microsoft.com/en-us/mem/intune/protect/antivirus-microsoft-defender-settings-windows#real-time-protection" data-linktype="absolute-path">Windows Antivirus policy settings for Microsoft Defender Antivirus for Intune</a></td>
+</tr>
+<tr>
+<td>CSP</td>
+<td>AllowBehaviorMonitoring</td>
+<td><a href="https://learn.microsoft.com/en-us/mem/intune/protect/antivirus-microsoft-defender-settings-windows#real-time-protection" data-linktype="absolute-path">Defender Policy CSP</a></td>
+</tr>
+<tr>
+<td>Configuration Manager Tenant Attach</td>
+<td>Turn on behavior monitoring</td>
+<td><a href="https://learn.microsoft.com/en-us/mem/intune/protect/antivirus-microsoft-defender-settings-windows-tenant-attach#real-time-protection" data-linktype="absolute-path">Windows Antivirus policy settings from Microsoft Defender Antivirus for tenant attached devices</a></td>
+</tr>
+<tr>
+<td>Group Policy</td>
+<td>Turn on behavior monitoring</td>
+<td><a href="https://www.microsoft.com/download/details.aspx?id=105668" data-linktype="external">Download Group Policy Settings Reference Spreadsheet for Windows 11 2023 Update (23H2)</a></td>
+</tr>
+<tr>
+<td>PowerShell</td>
+<td>Set-MpPreference -DisableBehaviorMonitoring</td>
+<td><a href="https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-disablebehaviormonitoring" data-linktype="absolute-path">Set-MpPreference</a></td>
+</tr>
+<tr>
+<td>WMI</td>
+<td>boolean  DisableBehaviorMonitoring;</td>
+<td><a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/defender/msft-mppreference" data-linktype="absolute-path">MSFT_MpPreference class</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>If you use Microsoft Defender for Business, see <a href="https://learn.microsoft.com/en-us/defender-business/mdb-next-generation-protection" data-linktype="absolute-path">Review or edit your next-generation protection policies in Microsoft Defender for Business</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#modify-the-behavior-monitoring-settings-by-using-powershell" aria-label="Section titled: Modify the behavior monitoring settings by using PowerShell"></a><h2 id="modify-the-behavior-monitoring-settings-by-using-powershell" class="heading-anchor">Modify the behavior monitoring settings by using PowerShell</h2></div>
+<p>Use the following command to modify the behavior monitoring settings:</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-0" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="powershell"><code class="lang-powershell"><span><span class="hljs-pscommand">Set-MpPreference</span><span class="hljs-parameter"> -DisableBehaviorMonitoring</span> &lt;true | false&gt;
+</span></code></pre>
+<ul>
+<li><code>True</code> disables Behavior monitoring.</li>
+<li><code>False</code> enables Behavior monitoring.</li>
+</ul>
+<p>For more information, see <a href="https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-disablebehaviormonitoring" data-linktype="absolute-path">Set-MpPreference</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#query-the-behavior-monitoring-status-from-powershell" aria-label="Section titled: Query the behavior monitoring status from PowerShell"></a><h2 id="query-the-behavior-monitoring-status-from-powershell" class="heading-anchor">Query the behavior monitoring status from PowerShell</h2></div>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-1" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="powershell"><code class="lang-powershell"><span><span class="hljs-pscommand">Get-MpComputerStatus</span> | <span class="hljs-pscommand">Format-Table</span> BehaviorMonitorEnabled
+</span></code></pre>
+<p>If the value returned is <code>true</code>, behavior monitoring is enabled.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#query-the-behavior-monitoring-status-by-using-advanced-hunting" aria-label="Section titled: Query the behavior monitoring status by using Advanced Hunting"></a><h2 id="query-the-behavior-monitoring-status-by-using-advanced-hunting" class="heading-anchor">Query the behavior monitoring status by using Advanced Hunting</h2></div>
+<p>You can use Advanced Hunting (AH) to query the status of behavior monitoring.</p>
+<p>Requires Microsoft Defender XDR, Microsoft Defender for Endpoint Plan 2, or Microsoft Defender for Business.</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-2" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			Kusto
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="kusto"><code class="lang-kusto"><span><span class="hljs-keyword">let</span> EvalTable = DeviceTvmSecureConfigurationAssessment
+| <span class="hljs-title">where</span> ConfigurationId <span class="hljs-keyword">in</span> (<span class="hljs-string">"scid-91"</span>)
+| <span class="hljs-title">summarize</span> <span class="hljs-keyword">arg_max</span>(Timestamp,IsCompliant, IsApplicable) <span class="hljs-keyword">by</span> DeviceId, ConfigurationId,<span class="hljs-keyword">tostring</span>(Context)
+| <span class="hljs-title">extend</span> Test = <span class="hljs-keyword">case</span>(
+ConfigurationId == <span class="hljs-string">"scid-91"</span> , <span class="hljs-string">"BehaviorMonitoring"</span>,
+<span class="hljs-string">"N/A"</span>),
+Result = <span class="hljs-keyword">case</span>(IsApplicable == <span class="hljs-number">0</span>,<span class="hljs-string">"N/A"</span>,IsCompliant == <span class="hljs-number">1</span> , <span class="hljs-string">"Enabled"</span>, <span class="hljs-string">"Disabled"</span>)
+| <span class="hljs-title">extend</span> packed = <span class="hljs-keyword">pack</span>(Test,Result)
+| <span class="hljs-title">summarize</span> Tests = make_bag(packed) <span class="hljs-keyword">by</span> DeviceId
+| <span class="hljs-title">evaluate</span> bag_unpack(Tests);
+<span class="hljs-keyword">let</span> DefUpdate = DeviceTvmSecureConfigurationAssessment
+| <span class="hljs-title">where</span> ConfigurationId == <span class="hljs-string">"scid-2011"</span>
+<span class="hljs-comment">// | where isnotnull(Context)</span>
+| <span class="hljs-title">extend</span> Definition = <span class="hljs-keyword">parse_json</span>(Context[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>])
+| <span class="hljs-title">extend</span> LastUpdated = <span class="hljs-keyword">parse_json</span>(Context[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>])
+| <span class="hljs-title">project</span> DeviceId,Definition,LastUpdated;
+<span class="hljs-keyword">let</span> DeviceInformation = DeviceInfo
+| <span class="hljs-title">where</span> <span class="hljs-keyword">isnotempty</span>(OSPlatform)
+| <span class="hljs-title">summarize</span> <span class="hljs-keyword">arg_max</span>(Timestamp,*) <span class="hljs-keyword">by</span> DeviceId, DeviceName
+| <span class="hljs-title">project</span> DeviceId, DeviceName, MachineGroup;
+<span class="hljs-keyword">let</span> withNames = EvalTable
+| <span class="hljs-title">join</span> <span class="hljs-keyword">kind</span> = <span class="hljs-keyword">inner</span> DeviceInformation <span class="hljs-keyword">on</span> DeviceId
+| <span class="hljs-title">project-away</span> DeviceId1
+| <span class="hljs-title">project</span>-reorder DeviceName, MachineGroup;
+withNames | <span class="hljs-title">join</span> <span class="hljs-keyword">kind</span> = <span class="hljs-keyword">fullouter</span> DefUpdate <span class="hljs-keyword">on</span> DeviceId
+| <span class="hljs-title">project-away</span> DeviceId1
+| <span class="hljs-title">sort</span> <span class="hljs-keyword">by</span> BehaviorMonitoring <span class="hljs-keyword">asc</span>
+</span></code></pre>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#troubleshooting-high-cpu-usage" aria-label="Section titled: Troubleshooting high CPU usage"></a><h2 id="troubleshooting-high-cpu-usage" class="heading-anchor">Troubleshooting high CPU usage</h2></div>
+<p>Detections related to behavior monitoring start with "<a href="https://learn.microsoft.com/en-us/unified-secops-platform/malware-naming#type" data-linktype="absolute-path">Behavior</a>".</p>
+<p>When investigating high CPU usage in <code>MsMpEng.exe</code>, you can temporarily disable behavior monitoring to see if the issues continue.</p>
+<p>You can use Performance analyzer for Microsoft Defender Antivirus to find <strong>\path\process</strong>, <strong>process</strong> and/or <strong>file extensions</strong> that are contributing to the high cpu utilization. You can then add these items to <a href="https://learn.microsoft.com/en-us/defender-endpoint/configure-contextual-file-folder-exclusions-microsoft-defender-antivirus" data-linktype="relative-path">Contextual Exclusion</a>.</p>
+<p>For more information, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/tune-performance-defender-antivirus" data-linktype="relative-path">Performance analyzer for Microsoft Defender Antivirus</a>.</p>
+<p>If you're seeing high CPU usage caused by behavior monitoring, continue troubleshooting the issue by reverting each of the following items in order. Re-enable behavior monitoring after reverting each item to identify where the problem might be.</p>
+<ol>
+<li><strong>platform update</strong></li>
+<li><strong>engine update</strong></li>
+<li><strong>security intelligence update</strong>.</li>
+</ol>
+<p>If you're still encountering high CPU usage issues, contact Microsoft support and have your Client Analyzer data ready.</p>
+<p>If behavior monitoring isn't causing the issue, use <a href="https://learn.microsoft.com/en-us/defender-endpoint/tune-performance-defender-antivirus" data-linktype="relative-path">Performance analyzer for Microsoft Defender Antivirus</a> to collect log information. Collect two different logs using <code>a -c</code> and <code>a -a</code>. Have this information ready when you contact Microsoft support.</p>
+<p>For more information, see <a href="https://learn.microsoft.com/en-us/defender-endpoint/data-collection-analyzer" data-linktype="relative-path">Data collection for advanced troubleshooting on Windows</a>.</p>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/perform-device-investigations-microsoft-defender-for-endpoints/?source=recommendations">
+						Perform device investigations in Microsoft Defender for Endpoint - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Perform device investigations in Microsoft Defender for Endpoint
+		</p>
+	
+		</div>
+	<!---->
+		<div class="position-relative margin-top-sm">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Certification
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/?source=recommendations">
+						Microsoft Certified: Security Operations Analyst Associate - Certifications
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Investigate, search for, and mitigate threats using Microsoft Sentinel, Microsoft Defender for Cloud, and Microsoft 365 Defender.
+		</p>
+	
+		</div>
+	<!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2025-09-29T22:46:00.000Z" data-article-date-source="calculated" class="">09/29/2025</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

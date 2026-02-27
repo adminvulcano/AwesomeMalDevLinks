@@ -1,0 +1,215 @@
+# https://blog.levi.wiki/post/2026-01-09-defender-detection-mechanisms
+
+<!DOCTYPE html><html lang="en">
+
+<body>
+    
+
+    <div id="main">
+        
+
+        <main>
+            
+<article>
+    <h1>Defender's different Detection Mechanisms</h1>
+
+<p>This post is based on the observations from my <a href="https://github.com/cailllev/EDR-Introspection">EDRi Framework</a>.<br>
+TL;DL: EDRi attaches itself to the Antimalware and Kernel ETW traces, and hooks ntdll of MsMpEng.exe, to supervise all actions MDE takes against my attack.exe<br>
+Start <a href="https://blog.levi.wiki/post/2025-12-04-defender-detection-engines">here</a> if you do not know about heuristic scans, emulations, memory scans or behaviour tracking.</p>
+
+<h2>EDRi Log Analysis</h2>
+
+<p>The output of the EDRi framework is analysed and interpreted, given these four attacks:</p>
+
+<ul>
+<li><a href="https://github.com/cailllev/EDR-Introspection/blob/d1c16c36e0e7a16cbd474df7331a3c7b5b6fec27/EDRi/dumps/events/MDE-vs-ProcInject-standard.csv">CobaltStrike loader, no bypass</a></li>
+<li><a href="https://github.com/cailllev/EDR-Introspection/blob/d1c16c36e0e7a16cbd474df7331a3c7b5b6fec27/EDRi/dumps/events/MDE-vs-ProcInject-obfuscation.csv">CobaltStrike loader, obfuscated</a></li>
+<li><a href="https://github.com/cailllev/EDR-Introspection/blob/d1c16c36e0e7a16cbd474df7331a3c7b5b6fec27/EDRi/dumps/events/MDE-vs-LsassReader-standard.csv">Lsass dumper, no bypass</a></li>
+<li><a href="https://github.com/cailllev/EDR-Introspection/blob/d1c16c36e0e7a16cbd474df7331a3c7b5b6fec27/EDRi/dumps/events/MDE-vs-LsassReader-deconditioning.csv">Lsass dumper, deconditioning</a></li>
+</ul>
+
+<p>The logs are also available as nicely formatted and pre-filtered Google sheets <a href="https://drive.google.com/drive/folders/17SLAfnBD9_jk4VrKUqm-2ZQ_pcJcnw-Z?usp=sharing">here</a>.<br><br></p>
+
+<p>The goal of the EDRi framework is to observe what the EDR does, therefore 2 undetected and 2 detected attacks are analysed further.<br>
+Try to guess which attacks are undetected, source code is <a href="https://github.com/cailllev/EDR-Introspection/tree/master/attacks">here</a>.</p>
+
+<ul>
+<li>CobaltStrike loader (obfuscated) is detected as a generic loader (Trojan/Bearfoos) when storing on disk. </li>
+<li>Lsass dumper (no bypass) can be executed but is frozen after the lsass process is opened and MiniDumpWriteDump is called.</li>
+<li>Generating a CobaltStrike loader (with default config) as raw bytes, storing the shellcode as an array, allocating memory, writing and invoking the shellcode still worked in 2025. Who would've guessed?</li>
+<li>The lsass dumper also works, when using deconditioning. This is still a bit of magic, more <a href="https://blog.levi.wiki/post/2025-12-05-decondition-everything">here</a>.</li>
+</ul>
+
+<h2>Observed Mechanisms</h2>
+
+<p>The listed mechanisms below can be found in the Microsoft-Antimalware-Engine ETW trace, as individual events.<br>
+The mechanisms are named after the event operation, task or message. There is no systematic way Microsoft labeled these.<br>
+The EDRi framework is <a href="https://github.com/cailllev/EDR-Introspection/blob/master/paper/EDR-Introspection.pdf">my master's thesis</a>, the analysis of the logs is a part of it and took substantial amount of time and nerves.<br>
+The table below is based on the analysis over all 4 EDRi logs, and the mechanisms are observed in all logs and in the same ordering.</p>
+
+<table>
+<thead>
+<tr>
+  <th>Mechanism</th>
+  <th>Event ID</th>
+  <th>Assumed Objective(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>stream scan</td>
+  <td>32</td>
+  <td>This represents the heuristics step (engine), gets static information</td>
+</tr>
+<tr>
+  <td>MetaStore insert</td>
+  <td>44</td>
+  <td>Stores extracted identifiers from heuristics and emulations</td>
+</tr>
+<tr>
+  <td>MetaStore query</td>
+  <td>44</td>
+  <td>Gets identifiers, used to decide what further analysis must be done</td>
+</tr>
+<tr>
+  <td>scan</td>
+  <td>1</td>
+  <td>This represents the complete emulation step (engine)</td>
+</tr>
+<tr>
+  <td>MOAC lookup</td>
+  <td>36</td>
+  <td>Used to check if a file should be emulated or not</td>
+</tr>
+<tr>
+  <td>UfsScanFile</td>
+  <td>30</td>
+  <td>The actual emulation of the file</td>
+</tr>
+<tr>
+  <td>UfsScanProc</td>
+  <td>32</td>
+  <td>The actual emulation (of a process?)</td>
+</tr>
+<tr>
+  <td>GetHashes</td>
+  <td>43</td>
+  <td>Extracts identifiers (cryptographic hashes) after an emulation, sometimes for retrieval of info in heuristics phase (stream scan)</td>
+</tr>
+<tr>
+  <td>UfsScanProc</td>
+  <td>32</td>
+  <td>Scans the loaded modules in a process</td>
+</tr>
+<tr>
+  <td>SpyNet report</td>
+  <td>43</td>
+  <td>Bundles identifiers, submits them to Microsoft’s cloud to request a verdict (or simply Microsoft’s data collection of known executables)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Data only in Threat-Intelligence</h3>
+
+<p>AllocVM and ProtectVM events indicate memory allocation or memory permission changes (to RW, then to RX) inside MsMpEng itself.<br>
+This is always linked to an emulation of your executable. Either sequence of events may <em>preceed</em> such an emulation:</p>
+
+<ul>
+<li>UfsScanFileTask start, NtCreateFile your.exe with access=0x120081, NtCreate your.exe with access=0x120089 (read data, read attr, read EA, read control, sync)</li>
+<li>UfsScaProcTask start, NtOpenProcess your.exe with access=0x418 (ProcVmOperation, ProcVmRead, ProcQueryInfo)</li>
+</ul>
+
+<h3>Memory Reads</h3>
+
+<p>All memory reads by MsMpEng are preceeded by a NtOpenProcess system call. This system call is also logged in the <strong>Microsoft-Windows-Kernel-Audit-API-Calls</strong> ETW trace.<br>
+The event log also includes the desiredaccess field, indicating what operation will be done. Observed use-cases:<br></p>
+
+<table>
+<thead>
+<tr>
+  <th>desired access</th>
+  <th>rights</th>
+  <th>observed time</th>
+  <th>subsequent actions</th>
+  <th>interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>0x410</td>
+  <td>ProcVmRead,ProcQueryInfo</td>
+  <td>after behaviour trigger</td>
+  <td>NtQueryInformationProcess InfoClass=Basic</td>
+  <td>extensive memory scan</td>
+</tr>
+<tr>
+  <td>0x418</td>
+  <td>ProcVmOperation,ProcVmRead,ProcQueryInfo</td>
+  <td>proc start</td>
+  <td>NtQueryInformationProcess InfoClass=Session,Basic</td>
+  <td>get loaded modules via LDR + pointer in ntdll</td>
+</tr>
+<tr>
+  <td>0x600</td>
+  <td>ProcSetInfo,ProcQueryInfo</td>
+  <td>proc start</td>
+  <td>NtQueryInformationProcess InfoClass=Logging</td>
+  <td>get logging info</td>
+</tr>
+<tr>
+  <td>0x1000</td>
+  <td>ProcQueryLimitedInfo</td>
+  <td>various</td>
+  <td>NtQueryInformationProcess  InfoClass=Session,ThreadPagePrio</td>
+  <td>cache lookup helper?</td>
+</tr>
+<tr>
+  <td>0x1010</td>
+  <td>ProcVmRead,ProcQueryLimitedInfo</td>
+  <td>various</td>
+  <td>NtQueryInformationProcess InfoClass=Session,Basic</td>
+  <td>after file read of attack.exe?</td>
+</tr>
+<tr>
+  <td>0x1410</td>
+  <td>ProcVmRead,ProcQuery(Limited)Info</td>
+  <td>various</td>
+  <td>NtQueryInformationProcess InfoClass=Session,Basic,Wow64</td>
+  <td>may get first module in LDR + pointer in ntdll</td>
+</tr>
+<tr>
+  <td>0x101000</td>
+  <td>Sync,ProcQueryLimitedInfo</td>
+  <td>around scan request</td>
+  <td>NtQueryInformationProcess InfoClass=Session,ImageFileName</td>
+  <td>get exe name</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Conclusion</h2>
+
+<p>It should be able to predict MDE's (MsMpEng's) actions with just observing the <strong>Microsoft-Windows-Kernel-Audit-API-Calls</strong> ETW trace.<br>
+The <strong>desiredaccess</strong> field from the event <strong>PsOpenProcess</strong>, eventID 5, can be combined with the above observations.<br>
+It is then possible to create <strong>AURA</strong> malware, in the sense of <strong>Access-based, Unintentionally Revealed Actions</strong>. <br>
+Alternative name: <strong>BITE</strong> malware, Behavioural Intent Tracking via ETW</p>
+
+<h2>Future Work</h2>
+
+<ul>
+<li>do <a href="https://github.com/cailllev/EDR-Introspection/tree/master?tab=readme-ov-file#create-own-attack">more attacks</a></li>
+<li>analyse more logs</li>
+<li>verify above findings</li>
+<li>develop <a href="https://blog.levi.wiki/post/Link%20follows">EDRi Core</a></li>
+<li>create <strong>AURA</strong> malware, test hypothesis</li>
+</ul>
+
+</article>
+
+        </main>
+
+        
+    </div>
+<div height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" data-original-tag="iframe"></div>
+
+</body></html>

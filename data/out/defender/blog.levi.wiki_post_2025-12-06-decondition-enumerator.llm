@@ -1,0 +1,29 @@
+Title:
+Decondition Enumerator
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post continues prior work on “deconditioning” detections by probing how an EDR/AV “Process Identification” (PI) cache behaves when a process is marked detected/known-bad versus “cutoff/deconditioned.”  
+- It reports an observed cooldown/reset window for the cache of roughly 5–15 minutes after a PI reaches a detected or cutoff state.  
+- The author describes a test methodology: create two near-identical binaries (A.exe and A’.exe) with a single controlled difference, run A to trigger detection, then run A’ with deconditioning to infer whether both map to the same PI.  
+- Initial results suggest PI is not based on superficial attributes like filename, compile timestamp, or common similarity/fingerprinting metrics (imphash, SSDeep, TLSH), since changing these did not alter PI.  
+- The post links to a set of tested executables (LsassReader variants) used to reproduce the experiments.  
+- It’s mainly useful for red teamers and malware/tool developers trying to understand what features drive process identity and caching in detection pipelines.
+
+Technical Focus:
+- EDR/AV process identity (PI) and caching behavior
+- Deconditioning/cutoff mechanics and cooldown timing
+- Differential binary testing (single-variable changes)
+- Static similarity/fingerprinting metrics (imphash, SSDeep, TLSH)
+- Detection state transitions (Detected vs cutoff/deconditioned)
+
+Use Cases:
+- Infer which binary features contribute to an EDR’s process identity key
+- Design experiments to isolate detection/identity signals beyond common hashes
+- Time deconditioning attempts around cache cooldown/reset windows
+- Validate whether rebuilds/metadata changes meaningfully affect detection linkage
+
+Keywords:
+deconditioning, process identification, PI cache, cooldown time, EDR, antivirus, detection pipeline, cutoff, known-bad, LsassReader, differential testing, binary variants, imphash, SSDeep, TLSH, static fingerprinting, cache reset, detection state

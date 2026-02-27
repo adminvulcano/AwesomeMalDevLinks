@@ -1,0 +1,30 @@
+Title:
+Using process creation properties to catch evasion techniques
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post analyzes a class of Windows stealth process execution techniques (process doppelganging, herpaderping, ghosting) that evade AV/EDR by exploiting time-of-check/time-of-use gaps between file scanning and process creation callbacks.  
+- The core idea is creating a process from an image section built from a file in a transient/modifiable state, then reverting/deleting/overwriting the file before the kernel’s process creation notification triggers, leaving no malicious bytes on disk to scan.  
+- It explains how attackers leverage the legacy syscall **NtCreateProcessEx** (process object without initial thread) to delay callback invocation until **NtCreateThreadEx**, bypassing assumptions made around **NtCreateUserProcess**.  
+- Microsoft proposes a robust kernel-signal-based detection: identify legacy process creation by the absence of the **GUID_ECP_CREATE_USER_PROCESS** Extra Create Parameter (ECP) on the executable open, then confirm transient-state abuse by checking section coherency/backing changes (e.g., **MmDoesFileHaveUserWritableReferences** indicating the image section is backed by the page file).  
+- The detection is implemented in Microsoft Defender for Endpoint to catch known and unknown variants of this execution class.  
+- Useful primarily for Blue Teams/EDR engineers and Windows internals researchers; also valuable to Red Teams for understanding what low-level telemetry breaks these evasion chains.
+
+Technical Focus:
+- TOCTOU evasion against antimalware file scanning and process creation callbacks  
+- NtCreateUserProcess vs NtCreateProcessEx process creation semantics  
+- Kernel process creation notifications (PsSetCreateProcessNotifyRoutineEx / PspCallProcessNotifyRoutines) timing  
+- Extra Create Parameters (ECP) and GUID_ECP_CREATE_USER_PROCESS attribution  
+- Image sections, section coherency, and pagefile-backed executable mappings  
+- MmDoesFileHaveUserWritableReferences as a transient-state/modify-reference signal
+
+Use Cases:
+- Build detections/hunts for process ghosting/herpaderping/doppelganging-like behavior
+- Differentiate “normal” process creation from legacy/abnormal creation paths in telemetry
+- Validate EDR sensor coverage against section-based execution and callback timing bypasses
+- Guide kernel-driver/EDR engineering to prefer non-spoofable kernel signals over user-mode hooks
+
+Keywords:
+process ghosting, process herpaderping, process doppelganging, TOCTOU, NtCreateProcessEx, NtCreateUserProcess, NtCreateThreadEx, PsSetCreateProcessNotifyRoutineEx, process creation callback, IRP_MJ_CREATE, Extra Create Parameters, ECP, GUID_ECP_CREATE_USER_PROCESS, IoCreateFileEx, NtCreateSection, image section, SectionObjectPointers, MmDoesFileHaveUserWritableReferences, pagefile-backed section, Microsoft Defender for Endpoint

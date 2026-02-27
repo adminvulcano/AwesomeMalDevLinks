@@ -1,0 +1,30 @@
+Title:
+Turn on cloud protection in Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn article explains how to enable and manage cloud-delivered protection (MAPS) in Microsoft Defender Antivirus and why it should remain enabled.  
+- It highlights Defender for Endpoint capabilities that depend on cloud protection, including metadata-based ML lookups, automatic sample submission/detonation, Block at First Sight, emergency signature updates, EDR in block mode, certain ASR rules, and IoC-based allow/block actions.  
+- The doc details multiple configuration paths: Microsoft Intune AV policies, Group Policy (MAPS membership and sample submission), PowerShell (`Set-MpPreference`), WMI (`MSFT_MpPreference`), and per-endpoint toggles via the Windows Security app.  
+- It calls out operational constraints like Tamper Protection (which can ignore local changes) and the need for Troubleshooting Mode to temporarily allow modifications.  
+- Useful primarily for blue teams and endpoint administrators standardizing Defender posture, but also relevant to red teams for understanding which Defender protections are cloud-dependent and what configuration controls/guardrails (tamper protection, policy enforcement) exist.
+
+Technical Focus:
+- Microsoft Defender Antivirus cloud-delivered protection (MAPSReporting)
+- Automatic sample submission / SubmitSamplesConsent
+- Intune Endpoint Security Antivirus policy configuration
+- Group Policy (Defender Antivirus > MAPS) enforcement and local override behavior
+- PowerShell Defender cmdlets (`Set-MpPreference`) and WMI (`MSFT_MpPreference`)
+- Dependencies: Block at First Sight, ASR rules, EDR in block mode, IoCs, emergency intelligence updates
+
+Use Cases:
+- Enable/standardize cloud protection across Windows fleets via Intune or GPO
+- Configure sample submission behavior to balance privacy vs detection efficacy
+- Validate why certain MDE features (BAFS, some ASR rules, IoCs) aren’t functioning due to disabled cloud protection
+- Automate Defender configuration in scripts using PowerShell/WMI
+- Troubleshoot blocked configuration changes when Tamper Protection is enabled
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, cloud protection, cloud-delivered protection, MAPS, MAPSReporting, SubmitSamplesConsent, automatic sample submission, Block at First Sight, tamper protection, troubleshooting mode, Intune, Group Policy, Set-MpPreference, MSFT_MpPreference, WMI, ASR rules, EDR in block mode, emergency signature updates, indicators of compromise, Windows Security app

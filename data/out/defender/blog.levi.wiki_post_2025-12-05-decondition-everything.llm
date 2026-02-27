@@ -1,0 +1,26 @@
+Title:
+Decondition Everything
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post proposes a theory for bypassing Microsoft Defender for Endpoint (and similar EDRs) by “deconditioning” behavioral rules—repeatedly performing similar but benign actions until the engine stops evaluating/scanning that behavior for a given process identity. It uses LSASS dumping and classic remote-thread injection as examples, where repeated benign dumps/injections appear to exhaust a per-rule (or per-rule+process) evaluation cutoff, after which the real malicious action succeeds. The author hypothesizes EDRs maintain caches keyed by a “process identification” function (e.g., imphash/metadata/code hash) and rule name, both for performance and behavioral tracking. Observations suggest detections can “stick” after a behavioral alert and may affect related binaries sharing the same inferred identity, with later amendments indicating the identity/caching model may be more complex (possibly multiple identifiers or rule-wide cutoffs). This is primarily useful for red teamers, malware developers, and EDR researchers exploring behavioral engine limitations and temporal/caching artifacts. It’s interesting because it frames certain bypasses as exploiting optimization/caching behavior rather than evading specific signatures.
+
+Technical Focus:
+- Behavioral detection engines and rule subscription to event types
+- Event caching / cutoff thresholds (temporal/volume-based evaluation limits)
+- Process identity heuristics (imphash, metadata, code-section hashing)
+- LSASS dumping via MiniDumpWriteDump and handle-based triggers
+- Remote process injection primitives (VirtualAllocEx, WriteProcessMemory, CreateRemoteThread)
+- Cross-process “benign priming” to suppress later scanning
+
+Use Cases:
+- Testing whether an EDR’s behavioral rules have evaluation cutoffs or caching artifacts
+- Designing PoCs to measure rule scope (per-process vs per-rule global) and cache lifetime
+- Building bypass experiments for LSASS dump prevention and memory-scan-on-injection
+- Developing defensive test cases to validate behavioral engine robustness under event flooding
+- Creating tooling to enumerate/trigger “deconditioning” candidates (rule discovery)
+
+Keywords:
+Microsoft Defender for Endpoint, MDE, EDR, behavioral engine, behavior tracking, temporal detections, caching, cutoff threshold, process identity, imphash, LSASS, MiniDumpWriteDump, credential dumping, VirtualAllocEx, WriteProcessMemory, CreateRemoteThread, remote thread injection, memory scanning, rule-based detection

@@ -1,0 +1,637 @@
+# https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde
+
+<!DOCTYPE html><html class="layout layout-holy-grail show-table-of-contents conceptual show-breadcrumb default-focus theme-light" lang="en-us" dir="ltr" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" style="--window-inner-height: 100000px !important; --atlas-header-height: 4543px !important; --atlas-footer-height: 400px !important; --atlas-header-visible-height: 4551px !important; --atlas-footer-visible-height: 400px !important;">
+	
+			<body id="body" data-bi-name="body" class="layout-body " lang="en-us" dir="ltr">
+				
+				 <section id="layout-body-menu" class="layout-body-menu display-flex" data-bi-name="menu">
+					
+		<div id="left-container" class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full" data-toc-container="true">
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				
+			</div>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full">
+				
+			</div>
+		</div>
+	
+			  </section>
+
+				<main id="main" role="main" class="layout-body-main " data-bi-name="content" lang="en-us" dir="ltr">
+					
+			<div id="ms--content-header" class="content-header default-focus border-bottom-none" data-bi-name="content-header">
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column="" class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
+			<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			
+			
+		<!----></div>
+		</details>
+
+		<bread-crumbs id="article-header-breadcrumbs" role="group" aria-label="Breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			
+		<!----></bread-crumbs>
+	 
+		<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+			
+		<button class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-mobile" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-modal-entry-tablet" data-ask-learn-modal-entry="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn " data-bi-name="ask-learn-assistant-entry" data-test-id="ask-learn-assistant-flyout-entry" data-ask-learn-flyout-entry="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button type="button" id="ms--focus-mode-button" data-focus-mode="" data-bi-name="focus-mode-entry" class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary class="justify-content-flex-start button button-clear button-sm button-primary inner-focus" aria-label="More actions" title="More actions">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button data-page-action-item="overflow-mobile" type="button" class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a id="lang-link-overflow" class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left" data-bi-name="language-toggle" data-page-action-item="overflow-all" data-check-hidden="true" data-read-in-link="" href="https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+			<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text="">Read in English</span>
+		</a>
+	 
+		<button type="button" class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus" data-list-type="collection" data-bi-name="collection" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Microsoft Defender Antivirus and non-Microsoft antivirus/antimalware solutions Antivirus protection without Defender for Endpoint - Microsoft Defender for Endpoint | Microsoft Learn to a collection">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add to Collections</span>
+		</button>
+	
+					
+		<button type="button" class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" data-list-type="plan" data-bi-name="plan" data-page-action-item="overflow-all" data-check-hidden="true" data-popover-close="" data-pressed="false" title="Add Microsoft Defender Antivirus and non-Microsoft antivirus/antimalware solutions Antivirus protection without Defender for Endpoint - Microsoft Defender for Endpoint | Microsoft Learn to a plan">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a data-contenteditbtn="" class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none" data-bi-name="edit" href="https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-endpoint/defender-antivirus-compatibility-without-mde.md" data-original_content_git_url="https://github.com/MicrosoftDocs/defender-docs-pr/blob/live/defender-endpoint/defender-antivirus-compatibility-without-mde.md" data-original_content_git_url_template="{repo}/blob/{branch}/defender-endpoint/defender-antivirus-compatibility-without-mde.md" data-pr_repo="" data-pr_branch="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs">
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fdefender-antivirus-compatibility-without-mde%3FWT.mc_id%3Dfacebook">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
+
+					<a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fdefender-antivirus-compatibility-without-mde%3FWT.mc_id%3Dtwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fdefender-antivirus-compatibility-without-mde%3FWT.mc_id%3Dtwitter" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a href="https://www.linkedin.com/feed/?shareActive=true&amp;text=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fdefender-antivirus-compatibility-without-mde%3FWT.mc_id%3Dlinkedin" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a href="mailto:?subject=%5BShared%20Article%5D%20Microsoft%20Defender%20Antivirus%20and%20non-Microsoft%20antivirus%2Fantimalware%20solutions%20Antivirus%20protection%20without%20Defender%20for%20Endpoint%20-%20Microsoft%20Defender%20for%20Endpoint%20%7C%20Microsoft%20Learn&amp;body=%0A%0D%0Ahttps%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fdefender-endpoint%2Fdefender-antivirus-compatibility-without-mde%3FWT.mc_id%3Demail" class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email" data-bi-name="email" data-page-action-item="overflow-all">
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs">
+		
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="copy-markdown" data-page-action-item="overflow-all" data-copy-markdown="" data-copy-state="idle" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader"></span>
+						<span data-show-when="success" class="docon docon-check-mark"></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus" type="button" data-bi-name="print" data-page-action-item="overflow-all" data-popover-close="" data-print-page="" data-check-hidden="true">
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section="" data-bi-name="permission-content-unauthorized-private">
+			<hr class="hr margin-top-xs margin-bottom-sm">
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde#" data-bi-name="permission-content-sign-in">signing in</a> or <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="microsoft-defender-antivirus-and-non-microsoft-antivirus-solutions-without-defender-for-endpoint">Microsoft Defender Antivirus and non-Microsoft antivirus solutions without Defender for Endpoint</h1></div>
+					
+		<div id="article-metadata" data-bi-name="article-metadata" data-test-id="article-metadata" class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap">
+			
+		<div class="margin-block-xxs">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				 <li class="display-inline">Applies to: Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Individuals</li>
+			</ul>
+		</div>
+	 
+				<div id="user-feedback" class="margin-block-xxs display-none display-none-print" data-hide-on-archived="">
+					
+		<button id="user-feedback-button" data-test-id="conceptual-feedback-button" class="button button-sm button-clear button-primary display-none" type="button" data-bi-name="user-feedback-button" data-user-feedback-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button id="ms--ai-summary" type="button" class="tag tag-sm tag-suggestion margin-left-xxs" data-test-id="ai-summary-cta" data-bi-name="ai-summary-cta" data-an="ai-summary">
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		
+	
+					<div class="content"><p>This section describes what happens when you use Microsoft Defender Antivirus alongside non-Microsoft antivirus/antimalware products on endpoints that aren't onboarded to Defender for Endpoint Plan 2.</p>
+<p>Microsoft Defender Antivirus doesn't run in passive mode on devices that aren't onboarded to Defender for Endpoint Plan 2.</p>
+<p>The following table summarizes what to expect:</p>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Table 1" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Windows version</th>
+<th>Primary antivirus/antimalware solution</th>
+<th>Microsoft Defender Antivirus state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows 11 and Windows 10</td>
+<td>Microsoft Defender Antivirus</td>
+<td>Active mode</td>
+</tr>
+<tr>
+<td>Windows 11 and Windows 10</td>
+<td>A non-Microsoft antivirus solution</td>
+<td>Disabled mode (happens automatically).</td>
+</tr>
+<tr>
+<td>Windows server 2016 and later. <br>  Windows Server version 1803 or newer. <br>  Azure Stack HCI OS, version 23H2 and later.</td>
+<td>Microsoft Defender Antivirus</td>
+<td>Active mode</td>
+</tr>
+<tr>
+<td>Windows server 2016 and later. <br>  Windows Server version 1803 or newer. <br>  Azure Stack HCI OS, version 23H2 and later.</td>
+<td>A non-Microsoft antivirus solution</td>
+<td>Disabled (set manually; see the note that follows this table)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>Defender for Endpoint support for Windows Server 2025 is rolling out, beginning in February 2025 and over the next several weeks.
+On Windows Server, if you're running a non-Microsoft antivirus product, you can uninstall Microsoft Defender Antivirus by using the following PowerShell cmdlet (as an administrator): <code>Uninstall-WindowsFeature Windows-Defender</code>. Restart your server to finish removing Microsoft Defender Antivirus. On Windows Server 2016, you might see <em>Windows Defender Antivirus</em> instead of <em>Microsoft Defender Antivirus</em>. If you uninstall your non-Microsoft antivirus product, make sure that Microsoft Defender Antivirus is re-enabled. See <strong><a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-update-mdav-to-latest-ws" data-linktype="absolute-path">Re-enable Microsoft Defender Antivirus on Windows Server if it was disabled</a></strong>.</p>
+</div>
+<p>Check the services and filter drivers for Microsoft Defender Antivirus by using the following command:</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-0" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="powershell"><code class="lang-powershell"><span>
+gsv WinDefend, WdBoot, WdFilter, WdNisSvc, WdNisDrv | ft<span class="hljs-parameter"> -auto</span> DisplayName, Name, StartType, Status
+
+</span></code></pre>
+<div class="buttons buttons-right margin-bottom-none margin-top-sm"><!----> <button class="button button-clear button-sm display-flex gap-xxs">
+		<span class="icon" aria-hidden="true">
+			<span class="docon docon-expand color-primary"></span>
+		</span>
+		<span><!---->Expand table<!----></span>
+	</button><!----></div><div class="inner-focus"><table aria-label="Table 2" class="table table-sm margin-top-none">
+<thead>
+<tr>
+<th>Display Name</th>
+<th>Name</th>
+<th>StartType</th>
+<th>Status when Microsoft Defender Antivirus is enabled</th>
+<th>Status when Microsoft Defender Antivirus is disabled</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Defender Antivirus Boot Driver</td>
+<td><code>WdBoot</code></td>
+<td>Boot</td>
+<td>Stopped (<code>0x0 Boot_start</code>)</td>
+<td>Stopped (<code>0x3 Demand_start</code>)</td>
+<td>It's normal to be stopped after boot.</td>
+</tr>
+<tr>
+<td>Microsoft Defender Antivirus Mini-Filter Driver</td>
+<td><code>WdFilter</code></td>
+<td>Manual</td>
+<td>Running (<code>0x0 Boot_start</code>)</td>
+<td>Stopped (<code>0x3 Demand_start</code>)</td>
+<td>If a non-Microsoft antivirus solution is installed, expect the status to be stopped.</td>
+</tr>
+<tr>
+<td>Microsoft Defender Antivirus Network Inspection System Driver</td>
+<td><code>WdNisDrv</code></td>
+<td>Manual</td>
+<td>Running (<code>0x3 Demand_start</code>)</td>
+<td>Stopped (<code>0x3 Demand_start</code>)</td>
+<td>If a non-Microsoft antivirus solution is installed, expect the status to be stopped.</td>
+</tr>
+<tr>
+<td>Microsoft Defender Antivirus Network Inspection Service</td>
+<td><code>WdNisSvc</code></td>
+<td>Manual</td>
+<td>Running (<code>0x3 Demand_start</code>)</td>
+<td>Stopped (<code>0x3 Demand_start</code>)</td>
+<td>If a non-Microsoft antivirus solution is installed, expect the status to be stopped.</td>
+</tr>
+<tr>
+<td>Microsoft Defender Antivirus Service</td>
+<td><code>WinDefend</code></td>
+<td>Automatic</td>
+<td>Running (<code>0x2 Auto_start</code>)</td>
+<td>Stopped (<code>0x3 Demand_start</code>)</td>
+<td>If a non-Microsoft antivirus solution is installed, expect the status to be stopped.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="heading-wrapper" data-heading-level="h3"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde#frequently-asked-questions-faq" aria-label="Section titled: Frequently Asked Questions (FAQ)"></a><h3 id="frequently-asked-questions-faq" class="heading-anchor">Frequently Asked Questions (FAQ)</h3></div>
+<p><strong>Q:</strong> Can I update Microsoft Defender Antivirus components such as "Security intelligence update" or "Engine update" or "Platform update" when Microsoft Defender Antivirus is disabled?</p>
+<p><strong>A:</strong> No. When Microsoft Defender Antivirus is disabled, since the services and drivers aren't running, you won't be able to update the components such as "Security intelligence update" or "Engine update" or "Platform update".</p>
+<div class="alert is-success">
+<p class="alert-title"><span class="docon docon-lightbulb" aria-hidden="true"></span> Tip</p>
+<p>If you are migrating to Microsoft Defender for Endpoint Plan 2, when onboarded, Microsoft Defender Antivirus goes into passive mode automatically on Windows clients, and can be set to passive mode using a registry key on Windows Server. You can update the different components of Microsoft Defender Antivirus.</p>
+</div>
+<p><strong>Q:</strong> Can I manually change the start type of the services and drivers for Microsoft Defender Antivirus?</p>
+<p><strong>A:</strong> We don't support the manual modification of the start type of the services and drivers for Microsoft Defender Antivirus in Windows images. On Windows clients, the supported method is by your non-Microsoft antivirus registering in Windows Security Center (WSC) api. Or, on Windows Server, you can uninstall the Microsoft Defender Antivirus feature by using roles and features MMC or by running the following PowerShell command (as an administrator):</p>
+<p>Windows Server 2019 and newer</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-1" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="powershell"><code class="lang-powershell"><span>
+<span class="hljs-pscommand">Uninstall-WindowsFeature</span> <span class="hljs-pscommand">Windows-Defender</span>
+
+</span></code></pre>
+<p>Windows Server 2016</p>
+<div class="code-block-header margin-top-sm" data-code-block-header="" id="code-try-2" data-bi-name="code-header"><!---->
+		<span class="code-block-header-language">
+			PowerShell
+		</span>
+		<div class="code-block-header-action-bar"><!---->
+		<button type="button" class="button display-none-print" data-bi-name="copy" data-code-header-copy-button="">
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-copy overflow-hidden"></span>
+				<span data-copy-button-success-indicator="" class="successful-copy-alert position-absolute is-transparent docon docon-check-mark"></span>
+			</span>
+			<span><!---->Copy<!----></span>
+		</button>
+	 <!----></div>
+	<!----></div><pre class="inner-focus" data-language="powershell"><code class="lang-powershell"><span>
+<span class="hljs-pscommand">Uninstall-WindowsFeature</span> <span class="hljs-pscommand">Windows-Defender</span>
+<span class="hljs-pscommand">Uninstall-WindowsFeature</span> <span class="hljs-pscommand">Windows-Defender</span>-Gui
+</span></code></pre>
+<p><strong>Q:</strong> Can I use Microsoft Defender Antivirus in passive mode without onboarding to Microsoft Defender for Endpoint?</p>
+<p><strong>A:</strong> No. Passive mode is a functionality in Microsoft Defender for Endpoint Plan 1, Microsoft Defender for Endpoint Plan 2 and Microsoft Defender for Business.</p>
+<p><strong>Q:</strong> Can I use <a href="https://learn.microsoft.com/en-us/defender-endpoint/edr-in-block-mode" data-linktype="relative-path">EDR in block mode</a> without onboarding to Microsoft Defender for Endpoint?</p>
+<p><strong>A:</strong> No. EDR in block mode is a functionality in Microsoft Defender for Endpoint Plan 2.</p>
+<p><strong>Q:</strong> Can I use indicators, such as file hashes, IP addresses, URLs, or certificates with Microsoft Defender Antivirus (in active mode) with my Microsoft 365 E3/A3 license?</p>
+<p><strong>A:</strong> Yes. See <a href="https://techcommunity.microsoft.com/blog/microsoftdefenderatpblog/microsoft-defender-for-endpoint-plan-1-now-included-in-m365-e3a3-licenses/3060639" data-linktype="external">Tech Community Blog: Microsoft Defender for Endpoint Plan 1 Now Included in Microsoft 365 E3/A3 Licenses</a> and <a href="https://learn.microsoft.com/en-us/defender-endpoint/defender-endpoint-plan-1" data-linktype="absolute-path">Overview of Microsoft Defender for Endpoint Plan 1</a>.</p>
+<div class="heading-wrapper" data-heading-level="h2"><a class="anchor-link docon docon-link" href="https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde#see-also" aria-label="Section titled: See also"></a><h2 id="see-also" class="heading-anchor">See also</h2></div>
+<ul>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/mde-security-settings-management" data-linktype="absolute-path">Use Microsoft Defender for Endpoint Security Settings Management to manage Microsoft Defender Antivirus</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/what-is-intune" data-linktype="absolute-path">Microsoft Intune securely manages identities, manages apps, and manages devices</a></p>
+<ul>
+<li><p><a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp" data-linktype="absolute-path">Defender CSP</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender" data-linktype="absolute-path">Policy CSP - Defender</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/mem/configmgr/protect/deploy-use/endpoint-antimalware-policies" data-linktype="absolute-path">How to create and deploy antimalware policies for Endpoint Protection in Configuration Manager</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/use-group-policy-microsoft-defender-antivirus" data-linktype="absolute-path">Use Group Policy settings to configure and manage Microsoft Defender Antivirus</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/use-powershell-cmdlets-microsoft-defender-antivirus" data-linktype="absolute-path">Use PowerShell cmdlets to configure and manage Microsoft Defender Antivirus</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/navigate-defender-endpoint-antivirus-exclusions" data-linktype="absolute-path">Exclusions overview</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/defender-endpoint-false-positives-negatives" data-linktype="absolute-path">Address false positives/negatives in Microsoft Defender for Endpoint</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-settings" data-linktype="absolute-path">Troubleshoot Microsoft Defender Antivirus settings</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/run-analyzer-windows" data-linktype="absolute-path">Run the client analyzer on Windows</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/defender-endpoint/tune-performance-defender-antivirus" data-linktype="absolute-path">Performance analyzer for Microsoft Defender Antivirus</a></p>
+</li>
+</ul>
+</div>
+					
+		<div id="ms--inline-notifications" class="margin-block-xs" data-bi-name="inline-notification"></div>
+	 
+		<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+		<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
+	
+					
+		<!-- feedback section -->
+		<section id="site-user-feedback-footer" class="font-size-sm margin-top-md display-none-print display-none-desktop" data-test-id="site-user-feedback-footer" data-bi-name="site-feedback-section">
+			<hr class="hr">
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button class="thumb-rating-button like button button-primary button-sm" data-test-id="footer-rating-yes" data-binary-rating-response="rating-yes" type="button" title="This article is helpful" data-bi-name="button-rating-yes" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button class="thumb-rating-button dislike button button-primary button-sm" id="standard-rating-no-button" data-test-id="footer-rating-no" data-binary-rating-response="rating-no" type="button" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false">
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details class="popover popover-top" id="mobile-help-popover" data-test-id="footer-feedback-popover">
+						<summary class="thumb-rating-button dislike button button-primary button-sm" data-test-id="details-footer-rating-no" data-binary-rating-response="rating-no" title="This article is not helpful" data-bi-name="button-rating-no" aria-pressed="false" data-bi-an="feedback-unhelpful-popover">
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div class="popover-content width-200 width-300-tablet" role="dialog" aria-labelledby="popover-heading" aria-describedby="popover-description">
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button class="button button-sm border inner-focus display-none margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-test-id="ask-learn-assistant-modal-entry-mobile-feedback" data-ask-learn-modal-entry-feedback="" data-bi-an="feedback-unhelpful-popover" type="button" style="min-width: max-content;" aria-expanded="false" aria-label="Ask Learn">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-modal-entry-tablet-feedback" data-ask-learn-modal-entry-feedback="" type="button" style="min-width: max-content;" aria-expanded="false">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs" data-bi-name="ask-learn-assistant-entry-troubleshoot" data-bi-an="feedback-unhelpful-popover" data-test-id="ask-learn-assistant-flyout-entry-feedback" data-ask-learn-flyout-entry-show-only="" data-flyout-button="toggle" type="button" style="min-width: max-content;" aria-expanded="false" aria-controls="ask-learn-flyout">
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button type="button" class="button button-sm margin-right-xxs" data-help-option="suggest-fix" data-bi-name="feedback-suggest" data-bi-an="feedback-unhelpful-popover" data-test-id="suggest-fix">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr">
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3">
+				Additional resources
+			</h2>
+			
+		<section id="right-rail-recommendations-mobile" class="" data-bi-name="recommendations"></section>
+	 
+		<section id="right-rail-training-mobile" class="" data-bi-name="learning-resource-card"><!---->
+		
+		<article class="margin-top-md margin-top-sm-desktop">
+			
+		<p class="font-weight-semibold font-size-md display-flex align-items-center">
+			<span class="icon margin-right-xxs" aria-hidden="true">
+				<span class="docon docon-cube-cone-ball-shapes"></span>
+			</span>
+			Training
+		</p>
+	
+			<div class="margin-top-xs position-relative">
+				<!---->
+		<div class="position-relative margin-top-xs">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Module
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/training/modules/implement-endpoint-protection-use-microsoft-defender-endpoint/?source=recommendations">
+						Implement endpoint protection by using Microsoft Defender for Endpoint - Training
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			This module examines how Microsoft Defender for Endpoint helps enterprise networks prevent, detect, investigate, and respond to advanced threats by using endpoint behavioral sensors, cloud security analytics, and threat intelligence. MS-102
+		</p>
+	
+		</div>
+	<!---->
+		<div class="position-relative margin-top-sm">
+			 
+				<p class="has-line-height-reset color-text-subtle font-size-xs font-weight-semibold">
+					Certification
+				</p>
+		   
+				<p class="line-clamp-3">
+					<a class="display-block inner-focus font-weight-semibold font-size-sm has-line-height-reset stretched-link" href="https://learn.microsoft.com/en-us/credentials/certifications/modern-desktop/?source=recommendations">
+						Microsoft 365 Certified: Endpoint Administrator Associate - Certifications
+					</a>
+				</p>
+		   
+			
+		<p class="font-size-sm has-line-height-reset color-text-subtle margin-top-xxs line-clamp-3">
+			Plan and execute an endpoint deployment strategy, using essential elements of modern management, co-management approaches, and Microsoft Intune integration.
+		</p>
+	
+		</div>
+	<!---->
+			</div>
+			
+		</article>
+	<!----></section>
+	 
+		<section id="right-rail-events-mobile" class="" data-bi-name="events-card"></section>
+	 
+		<section id="right-rail-qna-mobile" class="margin-top-xxs" data-bi-name="qna-link-card"></section>
+	
+		</div>
+	 
+		<div id="article-metadata-footer" data-bi-name="article-metadata-footer" data-test-id="article-metadata-footer" class="page-metadata-container">
+			<hr class="hr">
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric" datetime="2026-01-15T13:32:00.000Z" data-article-date-source="calculated" class="">01/15/2026</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel" tabindex="-1"></div>
+	
+		
+				</main>
+				 <section id="layout-body-flyout" class="layout-body-flyout " data-bi-name="flyout">
+					 <div class="height-full border-left background-color-body-medium" id="ask-learn-flyout"><!---->
+		<article class="chat-container  position-sticky top-0 " data-chat-container-name="ask-learn-flyout" data-test-id="chat-login-ask-learn-flyout">
+			<div class="chat-container-header">
+				
+			</div>
+			<div class="text-align-center padding-top-xl padding-inline-md">
+				<p class="margin-bottom-lg"><!---->Ask Learn is an AI assistant that can answer questions, clarify concepts, and define terms using trusted Microsoft documentation.<!----></p>
+				<p class="margin-bottom-lg"><!---->Please sign in to use Ask Learn.<!----></p>
+				<a href="https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde#" class="docs-sign-in button button-primary button-filled button-sm">
+					Sign in
+				</a>
+			</div>
+		</article>
+	<!----></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		
+	
+			
+		</div></body></html>

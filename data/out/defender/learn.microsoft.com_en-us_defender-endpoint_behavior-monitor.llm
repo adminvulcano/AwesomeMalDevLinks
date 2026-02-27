@@ -1,0 +1,31 @@
+Title:
+Behavior monitoring in Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn article explains Microsoft Defender Antivirus behavior monitoring, a real-time detection layer that flags threats based on process and system activity rather than signatures alone.  
+- It focuses on how Defender observes behaviors like unusual file modifications and persistence-related registry changes (ASEP) and uses both predefined behavior patterns and anomaly detection to catch emerging malware.  
+- The page outlines which Defender capabilities depend on behavior monitoring (notably anti-malware and network protection indicator enforcement) and notes it is protected by Tamper Protection.  
+- It provides multiple administrative methods to enable/disable and audit the feature (Intune, CSP, Group Policy, PowerShell, WMI) and includes example PowerShell commands.  
+- It also shows how to query compliance at scale using Advanced Hunting (KQL) via TVM secure configuration assessment data.  
+- Finally, it covers troubleshooting high CPU in MsMpEng.exe, using Performance Analyzer and contextual exclusions, and suggests update rollback steps (platform/engine/intelligence) for isolation.
+
+Technical Focus:
+- Microsoft Defender Antivirus behavior-based detection and anomaly detection
+- Tamper Protection and Troubleshooting Mode interactions
+- Policy/config management via Intune, CSP (AllowBehaviorMonitoring), Group Policy, ConfigMgr Tenant Attach
+- PowerShell/WMI management (Set-MpPreference, MSFT_MpPreference)
+- Advanced Hunting (KQL) and TVM secure configuration assessment (DeviceTvmSecureConfigurationAssessment)
+- Performance troubleshooting (MsMpEng.exe CPU, Performance Analyzer, contextual exclusions)
+
+Use Cases:
+- Validate and enforce Defender behavior monitoring posture across an enterprise
+- Audit behavior monitoring enablement via PowerShell or Microsoft Defender XDR Advanced Hunting
+- Troubleshoot endpoint performance issues attributed to behavior monitoring and tune exclusions safely
+- Build detection engineering checks for misconfigurations (feature disabled/noncompliant devices)
+- Red team/assessment planning: understand which Defender layers rely on behavior monitoring and how it’s governed by tamper controls
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, behavior monitoring, MsMpEng.exe, Tamper Protection, Troubleshooting mode, Set-MpPreference, DisableBehaviorMonitoring, Get-MpComputerStatus, WMI MSFT_MpPreference, Intune antivirus policy, Defender Policy CSP, AllowBehaviorMonitoring, Group Policy, Configuration Manager Tenant Attach, Advanced Hunting, KQL, DeviceTvmSecureConfigurationAssessment, contextual exclusions, Performance Analyzer, ASEP registry keys, anomaly detection, indicators allow/block, network protection, web content filtering

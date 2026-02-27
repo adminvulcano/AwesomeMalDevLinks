@@ -1,0 +1,30 @@
+Title:
+Cloud protection and Microsoft Defender Antivirus
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This Microsoft Learn page explains how Microsoft Defender Antivirus “cloud protection” (MAPS) augments local real-time protection with cloud-backed intelligence and ML-driven detections.  
+- The goal is to identify and block new or emerging threats faster than traditional signature/security intelligence update cycles, sometimes before widespread infection occurs.  
+- It describes the high-level architecture: endpoints submit signals/metadata to Microsoft cloud services, which use the Microsoft Intelligent Security Graph and machine learning to return rapid protection decisions.  
+- The doc notes cloud protection is enabled by default but may need re-enabling if disabled by policy, and it points to configuration guidance.  
+- It also highlights “emergency dynamic intelligence updates” (near real-time fixes delivered via cloud) for eligible subscriptions (e.g., Windows 10 E5).  
+- Useful primarily for Blue Teams, SecOps, and endpoint administrators planning Defender AV hardening and update strategy; it’s relevant to Red Teams for understanding detection latency and cloud-dependent detection paths.
+
+Technical Focus:
+- Microsoft Defender Antivirus cloud protection (MAPS)
+- Cloud-delivered protection / dynamic intelligence updates
+- Machine learning / AI-based malware classification
+- Microsoft Intelligent Security Graph telemetry correlation
+- Real-time protection enhancement via cloud services
+- Policy/configuration enablement and prerequisites (Windows)
+
+Use Cases:
+- Validate/enable Defender AV cloud protection across an enterprise via policy
+- Reduce exposure window to zero-day/rapidly evolving malware with cloud-delivered updates
+- Assess detection dependencies and potential offline/egress-restricted gaps in endpoint protection
+- Tune incident response expectations around near-real-time cloud verdicts vs signature updates
+
+Keywords:
+Microsoft Defender Antivirus, Microsoft Defender for Endpoint, cloud protection, MAPS, Microsoft Advanced Protection Service, Microsoft Intelligent Security Graph, machine learning, AI, next-generation protection, real-time protection, dynamic intelligence updates, emergency updates, security intelligence updates, behavior monitoring, endpoint telemetry, Windows, E5, policy configuration, cloud-delivered protection

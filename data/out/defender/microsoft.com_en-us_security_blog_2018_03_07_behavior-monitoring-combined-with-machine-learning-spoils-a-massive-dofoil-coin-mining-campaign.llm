@@ -1,0 +1,31 @@
+Title:
+Behavior monitoring combined with machine learning spoils a massive Dofoil coin mining campaign
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- Microsoft documents a large-scale March 2018 outbreak of Dofoil/Smoke Loader variants delivering a cryptocurrency miner payload.  
+- The post focuses on how Windows Defender AV’s behavior monitoring and cloud machine-learning models rapidly detected and blocked the campaign “at first sight,” scaling from tens of thousands to hundreds of thousands of blocked instances within hours.  
+- Technically, the malware chain uses cross-process injection via process hollowing into `explorer.exe`, then drops a miner masquerading as `wuauclt.exe` (wrong path/abnormal command line) and performs suspicious network communications.  
+- It establishes persistence by copying itself into Roaming AppData and modifying Run keys (notably a OneDrive Run key) to execute the renamed payload.  
+- For C2, Dofoil leverages decentralized Namecoin infrastructure (`.bit` domains) via DNS proxy IPs to reach a C2 such as `vinik.bit` and receive download/execute/sleep commands.  
+- Useful for blue teams and threat hunters for understanding behavioral detections and for red teams/malware analysts as a case study in injection, persistence, and decentralized C2 tradecraft.
+
+Technical Focus:
+- Process hollowing / cross-process injection into `explorer.exe`
+- Coin miner staging and masquerading (fake `wuauclt.exe`, anomalous path/CLI)
+- Registry-based persistence (Run keys, OneDrive Run key modification)
+- Namecoin (`.bit`) decentralized DNS/C2 via proxy resolvers
+- Cloud ML + behavior-based detection pipeline (metadata, detonation, anomaly detection)
+- Endpoint telemetry/process tree investigation (Windows Defender ATP timelines)
+
+Use Cases:
+- Threat hunting for process hollowing and suspicious child-process trees from `explorer.exe`
+- Detecting masqueraded Windows binaries executing from non-standard directories
+- Monitoring registry Run key modifications for persistence (including OneDrive-related keys)
+- Network detection for Namecoin/DNS-proxy patterns and `.bit` domain resolution attempts
+- Building detection logic that correlates injection + persistence + mining behavior
+
+Keywords:
+Dofoil, Smoke Loader, coin miner, cryptomining, process hollowing, code injection, explorer.exe, wuauclt.exe, masquerading, persistence, Run key, registry modification, AppData Roaming, Windows Defender Antivirus, Windows Defender ATP, behavior monitoring, cloud machine learning, detonation-based analysis, Namecoin, .bit C2

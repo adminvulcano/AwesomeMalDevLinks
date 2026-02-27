@@ -1,0 +1,26 @@
+Title:
+ShadowDumper
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+ShadowDumper is a Windows post-exploitation tool for dumping LSASS memory to extract credentials and other sensitive material during red team or penetration tests. It addresses common EDR/AV impediments to LSASS dumping by offering multiple dump paths ranging from standard MiniDumpWriteDump to stealthier approaches. Techniques include unhooked injection of a modified Mimikatz payload, direct syscalls to bypass user-mode API hooks, MINIDUMP_CALLBACK_INFORMATION-based dumping, and LSASS process forking to avoid direct reads of the live process. It also supports creating “native” dumps with selected streams intended for offline parsing, and includes dump encryption/decryption workflows. The project is primarily useful for Red Teamers and pentesters evaluating credential access controls and EDR detection coverage.
+
+Technical Focus:
+- LSASS credential dumping tradecraft
+- User-mode unhooking and EDR hook evasion
+- Direct syscalls (syscall stubs) vs Win32 API usage
+- MiniDumpWriteDump and MINIDUMP_CALLBACK_INFORMATION callbacks
+- LSASS process forking / cloning for dumping
+- Offline dump parsing workflows (e.g., mimikatz/pypykatz compatibility)
+
+Use Cases:
+- Dump LSASS credentials during an internal penetration test
+- Compare detection/telemetry differences across multiple LSASS dumping techniques
+- Generate lower-noise dumps for offline credential extraction
+- Test EDR resilience against unhooking, direct syscalls, and process-fork dumping
+- Produce encrypted dump artifacts for controlled handling in engagements/labs
+
+Keywords:
+LSASS, Local Security Authority Subsystem Service, credential dumping, MiniDumpWriteDump, MINIDUMP_CALLBACK_INFORMATION, direct syscalls, unhooking, EDR bypass, process forking, Mimikatz, pypykatz, Windows x64, injection, native dump, offline parsing, SAM dump, token elevation, Vault credentials, Visual Studio 2019, MASM

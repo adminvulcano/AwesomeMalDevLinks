@@ -1,0 +1,25 @@
+Title:
+Different ways of dumping LSASS (dumping_lsass)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository is a practical write-up plus C code implementing multiple techniques to dump `lsass.exe` memory for credential extraction. It compares “naive” LOLBin/utility approaches (Task Manager, `rundll32 comsvcs.dll MiniDump`, Sysinternals ProcDump) with custom implementations using Windows APIs to reduce tooling and potentially evade monitoring. Core methods include `MiniDumpWriteDump` (to disk or to an in-memory buffer via callbacks), `PssCaptureSnapshot`, full-memory reads with `ReadProcessMemory`/`VirtualQueryEx`, handle acquisition via `OpenProcess` or stealthier handle duplication using `NtQuerySystemInformation` + `NtDuplicateObject`, and two notable alternatives: `SilentProcessExit` registry-based dumping and the WER/ALPC “Shtinikering” technique. It also summarizes modern mitigations (LSA PPL and Credential Guard/VBS) and discusses high-level bypass directions (kernel primitives, PPL bypass, downgrade/reboot-based options). Useful primarily for red teams/pentesters and defenders wanting to understand and detect LSASS dumping tradecraft.
+
+Technical Focus:
+- LSASS credential material (NTLM, Kerberos tickets) and dump workflows
+- Windows process handle acquisition (OpenProcess vs handle duplication)
+- Minidumps and memory dumping APIs (MiniDumpWriteDump, ReadProcessMemory, VirtualQueryEx)
+- Native NT APIs (NtQuerySystemInformation, NtDuplicateObject, NtQueryObject)
+- Alternative dump mechanisms (SilentProcessExit/IFEO, WER via ALPC)
+- Mitigations: Protected Process Light (RunAsPPL), Credential Guard (VTL0/VTL1, lsaiso.exe)
+
+Use Cases:
+- Implementing/benchmarking multiple LSASS dump techniques in a lab
+- Evaluating EDR visibility differences across dump methods and handle-acquisition paths
+- Building detection logic around suspicious handle duplication, minidump creation, WER/CrashDumps activity, and SilentProcessExit registry changes
+- Training material for Windows credential access tradecraft and mitigation impact testing
+
+Keywords:
+LSASS, lsass.exe, credential dumping, MiniDumpWriteDump, comsvcs.dll, rundll32, ProcDump, OpenProcess, PROCESS_VM_READ, NtQuerySystemInformation, SystemHandleInformation, NtDuplicateObject, NtQueryObject, ReadProcessMemory, VirtualQueryEx, PssCaptureSnapshot, SilentProcessExit, IFEO, RtlReportSilentProcessExit, Windows Error Reporting, WER, ALPC, CrashDumps, PPL, RunAsPPL, Credential Guard, VBS, VTL0, VTL1, lsaiso.exe, Kerberos, NTLM, pass-the-hash, pass-the-ticket

@@ -1,0 +1,25 @@
+Title:
+TLSH (Trend Locality Sensitive Hash) — A Locality Sensitive / Fuzzy Hash
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+TLSH is a fuzzy hashing library/tool that generates similarity digests for files (minimum ~50 bytes) to enable approximate matching rather than exact equality checks. It solves the problem of identifying related or near-duplicate files (e.g., malware variants, repacked binaries, modified documents) by comparing hash distances where similar inputs yield similar hashes. The site highlights TLSH’s focus on speed/scalability for large-scale search and clustering, and claims improved robustness against adversarial evasion compared to other fuzzy hashes like ssdeep and sdhash. TLSH is widely integrated into threat intel and malware ecosystems (VirusTotal, MalwareBazaar, MISP) and is standardized in STIX 2.1. It’s useful for SOC analysts, threat hunters, malware analysts, and defenders building similarity-based triage pipelines. The referenced papers/talks cover design choices, fast search, scalable clustering, and robustness considerations.
+
+Technical Focus:
+- Fuzzy hashing / locality-sensitive hashing (LSH) for file similarity
+- Similarity distance scoring and nearest-neighbor style comparisons
+- Large-scale indexing, fast search, and scalable clustering of digests
+- Robustness/evasion resistance vs. ssdeep/sdhash
+- Threat intel ecosystem integration (VirusTotal, MISP, STIX 2.1)
+
+Use Cases:
+- Cluster malware samples into families/variants using similarity digests
+- Hunt for modified/repacked binaries across large repositories
+- Enrich threat intel objects with TLSH and share via STIX/MISP
+- Triage incoming files by finding nearest known-bad/known-good neighbors
+- Detect near-duplicate documents or payloads in incident response datasets
+
+Keywords:
+TLSH, fuzzy hashing, locality-sensitive hash, similarity digest, malware clustering, threat hunting, VirusTotal API, MalwareBazaar, MISP, STIX 2.1, ssdeep, sdhash, nearest neighbor search, scalable indexing, robustness to evasion, file similarity, SOC triage, high-dimensional clustering

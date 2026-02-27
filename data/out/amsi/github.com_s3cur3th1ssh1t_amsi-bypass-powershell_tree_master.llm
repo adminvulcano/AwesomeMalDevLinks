@@ -6,25 +6,26 @@ GitHub Tool
 
 Short Summary (4–8 sentences max):
 - This repository is a collection of PowerShell-based AMSI (Antimalware Scan Interface) bypass/avoidance techniques aggregated from various public blog posts and research.  
-- It targets the problem of PowerShell payloads being scanned and blocked at runtime by AMSI-enabled defenders (e.g., Windows Defender and other AMSI providers).  
-- The repo demonstrates multiple approaches including in-memory patching of AMSI-related functions (e.g., `AmsiScanBuffer`, `AmsiOpenSession`), CLR-level modifications/hooking, ScriptBlock AST manipulation (“ScriptBlock Smuggling”), provider DLL patching (e.g., `MpOav.dll`), and interception of AMSI provider scan callbacks.  
-- It also notes that many included scripts are signature-detected and suggests using trigger-finding and obfuscation/manual signature modification to restore effectiveness.  
-- Useful primarily for red teams, pentesters, and offensive security researchers testing PowerShell tradecraft against modern Windows defenses; also relevant to blue teams for understanding bypass primitives and building detections.  
-- Interesting because it covers a broad spectrum of bypass classes (reflection-only toggles through low-level memory patching and breakpoint-based manipulation), illustrating how AMSI can be subverted at different layers.
+- It targets common offensive friction where PowerShell payloads are scanned/blocked by AMSI and Defender/AV providers, and demonstrates multiple ways to disable or subvert scanning within a process/session.  
+- Techniques include in-memory patching of AMSI entrypoints (e.g., AmsiScanBuffer/AmsiOpenSession), CLR/.NET method pointer manipulation and hooking, provider DLL patching (MpOav.dll), ScriptBlock AST “smuggling,” and interception of AMSI provider scan callbacks.  
+- The README notes many snippets are signatured and suggests using AMSITrigger plus manual modifications/obfuscation (renaming, string replacement, runtime decode) to evade static detections.  
+- Useful primarily for red teams/pentesters and malware developers for tradecraft study and prototyping; also relevant to blue teams for understanding bypass primitives and building detections around memory tampering and PowerShell internals.  
+- Interesting because it consolidates a broad spectrum of AMSI bypass classes (reflection-only, patching, hooking, breakpoint-based) showing how attackers pivot between user-mode and .NET runtime manipulation.
 
 Technical Focus:
-- AMSI internals and bypass primitives (`AmsiScanBuffer`, `AmsiOpenSession`, `AmsiUtils.ScanContent`)
-- In-memory patching and memory protection changes (`VirtualProtect`, `WriteProcessMemory`, `ReadProcessMemory`)
-- CLR/.NET method patching & hooking (`RuntimeHelpers.PrepareMethod`, function pointer swapping)
-- PowerShell AST/ScriptBlock manipulation (ScriptBlock smuggling)
-- AMSI provider manipulation (patching `MpOav.dll`, provider scan interception via vtables)
-- Evasion workflow: signature triggers + obfuscation (AMSITrigger, Invoke-Obfuscation/ISESteroids)
+- AMSI internals and bypass primitives (AmsiScanBuffer, AmsiOpenSession, ScanContent)
+- In-memory patching via VirtualProtect/WriteProcessMemory and shellcode stubs
+- .NET/CLR method pointer swapping, JIT preparation, and CLR hooking
+- PowerShell ScriptBlock/AST manipulation (ScriptBlock smuggling)
+- AMSI provider manipulation (MpOav.dll patching, provider scan interception)
+- Hardware breakpoints + vectored exception handling to force “clean” results
 
 Use Cases:
-- Bypassing AMSI in a PowerShell session to execute post-exploitation frameworks or loaders
-- Testing EDR/AV resilience and detection coverage against common AMSI bypass families
-- Developing/benchmarking detections for memory patching, reflection-based tampering, and provider hooking
-- Red-team tradecraft research: comparing reliability of reflection toggles vs. low-level patching vs. AST tricks
+- Rapid testing of AMSI bypass approaches in a controlled lab
+- Adapting/rewriting known bypasses to evade current signatures (manual mutation/obfuscation)
+- Building offensive loaders that execute PowerShell content with reduced AMSI visibility
+- Defensive research: creating detections for AMSI tampering, suspicious VirtualProtect/patch patterns, and PowerShell reflection abuse
+- Training material for understanding PowerShell/AMSI attack surface and mitigations
 
 Keywords:
-AMSI, Antimalware Scan Interface, PowerShell, AmsiScanBuffer, AmsiOpenSession, AmsiUtils, ScanContent, clr.dll, System.Management.Automation.dll, MpOav.dll, DllGetClassObject, ScriptBlock, AST, reflection, CLR hooking, VirtualProtect, WriteProcessMemory, ReadProcessMemory, hardware breakpoints, vectored exception handler, AMSI providers, vtable patching, obfuscation, AMSITrigger, Invoke-Obfuscation, ISESteroids
+AMSI, Antimalware Scan Interface, PowerShell, AmsiScanBuffer, AmsiOpenSession, System.Management.Automation, AmsiUtils, ScanContent, VirtualProtect, WriteProcessMemory, ReadProcessMemory, CLR hooking, JIT, RuntimeHelpers.PrepareMethod, reflection, ScriptBlock smuggling, AST, Vectored Exception Handler, hardware breakpoints, MpOav.dll, provider scan interception
