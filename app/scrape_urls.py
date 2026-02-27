@@ -32,8 +32,8 @@ def url_to_filename(url):
     # Remove leading/trailing underscores
     filename = filename.strip('_')
     # Limit length to avoid filesystem issues
-    if len(filename) > 200:
-        filename = filename[:200]
+    if len(filename) > 144:
+        filename = filename[:144]
     # Add .md extension
     return filename
 
