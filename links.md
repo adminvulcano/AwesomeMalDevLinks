@@ -420,6 +420,12 @@ https://offsec.almond.consulting/evading-elastic-callstack-signatures.html
 https://g3tsyst3m.com/fileless%20techniques/Bypassing-EDR-using-an-In-Memory-PE-Loader/
 https://racoten.gitbook.io/red-team-developments-and-operations
 https://www.cobaltstrike.com/blog/behind-the-mask-spoofing-call-stacks-dynamically-with-timers
+https://github.com/fancycode/MemoryModule
+https://blog.deeb.ch/posts/idealistic-definitions/
+https://blog.deeb.ch/posts/maldev-myths/
+https://blog.deeb.ch/posts/how-edr-works/
+https://blog.deeb.ch/posts/supermega/
+https://blog.deeb.ch/posts/exe-injection/
 ```
 
 
@@ -489,15 +495,11 @@ https://github.com/Dor00tkit/BamExtensionTableHook
 https://github.com/EvilBytecode/Detecting-Indirect-Syscalls
 https://github.com/Helixo32/CrimsonEDR
 https://github.com/MazX0p/CobaltSentry
-https://github.com/MazX0p/CobaltSentry/
 https://github.com/Xacone/BestEdrOfTheMarket
 https://github.com/dennisbabkin/InjectAll
 https://github.com/jdu2600/API-To-ETW
 https://github.com/jdu2600/Etw-SyscallMonitor
-https://github.com/jdu2600/Etw-SyscallMonitor/tree/main
-https://github.com/jdu2600/Etw-SyscallMonitor/tree/main/src/ETW
 https://github.com/jdu2600/EtwTi-FluctuationMonitor
-https://github.com/jdu2600/EtwTi-FluctuationMonitor/blob/main/helpers.cpp
 https://github.com/jdu2600/Windows10EtwEvents?tab=readme-ov-file
 https://github.com/jonny-jhnson/JonMon
 https://github.com/jonny-jhnson/TelemetrySource/tree/main/Microsoft-Windows-Threat-Intelligence
@@ -522,7 +524,6 @@ https://labs.infoguard.ch/posts/edr_part2_driver_analysis_results/
 https://labs.infoguard.ch/posts/edr_part3_one_bug_to_stop_them_all/
 https://labs.withsecure.com/publications/spoofing-call-stacks-to-confuse-edrs
 https://learn.microsoft.com/en-us/windows/win32/etw/about-event-tracing
-
 https://medium.com/@VL1729_JustAT3ch/removing-process-creation-kernel-callbacks-c5636f5c849f
 https://medium.com/@matterpreter/mimidrv-in-depth-4d273d19e148
 https://medium.com/falconforce/sysmon-vs-microsoft-defender-for-endpoint-mde-internals-0x01-1e5663b10347
@@ -564,6 +565,7 @@ https://xacone.github.io/BestEdrOfTheMarketV3.html#1
 https://zacbrown.org/posts/2017-04-11-hidden-treasure-part-1.html
 https://zacbrown.org/posts/2017-05-09-hidden-treasure-part-2.html
 https://hackyboiz.github.io/2025/08/15/banda/Minifilter-Driver/en/
+https://www.elastic.co/security-labs/automating-goad-and-live-malware-labs
 ```
 
 
@@ -637,6 +639,9 @@ https://wbenny.github.io/2024/12/08/section-order-masm-text-mn-subsection.html
 https://secret.club/2023/12/24/riscy-business.html
 https://keowu.re/posts/Ry%C5%ABjin---Writing-a-Bin2Bin-Obfuscator-from-Scratch-for-Windows-PE-x64-and-Fully-Deobfuscating-It
 https://blog.es3n1n.eu/posts/obfuscator-pt-1/
+https://tlsh.org/
+https://github.com/andrivet/ADVobfuscator
+https://blog.deeb.ch/posts/avred-update/
 ```
 
 
@@ -691,6 +696,8 @@ https://www.netero1010-securitylab.com/evasion/indirect-syscall-in-csharp
 https://www.r-tec.net/r-tec-blog-bypass-amsi-in-2025.html
 https://www.r-tec.net/r-tec-blog-net-assembly-obfuscation-for-memory-scanner-evasion.html
 https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
+https://github.com/passthehashbrowns/Being-A-Good-CLR-Host
+https://github.com/almounah/go-buena-clr
 ```
 
 
@@ -824,7 +831,8 @@ https://www.asset-intertech.com/resources/blog/2024/09/seven-groundbreaking-new-
 https://www.crowdfense.com/windows-wi-fi-driver-rce-vulnerability-cve-2024-30078/
 https://www.exploitpack.com/blogs/news/windows-kernel-exploits-using-zwmapviewofsection-and-zwunmapviewofsection
 https://www.nsideattacklogic.de/en/kernel-access-please-byovd-and-vulnerable-drivers/
-https://www.youtube.com/watch?v=39N9qJk55Ac
+https://github.com/BlackSnufkin/HolyGrail
+https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days
 ```
 
 ## LSASS
@@ -842,6 +850,7 @@ https://otter.gitbook.io/red-teaming/articles/windows-of-opportunity-exploiting-
 https://www.zerosalarium.com/2025/09/Dumping-LSASS-With-WER-On-Modern-Windows-11.html
 https://github.com/yo-yo-yo-jbo/dumping_lsass/
 https://github.com/Shac0x/Wonka
+https://github.com/dazzyddos/lsawhisper-bof
 ```
 
 ## COM n stuff
@@ -869,6 +878,34 @@ https://www.linkedin.com/pulse/unseen-magic-com-steven-dejean-o7ipf
 https://www.r-tec.net/r-tec-blog-revisiting-cross-session-activation-attacks.html
 https://www.r-tec.net/r-tec-blog-windows-is-and-always-will-be-a-potatoland.html
 https://www.synacktiv.com/en/publications/dissecting-dcom-part-1
+```
+
+## MS Defender
+
+```
+https://learn.microsoft.com/en-us/defender-endpoint/next-generation-protection
+https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows
+https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus
+https://learn.microsoft.com/en-us/defender-endpoint/enable-cloud-protection-microsoft-defender-antivirus
+https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-antivirus-sample-submission
+https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus
+https://learn.microsoft.com/en-us/defender-endpoint/amsi-on-mdav
+https://learn.microsoft.com/en-us/defender-endpoint/adv-tech-of-mdav
+https://learn.microsoft.com/en-us/defender-endpoint/behavior-monitor
+https://learn.microsoft.com/en-us/defender-endpoint/defender-antivirus-compatibility-without-mde
+https://learn.microsoft.com/en-us/defender-endpoint/behavioral-blocking-containment
+https://learn.microsoft.com/en-us/defender-endpoint/client-behavioral-blocking
+https://learn.microsoft.com/en-us/defender-endpoint/behavioral-blocking-containment
+https://www.microsoft.com/en-us/security/blog/2019/06/24/inside-out-get-to-know-the-advanced-technologies-at-the-core-of-microsoft-defender-atp-next-generation-protection/
+https://www.microsoft.com/en-us/security/blog/2018/03/07/behavior-monitoring-combined-with-machine-learning-spoils-a-massive-dofoil-coin-mining-campaign/
+https://www.microsoft.com/en-us/security/blog/2017/12/11/detonating-a-bad-rabbit-windows-defender-antivirus-and-layered-machine-learning-defenses/
+https://www.microsoft.com/en-us/security/blog/2018/04/17/connect-to-the-intelligent-security-graph-using-a-new-api/
+https://www.microsoft.com/en-us/security/blog/2022/06/30/using-process-creation-properties-to-catch-evasion-techniques/
+https://blog.levi.wiki/post/2025-12-02-defender-temporal-detections
+https://blog.levi.wiki/post/2025-12-04-defender-detection-engines
+https://blog.levi.wiki/post/2025-12-05-decondition-everything
+https://blog.levi.wiki/post/2025-12-06-decondition-enumerator
+https://blog.levi.wiki/post/2026-01-09-defender-detection-mechanisms
 ```
 
 

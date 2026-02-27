@@ -42,3 +42,5 @@ https://www.netero1010-securitylab.com/evasion/indirect-syscall-in-csharp
 https://www.r-tec.net/r-tec-blog-bypass-amsi-in-2025.html
 https://www.r-tec.net/r-tec-blog-net-assembly-obfuscation-for-memory-scanner-evasion.html
 https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
+https://github.com/passthehashbrowns/Being-A-Good-CLR-Host
+https://github.com/almounah/go-buena-clr

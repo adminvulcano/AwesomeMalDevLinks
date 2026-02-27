@@ -1,0 +1,10 @@
+https://sensepost.com/blog/2024/dumping-lsa-secrets-a-story-about-task-decorrelation/
+https://mrvar0x.com/2025/02/16/stealth-mode-dumping-lsass-without-a-trace/
+https://github.com/ricardojoserf/NativeDump
+https://github.com/Offensive-Panda/ShadowDumper
+https://github.com/jfjallid/go-secdump
+https://otter.gitbook.io/red-teaming/articles/windows-of-opportunity-exploiting-race-conditions-in-seclogon-to-dump-lsass
+https://www.zerosalarium.com/2025/09/Dumping-LSASS-With-WER-On-Modern-Windows-11.html
+https://github.com/yo-yo-yo-jbo/dumping_lsass/
+https://github.com/Shac0x/Wonka
+https://github.com/dazzyddos/lsawhisper-bof

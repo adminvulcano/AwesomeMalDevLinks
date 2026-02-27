@@ -35,4 +35,5 @@ https://www.asset-intertech.com/resources/blog/2024/09/seven-groundbreaking-new-
 https://www.crowdfense.com/windows-wi-fi-driver-rce-vulnerability-cve-2024-30078/
 https://www.exploitpack.com/blogs/news/windows-kernel-exploits-using-zwmapviewofsection-and-zwunmapviewofsection
 https://www.nsideattacklogic.de/en/kernel-access-please-byovd-and-vulnerable-drivers/
-https://www.youtube.com/watch?v=39N9qJk55Ac
+https://github.com/BlackSnufkin/HolyGrail
+https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days

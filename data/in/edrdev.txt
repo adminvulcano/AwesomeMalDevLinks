@@ -28,15 +28,11 @@ https://github.com/Dor00tkit/BamExtensionTableHook
 https://github.com/EvilBytecode/Detecting-Indirect-Syscalls
 https://github.com/Helixo32/CrimsonEDR
 https://github.com/MazX0p/CobaltSentry
-https://github.com/MazX0p/CobaltSentry/
 https://github.com/Xacone/BestEdrOfTheMarket
 https://github.com/dennisbabkin/InjectAll
 https://github.com/jdu2600/API-To-ETW
 https://github.com/jdu2600/Etw-SyscallMonitor
-https://github.com/jdu2600/Etw-SyscallMonitor/tree/main
-https://github.com/jdu2600/Etw-SyscallMonitor/tree/main/src/ETW
 https://github.com/jdu2600/EtwTi-FluctuationMonitor
-https://github.com/jdu2600/EtwTi-FluctuationMonitor/blob/main/helpers.cpp
 https://github.com/jdu2600/Windows10EtwEvents?tab=readme-ov-file
 https://github.com/jonny-jhnson/JonMon
 https://github.com/jonny-jhnson/TelemetrySource/tree/main/Microsoft-Windows-Threat-Intelligence
@@ -102,3 +98,4 @@ https://xacone.github.io/BestEdrOfTheMarketV3.html#1
 https://zacbrown.org/posts/2017-04-11-hidden-treasure-part-1.html
 https://zacbrown.org/posts/2017-05-09-hidden-treasure-part-2.html
 https://hackyboiz.github.io/2025/08/15/banda/Minifilter-Driver/en/
+https://www.elastic.co/security-labs/automating-goad-and-live-malware-labs

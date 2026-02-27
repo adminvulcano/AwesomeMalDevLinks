@@ -60,3 +60,6 @@ https://wbenny.github.io/2024/12/08/section-order-masm-text-mn-subsection.html
 https://secret.club/2023/12/24/riscy-business.html
 https://keowu.re/posts/Ry%C5%ABjin---Writing-a-Bin2Bin-Obfuscator-from-Scratch-for-Windows-PE-x64-and-Fully-Deobfuscating-It
 https://blog.es3n1n.eu/posts/obfuscator-pt-1/
+https://tlsh.org/
+https://github.com/andrivet/ADVobfuscator
+https://blog.deeb.ch/posts/avred-update/

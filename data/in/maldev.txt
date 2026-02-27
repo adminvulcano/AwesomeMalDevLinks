@@ -408,3 +408,9 @@ https://offsec.almond.consulting/evading-elastic-callstack-signatures.html
 https://g3tsyst3m.com/fileless%20techniques/Bypassing-EDR-using-an-In-Memory-PE-Loader/
 https://racoten.gitbook.io/red-team-developments-and-operations
 https://www.cobaltstrike.com/blog/behind-the-mask-spoofing-call-stacks-dynamically-with-timers
+https://github.com/fancycode/MemoryModule
+https://blog.deeb.ch/posts/idealistic-definitions/
+https://blog.deeb.ch/posts/maldev-myths/
+https://blog.deeb.ch/posts/how-edr-works/
+https://blog.deeb.ch/posts/supermega/
+https://blog.deeb.ch/posts/exe-injection/
