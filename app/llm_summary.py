@@ -111,8 +111,7 @@ class LlmSummarizer:
         Returns:
             Summary text from ChatGPT
         """
-        # Truncate very large content to avoid token limits
-        max_chars = 100_000
+        max_chars = 256_000
         if len(content) > max_chars:
             content = content[:max_chars] + "\n\n[... content truncated ...]"
 

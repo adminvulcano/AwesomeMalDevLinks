@@ -58,7 +58,7 @@ To enable this, the following is provided in this repository:
 * Lists of links categorized by topic
 * The content of the page as markdown and HTML (.md, .html)
 * The metadata of the page (.json)
-* A AI summary of the page (.llm)
+* A AI summary of the page (.llm), by ChatGPT 5.2
 
 Not included links are: 
 * Linkedin posts (no thanks)
