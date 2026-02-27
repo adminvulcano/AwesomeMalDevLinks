@@ -701,7 +701,7 @@ https://github.com/almounah/go-buena-clr
 ```
 
 
-## Low-Level RedTeam
+## RedTeaming
 
 * Some C2 stuff
 * BOF's

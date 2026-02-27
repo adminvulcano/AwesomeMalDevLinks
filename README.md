@@ -1,6 +1,6 @@
 # Awesome Mega MalDev Links List
 
-This is a curated list of offensive security / malware development links to tutorials, writeups, and tools. It is representative of the offsec development of the last few years (around 2022 to 2026). The focus is mostly new-age initial access for redteamers against EDR's. The old static-analysis and anti-AV is also included in a separate chapter. 
+This is a curated list of offensive security / malware development links to tutorials, writeups, and tools. It is representative of the offsec development of the last few years (around 2022 to 2026). The focus is mostly new-age initial access for redteamers against EDR's. The old static-analysis/anti-AV is in a dedicated chapter. 
 
 Shortcuts:
 * [The Awesome Mega MalDev Link List](https://github.com/dobin/AwesomeMalDevLinks/blob/main/links.md) as markdown
@@ -13,34 +13,41 @@ This is mostly to be used with AI, NotebookLM style (see chapter below).
 
 ## Links & Topics
 
-MalDev [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/maldev.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/maldev/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/maldev.zip): 
+**MalDev** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/maldev.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/maldev/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/maldev.zip): 
 * Shellcode loader
 * process injection techniques
+* in/direct syscalls
 * callstack obfuscation
 * general windows api / memory basics
-* DLL loading & sideloading
+* (reflective) DLL loading & sideloading
 * General anti-EDR (no edr killing) / anti-detection
+* executing shellcode stealthily
 
-EdrDev [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/edrdev.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/edrdev/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/edrdev.zip):
+**EdrDev** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/edrdev.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/edrdev/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/edrdev.zip):
 * Develop or analyse a EDR
-* ETW, kernel callbacks, process hooking
+* ETW, kernel callbacks, process hooking / ntdll hooking
+* EDR architecture
 * For RedEdr mostly
 
-Static Analysis [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/staticanalysis.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/staticanalysis/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/staticanalysis.zip):
+**Static Analysis** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/staticanalysis.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/staticanalysis/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/staticanalysis.zip):
 * static analysis
 * obfuscation
-* anti virus scanner
+* anti virus-scanner
 * PE
 
-AMSI / ETW-patch / .NET / Powershell [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/amsi.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/amsi/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/amsi.zip): 
+**AMSI / ETW-patch / .NET / Powershell** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/amsi.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/amsi/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/amsi.zip): 
 * Disable AMSI to run .NET or powershell
 * .net/powershell tooling
 * .net/powershell obfuscation
 
-Vulnerable Drivers [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/vulndrivers)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/vulndrivers/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/vulndrivers.zip):
+**Vulnerable Drivers** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/vulndrivers)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/vulndrivers/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/vulndrivers.zip):
 * Finding and exploiting vulnerable drivers
 
-And some others.
+And some others: 
+* Crystal Palace & Stardust
+* RedTeaming (various)
+* MS Defender
+* LSASS dumping
 
 
 ## Description
