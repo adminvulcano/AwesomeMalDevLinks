@@ -1,17 +1,18 @@
 # Awesome Mega MalDev Links List
 
-This is a curated list of offensive security / malware development links to tutorials, writeups, and tools. It is representative of the offsec development of the last few years (around 2022 to 2026). The focus is mostly new-age initial access for redteamers against EDR's. The old static-analysis/anti-AV is in a dedicated chapter. 
+This is a curated list of offensive security / malware development links to tutorials, writeups, and tools. It is representative of the offsec development of the last few years (around 2022 to 2026). The focus is mostly new-age initial access for redteamers against EDR's using C2. To be used with AI.
 
 Shortcuts:
 * [The Awesome Mega MalDev Link List](https://github.com/dobin/AwesomeMalDevLinks/blob/main/links.md) as markdown
 * [All links per topic](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in) as .txt
-* [All page content + more per topic](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out)(.md, .html, with metadata as .json, and llm summary as .llm)
+* [All page content + more per topic](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out) (.md, .html, with metadata as .json, and llm summary as .llm)
 * [All page content per topic as zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result) (zip of all the .md of the pages)
 
 This is mostly to be used with AI, NotebookLM style (see chapter below). 
 
+e.g. for "How EDR Works" [blog.deeb.ch/posts/how-edr-works/](https://blog.deeb.ch/posts/how-edr-works/), we have: content [.md](https://github.com/dobin/AwesomeMalDevLinks/blob/main/data/out/maldev/blog.deeb.ch_posts_how-edr-works.md) ([.html](https://github.com/dobin/AwesomeMalDevLinks/blob/main/data/out/maldev/blog.deeb.ch_posts_how-edr-works.html)), with [.llm](https://github.com/dobin/AwesomeMalDevLinks/blob/main/data/out/maldev/blog.deeb.ch_posts_how-edr-works.llm) summary and [.json](https://github.com/dobin/AwesomeMalDevLinks/blob/main/data/out/maldev/blog.deeb.ch_posts_how-edr-works.json) metadata.
 
-## Links & Topics
+## Links
 
 **MalDev** [links](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/in/maldev.txt)/[pages](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/out/maldev/)/[zip](https://github.com/dobin/AwesomeMalDevLinks/tree/main/data/result/maldev.zip): 
 * Shellcode loader
@@ -50,7 +51,7 @@ And some others:
 * LSASS dumping
 
 
-## Description
+## Background
 
 The links are mostly collected from nonpublic Discord servers, and various public sources. They should contain advanced technical information or cutting edge tools and implementations. No low-effort, AI-generated or "write your first loader" tutorials should be included. Obviously wrong or obsolete information should also not be included. As all the links are from my notes app, i read most of them, or at least skimmed through. 
 
@@ -77,7 +78,7 @@ Not included links are:
 
 ## How to use with AI
 
-### Use with OpenNotebook
+### OpenNotebook
 
 [OpenNotebook](https://www.open-notebook.ai/) is not really usable for this currently (February 2026), but maybe soon. 
 
@@ -110,7 +111,7 @@ Usecase D:
 * NOTE: This uses all your sources, not per-notebook
 
 
-### Use with Onyx
+### Onyx App
 
 How to use with [Onyx App](https://www.onyx.app/)
 
@@ -121,7 +122,7 @@ How to use with [Onyx App](https://www.onyx.app/)
 * "Agents" -> "MalDev_Assist", click the weird settings icon, click "Internal Search" - there should be a blue "Internal Search" under the Chat
 
 
-### Use with NotebookLM
+### NotebookLM
 
 How to use with Googles [NotebookLM](https://notebooklm.google.com/)
 
