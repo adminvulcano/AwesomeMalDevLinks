@@ -1,0 +1,25 @@
+Title:
+Emulating Covert Operations – Dynamic Invocation (Avoiding PInvoke & API Hooks)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post introduces D/Invoke (DInvoke), an API added to SharpSploit that dynamically resolves and invokes unmanaged Windows APIs from C# without static P/Invoke imports. It targets two common detection/visibility points: suspicious Import Address Table entries in .NET assemblies and user-mode API hooking on Win32/NTDLL functions. The article explains using .NET delegates created from function pointers (via `Marshal.GetDelegateForFunctionPointer`) to call exports resolved at runtime by parsing module export tables, walking the PEB loader lists, or loading modules on demand. It also covers advanced execution primitives: manual mapping of PE modules (including “module overloading” using file-backed decoys) and generating syscall stubs from a fresh `ntdll.dll` to bypass userland hooks. Defensive considerations are included (module-load telemetry, memory scanners like pe-sieve, ETW/.NET runtime provider, and userland instrumentation via Frida). It’s primarily useful for red team/offensive .NET tool developers, while also providing concrete detection angles for blue teams.
+
+Technical Focus:
+- Dynamic API resolution/invocation in .NET using delegates and function pointers
+- PEB module enumeration and export table (EAT) parsing
+- Manual mapping of PE modules and module overloading (file-backed decoy mapping)
+- Syscall stub extraction from fresh `ntdll.dll` (userland hook bypass)
+- Detection via modload telemetry, memory scanning (pe-sieve), and ETW (.NET runtime provider)
+
+Use Cases:
+- Build .NET post-exploitation tooling without suspicious P/Invoke imports
+- Evade user-mode API hooks by resolving exports dynamically or using fresh manually mapped modules
+- Execute DLLs/EXEs reflectively from memory (including calling exports/DllMain)
+- Invoke NT syscalls via dynamically generated stubs to bypass userland monitoring
+- Develop detections based on anomalous module loads, ETW CLR events, and in-memory PE artifacts
+
+Keywords:
+DInvoke, SharpSploit, Dynamic Invocation, PInvoke, Import Address Table, IAT, API hooking, userland hooks, delegates, Marshal.GetDelegateForFunctionPointer, ntdll.dll, LdrLoadDll, PEB, export address table, EAT parsing, manual mapping, reflective loading, module overloading, syscall stubs, NtOpenProcess, NtCreateThreadEx, ETW, Sysmon, SilkETW, pe-sieve, Frida

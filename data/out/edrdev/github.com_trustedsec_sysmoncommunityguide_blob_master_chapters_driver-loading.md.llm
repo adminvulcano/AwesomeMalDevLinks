@@ -1,0 +1,26 @@
+Title:
+Sysmon Community Guide – Driver Loading (Event ID 6)
+
+Type:
+Documentation (GitHub)
+
+Short Summary (4–8 sentences max):
+This chapter explains how to use Sysmon Event ID 6 (DriverLoad) to monitor kernel driver loading on Windows as a high-signal detection source. It motivates driver-load monitoring by outlining how malicious or vulnerable drivers enable kernel-level persistence, rootkits, credential theft, and security control bypass (including BYOVD). The guide recommends a “log all, then baseline and exclude known-good” strategy due to the typically low daily volume of driver load events. It emphasizes validating both `Signature` and `SignatureStatus`, and enabling Sysmon certificate revocation checking (`<CheckRevocation/>`) to catch abused or revoked certificates. It also shows how to integrate LOLDrivers’ hash-based Sysmon rules to detect known-vulnerable signed drivers that signature validation alone won’t flag. The content is primarily useful for Blue Teams/DFIR and detection engineers, with red teams benefiting from understanding common detection pivots around driver abuse.
+
+Technical Focus:
+- Sysmon Event ID 6 (DriverLoad) telemetry and fields
+- Driver signing validation (`Signature`, `SignatureStatus`) and revocation checks
+- Baselining and allowlisting/exclusion rule design for low-volume events
+- BYOVD detection using LOLDrivers (hash/signature metadata)
+- Investigation heuristics for suspicious driver loads (path, vendor, signature state)
+- MITRE ATT&CK mapping for driver/rootkit activity
+
+Use Cases:
+- Detect unsigned or invalidly signed kernel drivers (potential rootkits/tool drivers)
+- Alert on known-vulnerable driver loads associated with BYOVD tradecraft
+- Build environment-specific allowlists for common vendor drivers after baselining
+- Triage suspicious driver loads from unusual directories (temp/user/removable media)
+- Hunt for tool-specific drivers (e.g., mimidrv.sys) by name/hash/signature
+
+Keywords:
+Sysmon, Event ID 6, DriverLoad, Windows kernel drivers, code signing, SignatureStatus, certificate revocation, CheckRevocation, BYOVD, LOLDrivers, loldrivers.io, mimidrv.sys, rootkit, LSASS, kernel-mode, allowlisting, baselining, MITRE ATT&CK T1014, T1068, T1543.003, T1562, T1611

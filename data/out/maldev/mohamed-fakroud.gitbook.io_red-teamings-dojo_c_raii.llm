@@ -1,0 +1,31 @@
+Title:
+RAII (Resource Acquisition Is Initialization) for Offensive Security Tooling in C++ (with a VirtualAlloc/VirtualFree Wrapper)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up explains how to use the C++ RAII idiom to make Windows offensive/security tooling more reliable by automatically managing resources (heap memory, Win32 handles, locks, etc.).  
+- It highlights common failure modes in red-team utilities—leaks, double-frees, and missed cleanup across early returns/exceptions—and shows how RAII ties acquisition to constructors and cleanup to destructors.  
+- The post walks through ownership semantics (raw pointers are non-owning), exception safety via stack unwinding, and how to prevent unsafe copying by deleting copy operations.  
+- It also covers lvalue/rvalue categories and how rvalue references enable move semantics for safe ownership transfer.  
+- A concrete example implements a `VirtualMemory` RAII class wrapping `VirtualAlloc`/`VirtualFree`, applying the Rule of Five, `noexcept`, and typed accessors.  
+- Useful for red teamers, pentesters, and Windows tooling developers who need stable long-running implants/utilities and fewer operational crashes.
+
+Technical Focus:
+- RAII and exception-safe cleanup (stack unwinding, destructors)
+- Ownership semantics (raw pointers vs owning wrappers)
+- Rule of Five (delete copy, implement move ctor/assignment)
+- Move semantics and `std::move` (rvalue references)
+- Win32 memory management (`VirtualAlloc`, `VirtualFree`, protection flags)
+- Modern C++ practices (`noexcept`, `const` correctness, templates, `std::format`)
+
+Use Cases:
+- Building leak-resistant Windows red-team tooling that uses Win32 resources heavily
+- Implementing safe wrappers for process/thread/token handles and synchronization primitives
+- Managing executable memory buffers for shellcode staging without cleanup bugs
+- Refactoring legacy C-style code with many error paths into exception-safe C++
+- Enabling safe ownership transfer of allocated memory between components/modules
+
+Keywords:
+RAII, C++, Windows internals, Win32 API, VirtualAlloc, VirtualFree, MEM_COMMIT, MEM_RESERVE, MEM_RELEASE, PAGE_EXECUTE_READWRITE, exception safety, stack unwinding, destructor, smart pointer, ownership, double free, memory leak, Rule of Five, move semantics, rvalue reference, std::move, noexcept, const correctness, templates, std::format

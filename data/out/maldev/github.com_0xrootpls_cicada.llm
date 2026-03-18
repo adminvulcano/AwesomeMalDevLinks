@@ -1,0 +1,26 @@
+Title:
+Cicada PIC Stager
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Cicada is a position-independent Windows shellcode stager (PIC) that fetches a second-stage payload over HTTPS and executes it with timer-based context switching. It focuses on stealth by avoiding imports and string literals, resolving APIs via PEB walking, and using WinHTTP with a certificate validation bypass to allow self-signed C2 certificates. Its main defensive-evasion feature is “protected sleep” (inspired by Ekko): during sleep it RC4-encrypts the stager’s shellcode region, heap, and stack, and hides most of the timer/ROP chain by encrypting the chain body separately. Execution is driven by an encrypted timer chain and `NtContinue` to pivot contexts rather than a direct call/jump into the stage. After handing off execution, it self-destructs by freeing the stager memory. Useful primarily for red teamers, implant developers, and security researchers studying sleep obfuscation and PIC shellcode staging tradecraft.
+
+Technical Focus:
+- Position-independent Windows shellcode (PIC) without relocations
+- PEB walking and dynamic API resolution (no `GetProcAddress` imports)
+- WinHTTP HTTPS staging with certificate validation bypass
+- Sleep obfuscation via RC4 encryption of code/heap/stack
+- Timer-chain / ROP-style execution flow using `NtContinue` CONTEXT switching
+- Self-deletion/self-freeing stager behavior (`VirtualFree`)
+
+Use Cases:
+- Building a small Windows stager that retrieves and runs remote shellcode over HTTPS
+- Researching Ekko-style sleep obfuscation and encrypted timer-chain designs
+- Developing/benchmarking EDR detections for stack/heap/code encryption during sleep
+- Studying import-less API resolution and stringless shellcode techniques
+- Creating lab PoCs for staged payload delivery and post-execution self-erasure
+
+Keywords:
+Windows shellcode, PIC, stager, WinHTTP, HTTPS staging, certificate validation bypass, self-signed certificate, PEB walk, dynamic API resolution, ntdll, kernel32, advapi32, NtContinue, CONTEXT, timer queue, sleep obfuscation, Ekko, RC4, SystemFunction032, VirtualProtect, VirtualAlloc, VirtualFree

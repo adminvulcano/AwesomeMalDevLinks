@@ -1,0 +1,26 @@
+Title:
+IronPE – Minimal Windows PE manual loader written in Rust
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+IronPE is a minimal manual PE loader (“manual mapping”) for Windows written in Rust that can load and execute x86 and x64 PE files directly from memory. It reimplements core behaviors of the Windows loader: parsing PE headers, allocating memory, mapping sections, applying base relocations, resolving imports, and jumping to the Original Entry Point (OEP). The project is positioned as an educational/research implementation to understand PE structure and Windows loader internals, and is a Rust rewrite of the author’s earlier C# dotNetPELoader. It demonstrates architecture constraints (x86 loader can’t load x64 PE and vice versa) and includes a demo running tools like mimikatz via in-memory execution. Useful for red teamers, malware researchers, and reverse engineers studying loader tradecraft, and for blue teamers wanting to understand what manual mapping does at a low level.
+
+Technical Focus:
+- Portable Executable (PE) parsing (headers, sections)
+- Manual mapping / in-memory execution
+- Base relocation processing
+- Import Address Table (IAT) resolution
+- WinAPI loader primitives (VirtualAlloc, LoadLibrary, GetProcAddress)
+- x86 vs x64 loader/PE compatibility
+
+Use Cases:
+- Build a research-grade PE manual loader in Rust
+- Study Windows loader internals by reimplementing the load pipeline
+- Execute a PE from memory for controlled red team simulations
+- Create test artifacts to validate EDR detections around manual mapping behaviors
+- Compare Rust vs C#/C implementations of PE loading logic
+
+Keywords:
+Windows, Rust, PE loader, manual mapping, Portable Executable, in-memory execution, section mapping, base relocations, import resolution, IAT, OEP, VirtualAlloc, LoadLibrary, GetProcAddress, x86, x64, WinAPI, fileless, mimikatz, reverse engineering

@@ -1,0 +1,26 @@
+Title:
+LdrShuffle — Stealthy code execution via runtime modification of DLL EntryPoint in the PEB loader lists
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+LdrShuffle is a Windows code-execution/injection technique that redirects execution by overwriting the `EntryPoint` field of a loaded module’s `_LDR_DATA_TABLE_ENTRY` at runtime. It leverages legitimate Windows loader behavior (thread attach/detach and process attach/detach `DllMain` invocations) so payload execution occurs under a less suspicious, loader-originated call stack. The repo includes a local PoC for “API proxying” (running chosen Win32 APIs with controlled arguments/return value handling) and a cross-process injector (`LdrInject`) that performs remote PEB/LDR walking plus `WriteProcessMemory` to patch a target DLL’s entrypoint without `CreateRemoteThread`/APCs. It discusses practical constraints of executing under the Loader Lock and in `DllMain`-like contexts (deadlocks, race conditions), and mitigations such as spawning a new thread for problematic APIs (e.g., WinINet/WinHTTP). It also includes notes/demos for adapting the approach to run Cobalt Strike beacon shellcode more safely by triggering only on `DLL_THREAD_ATTACH` and creating a new thread. Useful for red teams, implant developers, and defenders studying loader-based execution and call stack evasion tradeoffs.
+
+Technical Focus:
+- PEB / `PEB_LDR_DATA` / `_LDR_DATA_TABLE_ENTRY` traversal and manipulation
+- Overwriting DLL `EntryPoint` to hijack loader-driven execution paths
+- Thread attach/detach (`DLL_THREAD_ATTACH`/`DLL_THREAD_DETACH`) execution triggers
+- Loader Lock / `DllMain` constraints, deadlocks, and stability considerations
+- Cross-process memory R/W injection (`OpenProcess`, `WriteProcessMemory`)
+- Call stack shaping / API proxying via legitimate loader call chains
+
+Use Cases:
+- Stealthy in-process code execution without classic thread/APC injection primitives
+- Remote “threadless” style execution trigger by patching a target module’s entrypoint
+- Running sensitive APIs with a loader-originated call stack (API proxying)
+- Researching/validating EDR detections around PEB/LDR tampering and entrypoint patching
+- Implant staging where execution is deferred until a thread event occurs
+
+Keywords:
+Windows loader, PEB, PEB_LDR_DATA, _LDR_DATA_TABLE_ENTRY, EntryPoint hijack, DllMain, Ldrp, Loader Lock, DLL_THREAD_ATTACH, DLL_THREAD_DETACH, API proxying, call stack evasion, process injection, threadless injection, OpenProcess, WriteProcessMemory, VirtualAlloc, VirtualProtect, CreateThread, WinINet, WinHTTP, Cobalt Strike beacon, shellcode execution

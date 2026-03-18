@@ -1,0 +1,24 @@
+Title:
+C# Memory Injection Examples
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository provides C# code examples demonstrating multiple Windows process memory injection techniques. It aims to show relatively minimal/opsec-conscious implementations by avoiding unnecessary memory changes and extra process/file creation where possible. Included techniques cover APC-based shellcode execution (against existing and newly created processes), classic remote DLL injection via `CreateRemoteThread` + `LoadLibrary`, thread hijacking by suspending and redirecting an existing thread, and IAT (Import Address Table) pointer modification to redirect a specific imported function to shellcode. The examples use simple calc-spawning shellcode (linked externally) for demonstration. It’s primarily useful for red teamers, pentesters, and security researchers studying Windows injection tradecraft and detection opportunities.
+
+Technical Focus:
+- APC injection via `QueueUserAPC` and alertable thread states
+- Remote process memory allocation/writing and execution primitives
+- Remote DLL injection (`CreateRemoteThread`, `LoadLibrary`)
+- Thread hijacking (suspend/resume, context/flow redirection)
+- IAT patching / import pointer redirection in a remote process
+
+Use Cases:
+- Build/modify C# PoCs for common Windows injection patterns
+- Compare injection tradeoffs (reliability, noise, prerequisites like alertable threads)
+- Develop detections around API sequences and memory permissions/remote thread creation
+- Training material for Windows internals and offensive tradecraft labs
+
+Keywords:
+C#, Windows, process injection, memory injection, shellcode, QueueUserAPC, APC injection, alertable state, CreateRemoteThread, LoadLibrary, DLL injection, thread hijacking, SuspendThread, IAT injection, Import Address Table, VirtualAllocEx, WriteProcessMemory, remote process, Win32 API, opsec tradeoffs

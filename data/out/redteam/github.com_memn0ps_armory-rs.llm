@@ -1,0 +1,26 @@
+Title:
+Armory (armory-rs) — Rust Beacon Object Files (BOFs) Port of TrustedSec BOFs
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Armory-rs is a collection of Windows Beacon Object Files (BOFs) rewritten in Rust for adversary simulation, threat emulation, and security research. It ports the full set of 115 TrustedSec BOFs (situational awareness, remote operations, and injection) from C to Rust using the rustbof framework. The project provides a broad set of post-exploitation primitives (host/network enumeration, registry/service/task operations, credential/token artifact access, and multiple process injection techniques) mapped to MITRE ATT&CK. It targets COFF/BOF execution workflows and is intended to be run via compatible loaders (e.g., TrustedSec COFFLoader). Useful for red teams/pentesters building BOF-based tradecraft, and for blue teams/detection engineers validating telemetry and writing detections against common BOF behaviors. Notable for demonstrating a large-scale Rust port of a well-known BOF arsenal and for covering both SA and injection patterns in a consistent framework.
+
+Technical Focus:
+- Rust-based BOF development via rustbof (COFF object payloads)
+- Windows situational awareness and host/network enumeration
+- Remote operations via SCM, registry, scheduled tasks, and user management
+- Credential/token artifact access (DPAPI, browser/app tokens)
+- Process injection techniques (CreateRemoteThread, NtCreateThreadEx, APC, context hijack, KCT hijack)
+- MITRE ATT&CK technique mapping for emulation/detection alignment
+
+Use Cases:
+- Build and run BOF modules in Cobalt Strike/COFF-compatible execution chains
+- Threat emulation/purple team exercises aligned to ATT&CK techniques
+- Detection engineering: generate endpoint telemetry for services/registry/tasks/injection behaviors
+- Rapid situational awareness on compromised Windows hosts (processes, sessions, shares, routes, DNS cache)
+- Research and prototyping of Rust implementations of common post-exploitation actions
+
+Keywords:
+Rust, BOF, Beacon Object Files, COFF, Cobalt Strike, rustbof, COFFLoader, Windows internals, situational awareness, SCM (Service Control Manager), registry, scheduled tasks, WMI, LDAP, ADCS, DPAPI, token theft, CreateRemoteThread, NtCreateThreadEx, APC injection, SetThreadContext, KernelCallbackTable, MITRE ATT&CK

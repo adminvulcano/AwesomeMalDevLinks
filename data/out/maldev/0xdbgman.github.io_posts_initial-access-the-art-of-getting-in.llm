@@ -1,0 +1,32 @@
+Title:
+Initial Access: The Art of Getting In
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A long-form red team tradecraft guide focused on the “initial access” phase (MITRE ATT&CK TA0001), framed as a 9-phase playbook from payload delivery through social engineering, exploitation, and physical access.  
+- It aims to help operators reliably obtain a first foothold despite modern controls like email gateways, SmartScreen/MOTW, AMSI, EDR, and MFA.  
+- The post breaks down payload delivery chains (container/trigger/loader/beacon), MOTW bypass via containers (notably VHD/VHDX), HTML smuggling, code-signing/reputation considerations, DLL sideloading discovery with Procmon, and modern shellcode loader patterns (RW→RX, section mapping, direct/indirect syscalls).  
+- It also covers phishing variants (attachments/links, QR “quishing”, Teams phishing), AitM/MFA bypass with Evilginx, OAuth device-code phishing, credential attacks (spraying/stuffing with IP rotation), and exploitation of public-facing apps with scanning workflows.  
+- Later sections address vishing/helpdesk social engineering, watering holes/drive-bys, hardware implants/USB attacks, and supply-chain/trusted-relationship compromise, backed by recent APT/cybercrime case studies (APT29, Scattered Spider, Lazarus, Cl0p, etc.).  
+- Most useful for red teams and pentesters designing initial access campaigns; secondarily useful for blue teams as a consolidated map of common ingress patterns and OPSEC considerations.
+
+Technical Focus:
+- Mark-of-the-Web (Zone.Identifier ADS) bypass via ISO/VHD/IMG containers  
+- HTML smuggling (client-side payload assembly) and attachment-based delivery chains  
+- SmartScreen reputation, code signing, and metadata/signature cloning  
+- DLL sideloading (search order abuse) and Procmon-based discovery  
+- EDR evasion loader patterns: RW→RX, NtCreateSection/NtMapViewOfSection, direct/indirect syscalls (SysWhispers/HellsGate)  
+- MFA bypass and token theft: Evilginx AitM, OAuth device-code phishing (Microsoft 365/Entra ID)
+
+Use Cases:
+- Build and test initial-access delivery chains that survive gateway + SmartScreen + EDR controls
+- Design phishing campaigns (email/Teams/QR) with realistic pretexts and fallback vectors
+- Simulate MFA-bypass scenarios via session cookie theft or device-code OAuth abuse
+- Perform controlled password spraying/stuffing with enumeration and IP-rotation OPSEC
+- Triage external attack surface for exploitable public-facing apps (httpx/nuclei workflows)
+- Plan and scope physical-access and trusted-relationship simulations for engagements
+
+Keywords:
+Initial Access, MITRE ATT&CK TA0001, T1566, phishing, spearphishing, HTML smuggling, Mark-of-the-Web, Zone.Identifier, SmartScreen, VHD/VHDX, ISO, DLL sideloading, Process Monitor, AMSI, ETW, direct syscalls, NtCreateSection, NtMapViewOfSection, Evilginx, adversary-in-the-middle, OAuth device code, Microsoft 365, Entra ID, password spraying, o365spray, CredMaster, fireprox, nuclei, httpx, vishing, supply chain compromise, CitrixBleed, CVE-2023-34362 MOVEit

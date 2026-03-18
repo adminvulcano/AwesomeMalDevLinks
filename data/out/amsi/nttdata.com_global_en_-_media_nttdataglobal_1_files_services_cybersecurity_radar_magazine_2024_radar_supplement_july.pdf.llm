@@ -1,0 +1,30 @@
+Title:
+Using CLR Hosting to Evade AMSI
+
+Type:
+Technical Paper
+
+Short Summary (4–8 sentences max):
+- This paper analyzes how AMSI scans .NET assemblies and presents an evasion technique that avoids common in-memory patching approaches.  
+- It reverse engineers .NET Framework assembly-loading paths in `clr.dll` and identifies that some loaders (notably `StreamImageLayout`) do not trigger AMSI scanning, unlike `RawImageLayout` used by typical `AppDomain.Load(byte[])`/buffer-based loads.  
+- The author demonstrates using Microsoft-documented CLR Hosting APIs from a native (C/C++) host to influence assembly resolution/loading so the CLR consumes an `IStream` (memory-backed) and bypasses AMSI inspection.  
+- The technique relies on implementing COM hosting interfaces (`IHostControl`, `IHostAssemblyManager`, `IHostAssemblyStore`) to supply the assembly image via `IStream` (e.g., `SHCreateMemStream`) when the CLR fails to resolve it normally (e.g., not found in GAC).  
+- A practical example shows executing a known offensive .NET tool (Rubeus) without obfuscation and without AMSI blocking, contrasting with AMSI-blocked behavior when loading via direct memory buffer methods.  
+- Useful for red teams and malware/tool developers; also valuable to defenders for understanding blind spots in AMSI coverage and where to instrument detections beyond classic AMSI patch signatures.
+
+Technical Focus:
+- AMSI internals and call flow (`AmsiInitialize`, `AmsiOpenSession`, `AmsiScanBuffer`)
+- .NET Framework assembly loading internals (`clr.dll`, `AssemblyNative`, `PEImageLayout` subclasses)
+- CLR Hosting APIs and COM interfaces (`ICLRMetaHost`, `ICLRRuntimeInfo`, `ICLRRuntimeHost`, `ICorRuntimeHost`)
+- Custom assembly resolution via hosting (`IHostControl`, `IHostAssemblyManager`, `IHostAssemblyStore`)
+- `IStream`-based loading (`StreamImageLayout`, `SHCreateMemStream`) vs buffer-based loading (`RawImageLayout`)
+- Strong-name assembly binding and GAC resolution behavior
+
+Use Cases:
+- Build a native CLR host to execute managed payloads while avoiding AMSI’s .NET assembly scan path
+- Execute/reflectively invoke .NET post-exploitation tooling (e.g., Rubeus-like assemblies) without classic AMSI patching
+- Research/detect alternative .NET loading paths that bypass AMSI and design compensating telemetry (ETW/CLR load events)
+- Develop PoCs to validate AMSI coverage gaps across .NET Framework versions and loader variants
+
+Keywords:
+AMSI, AmsiScanBuffer, amsi.dll, MpOav.dll, .NET Framework, CLR, clr.dll, mscoree.dll, CLR Hosting, ICLRMetaHost, ICLRRuntimeInfo, ICLRRuntimeHost, ICorRuntimeHost, IHostControl, IHostAssemblyManager, IHostAssemblyStore, AppDomain, AssemblyNative, PEImageLayout, StreamImageLayout, RawImageLayout, IStream, SHCreateMemStream, strong name, GAC, reflection, dnSpy, IDA, ETW

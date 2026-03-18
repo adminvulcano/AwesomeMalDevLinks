@@ -1,0 +1,25 @@
+Title:
+catdumper — LSASS MiniDump + in-memory RC4/Base64 + HTTPS exfiltration
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+catdumper is a Windows LSASS credential dumping tool that snapshots the LSASS process and generates a MiniDump, then encrypts (RC4) and Base64-encodes the dump entirely in memory. It exfiltrates the encrypted dump and its randomly generated key over HTTPS to a companion Python Flask server (exfil.py), which decodes/decrypts and writes the dump to disk for offline parsing (e.g., Mimikatz). The project focuses on evasion tactics such as compile-time polymorphism for unique binaries, string obfuscation (e.g., “lsass.exe”), and randomized network timing/packet sizing. It also claims to unhook NtReadVirtualMemory to bypass userland EDR hooks and performs benign API call patterns to reduce heuristic suspicion. Useful primarily for red teams/pentesters researching LSASS dumping tradecraft and defenders studying common evasion patterns around credential access and exfiltration.
+
+Technical Focus:
+- LSASS process snapshotting and MiniDump generation
+- In-memory encryption (RC4) and Base64 encoding
+- Userland API unhooking (NtReadVirtualMemory)
+- Compile-time polymorphism / signature randomization
+- HTTPS exfiltration to a Flask receiver
+- String obfuscation and heuristic evasion via benign API noise
+
+Use Cases:
+- Dumping LSASS credentials for post-exploitation (offline analysis with Mimikatz)
+- Testing EDR/AV detections for in-memory dump handling and exfiltration
+- Researching/replicating userland unhooking and anti-hook techniques
+- Building detection logic for LSASS access + dump creation + outbound HTTPS staging patterns
+
+Keywords:
+LSASS, MiniDump, process snapshot, credential dumping, Mimikatz, NtReadVirtualMemory, API unhooking, userland hooks, EDR evasion, RC4, Base64, in-memory encryption, string obfuscation, polymorphism, compile-time RNG, Windows API, HTTPS exfiltration, Flask, Python receiver, randomized beaconing

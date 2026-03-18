@@ -1,0 +1,26 @@
+Title:
+Fritter — Evasive Donut Fork Shellcode Generator
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Fritter is a heavily modified fork of Donut that generates position-independent shellcode for in-memory execution of VBScript, JScript, EXE, DLL, and .NET assemblies. It focuses on evasion and signature resistance by reworking Donut’s crypto, compression, and API resolution layers and removing unneeded features while targeting x64-only. Each build produces unique output via per-run randomization of the entry stub, encoding layer, and loader blob (different instructions/keys/layout). At runtime it reduces the executable footprint by managing memory permissions so only a small portion is executable at a time, optionally using a VEH-based “sliding window” mode. It also supports multiple output formats (raw, base64, C, Python, PowerShell, C#, hex) and includes options for .NET AppDomain naming and “module overloading” via a decoy module. Useful primarily for red teams/pentesters and malware researchers evaluating loader detection and shellcode staging tradeoffs.
+
+Technical Focus:
+- Position-independent code (PIC) shellcode generation (x64)
+- Loader randomization / polymorphism for signature resistance
+- Reworked crypto + compression + API resolution layers
+- Memory permission choreography (RW→RX) and VEH-based sliding execution window
+- In-memory execution of .NET assemblies and unmanaged PE/DLL entrypoints
+- Optional HTTP staging and module overloading (decoy module)
+
+Use Cases:
+- Generate evasive in-memory loaders for EXE/DLL/.NET payloads during red team ops
+- Produce per-build unique shellcode to test EDR signature robustness
+- Research/diff loader design changes vs Donut (API hashing, crypto/compression, PIC)
+- Build staged payload delivery workflows (HTTP staging, multiple output encodings)
+- Evaluate detection opportunities around RW/RX transitions and VEH usage
+
+Keywords:
+Donut, shellcode generator, PIC, x64, in-memory execution, .NET assembly loading, VBScript, JScript, DLL entrypoint, API resolution, API hashing, encryption, compression, polymorphic loader, randomization, RWX avoidance, RW-to-RX, VEH, sliding window, module overloading, HTTP staging

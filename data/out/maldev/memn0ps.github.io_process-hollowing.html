@@ -1,0 +1,107 @@
+# https://memn0ps.github.io/process-hollowing/
+
+<!DOCTYPE html><html lang="en"><body><div class="container center"><div class="content"><article class="post"><h1 class="post-title"><a href="https://memn0ps.github.io/process-hollowing/">Process Hollowing</a></h1><div class="post-meta"><time class="post-date">2022-02-23</time><span class="post-reading-time">5 min read (956 words)</span></div><div class="post-content"><div><p>Injecting code into <code>explorer.exe</code> or <code>notepad.exe</code> is not trivial to evade detection as these processes generally do not generate any network activity. The <code>svchost.exe</code> system process is a shared service process that allows several services to share this process to reduce resource consumption, which usually generates network activity. The <code>svchost.exe</code> process runs under a SYSTEM integrity level, and that will prevent us from injecting inside it from a lower integrity level. Instead, we could create a process called <code>svchost.exe</code> in a <code>suspended state</code> and inject it inside this process. Note that we don’t have to choose <code>svchost.exe</code> to process hollowing successfully.</p><p>Once the process is created, we would need to locate the <code>EntryPoint</code> of the executable and overwrite its in-memory content with our payload/shellcode and then resume the process and execute our shellcode inside the memory. However, Address Space Layout Randomization (ASLR) makes this procedure tricky. We need to use <a href="https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess">ZwQueryInformationProcess</a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess">NtQueryInformationProcess</a> to get information about the target process such as the <code>Process Environment Block (PEB)</code>, and from the <code>PEB</code> we can obtain the image base address of the process and parse the Portable Executable (PE) headers to locate the <code>EntryPoint</code> of the executable.</p><p>Let’s see this in action! :D</p><h2 id="createprocessahttpsdocsmicrosoftcomen-uswindowswin32apiprocessthreadsapinf-processthreadsapi-createprocessa"><a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcessA</a><a href="https://memn0ps.github.io/process-hollowing/#createprocessahttpsdocsmicrosoftcomen-uswindowswin32apiprocessthreadsapinf-processthreadsapi-createprocessa" class="hanchor" arialabel="Anchor">#</a></h2><p>First, we need to call <a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcessA</a> and pass the path of <code>svchost.exe</code> to <code>lpcommandline</code>, which is <code>C:\Windows\System32\svchost.exe</code>. We will also need to tell this function to start in a suspended state. A suspended process is temporarily turned off and can be restarted in the same state.</p><h3 id="ntqueryinformationprocesshttpsdocsmicrosoftcomen-uswindowswin32apiwinternlnf-winternl-ntqueryinformationprocess"><a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess">NtQueryInformationProcess</a><a href="https://memn0ps.github.io/process-hollowing/#ntqueryinformationprocesshttpsdocsmicrosoftcomen-uswindowswin32apiwinternlnf-winternl-ntqueryinformationprocess" class="hanchor" arialabel="Anchor">#</a></h3><p>We then call <a href="https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess">ZwQueryInformationProcess</a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess">NtQueryInformationProcess</a> with then pass <code>ProcessBasicInformation</code> to the <code>ProcessInformationClass</code> to obtain a pointer to the <code>Process Environment Block (PEB)</code> structure.</p><h3 id="process-environment-block-pebhttpsdocsmicrosoftcomen-uswindowswin32apiwinternlns-winternl-peb"><a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb">Process Environment Block (PEB)</a><a href="https://memn0ps.github.io/process-hollowing/#process-environment-block-pebhttpsdocsmicrosoftcomen-uswindowswin32apiwinternlns-winternl-peb" class="hanchor" arialabel="Anchor">#</a></h3><p>The PEB will contain the <code>ImageBaseAddress</code> of the newly created process, which can be accessed by adding <code>PebBaseAddress+0x10</code>. We can use Windbg to dissect the data structures. Here we can see that the <code>ImageBaseAddress</code> is <code>0x10</code> bytes away from the <code>PROCESS_ENVIRONMENT_BLOCK (PEB)</code></p><pre tabindex="0"><code>0:006&gt; dt _PEB
+combase!_PEB
+   +0x000 InheritedAddressSpace : UChar
+   +0x001 ReadImageFileExecOptions : UChar
+   +0x002 BeingDebugged    : UChar
+   +0x003 BitField         : UChar
+   +0x003 ImageUsesLargePages : Pos 0, 1 Bit
+   +0x003 IsProtectedProcess : Pos 1, 1 Bit
+   +0x003 IsImageDynamicallyRelocated : Pos 2, 1 Bit
+   +0x003 SkipPatchingUser32Forwarders : Pos 3, 1 Bit
+   +0x003 IsPackagedProcess : Pos 4, 1 Bit
+   +0x003 IsAppContainer   : Pos 5, 1 Bit
+   +0x003 IsProtectedProcessLight : Pos 6, 1 Bit
+   +0x003 IsLongPathAwareProcess : Pos 7, 1 Bit
+   +0x004 Padding0         : [4] UChar
+   +0x008 Mutant           : Ptr64 Void
+   +0x010 ImageBaseAddress : Ptr64 Void
+</code></pre><p>We can attach <code>svchost.exe</code> to Windbg and dissect these data structures. Here we can see that the <code>ImageBaseAddress</code> is <code>00007ff74d270000</code>.</p><pre tabindex="0"><code>0:001&gt; !peb
+PEB at 000000b56c543000
+    InheritedAddressSpace:    No
+    ReadImageFileExecOptions: No
+    BeingDebugged:            Yes
+    ImageBaseAddress:         00007ff74d270000
+    NtGlobalFlag:             0
+    NtGlobalFlag2:            0
+    Ldr                       00007ffbafc9a4c0
+    Ldr.Initialized:          Yes
+    Ldr.InInitializationOrderModuleList: 000002b2722048a0 . 000002b272204f00
+    Ldr.InLoadOrderModuleList:           000002b272204a10 . 000002b272206eb0
+    Ldr.InMemoryOrderModuleList:         000002b272204a20 . 000002b272206ec0
+&lt;...snipped...&gt;
+</code></pre><h2 id="readprocessmemoryhttpsdocsmicrosoftcomen-uswindowswin32apimemoryapinf-memoryapi-readprocessmemory"><a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory">ReadProcessMemory</a><a href="https://memn0ps.github.io/process-hollowing/#readprocessmemoryhttpsdocsmicrosoftcomen-uswindowswin32apimemoryapinf-memoryapi-readprocessmemory" class="hanchor" arialabel="Anchor">#</a></h2><p>Since this is a remote process we will need to use <a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory">ReadProcessMemory</a> to read the <code>PebBaseAddress+0x10</code> to give us the <code>ImageBaseAddress</code>.</p><h3 id="image_dos_headerhttpswwwnirsoftnetkernel_structvistaimage_dos_headerhtml"><a href="https://www.nirsoft.net/kernel_struct/vista/IMAGE_DOS_HEADER.html">IMAGE_DOS_HEADER</a><a href="https://memn0ps.github.io/process-hollowing/#image_dos_headerhttpswwwnirsoftnetkernel_structvistaimage_dos_headerhtml" class="hanchor" arialabel="Anchor">#</a></h3><p>We can use the <code>ImageBaseAddress</code> at <code>00007ff74d270000</code> to dissect the <code>IMAGE_DOS_HEADER</code>.</p><pre tabindex="0"><code>0:001&gt; dt _IMAGE_DOS_HEADER 00007ff74d270000
+ntdll!_IMAGE_DOS_HEADER
+   +0x000 e_magic          : 0x5a4d
+   +0x002 e_cblp           : 0x90
+   +0x004 e_cp             : 3
+   +0x006 e_crlc           : 0
+   +0x008 e_cparhdr        : 4
+   +0x00a e_minalloc       : 0
+   +0x00c e_maxalloc       : 0xffff
+   +0x00e e_ss             : 0
+   +0x010 e_sp             : 0xb8
+   +0x012 e_csum           : 0
+   +0x014 e_ip             : 0
+   +0x016 e_cs             : 0
+   +0x018 e_lfarlc         : 0x40
+   +0x01a e_ovno           : 0
+   +0x01c e_res            : [4] 0
+   +0x024 e_oemid          : 0
+   +0x026 e_oeminfo        : 0
+   +0x028 e_res2           : [10] 0
+   +0x03c e_lfanew         : 0n232
+</code></pre><p>Here the <code>e_lfanew</code> value is converted to hex.</p><pre tabindex="0"><code>0:001&gt; ?0n232
+Evaluate expression: 232 = 00000000`000000e8
+</code></pre><h3 id="image_nt_headershttpsdocsmicrosoftcomen-uswindowswin32apiwinntns-winnt-image_nt_headers32"><a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_nt_headers32">IMAGE_NT_HEADERS</a><a href="https://memn0ps.github.io/process-hollowing/#image_nt_headershttpsdocsmicrosoftcomen-uswindowswin32apiwinntns-winnt-image_nt_headers32" class="hanchor" arialabel="Anchor">#</a></h3><p>The <code>ImageBaseAddress + e_lfanew</code> value should give us the <code>_IMAGE_NT_HEADERS</code>.</p><pre tabindex="0"><code>0:001&gt; dt _IMAGE_NT_HEADERS 00007ff74d270000+0xe8
+Symbol _IMAGE_NT_HEADERS not found.
+0:001&gt; dt _IMAGE_NT_HEADERS64 00007ff74d270000+0xe8
+ntdll!_IMAGE_NT_HEADERS64
+   +0x000 Signature        : 0x4550
+   +0x004 FileHeader       : _IMAGE_FILE_HEADER
+   +0x018 OptionalHeader   : _IMAGE_OPTIONAL_HEADER64
+</code></pre><h3 id="_image_optional_header64httpsdocsmicrosoftcomen-uswindowswin32apiwinntns-winnt-image_optional_header64"><a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_optional_header64">_IMAGE_OPTIONAL_HEADER64</a><a href="https://memn0ps.github.io/process-hollowing/#_image_optional_header64httpsdocsmicrosoftcomen-uswindowswin32apiwinntns-winnt-image_optional_header64" class="hanchor" arialabel="Anchor">#</a></h3><p>The <code>ImageBaseAddress + e_lfanew + OptionalHeader</code> should give us access to the <code>_IMAGE_OPTIONAL_HEADER64</code> which contains the <code>Relative Virtual Address (RVA)</code> of the <code>AddressOfEntryPoint</code>.</p><pre tabindex="0"><code>0:001&gt; dt _IMAGE_OPTIONAL_HEADER64 00007ff74d270000+0xe8+0x018
+ntdll!_IMAGE_OPTIONAL_HEADER64
+   +0x000 Magic            : 0x20b
+   +0x002 MajorLinkerVersion : 0xe ''
+   +0x003 MinorLinkerVersion : 0x14 ''
+   +0x004 SizeOfCode       : 0x6600
+   +0x008 SizeOfInitializedData : 0x5a00
+   +0x00c SizeOfUninitializedData : 0
+   +0x010 AddressOfEntryPoint : 0x4e80
+   +0x014 BaseOfCode       : 0x1000
+   +0x018 ImageBase        : 0x00007ff7`4d270000
+   +0x020 SectionAlignment : 0x1000
+   +0x024 FileAlignment    : 0x200
+   +0x028 MajorOperatingSystemVersion : 0xa
+   +0x02a MinorOperatingSystemVersion : 0
+   +0x02c MajorImageVersion : 0xa
+   +0x02e MinorImageVersion : 0
+   +0x030 MajorSubsystemVersion : 0xa
+   +0x032 MinorSubsystemVersion : 0
+   +0x034 Win32VersionValue : 0
+   +0x038 SizeOfImage      : 0x11000
+   +0x03c SizeOfHeaders    : 0x400
+   +0x040 CheckSum         : 0x1c364
+   +0x044 Subsystem        : 2
+   +0x046 DllCharacteristics : 0xc160
+   +0x048 SizeOfStackReserve : 0x80000
+   +0x050 SizeOfStackCommit : 0x4000
+   +0x058 SizeOfHeapReserve : 0x100000
+   +0x060 SizeOfHeapCommit : 0x1000
+   +0x068 LoaderFlags      : 0
+   +0x06c NumberOfRvaAndSizes : 0x10
+   +0x070 DataDirectory    : [16] _IMAGE_DATA_DIRECTORY
+</code></pre><p>We will need to call <a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory">ReadProcessMemory</a> again to read the <code>IMAGE_DOS_HEADER</code> then obtain the <code>_IMAGE_NT_HEADERS</code> and finally obtain <code>_IMAGE_OPTIONAL_HEADER64</code> to get the <code>AddressOfEntryPoint</code>.</p><h3 id="virtual-address-of-entrypoint">Virtual Address of EntryPoint<a href="https://memn0ps.github.io/process-hollowing/#virtual-address-of-entrypoint" class="hanchor" arialabel="Anchor">#</a></h3><p>To get access to the Virtual Address of the <code>EntryPoint</code> we can add <code>ImageBaseAddress + AddressOfEntryPoint</code>. In this example we get the value <code>00007ff74d274e80</code> which is the <code>EntryPoint</code> for <code>svchost.exe</code>.</p><pre tabindex="0"><code>0:001&gt; dd 00007ff74d270000+0x4e80
+00007ff7`4d274e80  28ec8348 000087e8 c4834800 ff66e928
+00007ff7`4d274e90  ccccffff cccccccc cccccccc cccccccc
+00007ff7`4d274ea0  cccccccc 6666cccc 00841f0f 00000000
+00007ff7`4d274eb0  890d3b48 75000071 c1c14810 c1f76610
+00007ff7`4d274ec0  0175ffff c9c148c3 0162e910 cccc0000
+00007ff7`4d274ed0  cccccccc 38ec8348 24648348 33450020
+00007ff7`4d274ee0  c03345c9 34d615ff c0330000 38c48348
+00007ff7`4d274ef0  ccccccc3 ffcccccc 0034bb25 cccccc00
+</code></pre><h2 id="writeprocessmemoryhttpsdocsmicrosoftcomen-uswindowswin32apimemoryapinf-memoryapi-writeprocessmemory-and-resumethreadhttpsdocsmicrosoftcomen-uswindowswin32apiprocessthreadsapinf-processthreadsapi-resumethread"><a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory">WriteProcessMemory</a> and <a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread">ResumeThread</a><a href="https://memn0ps.github.io/process-hollowing/#writeprocessmemoryhttpsdocsmicrosoftcomen-uswindowswin32apimemoryapinf-memoryapi-writeprocessmemory-and-resumethreadhttpsdocsmicrosoftcomen-uswindowswin32apiprocessthreadsapinf-processthreadsapi-resumethread" class="hanchor" arialabel="Anchor">#</a></h2><p>We can now use <a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory">WriteProcessMemory</a> to overwrite the original in-memory content with our shellcode and call <a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread">ResumeThread</a> to resume the execution flow of the program, which will cause it to execute our shellcode.</p><h2 id="poc">PoC<a href="https://memn0ps.github.io/process-hollowing/#poc" class="hanchor" arialabel="Anchor">#</a></h2><p>A PoC has been made in Rust using <code>NTAPI</code> (<code>ntdll.dll</code>) rather than using <code>winapi</code> (<code>kernel32.dll / kernelbase.dll</code>).</p><p><a href="https://github.com/memN0ps/arsenal-rs/tree/main/process_hollowing-rs">https://github.com/memN0ps/arsenal-rs/tree/main/process_hollowing-rs</a></p><h2 id="detection-on-virus-totalhttpswwwvirustotalcomguifile054783446c4e72a1d46b4cca5f57128ad55ebde1511dbdd5f40be6d497644193nocache1"><a href="https://www.virustotal.com/gui/file/054783446c4e72a1d46b4cca5f57128ad55ebde1511dbdd5f40be6d497644193?nocache=1">Detection on Virus Total</a><a href="https://memn0ps.github.io/process-hollowing/#detection-on-virus-totalhttpswwwvirustotalcomguifile054783446c4e72a1d46b4cca5f57128ad55ebde1511dbdd5f40be6d497644193nocache1" class="hanchor" arialabel="Anchor">#</a></h2><p>Detection at the time of writing.</p><p><img alt="Detection" src="https://memn0ps.github.io/Process-Hollowing/detection.png"></p><h2 id="references">References<a href="https://memn0ps.github.io/process-hollowing/#references" class="hanchor" arialabel="Anchor">#</a></h2><ul><li><a href="https://memn0ps.github.io/Parallel-Syscalls/">https://memn0ps.github.io/Parallel-Syscalls/</a></li><li><a href="https://github.com/memN0ps/arsenal-rs/">https://github.com/memN0ps/arsenal-rs/</a></li><li><a href="https://docs.microsoft.com/">https://docs.microsoft.com</a></li><li><a href="https://en.wikipedia.org/wiki/Svchost.exe">https://en.wikipedia.org/wiki/Svchost.exe</a></li><li><a href="https://0xrick.github.io/win-internals/pe5/">https://0xrick.github.io/win-internals/pe5/</a></li><li><a href="https://www.nirsoft.net/kernel_struct/vista/IMAGE_DOS_HEADER.html">https://www.nirsoft.net/kernel_struct/vista/IMAGE_DOS_HEADER.html</a></li></ul></div></div><div class="pagination"><div class="pagination__title"><span class="pagination__title-h">Read other posts</span><hr></div><div class="pagination__buttons"><a href="https://memn0ps.github.io/rusty-windows-kernel-rootkit/" class="button inline prev">&lt; [<span class="button__text">Rusty Rootkit - Windows Kernel Rookit in Rust (Codename: Eagle)</span>]
+</a>::
+<a href="https://memn0ps.github.io/parallel-syscalls/" class="button inline next">[<span class="button__text">Parallel Syscalls</span>] &gt;</a></div></div></article></div></div></body></html>

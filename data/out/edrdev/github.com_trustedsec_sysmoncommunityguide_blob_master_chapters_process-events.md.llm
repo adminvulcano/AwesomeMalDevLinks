@@ -1,0 +1,26 @@
+Title:
+Sysmon Community Guide – Process Events
+
+Type:
+Documentation (GitHub)
+
+Short Summary (4–8 sentences max):
+This chapter explains how Sysmon records process-related telemetry: process creation, termination, and process access. It focuses on Sysmon’s deterministically generated ProcessGuid and LogonGuid fields, which uniquely identify a specific process instance and logon session and avoid PID/logon ID reuse issues. For Windows, it notes process events are captured at kernel level via ObjRegisterCallbacks and that ProcessGuid is maintained by Sysmon (not a native EPROCESS attribute). For Linux, it describes ProcessGuid/LogonGuid generation using host-unique data such as `/etc/machine-id`. It also clarifies which Sysmon event types do not reference ProcessGuid (e.g., WMI events and kernel driver load). The chapter highlights how LogonGuid helps map all processes/actions to a user session, including the dual logon IDs created with UAC for local admins and the importance of correlating with Security Event ID 4624 (linked logon ID). Useful for defenders building correlation rules and for red/purple teams understanding how activity is stitched together in Sysmon logs.
+
+Technical Focus:
+- Sysmon process telemetry (create/terminate/access)
+- ProcessGuid generation and correlation vs PID reuse
+- LogonGuid generation and session correlation
+- Windows kernel callbacks (ObjRegisterCallbacks) used by Sysmon
+- Linux host identity influence (`/etc/machine-id`)
+- Cross-event field relationships (ProcessGuid-derived names, image relations)
+
+Use Cases:
+- Correlate multi-step attack chains across Sysmon events using ProcessGuid
+- Attribute process activity to specific user sessions via LogonGuid
+- Improve SIEM detections by avoiding PID/logon ID reuse pitfalls
+- Investigate UAC split-token behavior by linking logon sessions (4624 Linked Logon ID)
+- Validate which Sysmon event categories can/can’t be tied to a process GUID
+
+Keywords:
+Sysmon, ProcessGuid, LogonGuid, process creation, process termination, process access, ObjRegisterCallbacks, kernel driver, EPROCESS, Windows Security Event ID 4624, Linked Logon ID, UAC, split token, /etc/machine-id, Linux Sysmon, event correlation, process tree, LSA logon session, telemetry mapping

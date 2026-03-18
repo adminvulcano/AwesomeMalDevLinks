@@ -1,0 +1,306 @@
+# https://binary-win.github.io/2026/02/10/Browser-Dumping-The_Core_TacticBehind_Most_Infostealers.html
+
+<!DOCTYPE html><html lang="en"><!-- Site build date: 2026-02-11T05:52:11+0000 --><body>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <link href="https://binary-win.github.io/css/override.css" rel="stylesheet" type="text/css">
+<article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  
+
+  <div class="share-links">
+    
+
+
+
+
+
+<span style="color: silver;">Share on: </span><div id="share-buttons">
+  <div class="facebook" title="Share this on Facebook">
+    <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1343 12v264h-157q-86 0-116 36t-30 108v189h293l-39 296h-254v759h-306v-759h-255v-296h255v-218q0-186 104-288.5t277-102.5q147 0 228 12z"></path></svg></div>
+  <div class="twitter" title="Share this on Twitter">
+    <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"></path></svg></div>
+  <div class="linkedin" title="Share this on Linkedin">
+    <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"></path></svg></div>
+  <div class="gplus" title="Share this on Google Plus">
+    <svg viewBox="0 0 2304 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1437 913q0 208-87 370.5t-248 254-369 91.5q-149 0-285-58t-234-156-156-234-58-285 58-285 156-234 234-156 285-58q286 0 491 192l-199 191q-117-113-292-113-123 0-227.5 62t-165.5 168.5-61 232.5 61 232.5 165.5 168.5 227.5 62q83 0 152.5-23t114.5-57.5 78.5-78.5 49-83 21.5-74h-416v-252h692q12 63 12 122zm867-122v210h-209v209h-210v-209h-209v-210h209v-209h210v209h209z"></path></svg></div>
+  <div class="mail" title="Share this through Email">
+    <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"></path></svg></div>
+</div>
+  </div>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>This blog contains my own research collected from the internet, along with ideas from other blogs and studies. While many parts are written in my own words, the Most sections were copied directly from <a href="https://github.com/xaitax/Chrome-App-Bound-Encryption-Decryption/blob/main/docs/RESEARCH.md">external sources</a> because they were already very well written and clearly expressed. This blog is mainly for sharing my personal notes and learning journey.</p>
+</blockquote>
+
+<p>In today’s threat landscape, <strong>credential stuffing</strong>, <strong>ransomware affiliate attacks</strong>, and <strong>initial access</strong> sales are fueled almost entirely by <strong>stolen credentials</strong>. At the heart of nearly every major infostealer family lies one dominant technique: <strong>Browser Dumping</strong>.
+This method is responsible for the vast majority of compromised accounts traded on underground markets. billions of <strong>credentials</strong>, <strong>cookies</strong>, and <strong>tokens</strong> harvested year after year.</p>
+
+<p><img width="860" height="520" alt="image" src="https://github.com/user-attachments/assets/27e154b7-c5d0-435a-802f-d96fd61a2539"></p>
+<blockquote>
+  <p><em>Advertisement for TitanStealer, first offered for sale in November 2022 via the Russian-language BHF and Dark2Web forums (Source: Kela)</em></p>
+</blockquote>
+
+<h4 id="1-introduction-the-evolution-of-local-data-protection-in-chrome">1. <strong>Introduction: The Evolution of Local Data Protection in Chrome</strong></h4>
+<p>For years, <strong>Chromium-based</strong> browsers on Windows relied on the Data Protection API <code>(DPAPI)</code> to secure sensitive user data stored locally such as <code>cookies</code>, <code>passwords</code>, <code>payment information</code>, and the like. <code>DPAPI</code> binds data to the <strong>logged-in user’s credentials</strong>, offering a solid baseline against offline attacks (e.g., a stolen hard drive) and unauthorized access by other users on the <strong>same machine</strong>. However, DPAPI’s Achilles’ heel has always been its permissiveness within the user’s own session: any application running as the same user, with the same privilege level as Chrome, can invoke <code>CryptUnprotectData</code> and decrypt this data. This vulnerability has been a perennial favorite for <strong>infostealer malware</strong>.</p>
+
+<h3 id="decrypt-the-v10-key-of-chrome--dpapi-">Decrypt the V10 Key of Chrome ( DPAPI )</h3>
+<p>Found <strong>Local State</strong> <code>::os_crypt:encrypted_key </code>( DPAPI decryption)</p>
+
+<pre><code class="language-c">Start
+  ↓
+Read Local State (JSON)
+  ↓
+Extract "encrypted_key" (Base64)
+  ↓
+Decode Base64
+  ↓
+Remove "DPAPI" prefix
+  ↓
+CryptUnprotectData() → Master Key
+  ↓
+Open Login Data (SQLite)
+  ↓
+For each password:
+  ├─ Check prefix (v10)
+  ├─ v10 → DPAPI decrypt  [v] [1] [0] [DPAPI encrypted data...]
+  ↓
+Display results
+  ↓
+End
+
+
+┌──────────────────────────────────────────────────────────────────┐
+│  v10 Encrypted BLOB Format (Chromium / Chrome / Edge / etc.)     
+└──────────────────────────────────────────────────────────────────┘
+   ↓
+┌───┬───┬───┬────────────────┬──────────────────────────┬──────────────────┐
+│ v │ 2 │ 0 │   Nonce (12)   │   Ciphertext        │   Tag (16)       │
+└───┴───┴───┴────────────────┴──────────────────────────┴──────────────────┘
+  0   1   2 |----- 
+
+</code></pre>
+
+<p>To counter this, Google introduced <code>App-Bound Encryption (ABE)</code> in Chrome (<em>publicly announced around version 127, July 2024</em>). <code>ABE</code> is a significant architectural shift designed to dramatically raise the bar for attackers. Its core principle is to ensure that the primary decryption keys for sensitive Chrome data are only accessible to legitimate Chrome processes, thereby mitigating trivial data theft by same-user, same-privilege malware.</p>
+
+<h4 id="11-foundational-concepts-of-abe"><strong>1.1. Foundational Concepts of ABE</strong></h4>
+<p><strong>Primary Goal</strong>: Prevent an attacker operating with the same privilege level as Chrome from trivially calling DPAPI to decrypt sensitive data.</p>
+
+<p><strong>Acknowledged Limitations (Non-Goals)</strong>: ABE does not aim to prevent attackers with higher privileges (Administrator, SYSTEM, kernel drivers) or those who can successfully inject code into Chrome. The official Google design documents explicitly recognize code injection as a potent bypass vector, a technique this project leverages for legitimate research and data recovery demonstrations.</p>
+
+<p><strong>Underlying Mechanism</strong>: ABE introduces an intermediary COM service (part of Chrome’s Elevation Service) that acts as a gatekeeper for the DPAPI-unwrapping of a critical session key. This service verifies the “app identity” of the caller.</p>
+
+<p><strong>Initial Identity Verification Method</strong>: The first iteration relies on path validation of the calling executable. While digital signature validation was considered, path validation was chosen for the initial rollout to “descope the complexity” (as noted in a 2024 update to Google’s design document), deemed sufficient against the immediate threat model.</p>
+
+<p>Google’s conceptual diagram provides a clear overview:
+<img width="957" height="611" alt="image" src="https://github.com/user-attachments/assets/e0ef5d36-4fcf-4b0e-9d5d-9cfefd8e1520"></p>
+
+<hr>
+
+<h4 id="2-the-abe-mechanism-a-step-by-step-breakdown">2. <strong>The ABE Mechanism: A Step-by-Step Breakdown</strong></h4>
+<p>ABE employs a multi-layered strategy for key management and data encryption:</p>
+
+<p><strong>The app_bound_key (Session Key):</strong>
+A unique <strong>32-byte AES-256</strong> key is the target plaintext that applications like Chrome’s OSCrypt use.
+This key is what that use to recover for subsequent data decryption.</p>
+
+<p><strong>Generation of <code>validation_data</code>  and <code>app_bound_key</code> Wrapping (During Encryption by Chrome):</strong></p>
+<ul>
+  <li>When Chrome (via OSCrypt) needs to protect the app_bound_key using ABE, it calls the IElevator::EncryptData COM method.</li>
+  <li><strong>Caller Validation Data Generation</strong>: Inside <code>IElevator::EncryptData</code>, the service first generates <code>validation_data</code>. If <code>ProtectionLevel::PROTECTION_PATH_VALIDATION</code> is specified, this involves:
+    <ul>
+      <li>Obtaining the calling process’s executable path (<code>GetProcessExecutablePath</code>).</li>
+      <li>Normalizing this path using a specific routine (<code>MaybeTrimProcessPath</code>), which removes the .exe name, common temporary/application subfolders (like “Application”, “Temp”, version strings), and standardizes “Program Files (x86)” to “Program Files”. This results in a canonical base installation path.</li>
+    </ul>
+  </li>
+  <li>This normalized path string (UTF-8 encoded) becomes the core of the validation_data. The ProtectionLevel itself is also prepended to this data.</li>
+</ul>
+
+<p><strong>User-Context DPAPI Encryption</strong>: This <code>data_to_encrypt</code> blob is then encrypted using <code>CryptProtectData</code> under the <strong>calling user’s DPAPI context</strong> (achieved via <code>ScopedClientImpersonation</code>).</p>
+
+<p><strong>System-Context DPAPI Encryption (Outer Layer):</strong> The result from the <strong>user-context DPAPI encryption</strong> is then encrypted again using <code>CryptProtectData</code>, this time under the <strong>SYSTEM DPAPI</strong> context (or the service’s own context if not explicitly SYSTEM). This creates a “<strong>DPAPI-ception</strong>” or layered DPAPI protection.</p>
+
+<p><strong>This doubly DPAPI-wrapped blob is what IElevator::EncryptData returns as the ciphertext BSTR.</strong></p>
+
+<p>As you can see it expose only the <code>Interface {1BF5208B-295F-4992-B5F4-3A9BB6494838}</code> : <strong>IElevator2Chrome</strong></p>
+
+<p><img width="591" height="109" alt="image" src="https://github.com/user-attachments/assets/dbd7e8d6-023c-4017-9f27-8501e18b43cc"></p>
+
+<p><img width="817" height="488" alt="image" src="https://github.com/user-attachments/assets/ded7ef0e-c4a9-47ac-8fa3-d39a6520eed8"></p>
+
+<p>In addition, you can explore other interfaces that are not exposed in the current channel (e.g., Stable), but are registered and available in specific Chrome channels like Beta, Dev, Canary, or Chromium builds.</p>
+
+<p><img width="1066" height="329" alt="image" src="https://github.com/user-attachments/assets/564e0614-d436-4b68-ad8f-a44a0f0870d6"></p>
+
+<p><strong>Storage in <code>Local State</code>:</strong></p>
+<ul>
+  <li>The ciphertext BSTR received from <code>IElevator::EncryptData</code> is Base64-encoded.</li>
+  <li>The prefix APPB (ASCII: <code>0x41 0x50 0x50 0x42</code>) is prepended.</li>
+  <li>This final string is stored in Local State as <code>os_crypt.app_bound_encrypted_key</code>.</li>
+</ul>
+
+<p><strong>The IElevator COM Service (The Gatekeeper for Decryption):</strong>
+When Chrome (or this project’s injected DLL) needs the plaintext <code>app_bound_key</code>.
+It instantiates the IElevator COM object using browser-specific CLSIDs/IIDs:</p>
+<ul>
+  <li>Google Chrome: CLSID: <code>{708860E0-F641-4611-8895-7D867DD3675B}</code>, IID: <code>{463ABECF-410D-407F-8AF5-0DF35A005CC8}</code></li>
+  <li>Microsoft MsEdge: CLSID: <code>{1FCBE96C-1697-43AF-9140-2897C7C69767}</code> , IID: <code>{C9C2B807-7731-4F34-81B7-44FF7779522B}</code></li>
+</ul>
+
+<p>The APPB-prefixed, Base64-encoded string from <strong>Local State</strong> is decoded and the <code>APPB</code> prefix stripped. This resulting blob (the doubly DPAPI-wrapped key) is passed to <code>IElevator::DecryptData</code>.</p>
+
+<p><strong>Unwrapping and Path Validation by <code>IElevator::DecryptData</code>:</strong></p>
+<ul>
+  <li>
+    <p><strong>System-Context DPAPI Decryption:</strong> The input blob is first decrypted using <code>CryptUnprotectData</code> under the <strong>SYSTEM DPAPI context</strong>. This removes the outer DPAPI layer.</p>
+  </li>
+  <li>
+    <p><strong>User-Context DPAPI Decryption:</strong> The intermediate result is then decrypted using <code>CryptUnprotectData</code> under the calling <strong>user’s DPAPI</strong> context (via ScopedClientImpersonation). This removes the inner DPAPI layer, yielding a plaintext blob.</p>
+  </li>
+  <li>
+    <p>Extraction of Validation Data and Plaintext Key: This plaintext blob is structured as <code>[validation_data_length] [validation_data][app_bound_key_length][app_bound_key]</code>. The service uses <code>PopFromStringFront</code> to extract the original validation_data and then the <code>app_bound_key</code>.</p>
+  </li>
+</ul>
+
+<p><strong>Data Encryption/Decryption using the app_bound_key:</strong>
+Chrome’s OSCrypt then uses this recovered <strong>32-byte AES</strong> key with <strong>AES-256-GCM</strong> to <strong>encrypt/decrypt</strong> actual user data (<code>cookies</code>, <code>passwords</code>), <strong>which are typically prefixed (e.g., v20).</strong></p>
+
+<hr>
+
+<h4 id="3-dissecting-encrypted-data-structures"><strong>3. Dissecting Encrypted Data Structures</strong></h4>
+
+<p><strong>Local State and the app_bound_encrypted_key</strong>
+<em>Typical Location</em>: <code>%LOCALAPPDATA%\&lt;BrowserVendor&gt;\&lt;BrowserName&gt;\User Data\Local State</code>
+<em>Relevant JSON Key</em>: <code>os_crypt.app_bound_encrypted_key</code>.
+<em>Format A string value</em>: <code>APPB&lt;Base64EncodedSystemDPAPIWrappedUserDPAPIWrappedValidationDataAndKey&gt;</code>.</p>
+
+<p><strong>Data items encrypted with the app_bound_key generally adhere to a consistent format:</strong>
+<strong>Prefix</strong>: A version or type prefix string. For <code>cookies</code>, <code>passwords</code>, and <code>payment data</code> observed thus far, this is typically <strong>v20</strong> <code>(ASCII: 0x76 0x32 0x30)</code> . Older data encrypted solely with DPAPI might use <strong>prefixes</strong> like <code>v10</code> or <code>v11</code>.
+<strong>Nonce (IV):</strong> A <code>12-byte</code> Initialization Vector, essential for the security of <strong>AES-GCM</strong> mode.
+<strong>Ciphertext:</strong> The actual encrypted data, variable in length.
+<strong>Authentication Tag:</strong> A <code>16-byte</code> GCM authentication tag, which ensures both the integrity and authenticity of the decrypted ciphertext.</p>
+
+<p><strong>Overall Blob Structure:</strong>
+<code>[Prefix (e.g., 3 bytes for "v20")][IV (12 bytes)][Ciphertext (variable length)][Tag (16 bytes)]</code></p>
+
+<p><strong>Cookie Value Specifics (from encrypted_value in Cookies DB)</strong>
+A notable observation during the development of this tool is that after successfully decrypting a v20-prefixed cookie blob using AES-GCM with the app_bound_key, the first 32 bytes of the resulting plaintext appear to be some form of metadata or padding. The actual cookie value string begins after this DECRYPTED_COOKIE_VALUE_OFFSET of 32 bytes.</p>
+
+<p>**The value of the cookie starts after the first 32 bytes (Thanks to luci4<em>vx::https://luci4.net) ** -&gt; _after Decryption</em> go forward in 32 bytes.</p>
+
+<p><strong>Passwords (from password_value in Login Data DB) &amp; Payment Information</strong>
+These data types also use <code>v20-prefixed</code> blobs.
+Unlike cookies, the entire decrypted plaintext (after accounting for the v20 prefix, IV, and tag during the AES-GCM decryption process) is generally considered to be the sensitive value itself (e.g., the password string, credit card number, or CVC).</p>
+
+<hr>
+
+<h4 id="4-alternative-decryption-vectors--chromes-evolving-defenses"><strong>4. Alternative Decryption Vectors &amp; Chrome’s Evolving Defenses</strong></h4>
+
+<h4 id="administrator-level-decryption-eg-runassuchrome_v20_decryption-poc">Administrator-Level Decryption (e.g., <code>runassu/chrome_v20_decryption</code> PoC)</h4>
+<p>The proof-of-concept by runassu illustrates that if an attacker possesses Administrator privileges, the app_bound_key can potentially be decrypted. This aligns with ABE’s stated non-goal of protecting against higher-privilege attackers.
+<a href="https://github.com/runassu/chrome_v20_decryption?tab=readme-ov-file">REPO</a></p>
+
+<p>The PoC’s description of needing to decrypt the <strong>app_bound_encrypted_key</strong> from Local State <strong>first with SYSTEM DPAPI</strong>, then <strong>user DPAPI</strong>, directly matches the initial steps within the legitimate <code>IElevator::DecryptData</code> function as seen in <code>elevator.cc</code>. An administrator can perform these steps outside of the IElevator service.</p>
+
+<p>After these two DPAPI unwrap steps, the result would be the
+<code>[validation_data_length][validation_data][app_bound_key_length][app_bound_key]</code> 
+plaintext. An admin tool could then simply parse this structure to extract the app_bound_key directly, without needing to perform <strong>path validation</strong>.
+The runassu PoC’s claim that this result is “<strong>not the final app_bound_key</strong>” and requires a further <strong>AES-GCM decryption with a key hardcoded in elevation_service.exe is intriguing</strong>.
+This additional layer is not part of the standard <code>IElevator::DecryptData</code> flow for returning the app_bound_key to OSCrypt, as evidenced by elevator.cc. The plaintext_str returned by <code>IElevator::DecryptData</code> is the application-level key.</p>
+
+<p><img width="874" height="1043" alt="image" src="https://github.com/user-attachments/assets/1c83b854-b16b-4c5c-98b1-c018c893990d"></p>
+
+<p>The PoC’s extra step might be attempting to decrypt data that has undergone an additional, internal transformation within Chrome, possibly related to the <code>PreProcessData/PostProcessData</code> functions seen in <code>elevator.cc</code> (conditionally compiled with <code>BUILDFLAG(GOOGLE_CHROME_BRANDING))</code>. These functions might apply another layer of encryption using a service-internal key for specific branded builds or key versions.
+Alternatively, the PoC might be targeting a different internal key or an older/variant ABE scheme.</p>
+
+<p><strong>Hardcoded Keys in elevation_service.exe:</strong> The presence of hardcoded keys in elevation_service.exe (as mentioned by the PoC for <code>ChaCha20_Poly1305</code> or <code>AES-256-GCM</code>) would most likely be for such internal service operations or specific recovery mechanisms, rather than the primary ABE flow that returns the key to OSCrypt.</p>
+
+<p><strong>Stability Concerns</strong>: Relying on such internal administrator-level method, undocumented layers and hardcoded keys is highly unstable and prone to <strong>break with Chrome updates</strong>.</p>
+
+<p><img width="817" height="250" alt="image" src="https://github.com/user-attachments/assets/798e3a77-b8c0-407c-9465-cafa44c52b3a"></p>
+
+<p><a href="https://github.com/bitwarden/clients/blob/main/apps/desktop/desktop_native/bitwarden_chromium_import_helper/src/windows/crypto.rs">HardCoded KEYs:</a></p>
+
+<p><img width="971" height="748" alt="image" src="https://github.com/user-attachments/assets/06a86a96-ece1-4ae9-8ca7-f572cf00d405"></p>
+
+<p><img width="803" height="363" alt="image" src="https://github.com/user-attachments/assets/b4ef21ca-7c7d-4a7b-b137-8610eb37f3de"></p>
+
+<hr>
+
+<h4 id="device-bound-session-credentials-dbsc">Device Bound Session Credentials (DBSC)</h4>
+<p>As an overlapping and complementary security effort, Google has been developing Device Bound Session Credentials (DBSC), available for Origin Trial in Chrome 135. DBSC aims to combat cookie theft by cryptographically binding session cookies to the device.</p>
+
+<p>Mechanism: When a DBSC session is initiated, the browser generates a public-private key pair, storing the private key securely (ideally using hardware like a TPM). The server associates the session with the public key. Periodically, the browser proves possession of the private key to refresh the (typically short-lived) session cookie.
+Relevance to ABE: While ABE protects data at rest on the user’s device, DBSC focuses on making stolen session cookies useless if exfiltrated and used on another device. They are two distinct but synergistic layers of defense against session hijacking. An attacker bypassing ABE to get cookies might still find those cookies unusable elsewhere if they are DBSC-protected.</p>
+
+<p><a href="https://chromestatus.com/feature/5140168270413824"><strong>DBSC is exclusively available in Google Chrome (starting with version 145), and not yet supported in Firefox, Safari, Edge, or other major browsers.</strong></a></p>
+
+<hr>
+
+<h4 id="6-key-insights-from-googles-abe-design-document--chromium-source-code">6. Key Insights from Google’s ABE Design Document &amp; Chromium Source Code</h4>
+
+<p>Insights from Google’s design documents and the Chromium source code (<code>elevator.h</code> , <code>elevator.cc</code>, <code>caller_validation.h</code> , <code>caller_validation.cc</code> ) provide a comprehensive understanding:</p>
+
+<ul>
+  <li>
+    <p><strong>Security Approach Change:</strong> Initial proposal required digital signature validation, but was descoped to path validation for simplicity, assessed as providing “equivalent protection against non-admin attackers”</p>
+  </li>
+  <li>
+    <p><strong>OSCrypt Module Modifications:</strong> Modified to use new IPC mechanisms to communicate with Elevation Service instead of making direct DPAPI calls</p>
+  </li>
+  <li>
+    <p><strong>Key Encryption Delegates System:</strong> OSCrypt iterates through a list of delegates - one for legacy DPAPI keys, another for ABE-protected keys via IPC</p>
+  </li>
+  <li>
+    <p><strong>Stateless Service Design:</strong> IElevator service functions as a largely stateless encrypt/decrypt primitive with no persistent storage required for ABE operations</p>
+  </li>
+  <li>
+    <p><strong>Acknowledged Injection Vulnerability:</strong> Design document explicitly admits “an attacker could inject code into Chrome browser and call the IPC interface” - defeating a determined attacker using this technique would be hard</p>
+  </li>
+</ul>
+
+<hr>
+
+<h4 id="9-references-and-further-reading">9. References and Further Reading</h4>
+<ul>
+  <li>
+    <p><strong>the main one</strong> <a href="https://github.com/xaitax/Chrome-App-Bound-Encryption-Decryption/blob/main/docs/RESEARCH.md">xaitax</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/Maldev-Academy/DumpBrowserSecrets">Maldev-Academy </a></p>
+  </li>
+  <li>
+    <p><a href="https://security.googleblog.com/2024/07/improving-security-of-chrome-cookies-on.html">Google Security Blog: Improving the security of Chrome cookies on Windows (July 30, 2024)
+</a></p>
+  </li>
+  <li>
+    <p><a href="https://drive.google.com/file/d/1xMXmA0UJifXoTHjHWtVir2rb94OsxXAI/view">Google Design Document: Chrome app-bound encryption Service (formerly: Chrome Elevated Data Service) (Original: Jan 25, 2021, with later updates)</a></p>
+  </li>
+  <li>
+    <p><a href="https://developer.chrome.com/blog/dbsc-origin-trial">Chrome Developers Blog (DBSC): Origin trial: Device Bound Session Credentials in Chrome</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/runassu/chrome_v20_decryption">runassu’s PoC (Admin-level decryption): chrome_v20_decryption</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/SilentDev33/ChromeAppBound-key-injection">SilentDev33’s ChromeAppBound-key-injection </a></p>
+  </li>
+</ul>
+
+    <hr>
+<div class="post_navi"><a class="post_navi-item nav_prev" href="https://binary-win.github.io/2025/12/27/AVAST-Kernel-Hooks-and-AV-ANALYSIS.html" title="Analyzing Avast AV: Kernel Hooking and Driver Reverse Engineering">
+    <div class="post_navi-arrow">&lt;</div><div class="post_navi-label">Previous Post</div><div><span>Analyzing Avast AV: Kernel Hooking and Driver Reverse Engineering</span></div>
+  </a><a class="post_navi-item nav_next" href="https://binary-win.github.io/archive.html" title="Blog Archive">
+    <div class="post_navi-arrow">&gt;</div><div class="post_navi-label">Blog Archive</div><div><span>Archive of all previous blog posts</span></div>
+  </a></div>
+  </div>
+
+  <a class="u-url" href="https://binary-win.github.io/2026/02/10/Browser-Dumping-The_Core_TacticBehind_Most_Infostealers.html"></a>
+</article>
+      </div>
+    </main>
+
+
+
+</body></html>

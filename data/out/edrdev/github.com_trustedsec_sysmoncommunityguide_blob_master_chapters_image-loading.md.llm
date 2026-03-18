@@ -1,0 +1,27 @@
+Title:
+Sysmon Community Guide – Image Loading (Event ID 7)
+
+Type:
+Documentation (GitHub Repository Chapter)
+
+Short Summary (4–8 sentences max):
+This chapter explains how Sysmon Event ID 7 (“Image loaded”) can be used to detect suspicious DLL/OCX/module loads, while emphasizing that it is one of Sysmon’s highest-volume event types and can severely impact performance if misconfigured. It argues against exclusion-based logging (log everything then filter) and recommends a strict “targeted include only” strategy focused on high-signal DLLs and specific process+DLL combinations. The write-up maps image-load detections to common attacker techniques such as DLL injection/process injection, script engine abuse (PowerShell/VBScript/JScript), COM/ActiveX abuse (e.g., regsvr32 + scrobj.dll “Squiblydoo”), and credential access tooling indicators. It provides concrete Sysmon XML filtering examples for script engines, unsigned DLLs in sensitive processes, suspicious load paths, and credential-access-related DLLs. It also covers investigation pivots, false-positive sources (enterprise tooling, dev environments), and validation/performance guidance. Useful primarily for Blue Teams/Detection Engineers, but also valuable for red teams to understand likely telemetry and detection choke points.
+
+Technical Focus:
+- Sysmon Event ID 7 (ImageLoad) semantics and fields
+- High-volume telemetry management via include-only filtering
+- Script engine DLL load detection (PowerShell/VBScript/JScript/WSH)
+- COM/ActiveX and LOLBin indicators (regsvr32/mshta)
+- DLL injection/hijacking indicators (path, signature, metadata)
+- Credential access and dumping-related module loads (samlib/vaultcli/wdigest/dbghelp)
+
+Use Cases:
+- Detect PowerShell engine usage when loaded by non-powershell processes (Office/LOLBins)
+- Alert on regsvr32 loading scrobj.dll (Squiblydoo) and mshta loading jscript9.dll
+- Identify unsigned DLLs loaded into sensitive processes (e.g., lsass.exe, explorer.exe)
+- Flag DLL loads from user-writable or temporary directories (Users/ProgramData/Windows\Temp)
+- Hunt for credential theft/dumping activity via suspicious library loads (wdigest, dbghelp, vaultcli)
+- Baseline and tune Sysmon ImageLoad rules to keep event volume and CPU overhead manageable
+
+Keywords:
+Sysmon, Event ID 7, ImageLoad, DLL loading, OCX, module load, Sysmon XML, include-only filtering, signature validation, Signed false, ImageLoaded, Process injection, DLL injection, DLL hijacking, reflective DLL loading, LOLBins, regsvr32, scrobj.dll, mshta.exe, jscript9.dll, vbscript.dll, System.Management.Automation.dll, wshom.ocx, scrrun.dll, samlib.dll, vaultcli.dll, wdigest.dll, dbghelp.dll, LSASS, MITRE ATT&CK T1055, T1218.010, T1218.005

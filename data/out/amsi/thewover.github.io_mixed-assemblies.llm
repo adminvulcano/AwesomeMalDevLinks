@@ -1,0 +1,31 @@
+Title:
+Mixed Assemblies – Crafting Flexible C++ Reflective Stagers for .NET Assemblies
+
+Type:
+Blog Post / GitHub Tool (example code library)
+
+Short Summary (4–8 sentences max):
+- Describes using C++/CLI “mixed-mode” assemblies to bridge native C++ and managed .NET, enabling loaders/stagers that can execute .NET payloads from an unmanaged entry point (EXE main or DLLMain).  
+- Focuses on solving practical tradecraft issues with .NET payloads (easy decompilation, lack of DLLMain equivalent, and common in-memory loading patterns) by wrapping managed execution inside a mostly-native PE.  
+- Explains why mixed assemblies can’t be loaded via `Assembly.Load(byte[])` (memory-only reflection load) and instead are typically loaded from disk (`Assembly.LoadFrom/LoadFile`) or via a custom PE loader.  
+- Provides example implementations that avoid loader lock by spawning a new thread from `DllMain`, then transitioning into managed code to `Assembly.Load()` an embedded/downloaded .NET assembly and invoke a method via reflection.  
+- Discusses detection angles (CLR module load monitoring via WMI/ETW) and notes AMSI implications in .NET 4.8, including the advantage of performing AMSI bypass/unhooking in native code before loading managed payloads.  
+- Useful for red teamers/pentesters building Windows stagers, and for blue teamers looking to detect CLR injection and mixed-mode loader behavior.
+
+Technical Focus:
+- C++/CLI mixed-mode assemblies (/clr) and native↔managed interop
+- Loader lock constraints in `DllMain` and thread-based initialization
+- In-memory .NET assembly loading via `System.Reflection.Assembly::Load`
+- PE resources as payload containers (embedded DLL/EXE, optional stego/encryption)
+- CLR load detection (WMI `Win32_ModuleLoadTrace`, ETW/module monitoring)
+- AMSI behavior in .NET 4.8 and native pre-unhook strategies
+
+Use Cases:
+- Build on-disk DLL stagers that execute managed payloads when side-loaded (`DllMain` execution)
+- Wrap/obfuscate .NET tooling inside a less-reversible native-looking PE
+- Create hybrid implants leveraging Win32/NTAPI/COM plus .NET APIs in one artifact
+- Stage managed payloads from embedded resources or network download, then invoke entry methods via reflection
+- Defensive detection engineering for “non-.NET process loads CLR” heuristics
+
+Keywords:
+C++/CLI, mixed-mode assembly, /clr, IJW, CLR hosting, mscoree.dll, clr.dll, System.Reflection.Assembly.Load, Assembly.LoadFrom, DLLMain, loader lock, CreateThread, PE resources, FindResource, LoadResource, reflective loading, WMI Win32_ModuleLoadTrace, ETW, CLR injection detection, AMSI, .NET 4.8, unmanaged AMSI bypass, SILENTTRINITY

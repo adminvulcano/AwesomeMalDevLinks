@@ -1,0 +1,25 @@
+Title:
+Bypassing detections with command-line obfuscation
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains how EDR/AV detections that rely on process command-line strings can be bypassed by generating semantically equivalent but syntactically altered arguments. It distinguishes “command-line obfuscation” (target executable parsing quirks; obfuscation persists into EDR telemetry) from shell-level obfuscation like DOSfuscation/PowerShell obfuscation (often resolves before telemetry). The author surveys many obfuscation primitives across Windows and *nix (e.g., option character substitution, Unicode homoglyphs, quote insertion, path/URL manipulation, value transformations) and shows how they break common Sigma/Splunk/Elastic rules. A methodology is presented to systematically test executables for obfuscation tolerance using automated equivalence checking (exit code/stdout) and to encode findings as machine-readable “model files.” Results for 68 Windows 11 LOLBINs are published via ArgFuscator.net and open-source tooling (Invoke-ArgFuscator) to generate randomized obfuscated command lines. It’s useful for red teams to evaluate detection gaps and for defenders to harden detections via normalization, anomaly heuristics, and shifting to less-spoofable telemetry (e.g., network events vs. CLI substrings).
+
+Technical Focus:
+- Command-line parsing ambiguities and argv/argument tokenization
+- LOLBIN/“malwareless” tradecraft and process creation telemetry evasion
+- Obfuscation techniques: Unicode substitution/insertion, quote stuffing, option rewriting, path/URL/value transformations
+- Automated differential testing for command equivalence (exit code/stdout)
+- Detection engineering: normalization (e.g., MDE parse_command_line), anomaly-based heuristics, resilient rule design
+
+Use Cases:
+- Generate synonymous obfuscated commands to test EDR/SIEM process-creation detections
+- Build regression tests for detection content against known obfuscation variants
+- Create/extend obfuscation models for additional executables and environments
+- Develop defensive normalization and anomaly detections for suspicious CLI patterns
+- Validate whether detections should pivot from CLI strings to behavioral telemetry (network, file, registry)
+
+Keywords:
+command-line obfuscation, argv, process creation telemetry, EDR evasion, AV bypass, LOLBIN, living-off-the-land, Windows 11 23H2, Sigma rules, Splunk detections, Elastic detection rules, Unicode homoglyphs, quote insertion, option character substitution, argument normalization, Microsoft Defender for Endpoint, parse_command_line, ArgFuscator.net, Invoke-ArgFuscator, certutil, reg.exe, msiexec, mshta, MITRE ATT&CK T1027.010

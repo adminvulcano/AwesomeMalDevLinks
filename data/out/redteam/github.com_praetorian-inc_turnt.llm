@@ -1,0 +1,26 @@
+Title:
+TURNt (TURN tunneler)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+TURNt is a red team tunneling toolkit that smuggles interactive C2 traffic (e.g., SOCKS5, hidden VNC/RDP access) through legitimate TURN infrastructure used by web conferencing providers like Microsoft Teams (and historically Zoom). It addresses the problem of slow, noisy, or easily fingerprinted covert channels by blending into high-volume, commonly allowlisted conferencing traffic and leveraging TURN over TLS on port 443 (TURNS). The toolset uses WebRTC data channels (SCTP) over TURN/TCP/TLS to multiplex multiple proxied connections while avoiding classic TCP-over-TCP tunneling pitfalls, though it still inherits head-of-line blocking from the single underlying TCP stream. TURNt uses a manual “pidgin mode” offer/answer exchange (base64 blobs) intended to be passed via an existing implant/C2 rather than a dedicated signaling server. It includes a controller that exposes a local SOCKS5 proxy and an admin console to manage local/remote TCP port-forwards over an active tunnel. It’s primarily useful for red teams and operators needing short-lived, interactive access paths that are harder to isolate at the network layer; defenders can also use the included IOC notes to validate detections around conferencing TURN traffic.
+
+Technical Focus:
+- TURN/TURNS (TURN over TLS) tunneling via third-party conferencing providers
+- WebRTC data channels and SCTP multiplexing over TCP/TLS
+- SOCKS5 proxying with remote DNS resolution
+- Manual signaling (offer/answer) and out-of-band coordination via existing C2
+- Local/remote TCP port-forwarding over a tunneled transport
+- Operational constraints: head-of-line blocking, connection fragility, platform limitations
+
+Use Cases:
+- Establish a SOCKS5 pivot channel over Microsoft Teams TURN servers for internal web/SSH access
+- Local port-forward internal services (RDP/VNC/HTTP) to the operator machine
+- Remote port-forward to expose operator-hosted services into a target network (e.g., phishing pages, listeners)
+- Blend interactive operator traffic into conferencing-like egress on 443/TLS to reduce DPI/anomaly visibility
+- Lab validation of network detections/allowlisting risks around conferencing TURN endpoints
+
+Keywords:
+TURN, TURNS, WebRTC, SCTP, DTLS, SOCKS5, port forwarding, pivoting, NAT traversal, relay servers, Microsoft Teams, Zoom, QUIC admin interface, DPI evasion, egress filtering, TLS over TCP, offer/answer signaling, base64 handshake, C2 tunneling, red team tooling

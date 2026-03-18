@@ -1,0 +1,26 @@
+Title:
+AMSI Raccoon Lab (MostShittyAV) — The World’s Most Intentionally Terrible Antivirus Scanner
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository is an educational antimalware/AV simulator written in Nim that implements intentionally weak detection logic to teach how AV-style heuristics work and how they can be bypassed. It includes basic signature scanning (string matching) and simple heuristic checks (suspicious extensions, non-printable byte ratio, small-file checks, entropy-style indicators). A key focus is integrating the scanner as a Windows AMSI provider (IAntimalwareProvider) via a DLL wrapper, enabling experimentation with AMSI’s provider architecture. The project ships with PowerShell scripts and test corpora to generate “malicious,” “clean,” and “bypass” files (e.g., double extensions, uncommon extensions, no-extension payloads). It’s useful for red teamers, pentesters, and defenders who want a safe lab to understand detection gaps and evasion patterns without relying on real malware or commercial AV internals. It’s interesting because it demonstrates the practical weaknesses of naive static heuristics and how AMSI provider registration/behavior can be tested end-to-end.
+
+Technical Focus:
+- Windows AMSI provider development (IAntimalwareProvider) and registration
+- Signature-based detection via ASCII/case-insensitive pattern matching
+- Heuristic detection: extension allow/deny logic, tiny-file checks
+- Content-based heuristics: non-printable byte ratio, entropy-like indicators
+- Evasion/bypass test case generation and validation in a lab workflow
+- Nim-based Windows tooling + PowerShell automation (build/test/register)
+
+Use Cases:
+- Build a lab AMSI provider to understand AMSI scanning flow and integration points
+- Create training exercises on bypassing naive AV heuristics (extensions, casing, content shaping)
+- Generate deterministic test files for evaluating detection logic and logging/telemetry
+- Prototype and compare simple static detection strategies before implementing stronger approaches
+- Blue team education: demonstrate why simplistic signatures/heuristics produce false negatives/positives
+
+Keywords:
+AMSI, Antimalware Scan Interface, IAntimalwareProvider, Windows, AMSI provider, DLL wrapper, Nim, PowerShell, signature scanning, heuristic detection, entropy, non-printable bytes, file extension heuristics, case-insensitive matching, evasion, bypass techniques, red team training, malware simulation, static analysis, provider registration

@@ -1,0 +1,25 @@
+Title:
+Process Hollowing
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post walks through implementing classic Windows process hollowing by creating a benign process (example: `svchost.exe`) in a suspended state, locating its entry point in memory, overwriting it with shellcode, and resuming execution. It addresses the practical challenge of ASLR by using `NtQueryInformationProcess`/`ZwQueryInformationProcess` to retrieve the target’s PEB, then reading `PEB.ImageBaseAddress` to parse PE headers and compute the entry point VA (`ImageBase + AddressOfEntryPoint`). The technique uses `ReadProcessMemory` to extract remote PEB/PE structures and `WriteProcessMemory` + `ResumeThread` to redirect execution to the payload. A Rust PoC is referenced that prefers direct NTAPI (`ntdll.dll`) usage over higher-level Win32 APIs. It’s primarily useful for red teamers, pentesters, and malware developers studying Windows injection tradecraft and how EDRs may detect it (with a VirusTotal detection snapshot included).
+
+Technical Focus:
+- Process hollowing (suspended process + entry point overwrite)
+- NTAPI process introspection (`NtQueryInformationProcess` / `ZwQueryInformationProcess`)
+- PEB parsing and `ImageBaseAddress` retrieval
+- PE header parsing (`IMAGE_DOS_HEADER`, `IMAGE_NT_HEADERS64`, `IMAGE_OPTIONAL_HEADER64`)
+- Remote memory operations (`ReadProcessMemory`, `WriteProcessMemory`)
+- Thread control (`ResumeThread`) and ASLR considerations
+
+Use Cases:
+- Execute payloads under the guise of a legitimate process image
+- Build/understand injection PoCs in Rust using `ntdll.dll` syscalls/NTAPI
+- Research EDR detection points around hollowing (suspended create, remote writes, entry point tampering)
+- Training material for Windows internals: PEB and PE header layout in live processes
+
+Keywords:
+process hollowing, svchost.exe, suspended process, CreateProcessA, NtQueryInformationProcess, ZwQueryInformationProcess, ProcessBasicInformation, PEB, ImageBaseAddress, ASLR, ReadProcessMemory, WriteProcessMemory, ResumeThread, entry point, AddressOfEntryPoint, IMAGE_DOS_HEADER, IMAGE_NT_HEADERS64, IMAGE_OPTIONAL_HEADER64, Rust, NTAPI, ntdll.dll, shellcode injection, WinDbg, PE parsing

@@ -1,0 +1,24 @@
+Title:
+PEBwalker
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PEBwalker is a Rust implementation of a Windows PEB (Process Environment Block) walker used to resolve module exports and function addresses at runtime via checksum/hash comparisons. It avoids static imports by traversing the loaded module list from the PEB, locating a target DLL by hashed name, parsing its export table, and matching exported function names by hash to return a callable function pointer. This is commonly used in shellcode/loaders to reduce obvious IAT-based indicators and enable dynamic API resolution (e.g., resolving NTDLL syscalls like NtAllocateVirtualMemory). The repo includes example usage showing UTF-16 hashing for module names and byte hashing for function names. It’s primarily useful for red team tooling, malware development research, and defenders studying common in-memory API resolution patterns.
+
+Technical Focus:
+- PEB access and Ldr module list traversal
+- Runtime API resolution via hashed module/function names
+- PE export table parsing (IMAGE_EXPORT_DIRECTORY)
+- Avoiding static imports / IAT minimization
+- Rust-based Windows low-level interop (FFI/pointers)
+
+Use Cases:
+- Building loaders/shellcode that dynamically resolves Windows APIs
+- Reducing static indicators from import tables in offensive tooling
+- Studying/detecting PEB-walking and export-hash resolution techniques
+- Implementing custom GetProcAddress/LoadLibrary-like logic without imports
+
+Keywords:
+Windows, PEB, Process Environment Block, Ldr, InMemoryOrderModuleList, export table, PE parsing, IMAGE_EXPORT_DIRECTORY, API hashing, checksum, dynamic import resolution, IAT evasion, ntdll.dll, NtAllocateVirtualMemory, function pointer, Rust, FFI, shellcode, loader

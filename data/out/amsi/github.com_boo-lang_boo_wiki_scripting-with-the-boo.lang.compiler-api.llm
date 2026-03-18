@@ -1,0 +1,26 @@
+Title:
+Scripting with the Boo.Lang.Compiler API
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+This wiki page shows how to embed the Boo compiler in an application to compile and execute Boo scripts at runtime. It focuses on using `BooCompiler` with the `CompileToMemory` pipeline to generate an in-memory assembly rather than writing output to disk. The examples demonstrate invoking compiled script code via Boo’s duck typing (from Boo) and via .NET reflection (from C#), including how module/type names are derived (e.g., `ScriptModule`). It also covers basic error handling by checking `context.GeneratedAssembly` and enumerating `context.Errors`. Useful for developers building extensible .NET apps, plugin/scripting systems, or tooling that needs dynamic code execution. Interesting because it provides a straightforward pattern for runtime compilation + reflective invocation in the .NET ecosystem.
+
+Technical Focus:
+- Boo.Lang.Compiler `BooCompiler` usage and configuration
+- Compiler pipelines, especially `Boo.Lang.Compiler.Pipelines.CompileToMemory`
+- Runtime assembly generation (`CompilerContext.GeneratedAssembly`)
+- Duck typing in Boo (`Parameters.Ducky`)
+- .NET reflection (`Type.GetType`, `MethodInfo.Invoke`) for calling script methods
+- Script module naming conventions (`<FileName>Module`)
+
+Use Cases:
+- Embed a scripting language (Boo) into a .NET application
+- Build plugin systems that compile user-provided code at runtime
+- Execute automation scripts without shipping a separate compiler executable (`booc.exe`)
+- Prototype dynamic features using in-memory compilation and reflection
+- Implement script-driven configuration/logic in internal tools
+
+Keywords:
+Boo, Boo.Lang.Compiler, BooCompiler, CompileToMemory, CompilerContext, GeneratedAssembly, compiler pipeline, in-memory compilation, runtime code execution, duck typing, Parameters.Ducky, reflection, MethodInfo.Invoke, ScriptModule, FileInput, .NET, C#, dynamic scripting, plugin architecture, error handling

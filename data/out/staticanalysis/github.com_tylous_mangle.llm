@@ -1,0 +1,25 @@
+Title:
+Mangle — PE executable manipulation for evasion (strings, size inflation, cert cloning)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Mangle is a Go-based tool for post-processing compiled Windows executables (EXE/DLL) to reduce common detection artifacts. It focuses on three main capabilities: removing/overwriting known IoC-related strings (currently Go-binary specific), inflating file size by appending null-byte padding to exceed EDR scanning thresholds, and cloning the Authenticode certificate chain/attributes from a legitimate signed binary onto another file. The goal is to help loaders and payloads evade on-disk and in-memory scanning that relies on static strings, file characteristics, and signature metadata. It’s primarily useful for red teams, pentesters, and malware developers doing tradecraft research, and secondarily for blue teams to understand and test detection gaps around large-file scanning and signature trust. It was featured at Source Zero Con 2022 and uses PE parsing via Binject’s `debug/pe`.
+
+Technical Focus:
+- Windows PE (Portable Executable) parsing and modification
+- Go binary indicator/string stripping via in-place hex overwrites
+- File size inflation via null-byte padding to bypass scanning limits
+- Authenticode certificate/signature attribute cloning (certificate chain, timestamps)
+- EDR evasion tradecraft (static/on-disk and in-memory scanning constraints)
+
+Use Cases:
+- Remove known suspicious strings from Go-compiled payloads without changing string lengths
+- Inflate droppers/loaders to test or exploit EDR large-file scanning blind spots
+- Clone signing metadata from legitimate binaries to study trust/signature-based heuristics
+- Build red-team test cases to validate defensive controls against PE tampering
+- Generate samples for detection engineering around PE anomalies (padding, signature inconsistencies)
+
+Keywords:
+Mangle, Golang, Windows PE, EXE, DLL, Authenticode, code-signing certificate, certificate chain, timestamp countersignature, PE modification, string patching, IoC strings, Go indicators, null-byte padding, file inflation, EDR evasion, static detection, in-memory scanning, Binject debug/pe, loader tradecraft

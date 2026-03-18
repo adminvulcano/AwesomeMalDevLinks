@@ -1,0 +1,31 @@
+Title:
+WaveGate
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- WaveGate is a Tauri/Rust-based remote access tool (RAT) with an operator UI and a Windows-focused client offering a broad post-compromise feature set.  
+- It aims to provide a “feature-complete” offensive Rust RAT reference implementation rather than an evasive implant; the author notes it is early-stage and likely signatureable.  
+- Core capabilities include remote shell/execution, file/registry/process/service/task management, WMI console, clipboard monitoring, and interactive remote desktop plus webcam/audio streaming.  
+- It also includes network/pivoting features like a SOCKS5-style reverse proxy (including SMB/named pipe proxying), domain fronting via custom SNI, and proxy-aware outbound comms.  
+- Post-exploitation modules cover credential/cookie recovery (Chromium variants), UAC bypass, multiple persistence methods, anti-VM/environment checks, and extensive system/AD/Kerberos enumeration plus lateral movement via WMI/WinRM/SMB/PsExec-like methods.  
+- Useful for red teamers/pentesters and malware researchers studying Rust implant architecture, operator tooling, and Windows post-exploitation tradecraft in a single codebase.
+
+Technical Focus:
+- Rust + Tauri operator/client architecture
+- Windows post-exploitation (WMI, registry, services, scheduled tasks, process control)
+- Remote desktop capture/control (DXGI tile capture, H.264; BitBlt fallback)
+- Lateral movement & pivoting (SMB/WMI/WinRM, token impersonation, reverse proxy)
+- AD & Kerberos enumeration/ticket operations
+- C2 communications (TLS, HTTP→WebSocket upgrade, binary framing, SNI override/domain fronting)
+
+Use Cases:
+- Build/modify a Rust-based RAT for lab red teaming and feature prototyping
+- Study implementation patterns for Windows management modules (registry/services/tasks/WMI)
+- Prototype pivoting via reverse proxy and SMB/named-pipe transport concepts
+- Evaluate detection opportunities for common RAT behaviors (persistence, UAC bypass, credential access)
+- Training/demo platform for operator UI workflows (file manager, RD, chat, logs)
+
+Keywords:
+WaveGate, RAT, Rust, Tauri, Windows, remote shell, remote execution, file manager, registry editor, WMI, DXGI, BitBlt, H.264, WebSocket, TLS, binary protocol, SOCKS5 reverse proxy, SMB named pipe proxy, domain fronting, SNI override, UAC bypass, persistence, scheduled tasks, Windows services, token impersonation, WinRM, PsExec, Active Directory enumeration, Kerberos tickets, credential recovery, Chromium cookies, DNS cache poisoning, hosts file, anti-VM detection, mutex single instance

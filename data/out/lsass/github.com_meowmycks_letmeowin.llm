@@ -1,0 +1,25 @@
+Title:
+LetMeowIn
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+LetMeowIn is a Windows x64 LSASS credential dumping tool implemented in C++ with MASM x64, focused on stealth and EDR/AV evasion. It aims to reduce detection by using indirect system calls (manual NTAPI usage), breaking telemetry (notably ETW), and obfuscating API resolution via compile-time hashing and pointer/name hiding. Instead of opening new handles to LSASS (a common detection point), it attempts to duplicate already-existing LSASS handles on the system, then creates an offline copy of LSASS for dumping. It also tampers with the output minidump by corrupting the `MDMP` signature and includes a helper script (`restoresig.py`) to restore it later. The repo notes historical bypass success against several security products, but also highlights a key limitation: it depends on pre-existing LSASS handles and only supports x64. Useful primarily for red teams, pentesters, and malware researchers studying modern LSASS dumping tradecraft and defensive gaps.
+
+Technical Focus:
+- LSASS credential dumping via offline process cloning/copying
+- Indirect syscalls / manual NTAPI invocation (syscall evasion)
+- ETW (Event Tracing for Windows) tampering to reduce telemetry
+- Handle duplication to LSASS (avoid OpenProcess patterns)
+- Compile-time hashing & API obfuscation
+- Minidump (`MDMP`) signature corruption and restoration
+
+Use Cases:
+- Stealthy credential access on Windows endpoints where LSASS access is possible
+- Researching/replicating EDR detection bypass patterns (syscalls, ETW, handle ops)
+- Building detections around LSASS handle duplication, dump signature anomalies, and ETW disruption
+- Training and purple-team exercises focused on credential dumping tradecraft
+
+Keywords:
+LSASS, credential dumping, minidump, MDMP, Windows x64, C++, MASM, NTAPI, indirect syscalls, syscall stub, ETW, telemetry bypass, API hashing, string obfuscation, handle duplication, OpenProcess avoidance, offline dump, EDR evasion, Windows Defender, CrowdStrike Falcon, Cortex XDR

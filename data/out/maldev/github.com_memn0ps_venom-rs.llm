@@ -1,0 +1,24 @@
+Title:
+venom-rs — Shellcode Reflective DLL Injection (sRDI) in Rust (Codename: Venom)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Venom-rs is a Rust implementation of Shellcode Reflective DLL Injection (sRDI), converting a DLL into position-independent “shellcode” that can be injected and executed in a remote process. It includes a shellcode generator that packages a reflective loader + payload DLL + optional parameter data, and a simple PoC injector to allocate memory and run the resulting blob. The reflective loader performs in-memory PE loading tasks (mapping, relocations/rebasing, import resolution) and can execute either the payload’s DllMain or a specified exported function (e.g., “SayHello”) selected via flags and a function-hash mechanism. The project documents the bootstrap stub and the in-memory layout, emphasizing that OPSEC hardening is intentionally left to the user. It’s primarily useful for red teamers, pentesters, and malware researchers studying or prototyping Windows in-memory loading/injection tradecraft. Interesting due to its compact (~4KB) loader and clear, modular Rust codebase demonstrating end-to-end sRDI generation and execution.
+
+Technical Focus:
+- Shellcode Reflective DLL Injection (sRDI) design and implementation
+- In-memory PE loading: relocations, import resolution, section protections
+- Position-independent code (PIC) packaging and bootstrap stub mechanics
+- Windows process injection primitives (VirtualAlloc, remote execution)
+- Function selection via hashing and parameter passing conventions (x64 calling)
+
+Use Cases:
+- Generate PIC blobs from DLL payloads for custom injectors (BYOI)
+- Prototype/learn reflective loading and PE mapping behavior in Rust
+- Build and test process injection chains in controlled lab environments
+- Research detection opportunities around reflective loaders and RWX memory usage
+
+Keywords:
+Rust, Windows, sRDI, reflective DLL injection, shellcode, position-independent code, PE reflection, in-memory loader, import resolution, relocations, rebasing, section protections, VirtualAlloc, process injection, DllMain, function hashing, bootstrap shellcode, payload DLL, injector, x64 calling convention

@@ -1,0 +1,26 @@
+Title:
+KaplaStrike (Crystal-Palace UDRL)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+KaplaStrike is a custom Cobalt Strike reflective loader (UDRL) built using the Crystal Palace framework, focused on stealthy in-memory loading and EDR evasion. It replaces typical `LoadLibrary`-based loading with module overloading using `NtCreateSection`/`NtMapViewOfSection`, and improves stack hygiene by registering unwind metadata (`.pdata`) via `RtlAddFunctionTable`. The loader transfers execution using `NtContinue` with synthetic thread-start frames (`BaseThreadInitThunk`/`RtlUserThreadStart`) and performs call stack spoofing during setup (via Draugr). It includes build-time XOR encryption of the Beacon DLL, sleep masking implemented through IAT hooking (`addhook`) with per-section XOR, and removes Crystal Palace YARA signatures using `ised`. It’s primarily useful for red team operators and malware/tooling developers building custom CS loaders and researching modern userland evasion tradecraft. The repo also provides a CNA script to strip Cobalt Strike’s default reflective loader so the raw DLL can be linked into a PIC blob for execution by an external shellcode runner.
+
+Technical Focus:
+- Module overloading (section mapping) via `NtCreateSection` / `NtMapViewOfSection`
+- Unwind info / exception handling registration with `RtlAddFunctionTable` (`.pdata`)
+- Execution transfer with `NtContinue` and synthetic thread start frames
+- Call stack spoofing (Draugr-style)
+- Sleep masking via IAT hooking (`addhook`) and per-section encryption
+- Static signature reduction (YARA removal) and build-time payload encryption
+
+Use Cases:
+- Building a stealthier Cobalt Strike UDRL for controlled red team operations
+- Researching userland EDR telemetry gaps around section mapping and `NtContinue`
+- Producing PIC “blob” payloads to be run by custom shellcode loaders
+- Experimenting with sleep masking implementations independent of Malleable C2
+- Studying call stack spoofing + unwind registration for cleaner crash/telemetry behavior
+
+Keywords:
+Cobalt Strike, UDRL, reflective loader, Crystal Palace, Crystal-Kit, module overloading, NtCreateSection, NtMapViewOfSection, RtlAddFunctionTable, .pdata, unwind info, NtContinue, BaseThreadInitThunk, RtlUserThreadStart, call stack spoofing, Draugr, sleep masking, IAT hooking, addhook, YARA signature removal, XOR encryption, PIC shellcode, CNA script, Malleable C2 profile

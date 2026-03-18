@@ -1,0 +1,32 @@
+Title:
+MAPS Cloud Scanner (maps_scanner)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- A Python research tool that directly interacts with Microsoft Defender’s MAPS (Microsoft Active Protection Service) cloud backend to obtain file and URL reputation verdicts and study dynamic signature delivery behavior.  
+- It solves the problem of treating MAPS as a black box by implementing the same on-the-wire protocol used by Defender clients: Microsoft Bond CompactBinaryV1.  
+- The repo provides file submission scanning, SHA-256 reputation lookups, URL reputation checks, and a heartbeat/connectivity test to MAPS endpoints.  
+- It also includes offline PE inspection (metadata/imports/sections/AuthentiCode), raw payload build/decode/replay for protocol analysis, and an API fuzzer to enumerate undocumented endpoints/fields and observe server behavior.  
+- Useful primarily for security researchers, malware analysts, and red teamers studying Defender cloud detections and protocol behavior; also relevant to blue teams validating reputation workflows and telemetry assumptions.  
+- Interesting because it operationalizes MAPS protocol research into a practical CLI with tooling for replay and fuzzing, enabling repeatable experimentation against live services.
+
+Technical Focus:
+- Microsoft Defender MAPS cloud reputation and sample submission workflow  
+- Microsoft Bond serialization (CompactBinaryV1) implementation and parsing  
+- Cloud verdict querying (file hash, file upload, URL reputation)  
+- Payload capture/decoding/replay for protocol reverse engineering  
+- Endpoint/field fuzzing for undocumented MAPS behaviors  
+- Offline PE and AuthentiCode signature analysis
+
+Use Cases:
+- Validate how Defender MAPS classifies a file (clean/malware/PUA/unknown) via direct cloud submission  
+- Query reputation for a SHA-256 without uploading the sample  
+- Test URL reputation decisions made by Defender cloud services  
+- Replay captured MAPS requests to reproduce verdicts and compare responses over time  
+- Fuzz MAPS request types/fields to discover hidden capabilities or server-side validation rules  
+- Perform quick local PE triage (imports/sections/signing) alongside cloud reputation checks
+
+Keywords:
+Microsoft Defender, MAPS, Microsoft Active Protection Service, cloud reputation, sample submission, SHA-256, URL reputation, Bond, CompactBinaryV1, protocol reverse engineering, payload replay, API fuzzing, PE analysis, AuthentiCode, dynamic signatures, SDN, DSS, Python, requests, malware analysis

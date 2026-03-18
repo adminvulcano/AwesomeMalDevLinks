@@ -44,3 +44,13 @@ https://www.r-tec.net/r-tec-blog-net-assembly-obfuscation-for-memory-scanner-eva
 https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
 https://github.com/passthehashbrowns/Being-A-Good-CLR-Host
 https://github.com/almounah/go-buena-clr
+https://github.com/byt3bl33d3r/OffensiveDLR
+https://github.com/boo-lang/boo/wiki/Scripting-with-the-Boo.Lang.Compiler-API
+https://github.com/boo-lang/boo/wiki/Invoke-Native-Methods-with-DllImport
+https://github.com/pwndizzle/c-sharp-memory-injection
+https://thewover.github.io/Dynamic-Invoke/
+https://thewover.github.io/Introducing-Donut/
+https://thewover.github.io/Cruller/
+https://thewover.github.io/Mixed-Assemblies/
+https://www.nttdata.com/global/en/-/media/nttdataglobal/1_files/services/cybersecurity/radar_magazine/2024/radar_supplement_july.pdf
+https://github.com/vari-sh/RedTeamGrimoire/tree/main/Obolos

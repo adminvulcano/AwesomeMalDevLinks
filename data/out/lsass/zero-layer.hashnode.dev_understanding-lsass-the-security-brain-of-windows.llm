@@ -1,0 +1,31 @@
+Title:
+Understanding LSASS — The Security Brain of Windows
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This article explains LSASS (Local Security Authority Subsystem Service) from an internal/architectural perspective rather than as a “credential dumping target.”  
+- It breaks down LSASS as a session-based authentication authority that manages multiple concurrent logon sessions, each with isolated identity and authentication state.  
+- The post covers how Kerberos and NTLM authentication material is maintained per-logon-session (LUID-scoped), including TGT/TGS tickets, session keys, and related metadata enabling single sign-on.  
+- It discusses why LSASS access is privileged (SYSTEM + SeDebugPrivilege) and how mitigations like LSA Protection / Protected Process Light (PPL) restrict memory access.  
+- A key focus is “in-memory Kerberos ticket transfer” and the conceptual basis of Pass-the-Ticket: reusing already-issued service tickets by moving them between sessions rather than re-authenticating.  
+- It’s useful for red teamers and defenders who need to understand where tickets live, how session scoping works, and why modern tradecraft shifts from raw LSASS dumping to stealthier LSA/Kerberos interface abuse and behavioral detection.
+
+Technical Focus:
+- LSASS architecture and logon session isolation (LUID scoping)
+- Kerberos ticket lifecycle in memory (TGT, TGS, session keys)
+- NTLM material within LSASS logon sessions
+- Access tokens and authentication state management
+- LSA Protection / Protected Process Light (PPL) and privilege requirements
+- Pass-the-Ticket concepts and detection implications
+
+Use Cases:
+- Map where Kerberos tickets reside and how they’re bound to logon sessions during investigations
+- Design detections for Pass-the-Ticket via anomalous ticket usage/service access patterns
+- Improve red team tradecraft by understanding session boundaries and ticket reuse mechanics
+- Evaluate the defensive value/limitations of PPL and LSASS access restrictions
+- Train teams on Windows authentication internals beyond “dump LSASS” narratives
+
+Keywords:
+LSASS, Local Security Authority, Windows internals, logon session, LUID, access token, Kerberos, NTLM, TGT, TGS, AS-REQ, AS-REP, TGS-REQ, TGS-REP, single sign-on, Pass-the-Ticket, SeDebugPrivilege, LSA Protection, Protected Process Light, Active Directory, KDC, EDR detection

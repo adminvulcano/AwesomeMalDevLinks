@@ -426,6 +426,38 @@ https://blog.deeb.ch/posts/maldev-myths/
 https://blog.deeb.ch/posts/how-edr-works/
 https://blog.deeb.ch/posts/supermega/
 https://blog.deeb.ch/posts/exe-injection/
+https://bishopfox.com/blog/rust-for-malware-development
+https://3xpl01tc0d3r.blogspot.com/2019/08/process-injection-part-i.html
+https://3xpl01tc0d3r.blogspot.com/2019/09/process-injection-part-ii.html
+https://3xpl01tc0d3r.blogspot.com/2019/10/process-injection-part-iii.html
+https://3xpl01tc0d3r.blogspot.com/2019/12/process-injection-part-v.html
+https://medium.com/@r3n_hat/parent-pid-spoofing-b0b17317168e
+https://github.com/mathisvickie/sign-expired
+https://web.archive.org/web/20190428161440/https://modexp.wordpress.com/2018/08/26/process-injection-ctray/
+https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way
+https://klezvirus.github.io/posts/Byoud/
+https://github.com/klezVirus/BYOUD
+https://github.com/memN0ps/doublepulsar-rs
+https://github.com/memN0ps/venom-rs
+https://memn0ps.github.io/process-hollowing/
+https://memn0ps.github.io/parallel-syscalls/
+https://cocomelonc.github.io/malware/2024/06/12/malware-trick-39.html
+https://github.com/iss4cf0ng/IronPE
+https://www.safebreach.com/blog/process-injection-using-windows-thread-pools/
+https://0xdbgman.github.io/posts/initial-access-the-art-of-getting-in/
+https://mohamed-fakroud.gitbook.io/red-teamings-dojo/c++/raii
+https://github.com/RWXstoned/LdrShuffle
+https://github.com/CheckPointSW/VectoredOverloading/tree/main
+https://blog.fndsec.net/2025/05/16/the-context-only-attack-surface/
+https://github.com/Friends-Security/RedirectThread
+https://3xpl01tc0d3r.blogspot.com/2019/12/process-injection-part-v.html
+https://github.com/whokilleddb/stacktracer
+https://github.com/0xROOTPLS/Fritter
+https://github.com/0xROOTPLS/Cicada
+https://github.com/0xROOTPLS/WaveGate
+https://github.com/0xROOTPLS/PEBwalker
+https://github.com/0xROOTPLS/Doppel
+https://github.com/kapla0011/KaplaStrike
 ```
 
 
@@ -455,6 +487,7 @@ https://tradecraftgarden.org/crystalpalace.html
 https://tradecraftgarden.org/docs.html
 https://tradecraftgarden.org/pagestream.html
 https://tradecraftgarden.org/stackcutting.html
+https://github.com/kapla0011/KaplaStrike
 ```
 
 
@@ -566,6 +599,12 @@ https://zacbrown.org/posts/2017-04-11-hidden-treasure-part-1.html
 https://zacbrown.org/posts/2017-05-09-hidden-treasure-part-2.html
 https://hackyboiz.github.io/2025/08/15/banda/Minifilter-Driver/en/
 https://www.elastic.co/security-labs/automating-goad-and-live-malware-labs
+https://github.com/BenjiTrapp/MostShittyAV
+https://github.com/HackingLZ/maps_scanner
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/process-events.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/driver-loading.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/create-remote-thread.md
 ```
 
 
@@ -642,6 +681,7 @@ https://blog.es3n1n.eu/posts/obfuscator-pt-1/
 https://tlsh.org/
 https://github.com/andrivet/ADVobfuscator
 https://blog.deeb.ch/posts/avred-update/
+https://github.com/Tylous/Mangle
 ```
 
 
@@ -698,6 +738,16 @@ https://www.r-tec.net/r-tec-blog-net-assembly-obfuscation-for-memory-scanner-eva
 https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
 https://github.com/passthehashbrowns/Being-A-Good-CLR-Host
 https://github.com/almounah/go-buena-clr
+https://github.com/byt3bl33d3r/OffensiveDLR
+https://github.com/boo-lang/boo/wiki/Scripting-with-the-Boo.Lang.Compiler-API
+https://github.com/boo-lang/boo/wiki/Invoke-Native-Methods-with-DllImport
+https://github.com/pwndizzle/c-sharp-memory-injection
+https://thewover.github.io/Dynamic-Invoke/
+https://thewover.github.io/Introducing-Donut/
+https://thewover.github.io/Cruller/
+https://thewover.github.io/Mixed-Assemblies/
+https://www.nttdata.com/global/en/-/media/nttdataglobal/1_files/services/cybersecurity/radar_magazine/2024/radar_supplement_july.pdf
+https://github.com/vari-sh/RedTeamGrimoire/tree/main/Obolos
 ```
 
 
@@ -786,6 +836,11 @@ https://www.infinitycurve.org/blog/introduction
 https://www.netspi.com/blog/technical-blog/network-pentesting/the-future-of-beacon-object-files/
 https://www.praetorian.com/blog/corrupting-the-hive-mind-persistence-through-forgotten-windows-internals/
 https://www.r-tec.net/r-tec-blog-windows-is-and-always-will-be-a-potatoland.html
+https://github.com/memN0ps/armory-rs
+https://binary-win.github.io/2026/02/10/Browser-Dumping-The_Core_TacticBehind_Most_Infostealers.html
+https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
+https://github.com/praetorian-inc/turnt
+https://systemweakness.com/lateral-movement-with-elastic-edr-and-asr-enabled-9c3e5dcf38b0
 ```
 
 
@@ -838,6 +893,7 @@ https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days
 ## LSASS
 
 * Dumping LSASS
+* Maybe other credential dumping
 * Not a complete list, just some entries
 
 ```
@@ -851,6 +907,11 @@ https://www.zerosalarium.com/2025/09/Dumping-LSASS-With-WER-On-Modern-Windows-11
 https://github.com/yo-yo-yo-jbo/dumping_lsass/
 https://github.com/Shac0x/Wonka
 https://github.com/dazzyddos/lsawhisper-bof
+https://zero-layer.hashnode.dev/understanding-lsass-the-security-brain-of-windows
+https://github.com/Meowmycks/LetMeowIn
+https://github.com/Meowmycks/catdumper
+https://specterops.io/blog/2026/03/04/offensive-dpapi-with-nemesis/
+https://ipurple.team/2026/03/17/credential-guard/
 ```
 
 ## COM n stuff

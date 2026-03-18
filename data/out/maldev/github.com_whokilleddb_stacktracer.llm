@@ -1,0 +1,24 @@
+Title:
+StackTracer
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+StackTracer is a Rust utility that prints the stack trace (stack frames) of a specified thread in a target Windows process. Its primary goal is to help operators identify “legit-looking” call stacks from real processes that can be replicated in payloads/shellcode to improve evasiveness (e.g., when a C2 framework allows specifying spoofed stack frames). The tool takes a PID and optionally a TID, then outputs a comma-separated list of module!function+offset frames for that thread. This is useful for red teamers and malware developers experimenting with call stack spoofing / thread stack manipulation to blend into normal execution patterns. It’s interesting because it operationalizes collection of realistic stack frame chains, which are often needed when testing EDR detections based on anomalous call stacks.
+
+Technical Focus:
+- Windows thread stack walking / stack trace collection
+- Per-process / per-thread inspection via PID/TID targeting
+- Call stack spoofing / “legitimate stack frame” replication for payloads
+- Symbol/module+offset resolution (module!function+0xoffset style output)
+- Rust-based Windows tooling (cross-compiling with x86_64-pc-windows-gnu)
+
+Use Cases:
+- Collect real call stacks from benign GUI/system processes to model “normal” execution chains
+- Build or tune spoofed call stacks for shellcode loaders / C2 implants that support stack frame specification
+- Validate whether a payload’s execution stack resembles common Windows API call paths
+- Support EDR evasion research focused on call-stack-based detections
+
+Keywords:
+Stack walking, stack trace, call stack spoofing, stack frames, Windows threads, PID, TID, process inspection, NtUserWaitMessage, USER32.dll, win32u.dll, KERNEL32.dll, shellcode evasion, C2 tradecraft, Rust, x86_64-pc-windows-gnu, module offset, function+offset, EDR telemetry

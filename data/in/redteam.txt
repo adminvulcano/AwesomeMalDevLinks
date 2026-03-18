@@ -70,3 +70,8 @@ https://www.infinitycurve.org/blog/introduction
 https://www.netspi.com/blog/technical-blog/network-pentesting/the-future-of-beacon-object-files/
 https://www.praetorian.com/blog/corrupting-the-hive-mind-persistence-through-forgotten-windows-internals/
 https://www.r-tec.net/r-tec-blog-windows-is-and-always-will-be-a-potatoland.html
+https://github.com/memN0ps/armory-rs
+https://binary-win.github.io/2026/02/10/Browser-Dumping-The_Core_TacticBehind_Most_Infostealers.html
+https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
+https://github.com/praetorian-inc/turnt
+https://systemweakness.com/lateral-movement-with-elastic-edr-and-asr-enabled-9c3e5dcf38b0

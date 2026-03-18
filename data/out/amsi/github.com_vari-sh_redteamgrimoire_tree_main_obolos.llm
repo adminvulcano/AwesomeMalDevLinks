@@ -1,0 +1,26 @@
+Title:
+Obolos — Windows Direct Syscall Evasion Engine (Dynamic SSN + Synthetic Stack + Polymorphic Stubs)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Obolos is a standalone Windows evasion “engine” intended to be embedded into other red team tooling to execute direct syscalls while reducing common EDR visibility points. It focuses on bypassing user-mode API hooks by dynamically resolving System Service Numbers (SSNs) at runtime via PEB/export parsing and neighboring-byte inspection when hooks (e.g., JMP trampolines) are detected. It also implements synthetic call stack construction by parsing the Exception Directory (.pdata) of legitimate system functions to build believable stack frames for stack-walk based detections. To resist static signatures, it generates many randomized syscall assembly stubs per build (junk instructions/NOP padding) via a Python generator. It’s primarily useful for red team operators, implant/tool developers, and security researchers experimenting with syscall-based evasion and stack-walk deception.
+
+Technical Focus:
+- Direct syscalls on Windows (ntdll/SSN-based invocation)
+- Dynamic SSN resolution via PEB + export directory parsing
+- User-mode hook detection/bypass (JMP trampoline handling)
+- Synthetic call stack / stack spoofing using .pdata unwind metadata
+- Polymorphic syscall stub generation (build-time randomization)
+- x64 assembly + C integration (ml64/cl toolchain)
+
+Use Cases:
+- Integrate into custom loaders/implants to reduce user-mode EDR hook visibility
+- Research and prototype stack-walk evasion via unwind-aware synthetic frames
+- Generate per-build polymorphic syscall stubs to hinder signature-based detections
+- Build a reusable syscall abstraction layer for offensive Windows tooling
+- Test defensive detections around syscall patterns and anomalous call stacks
+
+Keywords:
+Windows, EDR evasion, direct syscall, ntdll, SSN, System Service Number, PEB parsing, export directory, user-mode hooks, JMP trampoline, syscall stubs, polymorphic code, junk instructions, stack spoofing, synthetic call stack, stack walking, .pdata, unwind info, ml64, cl.exe

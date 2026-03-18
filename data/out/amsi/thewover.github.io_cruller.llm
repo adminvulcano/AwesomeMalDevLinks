@@ -1,0 +1,27 @@
+Title:
+Donut v1.0 “Cruller” – ETW Bypasses, Module Overloading, and Much More
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post announces and explains Donut v1.0 (“Cruller”), a shellcode generator that turns native PEs, .NET assemblies, and scripts into positionable shellcode with an embedded loader. The release adds a modular ETW bypass system (defaulting to patching `ntdll!EtwEventWrite` to return) alongside existing AMSI/WLDP bypass modules. A major new feature is “Module Overloading,” which maps a legitimate file-backed image via `NtCreateSection`/`NtMapViewOfSection` and overwrites it with the payload so execution appears to originate from disk-backed memory, reducing detections that flag private/RWX or non-file-backed code. It also introduces configurable native PE header handling (mutate vs preserve) to maintain compatibility with payloads needing resources, and can spoof decoy headers to evade tools like pe-sieve that compare in-memory vs on-disk headers. Additional improvements include better handling of missing relocation info, offset-based execution for chaining with hollowing/infection workflows, Docker-based builds, and loader/output enhancements (C#/Python/UUID formats). Useful primarily for red teams and offensive tool developers, with defensive value for understanding modern injection evasion patterns and what to detect.
+
+Technical Focus:
+- ETW bypass via patching `EtwEventWrite` and modular bypass framework
+- Module Overloading (file-backed manual mapping using section objects)
+- PE header mutation/preservation and decoy header spoofing vs memory scanners (e.g., pe-sieve)
+- Native PE relocation handling (including absent relocation data)
+- Loader behavior changes (custom `LoadLibrary`/`GetProcAddress`, exit/block options)
+- Alternate shellcode encodings/output generators (C#, Python, UUID strings)
+
+Use Cases:
+- Generate shellcode loaders for native PE, .NET, and script payloads
+- Reduce telemetry/detections by disabling ETW event emission in-process
+- Execute payloads from file-backed memory to evade “private memory execution” heuristics
+- Improve stealth against PE replacement scanners by mutating headers to match decoy modules
+- Support process hollowing/file infector workflows via base+offset execution handoff
+- Cross-platform shellcode generation using the provided Docker build environment
+
+Keywords:
+Donut, shellcode generator, ETW, Event Tracing for Windows, EtwEventWrite, ntdll.dll, AMSI bypass, WLDP bypass, Module Overloading, NtCreateSection, NtMapViewOfSection, section objects, manual mapping, PE headers, header mutation, PE resources, relocations, process injection evasion, pe-sieve, Cobalt Strike, UUID shellcode encoding, LoadLibrary, GetProcAddress, Dockerfile

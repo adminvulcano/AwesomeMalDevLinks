@@ -1,0 +1,28 @@
+Title:
+Invoke Native Methods with DllImport (Boo Wiki)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This page shows how to call unmanaged/native functions from Boo code using .NET P/Invoke via `System.Runtime.InteropServices.DllImport`.  
+- It provides small examples importing functions from `user32.dll` (e.g., `MessageBeep`, `MessageBox`) and `msvcrt.dll` (e.g., `puts`, `_flushall`).  
+- It demonstrates basic DllImport usage, including specifying an `EntryPoint` to map a Boo function name to a different exported symbol name.  
+- The page briefly notes a more cross-platform alternative for beeping (`Microsoft.VisualBasic.Interaction.Beep`) that works on both .NET and Mono.  
+- Useful for developers, red teamers, and tool authors who need direct access to Win32/CRT APIs from Boo without writing a separate native wrapper.
+
+Technical Focus:
+- .NET P/Invoke (`DllImportAttribute`)
+- Interop with unmanaged DLL exports (Win32, MSVCRT)
+- Function signature mapping and marshaling basics (strings/ints)
+- `EntryPoint` name binding for imported functions
+- Boo language interop with .NET/Mono runtime
+
+Use Cases:
+- Calling Win32 UI functions (MessageBox/MessageBeep) from Boo utilities
+- Invoking C runtime functions for quick console output/testing
+- Building Boo-based tooling that needs direct Windows API access
+- Prototyping interop signatures before implementing in other .NET languages
+
+Keywords:
+Boo, .NET, Mono, P/Invoke, DllImport, System.Runtime.InteropServices, user32.dll, msvcrt.dll, MessageBeep, MessageBox, puts, _flushall, EntryPoint, unmanaged code, native API, interop, marshaling

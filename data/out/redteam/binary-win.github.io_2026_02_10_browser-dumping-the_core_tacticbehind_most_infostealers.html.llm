@@ -1,0 +1,32 @@
+Title:
+Browser Dumping: The Core Tactic Behind Most Infostealers (Chrome App-Bound Encryption / ABE on Windows)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how infostealers “dump” Chromium-based browser secrets on Windows by decrypting locally stored cookies/passwords, and how Chrome’s historical DPAPI-based protection enabled same-user malware to trivially decrypt data.  
+- It then breaks down Google Chrome’s newer App-Bound Encryption (ABE, announced around Chrome 127) which gates decryption behind an Elevation Service COM interface that validates the caller’s “app identity” (initially via path validation).  
+- The article details the ABE key hierarchy: an `app_bound_key` (32-byte AES-256) stored in `Local State` as `os_crypt.app_bound_encrypted_key` with an `APPB` prefix, wrapped with layered DPAPI (SYSTEM then user) plus embedded validation data.  
+- It documents the blob formats for legacy `v10` (DPAPI) and newer `v20` (AES-256-GCM) encrypted values, including cookie plaintext quirks (cookie value offset after 32 bytes).  
+- Alternative decryption vectors are discussed, including admin-level DPAPI unwrapping and the acknowledged bypass of code injection into Chrome to call the IPC/COM interface legitimately.  
+- It also briefly covers Device Bound Session Credentials (DBSC) as a complementary defense that aims to make stolen cookies unusable off-device.  
+- Useful for red teamers, malware analysts, and defenders reverse-engineering infostealers or building detections around browser secret access and ABE/IElevator usage.
+
+Technical Focus:
+- Windows DPAPI (CryptProtectData / CryptUnprotectData) and user vs SYSTEM context
+- Chrome App-Bound Encryption (ABE) and Elevation Service COM (IElevator / IElevator2Chrome)
+- Caller validation via executable path normalization (ProtectionLevel path validation)
+- Chromium secret storage artifacts (Local State JSON, SQLite Login Data/Cookies DB)
+- AES-256-GCM encrypted blob formats (v10/v11 vs v20, IV/Tag layout)
+- Code injection as an ABE bypass vector; admin/offline decryption considerations
+
+Use Cases:
+- Reverse engineer infostealer browser credential/cookie theft workflows
+- Build PoCs or internal tooling to recover Chrome/Edge secrets for IR or testing
+- Create detections for suspicious COM usage of Chrome Elevation Service / DPAPI patterns
+- Validate security impact of running malware in same-user context vs elevated/admin context
+- Assess how DBSC changes the value of stolen cookies for session hijacking
+
+Keywords:
+Chrome, Chromium, Microsoft Edge, browser dumping, infostealer, DPAPI, CryptUnprotectData, CryptProtectData, Local State, os_crypt.app_bound_encrypted_key, APPB, App-Bound Encryption, ABE, IElevator, COM service, Elevation Service, path validation, OSCrypt, AES-256-GCM, v10, v20, SQLite Login Data, Cookies database, code injection, SYSTEM context, user context, Device Bound Session Credentials, DBSC, session cookie theft

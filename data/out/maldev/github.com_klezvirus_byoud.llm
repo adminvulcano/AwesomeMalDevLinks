@@ -1,0 +1,26 @@
+Title:
+BYOUD — Bring Your Own Unwind Data
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+BYOUD is a Windows x64 stack spoofing framework that hides or alters call-chain visibility by manipulating unwind metadata rather than only crafting fake return addresses. It targets how debuggers and EDRs reconstruct stack traces by abusing PE exception handling structures (e.g., `.pdata`, `RUNTIME_FUNCTION`, `UNWIND_INFO`) and dynamic function tables. The repo implements multiple techniques ranging from in-place `UNWIND_INFO` tampering to injecting/hijacking `RUNTIME_FUNCTION` entries and registering JIT unwind info via `RtlAddFunctionTable`, including variants that account for visibility differences in tools like WinDbg and SystemInformer. It includes `byoud.dll` (core framework with `ShieldedExecution` and an assembly `CallGate` stub) and `udinject.exe` (a harness to test techniques and validate unwind/stack-trace behavior). It’s primarily useful for red teams, offensive security researchers, and malware developers studying call stack evasion and telemetry blind spots. It’s interesting because it flips the usual stack spoofing approach by attacking the unwind/exception metadata that many stack-walking implementations trust.
+
+Technical Focus:
+- Windows x64 unwind metadata (`UNWIND_INFO`) manipulation
+- PE exception directory / `.pdata` and `RUNTIME_FUNCTION` abuse
+- Dynamic function tables via `RtlAddFunctionTable`
+- Stack trace evasion against debuggers/EDRs
+- `LdrpInvertedFunctionTable` manipulation (WinDbg-oriented variant)
+- `/GS` stack cookies interaction and constraints
+
+Use Cases:
+- Evaluating EDR/user-mode stack-walking robustness against unwind-data tampering
+- Building PoCs for stealthy shellcode execution with obscured call chains
+- Researching debugger vs. EDR differences in unwind resolution (WinDbg/SystemInformer)
+- Developing and testing new stack spoofing variants based on exception metadata
+- Training/validation tool for understanding Windows x64 unwinding behavior
+
+Keywords:
+Windows x64, stack spoofing, stack walking, unwind data, UNWIND_INFO, RUNTIME_FUNCTION, .pdata, PE exception directory, RtlAddFunctionTable, LdrpInvertedFunctionTable, VirtualAlloc, shellcode, call chain hiding, EDR evasion, WinDbg, SystemInformer, /GS, stack cookies, exception handling, user-mode telemetry

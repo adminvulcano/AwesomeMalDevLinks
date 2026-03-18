@@ -1,0 +1,152 @@
+# https://thewover.github.io/Cruller/
+
+<!DOCTYPE html><html>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Donut v1.0 "Cruller" - ETW Bypasses, Module Overloading, and Much More</h1>
+
+  <div class="entry">
+    <p><em>TLDR: Version v1.0 “Cruller” of Donut has been released, including Module Overloading for native PEs, ETW bypasses, a Dockerfile, support for binaries without relocation information, and many other minor improvements and bugfixes.</em></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><img src="https://thewover.github.io/images/Cruller/French-Cruller-Donut.jpg" alt="_config.yml" title="A Cruller"></p>
+
+<p><a href="https://github.com/TheWover/donut" title="Donut">Donut</a> is a shellcode generation tool created to generate shellcode payloads from a variety of payload types including native PEs, .NET Assemblies, and scripts (JScript/VBScript).</p>
+
+<p>Today, we are (finally) releasing version 1.0. This blog post details the changes made and discusses their potential use.</p>
+
+<h1 id="release-notes">Release Notes</h1>
+
+<h2 id="etw-bypasses">ETW Bypasses</h2>
+
+<p>The previous release of Donut included a modular system for bypassing AMSI and WLDP. Version 1.0 adds a system for bypassing Event Tracing for Windows (ETW). The default bypass is derived from <a href="https://blog.xpnsec.com/hiding-your-dotnet-etw/">research</a> by XPN (Adam Chester). It patches the <code class="language-plaintext highlighter-rouge">ntdll.dll!EtwEventWrite</code> function to simply return, preventing it from writing any ETW events.</p>
+
+<p>That bypass was published a while ago and others have since been published. In the same way as AMSI, you may add your own modular bypasses for ETW if you prefer to use a different technique. You may refer to the documentation and previous release blog post for details on that system.</p>
+
+<h2 id="module-overloading">Module Overloading</h2>
+
+<p>Module Overloading is a technique where a native PE executable is manually mapped into file-backed memory by overwriting a legitimate module on disk. This bypasses certain process injection detections that look for threads executing code in memory that is not mapped by a file on disk. The presumption is that, if code is being executed that does not originate from a file on disk, then it must have been dynamically allocated and that is suspicious. The detection does not work for processes running managed applications such as JIT-compiled languages like C#, Powershell, or Python. However, it is a fair detection for many native processes.</p>
+
+<p>To accomplish this, we map a decoy module via <code class="language-plaintext highlighter-rouge">NtCreateSection</code> &amp; <code class="language-plaintext highlighter-rouge">NtMapViewOfSection</code>, specifying a file handle and that the section should be mapped as an image. This maps a legitimate executable module into memory, which we then overwrite. We use the space in the memory section to map our payload PE file. At that point, our payload is executing from memory backed by a file on disk.</p>
+
+<p>To use Module Overloading, specify the path of a decoy file using the <code class="language-plaintext highlighter-rouge">-j</code> argument. You must specify a decoy file with a size greater than or equal to your payload. As an example, here we run mimikatz from memory backed by <code class="language-plaintext highlighter-rouge">dgbeng.dll</code>.</p>
+
+<p><img src="https://thewover.github.io/images/Cruller/mimikatz_overloaded.png" alt="_config.yml" title="Technique #332,770 for executing mimikatz"></p>
+
+<h2 id="native-pe-headers">Native PE Headers</h2>
+
+<p>In previous versions, Donut wiped all PE headers for native PE payloads. This provided some OpSec advantages, but broke some payloads that expected those PE headers to be there. Of particular note were payloads that contained PE Resources.</p>
+
+<p>Donut now has two modes: By default it will mutate headers. But it may also be directed to preserve PE headers. This is necessary for any payload that references its embedded PE resources to function properly.</p>
+
+<p>When header mutation is allowed and Module Overloading is being used, Donut will overwrite the headers of the payload with the headers of the decoy file on disk. This deters memory scanners (such as <code class="language-plaintext highlighter-rouge">pe-sieve</code>) that compares the headers of files in memory with details of the file on disk that backs that memory.</p>
+
+<p>To demonstrate this, let’s use donut with Module Overloading enabled but header mutation turned off. As you can see, pe-sieve shows that one of the modules has been replaced. This is a detection created for Module Overloading.</p>
+
+<p><img src="https://thewover.github.io/images/Cruller/ps_sieve_no_mutate.png" alt="_config.yml" title="PE Sieve without that detection"></p>
+
+<p>However, now we run it again with header mutation enabled. Donut will, after mapping the payload PE into the decoy file’s memory, overwrite the payload’s PE headers with those of the decoy file. Now when pe-sieve compares the headers of the file in memory to its headers in the copy on disk, it will find no difference and not state that the module was replaced.</p>
+
+<p><img src="https://thewover.github.io/images/Cruller/ps_sieve_mutated.png" alt="_config.yml" title="PE Sieve with detection"></p>
+
+<h2 id="relocation-information">Relocation Information</h2>
+
+<p>Donut now appropriates handles relocation information of native PE payloads, or lack thereof. Previously, Donut assumed that payloads possessed relocation information. This will assist in loading some common red team tools such as Cobalt Strike.</p>
+
+<h2 id="offset-execution">Offset Execution</h2>
+
+<p>The previous version of Donut included an option <code class="language-plaintext highlighter-rouge">-y</code> that allowed the user to specify an absolute address. When the loader finished it would create a new thread at that address.</p>
+
+<p>Based on user feedback, this has been modified to assume that the value provided is an offset of the base address of the main module (executable binary) of the host process. This will support third-party tools such as file infectors that wish to resume execution in the infected file after the donut payload is executed. It also may be used by process hollowers that wish to execute code in the host binary after donut executes.</p>
+
+<h2 id="docker">Docker</h2>
+
+<p>Donut now has a Dockerfile (thanks @tijme). Using this docker image will make it easier to generate Donut shellcode when you are running on a platform (MacOS or less common *nix/BSD variants) that may not support all of the libraries or mechanisms that Donut uses. The provided Docker image uses Ubuntu 22.04 LTS and gcc, so it is limited to features available on those platforms.</p>
+
+<h2 id="indefinite-blocking-option">Indefinite Blocking Option</h2>
+
+<p>There is now a third Exit Option. The Exit Options determine what donut does after executing the payload. Previously there were two options: 1) Exit the thread. 2) Exit the process. There is now 3) Do not exit or cleanup and block indefinitely.</p>
+
+<p>This option supports some use cases where the native PE payload that donut is executing immediately creates a new thread. An example would be a C2 implant that is being executed from DllMain and then creates a new thread to initialize the implant. In such cases, the function that donut is calling may immediately return, causing donut to believe that the payload is finished and may be cleaned up in memory. This will cause problems when the payload is actually still running and does not want to be cleaned up; such as when a C2 implant intends to continue executing indefinitely.</p>
+
+<p>This third option will cause donut to not cleanup the payload in memory and then simply sleep its own thread forever. In the case described above, the C2 implant would then be able to continue running indefinitely without being distracted by a donut.</p>
+
+<h3 id="loader-improvements">Loader Improvements</h3>
+
+<p><code class="language-plaintext highlighter-rouge">LoadLibrary</code> and <code class="language-plaintext highlighter-rouge">GetProcAddress</code> have been replaced with custom functions that will only call the Win32 API calls as fallbacks when absolutely necessary. This will significantly reduce the amount that those APIs are called but will not necessarily eliminate them entirely.</p>
+
+<h3 id="output-generators">Output Generators</h3>
+
+<p>There are new output generators for C# and Python, as well as one for UUID Strings as based on this <a href="https://research.nccgroup.com/2021/01/23/rift-analysing-a-lazarus-shellcode-execution-method/">research</a>.</p>
+
+<h3 id="miscellaneous-changes">Miscellaneous Changes</h3>
+
+<ul>
+  <li>Native PE Section permissions are more accurate</li>
+  <li>Fixed some issues with the MingW makefile (#96)</li>
+  <li>Fixed and improved all makefiles</li>
+  <li>Added an X86 MSVC makefile (Makefile_x86.msvc) for ease of use</li>
+  <li>The Python module has been updated to the new version and some minor fixes and improvments have been made</li>
+  <li>Added an inject_local.exe that runs shellcode in the current process for testing purposes</li>
+  <li>NTHeaders-&gt;OptionalHeader-&gt;ImageBase is now updated correctly</li>
+  <li>Sections’ PhysicalAddress is now updated correctly</li>
+  <li>Much more detailed debugging output</li>
+  <li>Better wiping of data in memory to evade scanners</li>
+  <li>Improved error handling</li>
+  <li>Default AppDomain is now used when entropy is disabled</li>
+  <li>Updated reference to go-donut</li>
+  <li>Stack pointer is now correctly aligned</li>
+  <li>Support for HTTP Basic Authentication when using remote modules</li>
+</ul>
+
+<h1 id="credits">Credits</h1>
+
+<p>I would like to thank the following people who contributed code or feedback or helped with testing for this release:</p>
+
+<ul>
+  <li>Kyle Willmon</li>
+  <li>S4ntiagoP</li>
+  <li>Awgh</li>
+  <li>tijme</li>
+  <li>physics-sec</li>
+  <li>Dewara</li>
+  <li>phra</li>
+  <li>checkymander</li>
+  <li>jarilaos</li>
+  <li>m4rvxpn</li>
+  <li>wumb0</li>
+  <li>loadeddypper</li>
+  <li>Checkymander</li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on December 13, 2022
+  </div>
+
+  
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        
+      </div>
+    </div>
+
+    
+
+  
+
+</body></html>

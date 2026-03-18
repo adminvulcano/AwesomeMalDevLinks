@@ -1,0 +1,28 @@
+Title:
+Process Injection Part II
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post continues a series on Windows process injection, focusing on practical implementation details beyond basic CreateRemoteThread-style injection.  
+- It explains how to execute code in a remote process by allocating memory, writing a payload, and triggering execution using alternative thread creation/execution primitives.  
+- The write-up emphasizes Windows internals involved in remote memory operations and thread context manipulation, highlighting common pitfalls (permissions, architecture mismatch, memory protections).  
+- It’s primarily useful for red teamers, pentesters, and malware developers building or analyzing injection tradecraft, and for blue teamers wanting to understand what telemetry these steps generate.  
+- It’s interesting because it breaks injection down into discrete API-level stages that map cleanly to detection opportunities (handle opens, RWX transitions, remote thread start).
+
+Technical Focus:
+- OpenProcess / process handle access rights
+- VirtualAllocEx / VirtualProtectEx remote memory allocation & protection changes
+- WriteProcessMemory payload staging
+- Remote thread execution primitives (e.g., CreateRemoteThread / NtCreateThreadEx or equivalents)
+- Thread context / execution flow control (where applicable)
+
+Use Cases:
+- Implementing a basic-to-intermediate Windows process injection PoC
+- Mapping injection steps to EDR telemetry and detection rules
+- Testing defensive controls around remote memory allocation and remote thread creation
+- Training material for understanding Windows injection tradecraft
+
+Keywords:
+process injection, Windows internals, OpenProcess, VirtualAllocEx, WriteProcessMemory, VirtualProtectEx, CreateRemoteThread, NtCreateThreadEx, remote thread, code execution, memory permissions, RWX, shellcode, payload staging, handle rights, EDR telemetry, detection engineering, userland injection

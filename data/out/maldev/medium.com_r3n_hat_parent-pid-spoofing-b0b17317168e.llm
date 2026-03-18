@@ -1,0 +1,25 @@
+Title:
+Parent PID Spoofing
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains Parent PID (PPID) spoofing on Windows as an evasion technique that lets an attacker create a process while specifying a different parent process to alter the process tree. It focuses on using `CreateProcess` with `STARTUPINFOEX` and process thread attributes (available since Windows Vista) to set `PROC_THREAD_ATTRIBUTE_PARENT_PROCESS`. The author integrated PPID spoofing into an existing C# process-injection project that already supports “vanilla” injection and DLL injection, and added process hollowing as well. A demo shows spawning a benign child (e.g., `notepad.exe`) under a chosen parent (e.g., `explorer.exe`) and then injecting MSFVenom-generated shellcode to obtain a Meterpreter session. It’s useful for red teamers and malware developers researching Windows process creation/injection tradecraft, and for defenders understanding what telemetry to monitor. The post also briefly notes detection ideas around extended startup info usage and suspicious child process behavior (e.g., system binaries making network connections).
+
+Technical Focus:
+- PPID spoofing via `STARTUPINFOEX` and `PROC_THREAD_ATTRIBUTE_PARENT_PROCESS`
+- Windows process creation attributes (`InitializeProcThreadAttributeList`, `UpdateProcThreadAttribute`)
+- Handle operations (`OpenProcess`, `DuplicateHandle`)
+- Process injection workflows (shellcode injection, DLL injection, process hollowing)
+- Basic detection/telemetry considerations for EDR/AV
+
+Use Cases:
+- Create “legitimate-looking” process trees during payload execution
+- Combine PPID spoofing with shellcode/DLL injection to reduce suspicion
+- Red team tradecraft development in C# using Win32 APIs
+- Defensive testing: build detections for suspicious `CreateProcess` + attribute updates
+- Lab demonstrations of process lineage manipulation and post-exploitation staging
+
+Keywords:
+Parent PID spoofing, PPID spoofing, STARTUPINFOEX, EXTENDED_STARTUPINFO_PRESENT, PROC_THREAD_ATTRIBUTE_PARENT_PROCESS, CreateProcess, UpdateProcThreadAttribute, InitializeProcThreadAttributeList, OpenProcess, DuplicateHandle, Win32 API, C#, process injection, process hollowing, DLL injection, shellcode, MSFVenom, Meterpreter, EDR evasion, process tree spoofing

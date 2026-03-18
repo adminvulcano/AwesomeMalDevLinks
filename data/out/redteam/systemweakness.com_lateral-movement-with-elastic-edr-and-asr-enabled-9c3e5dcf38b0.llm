@@ -1,0 +1,30 @@
+Title:
+Bypassing Elastic EDR to Perform Lateral Movement
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through a lab lateral-movement chain in a Windows environment monitored by Elastic EDR, with ASR enabled on the target workstation.  
+- The author focuses on evading specific Elastic detection rules triggered by SMB tool transfer, remote execution from file shares, WMI-based lateral movement, and service-based execution spawning system shells.  
+- Techniques include altering PE “magic bytes”/loader characteristics via a Cobalt Strike malleable profile, using non-standard file extensions (e.g., staging as `.png`, executing as `.scr`), and switching from WMI execution to service-based remote command execution using SCShell (BOF).  
+- The chain also leverages an Elastic rule exclusion by placing the payload in an excluded directory path (e.g., under `C:\ProgramData\Microsoft\Search`) to reduce detection.  
+- It’s primarily useful for red teamers/pentesters testing Elastic’s behavioral detections and for blue teamers validating rule coverage and risky exclusions.  
+- The interesting part is the practical, rule-driven evasion workflow: reading Elastic rule logic and iterating execution methods until detections stop firing.
+
+Technical Focus:
+- Elastic Security detection rules and query-based evasion
+- SMB-based payload staging and file-share execution detections
+- Cobalt Strike malleable C2 profile / reflective loader modifications
+- Windows services for remote execution (SCShell / BOF usage)
+- Extension and header-byte (MZ) based detection bypass
+- ASR/EDR operational constraints during lateral movement
+
+Use Cases:
+- Validate and tune Elastic EDR detections for lateral movement
+- Red team tradecraft for moving laterally under Elastic agent monitoring
+- Identify dangerous detection exclusions (path-based allowlists) in enterprise rules
+- Build test cases for SOC detections around SMB transfer, WMI, and service execution
+
+Keywords:
+Elastic EDR, Elastic Security, lateral movement, SMB share, file transfer detection, MZ header bytes, PE magic bytes, Cobalt Strike, malleable C2 profile, reflective loader, BOF, SCShell, Windows services, sc.exe, WMI, SharpWMI, ASR, cmd.exe detection, msiexec.exe, System.Management.Automation.dll

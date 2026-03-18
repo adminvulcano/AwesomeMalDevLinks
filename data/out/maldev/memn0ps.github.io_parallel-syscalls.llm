@@ -1,0 +1,26 @@
+Title:
+Parallel Syscalls (EDR Parallel-asis through Analysis)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains the “Parallel Syscalls / Parallel-asis” technique for obtaining reliable Windows syscall numbers at runtime without trusting potentially userland-hooked NTDLL stubs. It leverages Windows 10’s parallel DLL loading detour-detection logic, specifically the `ntdll!LdrpThunkSignature` bytes used to validate critical loader syscalls, to recover syscall IDs for `NtOpenFile`, `NtCreateSection`, and `NtMapViewOfSection`. With those syscalls, an operator can map a fresh on-disk copy of `ntdll.dll` into memory, parse its Export Address Table, and extract additional syscall numbers dynamically. The article provides foundational background on Windows rings, syscall flow (KERNEL32/KERNELBASE → NTDLL → ntoskrnl/SSDT), common EDR hooking methods, and PE/PEB parsing needed to implement the approach. It’s primarily useful for red teamers, malware developers, and offensive tool authors building syscall-based execution paths to reduce exposure to user-mode API hooks. It’s interesting because it repurposes a Windows loader anti-detour mechanism as a syscall-number oracle and a stepping stone to unhooked NTDLL mapping.
+
+Technical Focus:
+- Windows 10 loader internals (parallel DLL loading, `LdrInitializeThunk`, `LdrpEnableParallelLoading`, `LdrpDetectDetour`)
+- Syscall stub structure and runtime syscall number extraction
+- Mapping a clean `ntdll.dll` via `NtOpenFile` + `NtCreateSection` + `NtMapViewOfSection`
+- PEB/TEB traversal to locate loaded modules without `GetModuleHandle`
+- PE parsing (DOS/NT headers, DataDirectory, Export Address Table)
+- Userland hooking and unhooking concepts (inline hooks, IAT hooks, Detours)
+
+Use Cases:
+- Build direct/indirect syscall frameworks that avoid hooked Win32/NTDLL APIs
+- Load an unhooked NTDLL copy in-memory to resolve clean syscall stubs/exports
+- Implement stealthier process injection or memory operations using syscalls
+- Research/detect EDR hook strategies by understanding loader detour checks
+- Port syscall-resolution logic into Rust/C#/Nim offensive tooling
+
+Keywords:
+Windows syscalls, Parallel-asis, Parallel Syscalls, EDR evasion, userland hooks, NTDLL, LdrpThunkSignature, LdrpDetectDetour, LdrInitializeThunk, NtOpenFile, NtCreateSection, NtMapViewOfSection, ZwMapViewOfSection, SSDT, ntoskrnl.exe, PEB, TEB, PE parsing, Export Address Table, inline hooking, IAT hooking, Microsoft Detours, WinDbg, IDA, Rust offensive security

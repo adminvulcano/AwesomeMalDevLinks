@@ -1,0 +1,26 @@
+Title:
+VectoredOverloading (Vectored Overloading PE Injection Technique)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+VectoredOverloading is a C++ proof-of-concept implementing “Vectored Overloading,” a local PE injection technique first seen in the KidKadi malware. It abuses Hardware Breakpoints (HWBP) and Vectored Exception Handling (VEH) to interfere with the Windows loader’s DLL mapping flow and transparently substitute a malicious PE image in place of a legitimate DLL’s section object. The technique creates a `SEC_IMAGE` mapping from a real DLL, overlays it with a payload PE, and then hooks loader syscalls by setting HWBPs on `NtOpenSection` and `NtMapViewOfSection`. When those syscalls are hit, a VEH handler skips/emulates the syscalls and rewrites OUT parameters so the loader believes it is mapping the legitimate DLL while actually mapping the payload. The Windows loader then performs normal image processing (imports, relocations, etc.) and eventually transfers execution to the payload entrypoint. This is mainly useful for red teamers and malware researchers studying loader-abuse tradecraft and for blue teams developing detections around VEH/HWBP-based syscall manipulation.
+
+Technical Focus:
+- Vectored Exception Handling (VEH) abuse
+- Hardware breakpoints (debug registers) for control-flow interception
+- Windows loader internals and image mapping (`SEC_IMAGE`)
+- Syscall emulation/parameter spoofing for `NtOpenSection` and `NtMapViewOfSection`
+- PE header manipulation (DLL characteristics, entrypoint changes)
+- Section object/view substitution during DLL load
+
+Use Cases:
+- Implementing/understanding stealthy local PE loading via loader-assisted execution
+- Researching malware techniques that avoid classic remote-thread injection patterns
+- Building detections for anomalous VEH registration and debug-register usage
+- Reproducing KidKadi-style loader manipulation in a controlled lab
+- Developing EDR telemetry/heuristics around syscall skipping and OUT-parameter tampering
+
+Keywords:
+Vectored Overloading, KidKadi, PE injection, local injection, Windows loader, VEH, VectoredExceptionHandler, hardware breakpoints, debug registers, DR0-DR7, NtOpenSection, NtMapViewOfSection, SEC_IMAGE, section object, MapViewOfSection, syscall emulation, PE header manipulation, DLL characteristics, import resolution, image mapping

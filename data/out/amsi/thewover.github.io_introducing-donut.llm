@@ -1,0 +1,25 @@
+Title:
+Introducing Donut – Injecting .NET Assemblies as Shellcode
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post introduces Donut, a shellcode generator that converts arbitrary .NET assemblies (EXE/DLL) into position-independent x86/x64 shellcode for injection into local or remote Windows processes. It addresses limitations of common in-memory .NET execution approaches (e.g., `Assembly.Load` being in-process only, and Cobalt Strike `execute-assembly` being predictable and constrained) by enabling flexible process injection and “migrate”-style tradecraft. Donut bootstraps the CLR inside the target using the Unmanaged CLR Hosting API, creates a new AppDomain, loads the assembly from memory or stages it from a URL, and invokes a specified method with parameters. Payload modules can be embedded (stageless) or downloaded (staged), are encrypted (Chaskey + random key), and the decrypted buffer is freed to reduce memory-scanning exposure. The article also discusses operational considerations (prefer injecting into already-managed processes) and provides a basic detection idea: alert when unmanaged processes load CLR-related DLLs (e.g., `mscoree.dll`, `mscorlib.dll`). Useful for red teams/pentesters building in-memory .NET execution and for defenders modeling/detecting CLR injection behavior.
+
+Technical Focus:
+- Unmanaged CLR Hosting API (CLR bootstrap/hosting from native code)
+- .NET assembly in-memory loading and AppDomain isolation/unloading strategy
+- Position-independent shellcode generation (x86/x64) for process injection
+- Staged vs stageless payload delivery; encrypted module packaging (Chaskey)
+- Detection concept: module-load telemetry (WMI/Sysmon/ETW) for CLR injection
+
+Use Cases:
+- Generate shellcode to execute .NET post-exploitation tooling inside arbitrary processes
+- Add “migrate”/process-hopping capability to C2 agents using .NET modules
+- Execute large or complex .NET assemblies in-memory without dropping to disk
+- Red-team emulation of CLR injection tradecraft and defender validation of detections
+- Build/modify custom CLR-loader shellcode by editing and recompiling `payload.c`
+
+Keywords:
+Donut, CLR injection, .NET assembly, shellcode, position-independent code, Unmanaged CLR Hosting API, AppDomain, Assembly.Load, execute-assembly, process injection, remote process injection, in-memory execution, staging, stageless payload, Chaskey, mscoree.dll, mscorlib.dll, VirtualFree, WMI Win32_ModuleLoadTrace, Sysmon ImageLoad, ETW

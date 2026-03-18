@@ -1,0 +1,28 @@
+Title:
+Process Injection – Part I
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post introduces Windows process injection fundamentals and frames injection as a way to execute code in the context of another process.  
+- It focuses on the core building blocks needed to inject shellcode/DLLs, typically involving obtaining a handle to a target process, allocating memory inside it, writing payload bytes, and triggering execution.  
+- The discussion centers on common Win32/NT APIs used for classic “remote thread” style injection and the permissions/privileges required to interact with other processes.  
+- It’s primarily useful for red teamers, pentesters, and malware developers learning baseline injection tradecraft, and for blue teamers who need to understand what to hunt for.  
+- It’s interesting as a foundational primer that sets up later, more advanced injection variants and the detection surface they create (API sequences, access rights, cross-process memory operations).
+
+Technical Focus:
+- OpenProcess and process access rights (e.g., PROCESS_VM_WRITE/OPERATION, PROCESS_CREATE_THREAD)
+- VirtualAllocEx / WriteProcessMemory workflow
+- CreateRemoteThread (classic remote thread injection)
+- Shellcode staging in remote process memory
+- Basic detection surface of cross-process memory + thread creation
+
+Use Cases:
+- Implementing a basic Windows process injection PoC for training/labs
+- Understanding common EDR telemetry points for injection (memory allocation/write + remote thread)
+- Building simple loaders that execute payloads inside a chosen target process
+- Creating detection rules for suspicious API call chains and handle access patterns
+
+Keywords:
+process injection, Windows, Win32 API, OpenProcess, VirtualAllocEx, WriteProcessMemory, CreateRemoteThread, remote thread injection, shellcode, DLL injection, PROCESS_VM_WRITE, PROCESS_VM_OPERATION, PROCESS_CREATE_THREAD, cross-process memory, code execution, EDR telemetry, detection surface, handle permissions

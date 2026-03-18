@@ -1,0 +1,26 @@
+Title:
+OffensiveDLR
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+OffensiveDLR is a toolbox of research notes and PoC code focused on weaponizing the .NET Dynamic Language Runtime (DLR) by embedding scripting engines/compilers (IronPython, Boo, Lua, JScript/VBScript via ClearScript, SSharp) inside PowerShell and C# payloads. It targets the problem of executing complex post-exploitation logic without relying on `csc.exe`, dropping files, or exposing PowerShell script content to common telemetry like ScriptBlock Logging. The repo demonstrates in-memory compilation/execution, runtime assembly resolution tricks, and multiple shellcode execution/injection techniques implemented in “DLR languages.” It also includes Kukulkan, a slimmed-down SILENTTRINITY variant with encrypted comms and optional Cobalt Strike integration. This is primarily useful for red teams, pentesters, and offensive tool developers exploring alternative execution paths and telemetry/inspection blind spots created by DLR embedding. It’s interesting because it shows how “non-PowerShell” logic can still leverage full .NET APIs while reducing typical PowerShell-centric detections and operational friction.
+
+Technical Focus:
+- .NET DLR embedding (IronPython, Boo.Lang, NeoLua, ClearScript, SSharp)
+- In-memory compilation/execution without `csc.exe` and minimal disk artifacts
+- PowerShell host wrappers for embedded engines/compilers
+- Runtime dependency loading via `AppDomain.CurrentDomain.AssemblyResolve`
+- Shellcode execution/injection patterns (QueueUserAPC, CreateThread, CreateRemoteThread, WriteProcessMemory)
+- Memory dumping via `MiniDumpWriteDump`
+
+Use Cases:
+- Execute post-exploitation logic in IronPython/Boo/Lua/JScript from PowerShell without visible ScriptBlock content
+- Build C# loaders that embed scripting engines and resolve assemblies at runtime
+- Run shellcode in-memory using alternative language runtimes/compilers
+- Prototype payload “retooling” workflows where operators swap embedded scripts without recompiling full tooling
+- Experiment with DLR-based tradecraft and detection gaps for defensive validation
+
+Keywords:
+.NET, DLR, CLR, PowerShell, C#, IronPython, Boo.Lang, Boolang, ClearScript, JScript, VBScript, NeoLua, SSharp, in-memory execution, embedded compiler, AssemblyResolve, reflection, AMSI bypass, ScriptBlock Logging evasion, shellcode injection, QueueUserAPC, CreateRemoteThread, WriteProcessMemory, MiniDumpWriteDump, SILENTTRINITY, Cobalt Strike

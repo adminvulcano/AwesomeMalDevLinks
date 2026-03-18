@@ -1,0 +1,32 @@
+Title:
+Bypassing EDR in a Crystal Clear Way
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through building an evasive Windows reflective loader (UDRL-style) that focuses on defeating modern EDR behavioral detections, especially call stack inspection and memory-backed execution expectations.  
+- It explains C2 payload architecture (raw beacon DLL, rDLL vs sRDI) and why default reflective loading patterns (MEM_PRIVATE + RWX + unbacked return addresses) are high-signal.  
+- The core loader is built as a PIC blob using Raphael Mudge’s Crystal Palace (COFF-to-PIC linker) with modular “PICO” components and DFR (dynamic API resolution).  
+- Key evasion techniques include module overloading (stomping a mapped legit DLL) with .pdata registration via RtlAddFunctionTable, NtContinue-based entry transfer with synthetic frames to remove unbacked return addresses, and loader-time API call stack spoofing using Draugr-style gadget-based spoof_call wrappers.  
+- It adds sleep masking by hooking Sleep via Crystal Palace’s hook resolution path, plus build-time XOR masking of the embedded DLL to reduce signature hits and post-link instruction rewriting (ised) to break Crystal Palace/libtcg YARA “islands of invariance.”  
+- Useful primarily for red team operators and implant/loader developers who need to understand and control the full in-memory execution chain rather than only the initial shellcode delivery.
+
+Technical Focus:
+- Reflective loading internals (PE mapping, relocations, IAT resolution, section permissions)
+- Crystal Palace PIC linking (COFF, DFR, PICO composition, spec directives)
+- Module overloading / DLL stomping with SEC_IMAGE (NtCreateSection/NtMapViewOfSection)
+- Call stack evasion (RtlAddFunctionTable, synthetic frames, NtContinue context pivot)
+- API call stack spoofing (gadget selection, Draugr/spoof_call wrappers)
+- Sleep masking + static signature reduction (IAT hook for Sleep, XOR masking, ised rewriting, YARA invariants)
+
+Use Cases:
+- Build a C2-agnostic UDRL-like reflective loader with modular evasion components
+- Convert raw DLL payloads into “backed” execution via module overloading to avoid MEM_PRIVATE heuristics
+- Eliminate suspicious call stack frames by transferring execution with NtContinue and synthetic thread-start frames
+- Spoof loader-time API call stacks to reduce behavioral detections during mapping/stomping
+- Implement sleep masking by intercepting Sleep and encrypting/decrypting mapped pages
+- Break static YARA signatures generated from invariant byte sequences in loader/PICO code
+
+Keywords:
+EDR evasion, reflective loader, UDRL, Cobalt Strike, Beacon, Crystal Palace, COFF, PIC, PICO, DFR, module overloading, DLL stomping, .pdata, RtlAddFunctionTable, NtContinue, CONTEXT, synthetic stack frames, call stack inspection, NtCreateSection, NtMapViewOfSection, SEC_IMAGE, Control Flow Guard (CFG), API hooking, spoofed call stack, Draugr, GadgetHunter, sleep masking, VirtualProtect, VirtualQuery, YARA, islands of invariance, ised, ROR13 hashing, PEB walking, EAT parsing, ETW-TI (discussion)

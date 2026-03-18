@@ -1,0 +1,24 @@
+Title:
+sign-expired — Signtool modification for expired certificates
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository provides a modified workflow to allow Microsoft’s `signtool.exe` to sign binaries using expired code-signing certificates. It does this by DLL hijacking: a custom-built `XmlLite.dll` is placed next to the official, Microsoft-signed `signtool.exe` so it is loaded at runtime. The injected DLL alters/patches behavior so the same signing command works even when the certificate is expired. The repo includes the C++ source (`dllmain.cpp`) and bundled binaries (`signtool.exe`, `XmlLite.dll`). It is primarily useful for red teamers, malware developers, and researchers exploring Authenticode trust edge-cases and signing tool abuse. It’s interesting because it leverages a trusted Microsoft-signed utility plus side-loading to bypass expected certificate validity enforcement.
+
+Technical Focus:
+- DLL search order hijacking / DLL side-loading (XmlLite.dll)
+- Authenticode code signing and certificate validity checks
+- Runtime patching/hooking inside `signtool.exe`
+- Windows trust chain / signing tool behavior
+- C++ DLL entrypoint manipulation (`DllMain`)
+
+Use Cases:
+- Testing how security products validate Authenticode signatures vs certificate expiration
+- Simulating attacker tradecraft that abuses trusted signed tooling (LOLBIN-adjacent)
+- Researching Windows signing pipeline and trust enforcement gaps
+- Building detections for DLL side-loading against developer tooling (e.g., signtool)
+
+Keywords:
+signtool, Authenticode, code signing, expired certificate, DLL hijacking, DLL side-loading, XmlLite.dll, Windows, trust validation, certificate chain, signature verification, WinVerifyTrust, DllMain, C++, Microsoft-signed binary, LOLBIN, supply chain, EDR evasion

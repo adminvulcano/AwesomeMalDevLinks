@@ -1,0 +1,29 @@
+Title:
+Process Injection Part III
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post continues a series on Windows process injection, focusing on implementing and understanding a specific injection workflow in practice.  
+- It explains how to place attacker-controlled code into a remote process and trigger execution, emphasizing the Windows APIs and required access rights.  
+- The write-up discusses common injection primitives (remote memory allocation, writing payload bytes, and starting execution via a new thread or equivalent mechanism) and the typical pitfalls around permissions, architecture (x86 vs x64), and stability.  
+- It is primarily useful for red teamers, pentesters, and malware developers who need a clear, step-by-step view of classic user-mode injection.  
+- It’s interesting because it ties together the end-to-end mechanics of injection and highlights the operational details that often determine whether an injector works reliably.
+
+Technical Focus:
+- Windows user-mode process injection workflow
+- Remote memory allocation and payload staging
+- Cross-process memory writing
+- Remote thread creation / execution triggering
+- Process/thread access rights and token/privilege considerations
+- x86/x64 (WOW64) compatibility considerations
+
+Use Cases:
+- Building a basic Windows injector for lab testing
+- Understanding how commodity malware performs classic injection
+- Developing or validating EDR detections around injection API sequences
+- Troubleshooting injection failures related to privileges or architecture mismatches
+
+Keywords:
+Windows, process injection, CreateRemoteThread, VirtualAllocEx, WriteProcessMemory, OpenProcess, remote thread, shellcode, payload staging, access rights, PROCESS_ALL_ACCESS, WOW64, x86, x64, user-mode, memory allocation, code execution, API sequence, endpoint detection, EDR evasion

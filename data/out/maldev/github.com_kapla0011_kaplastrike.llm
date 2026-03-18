@@ -1,0 +1,26 @@
+Title:
+KaplaStrike (Crystal-Palace UDRL)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+KaplaStrike is a custom Cobalt Strike reflective loader built using the Crystal Palace framework, focused on stealthy in-memory loading and EDR evasion. It replaces typical `LoadLibrary`-style loading with module overloading using `NtCreateSection`/`NtMapViewOfSection`, and improves stack legitimacy by registering unwind info (`.pdata`) via `RtlAddFunctionTable`. The loader transfers execution using `NtContinue` with synthetic thread-start frames and performs call stack spoofing during setup (via Draugr). It also includes build-time XOR encryption of the Beacon DLL, sleep masking implemented through IAT hooking (`addhook`) with per-section XOR, and static signature removal (YARA) using `ised`. It’s primarily useful for red team operators and offensive security researchers building custom CS payload pipelines and studying modern loader tradecraft.
+
+Technical Focus:
+- Module overloading / section mapping (NtCreateSection, NtMapViewOfSection)
+- Unwind metadata registration (.pdata, RtlAddFunctionTable)
+- Execution transfer via NtContinue with synthetic thread start frames
+- Call stack spoofing (Draugr-style stack manipulation)
+- Sleep masking via IAT hooking (addhook) and per-section encryption
+- Static signature removal / YARA evasion (ised), build-time XOR obfuscation
+
+Use Cases:
+- Generate a stealthier CS Beacon PIC blob to run via an external shellcode loader
+- Research and prototype EDR bypass techniques in reflective loading pipelines
+- Improve telemetry/call-stack plausibility for in-memory implants
+- Experiment with sleep masking approaches independent of Malleable C2 sleep_mask
+- Study/compare Crystal Palace / Crystal-Kit loader architectures and tradeoffs
+
+Keywords:
+Cobalt Strike, reflective loader, UDRL, Crystal Palace, Crystal-Kit, NtCreateSection, NtMapViewOfSection, RtlAddFunctionTable, .pdata, unwind info, NtContinue, BaseThreadInitThunk, RtlUserThreadStart, call stack spoofing, Draugr, sleep masking, IAT hooking, addhook, XOR encryption, YARA signature removal, ised, PIC blob, in-memory loading, EDR bypass

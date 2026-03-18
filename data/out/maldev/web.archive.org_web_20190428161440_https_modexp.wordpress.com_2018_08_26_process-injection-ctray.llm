@@ -1,0 +1,25 @@
+Title:
+Windows Process Injection: Extra Window Bytes
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post describes a Windows GUI-based process injection technique that abuses “Extra Window Bytes” (index 0) on the `Shell_TrayWnd` window class to hijack Explorer’s tray window object. It targets the `CTray` class instance pointer stored via `SetWindowLongPtr/GetWindowLongPtr`, a method historically associated with PowerLoader-era malware. The technique reads the existing `CTray` object and its vtable from `explorer.exe`, allocates memory in the remote process, writes a modified `CTray` object whose `WndProc` points to attacker-controlled shellcode, and swaps the window’s extra bytes pointer to the new object. Execution is triggered by posting a window message (e.g., `WM_CLOSE`), then the original pointer is restored to reduce instability. It’s useful for red teams, pentesters, and malware researchers studying alternative injection primitives and “Shatter”-style UI attacks that still work despite UIPI-era mitigations.
+
+Technical Focus:
+- Extra Window Bytes abuse (`GetWindowLongPtr/SetWindowLongPtr`, index 0)
+- `Shell_TrayWnd` / Explorer tray window internals (`CTray` object, vtable)
+- Remote memory operations (`OpenProcess`, `ReadProcessMemory`, `WriteProcessMemory`)
+- Remote allocation and execution (`VirtualAllocEx`, RWX/RW regions)
+- Message-based triggering (`PostMessage`, `WM_CLOSE`)
+- Shatter attacks and UIPI considerations
+
+Use Cases:
+- Injecting code into `explorer.exe` via GUI object pointer manipulation
+- Researching non-thread-creation injection techniques (message-triggered execution)
+- Building/validating EDR detections for window object tampering and vtable-style hijacks
+- Reproducing historical malware tradecraft (PowerLoader-like injection)
+
+Keywords:
+Windows process injection, Extra Window Bytes, SetWindowLongPtr, GetWindowLongPtr, Shell_TrayWnd, explorer.exe, CTray, vtable hijacking, WndProc, Shatter attack, UIPI, FindWindow, GetWindowThreadProcessId, OpenProcess, ReadProcessMemory, WriteProcessMemory, VirtualAllocEx, PostMessage, WM_CLOSE, PowerLoader

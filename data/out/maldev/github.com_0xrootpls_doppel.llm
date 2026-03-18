@@ -1,0 +1,26 @@
+Title:
+Döppel (Doppel) — Advanced Evasive Persistent Shellcode Loader for Windows
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Döppel is a Windows C++ proof-of-concept shellcode loader designed to be evasive, VM-aware, and persistent. It focuses on defeating common analysis and telemetry by performing multiple VM/sandbox checks, unhooking `ntdll.dll`, and patching ETW. The loader retrieves an encrypted payload over TCP (RC4), then executes a staged workflow where shellcode is XOR-decrypted “just-in-time” and injected into `explorer.exe` in chunks. It includes stealthier injection details such as setting the remote thread context into a `MEM_IMAGE`-backed region to evade injected-thread heuristics, and mentions using the “gargoyle” technique to reduce in-memory scanning exposure. Persistence is implemented in an unusual way via a debugger global flag targeting `wuauclt.exe`. Useful primarily for red teamers, malware analysts, and defenders studying modern loader tradecraft and detection opportunities.
+
+Technical Focus:
+- Anti-VM / anti-sandbox checks (mouse, hardware, activity heuristics)
+- `ntdll.dll` unhooking and ETW patching
+- Dynamic API resolution (Kernel32) for evasion
+- Staged payload retrieval (RC4 over TCP) and C2 comms (reverse-HTTPS)
+- Chunked shellcode decryption/injection into `explorer.exe` + thread context manipulation (`MEM_IMAGE`)
+- “Gargoyle” in-memory evasion technique + obfuscation/packing
+
+Use Cases:
+- Build/test evasive shellcode loader tradecraft in a controlled lab
+- Study ETW/`ntdll` tampering and corresponding detection strategies
+- Evaluate EDR heuristics around remote thread creation and injected-thread enumeration
+- Reverse engineering practice on a packed/obfuscated loader with anti-analysis gates
+- Prototype alternative persistence mechanisms leveraging debugger-related flags
+
+Keywords:
+Windows, C++, shellcode loader, process injection, explorer.exe, remote thread, thread context, MEM_IMAGE, ntdll unhooking, ETW patching, anti-VM, sandbox evasion, dynamic API resolution, Kernel32.dll, RC4, XOR decryption, reverse HTTPS C2, persistence, wuauclt.exe, gargoyle technique

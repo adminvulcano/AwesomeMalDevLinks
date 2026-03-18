@@ -99,3 +99,9 @@ https://zacbrown.org/posts/2017-04-11-hidden-treasure-part-1.html
 https://zacbrown.org/posts/2017-05-09-hidden-treasure-part-2.html
 https://hackyboiz.github.io/2025/08/15/banda/Minifilter-Driver/en/
 https://www.elastic.co/security-labs/automating-goad-and-live-malware-labs
+https://github.com/BenjiTrapp/MostShittyAV
+https://github.com/HackingLZ/maps_scanner
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/process-events.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/driver-loading.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md
+https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/create-remote-thread.md

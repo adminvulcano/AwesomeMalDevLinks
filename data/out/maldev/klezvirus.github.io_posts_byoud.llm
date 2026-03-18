@@ -1,0 +1,31 @@
+Title:
+Fantastic unwind information and where to find them (BYOUD – Bring Your Own Unwinding Data)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post introduces BYOUD, a CET-compliant call stack spoofing framework that avoids modifying return addresses (which Intel CET shadow stacks would detect) by instead manipulating Windows x64 unwind metadata.  
+- It targets the separation between CET’s return-flow integrity (shadow stack) and Windows stack walking/unwinding (SEH + `.pdata`/`UNWIND_INFO`) to make stack traces appear legitimate and fully unwindable while hiding real caller frames.  
+- Multiple variants are described: direct tampering of `UNWIND_INFO`, hijacking `RUNTIME_FUNCTION` unwind offsets, injecting/reusing runtime function entries, and a JIT-oriented approach using `RtlAddFunctionTable`.  
+- The post also dives into practical constraints and artifacts, including interactions with `/GS` stack cookies and why `dbghelp`/`StackWalk64` can fail to consult dynamic function tables depending on address ownership.  
+- It proposes a more complex “state-driven” architecture to better align visible stacks with shadow stack reality, and discusses detection strategies (integrity monitoring of exception metadata, shadow stack vs. normal stack comparison).  
+- Useful for red teamers/malware developers researching post-CET evasion and for blue teamers building detections around unwind metadata tampering and shadow stack validation.
+
+Technical Focus:
+- Intel CET / Hardware-enforced Shadow Stack (HSP) constraints on stack spoofing  
+- Windows x64 unwinding internals: `.pdata`, `RUNTIME_FUNCTION`, `UNWIND_INFO`, unwind opcodes (`UWOP_ALLOC_SMALL/LARGE`)  
+- Metadata tampering and runtime function table manipulation (offset hijacking, injection, reuse)  
+- Dynamic function tables for JIT code: `RtlAddFunctionTable` / `RtlDeleteFunctionTable` and lookup paths  
+- Stack walking discrepancies: `RtlVirtualUnwind`/`RtlLookupFunctionEntry` vs `dbghelp` (`StackWalk64`, `SymFunctionTableAccess64`)  
+- Detection approaches: section integrity checks, memory protection monitoring, shadow stack correlation
+
+Use Cases:
+- Hide in-memory execution/shellcode frames from user-mode stack walkers without tripping CET
+- Build CET-compatible proxy-call based stack spoofing for API invocation (e.g., via RPC proxy functions)
+- Research and validate how EDRs/tools reconstruct stacks (OS unwinder vs dbghelp pipeline)
+- Develop detections for `.pdata`/unwind metadata tampering and suspicious dynamic function tables
+- Create PoCs to test shadow stack vs normal stack inconsistency detection
+
+Keywords:
+Intel CET, Hardware Stack Protection, shadow stack, Control Protection Exception, Windows x64 unwinding, SEH, .pdata, .xdata, RUNTIME_FUNCTION, UNWIND_INFO, UNWIND_CODE, UWOP_ALLOC_LARGE, BaseThreadInitThunk, RtlUserThreadStart, RtlVirtualUnwind, RtlLookupFunctionEntry, RtlAddFunctionTable, StackWalk64, dbghelp.dll, SymFunctionTableAccess64, stack spoofing, call stack evasion

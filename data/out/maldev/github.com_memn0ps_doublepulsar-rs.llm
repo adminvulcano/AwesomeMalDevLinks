@@ -1,0 +1,31 @@
+Title:
+doublepulsar-rs — Rust Cobalt Strike User-Defined Reflective Loader (UDRL) implementing sRDI
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository provides a Rust-based, position-independent reflective loader for Cobalt Strike using the User-Defined Reflective Loader (UDRL) API and Shellcode Reflective DLL Injection (sRDI).  
+- It focuses on executing an encrypted beacon payload in-memory while reducing common memory-scanning and behavioral detections via module stomping, call stack spoofing, sleep obfuscation, and memory/code encryption.  
+- The loader uses a “prepended” architecture (ReflectiveLoader placed before the PE) to behave as PIC shellcode that decrypts and maps the payload at runtime.  
+- It includes multiple sleep obfuscation implementations (Ekko default, FOLIAGE, Zilean, XOR masking) and optional syscall dispatch with Hell’s Gate / Halo’s Gate / Tartarus Gate style fallbacks.  
+- Useful primarily for red teams and adversary emulation engineers building custom Cobalt Strike loaders, and for blue teams studying modern in-memory tradecraft and writing detections (YARA rule included).  
+- Interesting due to the combination of modern evasive techniques (heap isolation, IAT hooking, synthetic stacks, RC4 via SystemFunction032) packaged into a relatively small (~65KB) Rust PIC loader.
+
+Technical Focus:
+- Cobalt Strike UDRL + sRDI reflective loading (prepended PIC loader)
+- Module stomping and in-memory PE mapping/decryption
+- Sleep obfuscation (Ekko / FOLIAGE / Zilean / XOR masking) with NtContinue chains and fiber support
+- Synthetic call stack spoofing + return address spoofing
+- IAT hooking, heap isolation, dynamic memory encryption
+- Optional direct/indirect syscalls (Hell’s Gate / Halo’s Gate / Tartarus Gate)
+
+Use Cases:
+- Custom Cobalt Strike stageless beacon loader development (x64)
+- Evasion research against EDR memory scanning and behavioral detections
+- Purple-team tradecraft emulation (sleep masking, stack spoofing, module stomping)
+- Detection engineering: build YARA/memory signatures and validate against loader behaviors
+- Training/education on reflective loading architectures and in-memory OPSEC
+
+Keywords:
+Cobalt Strike, UDRL, User-Defined Reflective Loader, sRDI, reflective loader, Rust, position-independent code, shellcode, module stomping, synthetic call stack, call stack spoofing, return address spoofing, sleep obfuscation, Ekko, FOLIAGE, NtContinue, fibers, IAT hooking, heap isolation, SystemFunction032, RC4, Hell’s Gate, Halo’s Gate, Tartarus Gate, YARA, in-memory decryption, Windows x64

@@ -1,0 +1,26 @@
+Title:
+Offensive DPAPI With Nemesis
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains how Nemesis 2.2 automates end-to-end offline DPAPI decryption workflows, with a focus on decrypting modern Chromium cookies and saved logins on Windows. It addresses the operational pain of DPAPI’s multi-step dependency chain (SYSTEM/user masterkeys, LSA secrets, domain DPAPI backup keys, and now Chromium App-Bound Encryption and CNG “Chromekey1”). The authors detail how Nemesis ingests artifacts (registry hives, masterkey files, LSASS dumps, Chromium “Local State”/“Login Data”, and CNG SystemKeys files), correlates them by host “Source”, and performs forward/retroactive decryption regardless of submission order. It also notes Windows changes that altered decrypted masterkey structures (breaking some existing libraries) and how Nemesis accounts for them. The write-up is primarily useful for red teams/pentesters doing post-compromise credential/cookie recovery and for defenders/IR teams needing to understand the artifact chain and where to detect/contain it. It’s interesting because it operationalizes the newest Chromium 137+ ABE + CNG wrinkle into a largely automated, file-based pipeline.
+
+Technical Focus:
+- Windows DPAPI masterkeys (SYSTEM vs user) and decryption prerequisites
+- LSA secrets extraction (DPAPI_SYSTEM) via SYSTEM/SECURITY hives and LSASS dumps
+- Domain DPAPI backup key and MS-BKRP concepts (backup key decryption path)
+- Chromium cookie/login protection evolution: DPAPI → Local State encrypted_key → App-Bound Encryption (ABE)
+- CNG/KSP integration in Chrome 137+ (Google “Chromekey1” in SystemKeys) and DPAPI-protected private key material
+- Retroactive decryption/correlation logic in Nemesis (artifact linking by host/source)
+
+Use Cases:
+- Decrypt Chromium cookies and saved passwords from collected endpoint artifacts (offline analysis)
+- Automate DPAPI masterkey recovery using registry hives, LSASS dumps, or submitted key material
+- Post-exploitation triage at scale: carve DPAPI blobs from files and identify required masterkey GUIDs
+- Incident response validation: reproduce attacker decryption paths to assess exposure and scope
+- Research/testing of DPAPI parsing changes on newer Windows builds and tool compatibility
+
+Keywords:
+DPAPI, CryptProtectData, CryptUnprotectData, DPAPI_SYSTEM, LSA secrets, LSASS dump, SYSTEM hive, SECURITY hive, masterkey GUID, domain DPAPI backup key, MS-BKRP, SharpDPAPI, mimikatz, pypykatz, Impacket, DPAPIck3, Chromium, Chrome Local State, Login Data, App-Bound Encryption, iElevator COM, CNG, KSP, Google Chromekey1, SystemKeys, Nemesis 2.2, retroactive decryption

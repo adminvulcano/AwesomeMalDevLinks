@@ -8,3 +8,8 @@ https://www.zerosalarium.com/2025/09/Dumping-LSASS-With-WER-On-Modern-Windows-11
 https://github.com/yo-yo-yo-jbo/dumping_lsass/
 https://github.com/Shac0x/Wonka
 https://github.com/dazzyddos/lsawhisper-bof
+https://zero-layer.hashnode.dev/understanding-lsass-the-security-brain-of-windows
+https://github.com/Meowmycks/LetMeowIn
+https://github.com/Meowmycks/catdumper
+https://specterops.io/blog/2026/03/04/offensive-dpapi-with-nemesis/
+https://ipurple.team/2026/03/17/credential-guard/

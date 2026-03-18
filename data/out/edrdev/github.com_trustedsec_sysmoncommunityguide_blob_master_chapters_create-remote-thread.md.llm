@@ -1,0 +1,31 @@
+Title:
+Sysmon Community Guide – Create Remote Thread (Event ID 8)
+
+Type:
+Documentation (GitHub Repository Chapter)
+
+Short Summary (4–8 sentences max):
+- This chapter explains Sysmon Event ID 8, which logs usage of the Win32 API `CreateRemoteThread`, a common primitive for Windows process injection.  
+- It highlights why the event is “low-volume, high-value” for detecting malware and attacker tradecraft such as code injection, defense evasion via trusted processes, and potential privilege escalation.  
+- The write-up outlines the typical injection chain (`OpenProcess` → `VirtualAllocEx` → `WriteProcessMemory` → `CreateRemoteThread`) and documents the key Sysmon fields (source/target process, thread start address/module/function).  
+- It recommends a “log all, exclude known-good” strategy due to the generally low legitimate usage in enterprise environments, and provides an example exclusion-focused Sysmon configuration snippet.  
+- It also notes a key limitation: Sysmon Event ID 8 only covers `CreateRemoteThread`, so attackers can evade it using alternatives like `NtCreateThreadEx`, `RtlCreateUserThread`, or APC-based injection, requiring correlation with other Sysmon events.  
+- Useful primarily for Blue Teams/DFIR and detection engineers, but also valuable for Red Teams to understand detection surfaces and gaps.
+
+Technical Focus:
+- Sysmon Event ID 8 telemetry and fields (StartAddress/StartModule/StartFunction)
+- Windows process injection via `CreateRemoteThread`
+- Memory allocation and remote write primitives (`VirtualAllocEx`, `WriteProcessMemory`)
+- Detection engineering strategy (baseline + exclusions)
+- Evasion via alternative thread creation/injection APIs
+- Correlation with complementary Sysmon events (e.g., Process Access, Image Load)
+
+Use Cases:
+- Build/validate Sysmon rules to detect remote-thread-based process injection
+- Triage suspicious injections into high-value processes (e.g., `explorer.exe`, `lsass.exe`)
+- Hunt for anomalous thread start addresses/modules indicating shellcode or unbacked memory
+- Reduce false positives by baselining and excluding verified legitimate sources/targets
+- Identify detection gaps where attackers may switch to `NtCreateThreadEx`/APC injection
+
+Keywords:
+Sysmon, Event ID 8, CreateRemoteThread, process injection, OpenProcess, VirtualAllocEx, WriteProcessMemory, thread start address, StartModule, StartFunction, PEB module list, NtCreateThreadEx, RtlCreateUserThread, QueueUserAPC, defense evasion, MITRE ATT&CK T1055, DLL injection, PE injection, Windows internals, detection engineering
