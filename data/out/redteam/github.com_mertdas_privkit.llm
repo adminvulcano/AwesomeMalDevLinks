@@ -1,0 +1,26 @@
+Title:
+PrivKit — Beacon Object Files for Windows Local Privilege Escalation Checks
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PrivKit is a collection of Cobalt Strike Beacon Object Files (BOFs) that perform common Windows local privilege escalation (LPE) discovery checks from within an active Beacon session. It solves the problem of quickly enumerating misconfigurations and credential artifacts without dropping tools to disk, leveraging in-memory BOF execution. The repo includes checks for AlwaysInstallElevated, Autologon credentials, Windows Credential Manager, writable PATH directories, modifiable autoruns, modifiable service permissions (DACL), unquoted service paths, token privileges, PowerShell history, and UAC status/integrity level. It’s primarily useful for red team operators and penetration testers running Cobalt Strike who need fast, low-footprint local privesc triage. It’s interesting because it packages multiple high-signal LPE misconfiguration checks into BOFs with an Aggressor script interface (PrivCheck.cna) for streamlined operator workflow across x86/x64.
+
+Technical Focus:
+- Cobalt Strike BOF development and in-memory execution
+- Windows registry-based misconfiguration checks (Winlogon, Installer, Run/RunOnce)
+- Windows service misconfigurations (unquoted paths, weak service DACLs)
+- Credential discovery (Autologon, Credential Manager)
+- Token/UAC enumeration (integrity levels, filtered tokens, privileges)
+- Local persistence/abuse primitives (PATH hijacking, autorun writability)
+
+Use Cases:
+- Rapid post-compromise Windows LPE enumeration from an existing Beacon
+- Identifying misconfigurations enabling service binary replacement or path hijacking
+- Hunting for stored credentials (Autologon, Credential Manager) to pivot/escalate
+- Assessing UAC posture and whether UAC bypass paths may be viable
+- Operator-friendly “run all checks” triage via `PrivCheck` in Cobalt Strike
+
+Keywords:
+Cobalt Strike, Beacon Object File, BOF, Aggressor Script, PrivCheck.cna, Windows LPE, AlwaysInstallElevated, Autologon, Winlogon registry, Credential Manager, DPAPI, service DACL, modifiable services, unquoted service path, PATH hijacking, Run keys, RunOnce, token privileges, UAC, integrity level, PSReadLine history, MinGW-w64

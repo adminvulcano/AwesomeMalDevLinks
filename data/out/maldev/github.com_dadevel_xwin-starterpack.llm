@@ -1,0 +1,24 @@
+Title:
+xwin-starterpack
+
+Type:
+GitHub Tool (template/dev environment)
+
+Short Summary (4–8 sentences max):
+This repository is a starter template for developing and debugging Windows C/C++ software from a Linux host using LLVM/Clang and the xwin toolchain. It solves the friction of setting up Windows SDK/CRT headers/libs for cross-compilation and provides a repeatable VS Code + devcontainer workflow. The setup uses a Windows VM running OpenSSH and `lldb-server`, with SSH port forwarding to enable remote debugging from Linux via LLDB/DAP in VS Code. The repo includes container/devcontainer configuration plus a Makefile and project skeleton, and adds support for x86 and ARM64 targets. It’s useful for red teamers, exploit devs, and malware researchers who want fast iteration on Windows-native code without living on Windows, and for defenders building Windows tooling in a controlled environment. Interesting because it combines cross-compilation (xwin) with a practical remote-debug pipeline that mirrors real-world Windows debugging workflows.
+
+Technical Focus:
+- Cross-compiling Windows binaries on Linux (Clang/LLVM + xwin)
+- Windows CRT/SDK provisioning (Universal CRT concepts)
+- Remote debugging with `lldb-server` and LLDB platform mode
+- VS Code devcontainers (Docker/Podman) and reproducible builds
+- SSH port forwarding for debugger transport (LLDB DAP)
+
+Use Cases:
+- Build Windows-native payloads/tools from a Linux workstation
+- Remote-debug Windows binaries inside a VM from VS Code on Linux
+- Rapid prototyping for exploit development across x64/x86/ARM64
+- Reproducible CI-like local builds using containerized toolchains
+
+Keywords:
+xwin, LLVM, Clang, lldb, lldb-server, LLDB DAP, VS Code, devcontainer, Docker, Podman, cross-compilation, Windows SDK, Universal CRT, OpenSSH Server, SSH port forwarding, Windows VM, Makefile, x86, ARM64, remote debugging

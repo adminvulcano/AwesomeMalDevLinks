@@ -1,0 +1,26 @@
+Title:
+zero-loader — Polymorphic x64 shellcode loader (CRT-free) with patchless AMSI/ETW bypass and call stack spoofing
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+zero-loader is a Windows 10/11 x64 shellcode loader designed to produce polymorphic builds where each compilation regenerates keys, nonces, string encodings, and PE metadata to avoid static signatures. It focuses on modern userland evasion: indirect syscalls with randomized syscall;ret gadget selection, patchless AMSI/ETW bypass using VEH + hardware breakpoints, and call stack spoofing via ntdll gadgets and thread pool execution. Payloads are staged over HTTPS (WinINet), compressed with LZNT1, and encrypted with Chaskey-12 CTR, with runtime key recovery and post-exec cleanup (clearing debug registers, removing VEH, wiping secrets). For in-memory placement it supports “phantom DLL hollowing” using NTFS transactions + SEC_IMAGE rollback and module stomping of signed DLL .text to attribute memory to legitimate modules. It also includes a DLL sideloading mode with auto-generated export forwarding and version-info cloning, plus an exit hook to keep the host process from terminating. Useful primarily for red teams, pentesters, and malware researchers evaluating EDR detection gaps and telemetry around thread pool execution, syscall indirection, and memory attribution tricks.
+
+Technical Focus:
+- Indirect syscalls (SSN extraction, hooked-stub fallback, syscall gadget pooling/randomization)
+- Patchless AMSI/ETW bypass (VEH + hardware breakpoints via NtContinue)
+- Phantom DLL hollowing (TxF/CreateFileTransacted, NtCreateSection, NtMapViewOfSection, SEC_IMAGE rollback)
+- Module stomping of signed DLL sections and memory attribution
+- Call stack spoofing + thread pool execution (TpAllocWork/TpPostWork, ntdll gadgets)
+- Polymorphic build pipeline (string obfuscation, PE metadata mutation, API hashing/PEB walking)
+
+Use Cases:
+- Generate per-build-unique Windows loaders for controlled adversary simulation
+- Test EDR visibility/detections for AMSI/ETW bypass without code patching
+- Evaluate detections around thread pool execution and call stack spoofing
+- Research memory attribution techniques (SEC_IMAGE mapping, module stomping)
+- Build DLL sideloading proxies with export forwarding and version cloning for lab scenarios
+
+Keywords:
+Windows x64, shellcode loader, polymorphic build, CRT-free, indirect syscalls, SSN extraction, ntdll, syscall;ret gadgets, RDTSC, AMSI, ETW, VEH, hardware breakpoints, DR0 DR1 DR7, NtContinue, call stack spoofing, thread pool, TpAllocWork, module stomping, phantom DLL hollowing, TxF, CreateFileTransactedA, NtCreateSection, NtMapViewOfSection, SEC_IMAGE, LZNT1, RtlDecompressBuffer, Chaskey-12, WinINet, InternetCrackUrlA, DLL sideloading, export forwarding, LdrRegisterDllNotification, RtlExitUserProcess, LdrAddRefDll, UAC runas

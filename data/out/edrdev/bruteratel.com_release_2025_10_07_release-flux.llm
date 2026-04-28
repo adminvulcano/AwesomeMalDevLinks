@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v2.3 “Flux” Release Notes (Badger implant redevelopment, Safe HTTP, Advanced Async BOFs)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This release describes Brute Ratel v2.3 (Flux), focused on a major redevelopment of the Badger implant using a custom-built compiler to improve OpSec and reduce memory footprint (~30% smaller, with more planned).  
+- It addresses limitations in common toolchains (MinGW/Clang) around memory regions/stack layouts that conflicted with stealth requirements.  
+- Key additions include “safe_http,” which uses a tiny PIC stub to perform HTTP transactions while keeping Badger code/heap encrypted so the implant is effectively absent from memory during network activity, reducing ETW/EDR memory-scan exposure tied to WinINet/WinHTTP.  
+- It introduces an “Advanced Async BOF” framework via `coffexec_async`, enabling BOFs to run while Badger remains sleep-masked/hidden, with new BOF APIs for forced sleep, wake/send, stop-task checks, buffer upload, and token handling.  
+- Several built-in capabilities (e.g., portscan, dcsync, pth) are ported to async BOFs to keep the main implant masked during longer operations.  
+- Useful primarily for red teams/pentesters and implant developers focused on stealthy post-exploitation tradecraft and BOF-based extensibility under modern EDR scrutiny.
+
+Technical Focus:
+- Custom compiler/toolchain tailoring for implant stealth (stack layout, memory region handling, size reduction)
+- Sleep masking and in-memory encryption of code/heap
+- PIC stubs for “safe” HTTP transactions and reduced network-triggered memory scanning
+- Asynchronous COFF/BOF execution model (`coffexec_async`) and new BOF APIs
+- ETW/EDR detection pressure around WinINet/WinHTTP network activity
+- Task control, token handling, and buffered exfil/upload via main HTTP thread
+
+Use Cases:
+- Running long or noisy post-exploitation actions while keeping the primary implant sleep-masked
+- Building BOFs that can force masking, wake to send buffered output, and exit cleanly
+- Reducing memory-resident indicators during HTTP C2 check-ins/transactions
+- Porting internal commands (portscan, samdump, pth, dcsync) into async BOF workflows for better OpSec
+- Improving operational stability/performance for socks and remote port forwarding
+
+Keywords:
+Brute Ratel, Badger implant, v2.3 Flux, custom compiler, MinGW, Clang, OpSec, memory footprint reduction, sleep masking, in-memory encryption, PIC stub, safe_http, WinINet, WinHTTP, ETW, EDR evasion, COFF, BOF, coffexec_async, BadgerForceSleep, BadgerWakeupAndExit, BadgerWakeupAndSend, BadgerDispatch, BadgerStopTask, BadgerDownloadBuffer, BadgerSetToken, dcsync, pass-the-hash, samdump, portscan, socks, rportfwd

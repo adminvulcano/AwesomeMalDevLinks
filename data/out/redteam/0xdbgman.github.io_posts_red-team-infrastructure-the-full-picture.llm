@@ -1,0 +1,31 @@
+Title:
+Red Team Infrastructure The Full Picture: From Domain to Beacon
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post is an end-to-end blueprint for building resilient red team infrastructure that keeps C2 reachable while minimizing exposure and burn risk.  
+- It covers a layered architecture where the team server is never internet-facing, traffic is funneled through redirectors and optionally CDN/serverless relays, and non-matching traffic is silently diverted to decoys.  
+- Key tradecraft includes domain selection/aging and categorization, strict infrastructure segmentation by engagement phase (phish → long-term C2 → interactive ops → exfil), and Infrastructure-as-Code deployment with Terraform.  
+- It details HTTPS redirector hardening using multi-layer filtering (UA, secret headers, URI allowlists, IP blocklists), TLS certificate OPSEC choices, and CDN relay setups (Azure CDN/Front Door, CloudFront, GCP) to blend into trusted cloud IP space.  
+- It also includes phishing stack guidance (mail server + SPF/DKIM/DMARC, GoPhish + Evilginx) and C2 traffic shaping via Malleable C2 profiles (headers, URIs, caching controls, sleep/jitter).  
+- Useful primarily for Red Teamers and pentesters running adversary simulations; also relevant to Blue Teams for understanding common infrastructure patterns and choke points for detection.
+
+Technical Focus:
+- Redirector design and multi-layer HTTP(S) traffic filtering (mod_rewrite/Nginx rules)
+- Domain reputation, aging, and web categorization evasion
+- CDN relays and cloud edge routing (Azure CDN/Front Door, AWS CloudFront, GCP Cloud CDN)
+- Infrastructure-as-Code for offensive infra (Terraform, VPC/VPN segmentation)
+- C2 malleability and traffic shaping (Cobalt Strike Malleable C2, SourcePoint, caching controls)
+- Phishing infrastructure and deliverability (SPF/DKIM/DMARC, GoPhish, Evilginx)
+
+Use Cases:
+- Build a segmented red team infra stack where only redirectors are exposed and team servers stay private
+- Deploy CDN-fronted C2 to leverage trusted cloud IP ranges and managed certificates
+- Implement hardened redirectors that selectively proxy only valid beacon traffic and decoy everything else
+- Stand up phishing infrastructure with high deliverability and AitM session capture workflows
+- Generate and validate Malleable C2 profiles aligned to redirector/CDN constraints (no-cache, header gates, URI allowlists)
+
+Keywords:
+red team infrastructure, C2, Cobalt Strike, Sliver, Havoc, Mythic, redirector, Apache mod_rewrite, Nginx reverse proxy, TLS certificates, Let’s Encrypt, Cloudflare Origin Certificate, Microsoft-managed certificate, domain aging, domain categorization, Bluecoat/Symantec SiteReview, SPF, DKIM, DMARC, GoPhish, Evilginx2, Azure CDN, Azure Front Door, AWS CloudFront, GCP Cloud CDN, Cloudflare Workers, cloudflared tunnel, Terraform, Malleable C2 profile, SourcePoint, OPSEC, Geo-IP filtering, header-based allowlisting, URI allowlisting, IP blocklists

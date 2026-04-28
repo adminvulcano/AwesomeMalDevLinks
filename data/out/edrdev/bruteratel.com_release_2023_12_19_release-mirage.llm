@@ -1,0 +1,27 @@
+Title:
+Brute Ratel v1.8 “Mirage” Release – Evading Every EDR On The Planet Part 2
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post announces Brute Ratel C4 v1.8 (codename “Mirage”) and highlights major internal rewrites focused on operational security and EDR evasion. Key additions include full stack frame spoofing even during active execution (“sleep zero”), exception-handler unhooking that targets both vectored exception handling and hardware breakpoint (SINGLE_STEP) telemetry, and a “Raw DNS Badger” option alongside existing DoH/DNS listener support. The stack spoofing changes aim to prevent EDRs from tracing execution back to in-memory shellcode regions via stack walking/ETW and then performing memory scanning/signature checks. The release also improves operator workflow and tradecraft features (custom PsExec service binaries, net use share mounting, staged payload support in the profiler, large file downloads, and API-based bulk badger removal). It’s primarily useful for red teams and adversary simulation operators focused on stealthy post-exploitation and resilient C2 in monitored Windows environments. It’s notable because it explicitly targets modern EDR stack-tracing and exception-based telemetry collection techniques rather than only relying on indirect syscalls/return-address spoofing.
+
+Technical Focus:
+- Stack frame spoofing / synthetic call stacks (sleep-zero execution)
+- EDR telemetry evasion via ETW/stack walking countermeasures
+- VEH and hardware breakpoint (SINGLE_STEP) exception unhooking
+- DNS/DoH C2 transport (“Raw DNS Badger”)
+- Post-exploitation tradecraft (PsExec service execs, SMB share mounting)
+- AD/BloodHound data handling (LDAP security descriptors, BOFHound compatibility)
+
+Use Cases:
+- Running post-exploitation tasks while reducing stack-trace attribution to shellcode memory
+- Bypassing EDR user-mode telemetry that leverages VEH and hardware breakpoint exceptions
+- Operating C2 over DNS/DoH or raw DNS in restricted egress environments
+- Lateral movement customization via PsExec-compatible service payloads
+- Automating agent (“badger”) lifecycle management via server API scripts
+- Feeding improved LDAP/SD data into BloodHound workflows via BOFHound
+
+Keywords:
+Brute Ratel, BRC4, Mirage, badger, C2, EDR evasion, stack spoofing, sleep zero, call stack, ETW, Kernel ETW, Vectored Exception Handling, VEH unhooking, hardware breakpoints, SINGLE_STEP, shellcode, module stomping, DNS C2, DoH, LDAP security descriptor, BOFHound, BloodHound, PsExec, SMB net use, SOCKS proxy, port forwarding

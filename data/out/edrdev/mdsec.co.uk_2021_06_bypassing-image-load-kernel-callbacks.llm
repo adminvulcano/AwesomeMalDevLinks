@@ -1,0 +1,26 @@
+Title:
+Bypassing Image Load Kernel Callbacks
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post analyzes Windows image-load notification callbacks (registered via `PsSetLoadImageNotifyRoutine`) that many EDR/Sysmon-style sensors use to observe DLL/EXE/driver loads from kernel space. It shows that the callback is triggered during loader-backed section mapping (`NtCreateSection` with `SEC_IMAGE` + `NtMapViewOfSection`), making it difficult for low-privileged attackers to “turn off” image-load telemetry. The author demonstrates “spoofing” image-load events by repeatedly mapping a legitimate on-disk PE as an image section without actually loading/executing it, creating noisy/decoy telemetry. The main contribution is a custom user-mode PE loader (“DarkLoadLibrary”) that maps and initializes modules without using `SEC_IMAGE` section mapping, thereby avoiding image-load callbacks while still supporting `GetProcAddress`/`GetModuleHandle` semantics by linking into internal loader structures. It details how to locate and update undocumented ntdll loader data structures (PEB module lists, loader hash table, and module base-address red-black tree). This is primarily useful for red teams and malware developers focused on stealthy in-memory module loading and evasion of kernel image-load visibility.
+
+Technical Focus:
+- Image load notify routines (`PsSetLoadImageNotifyRoutine`) and kernel telemetry triggers  
+- Windows loader internals: `Ldrp*` routines, PEB/LDR structures, `LDR_DATA_TABLE_ENTRY`  
+- Section-based image mapping (`NtOpenFile`, `NtCreateSection` + `SEC_IMAGE`, `NtMapViewOfSection`)  
+- Custom PE loading: relocations, imports, TLS callbacks, exception handling, `DllMain`  
+- Loader indexing structures: module hash table (x65599 / `RtlHashUnicodeString`) and base-address RB-tree (`RtlRbInsertNodeEx`)  
+- Module concealment: unlinking from PEB, permission changes, section/header encryption
+
+Use Cases:
+- In-memory DLL loading that avoids kernel image-load callbacks/telemetry
+- Generating decoy/noise image-load events to degrade defender signal quality
+- Replacing reflective DLL injection with a loader that preserves normal API lookups
+- Post-exploitation tradecraft to reduce IOCs from “unbacked” or mismatched modules
+- Researching/validating EDR detections based on image-load callbacks and loader artifacts
+
+Keywords:
+PsSetLoadImageNotifyRoutine, image load callbacks, NtMapViewOfSection, NtCreateSection, SEC_IMAGE, Windows loader, ntdll, LdrpMapDllWithSectionHandle, LdrpMinimalMapModule, PEB, LDR_DATA_TABLE_ENTRY, GetProcAddress, GetModuleHandle, RtlHashUnicodeString, x65599, LdrpHashTable, red-black tree, RtlRbInsertNodeEx, DarkLoadLibrary, ConcealLibrary

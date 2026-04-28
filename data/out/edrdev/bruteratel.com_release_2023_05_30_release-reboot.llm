@@ -1,0 +1,32 @@
+Title:
+Brute Ratel v1.6 “Reboot” Release Notes (Ratel Server/Badger/Commander)
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- This release post summarizes Brute Ratel v1.6 updates across the C2 server, the Badger implant, and the Commander UI, with emphasis on evasion, stability, and operator QoL.  
+- It adds LDAP Sentinel sleep/jitter plus SASL (encrypted bind) with Kerberos fallback and attribute filtering to reduce noisy LDAP enumeration and evade network detections.  
+- New post-ex features include ACL enumeration via `GetSecurityDescriptorDacl`, process environment variable modification (`setenv`), a lightweight HTTP(S) “curl” command, and optional secure file deletion (multi-pass overwrite) via `rm rf`.  
+- Evasion-focused changes include disabling userland DLL load telemetry (to counter EDR userland LoadLibrary-style hooks) and lowering network traffic entropy for staged/stageless payloads using malleability and transport changes.  
+- SMB Badger named-pipe access is relaxed (Everyone DACL) to support scenarios like IIS exploitation where credentials/tokens aren’t available.  
+- Commander gains Windows 10 support, Hi-DPI scaling, theming via stylesheets, and multiple UI/UX improvements for managing sessions, logs, downloads, and connectivity state.  
+
+Technical Focus:
+- LDAP enumeration evasion (sleep/jitter, SASL bind encryption, attribute filtering)
+- Windows security descriptors and DACL parsing (`GetSecurityDescriptorDacl`)
+- Anti-forensics (secure deletion / overwrite-on-delete)
+- EDR evasion (userland DLL load notification suppression, entropy reduction, sleep obfuscation + module stomping stability)
+- C2 transport/malleability and DNS comms backend updates
+- SMB named pipe access control changes for payload connectivity
+
+Use Cases:
+- Stealthier AD reconnaissance and custom BloodHound-compatible data collection (with BofHound)
+- On-host permission auditing of files/folders during post-exploitation
+- Operating reliably inside constrained service contexts (IIS/service processes) by setting missing environment variables
+- Quick internal web app reachability checks without standing up SOCKS
+- Reducing forensic recoverability of dropped tooling/artifacts
+- Improving C2 survivability against network inspection/EDR telemetry and operator workflow via Commander enhancements
+
+Keywords:
+Brute Ratel, BRc4, Badger, Ratel Server, Commander, LDAP Sentinel, SASL, Kerberos, LDAP bind, sleep jitter, BloodHound, BofHound, DACL, GetSecurityDescriptorDacl, named pipe, SMB, PsSetLoadImageNotifyRoutineEx, LoadLibrary hooking, module stomping, sleep obfuscation, network entropy, DNS C2, malleable C2, secure deletion, EnCase, Autopsy, CrowdStrike, Defender ATP, Elastic EDR, FortiEDR

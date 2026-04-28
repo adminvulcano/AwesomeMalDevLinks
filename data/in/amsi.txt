@@ -54,3 +54,7 @@ https://thewover.github.io/Cruller/
 https://thewover.github.io/Mixed-Assemblies/
 https://www.nttdata.com/global/en/-/media/nttdataglobal/1_files/services/cybersecurity/radar_magazine/2024/radar_supplement_july.pdf
 https://github.com/vari-sh/RedTeamGrimoire/tree/main/Obolos
+https://winslow1984.com/books/red-team/page/bypass-amsi-on-windows-11
+https://winslow1984.com/books/malware/page/mutationgate
+https://blog.washi.dev/posts/misconceptions-about-dotnet/
+https://blog.washi.dev/posts/awaitfuscator/

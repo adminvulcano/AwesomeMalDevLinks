@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v1.2 “Scandinavian Defense” Release – Memory Evasion and Bring-Your-Own Injection via COFF
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes Brute Ratel C4 v1.2 (“Scandinavian Defense”) with a focus on in-memory evasion against userland EDR hooking and telemetry.  
+- It targets common EDR “traps” such as PEB/IAT/EAT manipulation, page-guarded decoy mappings, VEH-based exception interception, and origin checks on API calls from unbacked RX/RWX regions.  
+- The post outlines techniques to locate legitimate ntdll metadata without trusting the PEB, unhook EDR DLLs before resolving NTAPI pointers, and adjust PIC/PE staging to avoid detections tied to unbacked allocations (notably discussed with Elastic).  
+- It also adds stronger sleep-masking: heap + stack encryption, thread stack frame duplication, and anti-debugging behaviors to hinder sandboxing and reverse engineering.  
+- A major operator feature is “bring your own injection” by extending COFF/BOF execution to accept file buffers (shellcode/.NET/reflective DLL) via `set_coffargs`, plus a buffer-size API for allocation workflows.  
+- Useful primarily for red teams/pentesters and malware tradecraft researchers; it’s interesting for its detailed discussion of modern EDR memory traps and practical countermeasures (including hardware-breakpoint “patchless” AMSI/ETW evasion).
+
+Technical Focus:
+- Userland EDR hooking/traps (PEB/IAT/EAT hooks, page guards, VEH interception)
+- Legitimate ntdll discovery without PEB trust (kernel structure/EPROCESS-derived metadata)
+- Unhooking system DLLs / restoring clean syscall/NTAPI resolution
+- Sleep masking: heap & stack encryption, thread stack spoofing/duplication
+- COFF/BOF extensibility and file-buffer argument passing for custom injection
+- Hardware breakpoints (DR0–DR3/DR7) + VEH for “patchless” AMSI/ETW evasion
+
+Use Cases:
+- Building more resilient Windows implants/loaders that survive common EDR userland traps
+- Customizing injection tradecraft by shipping operator-supplied COFF modules and payload buffers
+- Reducing in-memory artifacts during sleep (stack/heap encryption, stack frame spoofing)
+- Evading AMSI/ETW detections without inline patching (hardware-breakpoint redirection)
+- Hardening payloads against debugging/sandbox automation (anti-debug crash-on-detect)
+
+Keywords:
+Brute Ratel, Badger, EDR evasion, userland hooks, ntdll.dll, kernel32.dll, kernelbase.dll, PEB hooking, IAT hooking, EAT hooking, Page Guard, Vectored Exception Handler (VEH), ETWTI, LdrLoadDll, LoadLibrary, reflective DLL, PIC, module stomping, COFF, BOF, set_coffargs, AMSI, AmsiScanBuffer, ETW, EtwEventWrite, hardware breakpoints, DR0-DR3, DR7, GetThreadContext, sleep masking, stack encryption, heap encryption, thread stack spoofing

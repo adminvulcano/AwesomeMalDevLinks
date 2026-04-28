@@ -1,0 +1,169 @@
+# https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/
+
+<!DOCTYPE html><html lang="en-US">
+
+<body class="wp-singular post-template-default single single-post postid-15923 single-format-standard wp-theme-insinuator2 group-blog">
+
+	<!-- hello icons! -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="menu" viewBox="0 0 14 12">
+    <rect width="14" height="2" rx="1"></rect>
+    <rect y="5" width="10" height="2" rx="1"></rect>
+    <rect y="10" width="14" height="2" rx="1"></rect>
+  </symbol>
+
+  <symbol id="search" viewBox="0 0 16 16">
+    <path d="M15.557 14.166l-4.206-4.234a6.281 6.281 0 0 0 1.16-3.64C12.51 2.817 9.71 0 6.255 0 2.801 0 0 2.817 0 6.292c0 3.474 2.8 6.291 6.255 6.291 1.35 0 2.597-.435 3.62-1.166l4.205 4.234a1.039 1.039 0 0 0 1.477 0 1.054 1.054 0 0 0 0-1.485zM10.426 6.29a4.157 4.157 0 1 1-8.314 0 4.157 4.157 0 0 1 8.314 0z"></path>
+  </symbol>
+
+  <symbol id="back" viewBox="0 0 9 16">
+    <path d="M.322 8.77l6.751 6.862c.43.436 1.126.436 1.555 0a1.13 1.13 0 0 0 0-1.58L2.654 7.98l5.974-6.072a1.13 1.13 0 0 0 0-1.58 1.086 1.086 0 0 0-1.555 0L.32 7.19A1.124 1.124 0 0 0 0 7.98c0 .286.107.572.322.79z"></path>
+  </symbol>
+
+  <symbol id="mail" viewBox="0 0 17 16">
+    <path d="M16.992 5.895c0-.606-.315-1.137-.8-1.431L8.5 0 .807 4.464A1.673 1.673 0 0 0 0 5.894v8.422C0 15.242.765 16 1.7 16h13.6c.935 0 1.7-.758 1.7-1.684l-.008-8.421zM8.5 10.105L1.479 5.76 8.5 1.684l7.021 4.076L8.5 10.105z"></path>
+  </symbol>
+
+  <symbol id="twitter" viewBox="0 0 20 16">
+    <path d="M18.559 2.233c-.103.054-.3.124-.533.192.293-.39.529-.826.634-1.218a.42.42 0 0 0-.164-.45.42.42 0 0 0-.48 0c-.224.159-1.315.632-2.004.786-1.547-1.356-3.383-1.498-5.254-.406-1.533.896-1.866 2.712-1.8 3.821-3.503-.337-5.683-2.19-6.911-3.722a.416.416 0 0 0-.683.049C.782 2.264.623 3.347.9 4.417c.153.582.417 1.097.725 1.514a2.177 2.177 0 0 1-.424-.272.416.416 0 0 0-.68.322c0 1.908 1.202 3.092 2.253 3.705a3.085 3.085 0 0 1-.568-.12.412.412 0 0 0-.501.561c.6 1.332 1.742 2.237 3.156 2.57-1.221.718-2.848 1.059-4.398.881-.197-.025-.382.047-.444.237-.06.188.019.214.192.312 2.054 1.153 4.13 1.463 6.172 1.463 3.06 0 5.922-1.044 8.06-3.44 2.008-2.246 3.06-4.876 2.848-7.477.528-.392 1.32-1.093 1.81-1.866a.39.39 0 0 0-.044-.486.418.418 0 0 0-.5-.088z"></path>
+  </symbol>
+
+  <symbol id="mastodon" viewBox="0 0 448 512">
+    <path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"></path>
+  </symbol>
+
+  <symbol id="linkedin" viewBox="0 0 448 512">
+    <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"></path>
+  </symbol>
+
+  <symbol id="rss" viewBox="0 0 15 16">
+    <g transform="rotate(45 3.864 2.5)">
+      <path d="M0 3.955l1.818 1.737c4.518-4.317 11.846-4.317 16.364 0L20 3.955c-5.518-5.273-14.473-5.273-20 0zm3.636 3.474l1.819 1.738c2.509-2.398 6.581-2.398 9.09 0l1.819-1.738c-3.51-3.353-9.21-3.353-12.728 0z"></path>
+      <ellipse cx="10.093" cy="11.333" rx="2.093" ry="2"></ellipse>
+    </g>
+  </symbol>
+</svg>
+
+	<div id="page" class="site">
+		<div class="site-header-wrap">
+			<!-- #masthead -->
+		</div>
+
+		<div id="content" class="site-content">
+
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+<article id="post-15923" class="post-15923 post type-post status-publish format-standard hentry category-misc tag-reversing tag-windows">
+	
+	<!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>While investigating how process mitigation settings are initialized, I encountered the global variable <code>PspSystemMitigationOptions</code>. Tracing how this value is populated led me to the <code>CmControlVector</code>. In this blog post, we take a look at the Windows kernel land configuration manager, especially its global <code>CmControlVector</code> variable. Quick note: the kernel’s configuration manager is not related to Microsoft Intune’s <a href="https://learn.microsoft.com/en-us/intune/configmgr/core/understand/introduction">Configuration Manager</a>. In short, the configuration manager is responsible for managing and implementing the registry. However, it is also responsible for setting up parts of the system during early boot.</p>
+<p><span id="more-15923"></span></p>
+<p>This blog post is structured as follows:</p>
+<ul class="incremental">
+<li>First, a bit of background on how I encountered the <code>CmControlVector</code>. It was of course via a detour. <!-- while investigating another global variable: `PspSystemMitigationOptions`, which is closely related to the `_EPROCESS` structure's `MitigationFlags`. --></li>
+<li>Next, we discuss when and how the <code>CmControlVector</code> is processed by the kernel’s configuration manager.</li>
+<li>Finally, we take a peek into the <code>CmControlVector</code> variable and extract some insights.</li>
+</ul>
+<p>Recently, a question regarding a process’s <code>MitigationFlags</code> came up. These flags encode the exploit mitigations the kernel (or process itself) applies to a process. The information regarding enabled mitigations are stored in the process’s <code>_EPROCESS</code> structure. Many exploit mitigations already play a role during process initialization. In the past (see, for example, our work on the <a href="https://insinuator.net/2024/04/bsi-publishes-windows-10-sisyphus-reports-application-compatibility-infrastructure-microsoft-defender-antivirus-etw-usage-and-device-setup-manager-service/">Application Compatibility Infrastructure</a>), we often had to debug the process creation procedure under Windows. And so from time to time, we had already stumbled across the <code>PspSystemMitigationOptions</code> global variable. This one is prominently used in <code>PspAllocateProcess</code> when a newly created process is allocated.</p>
+<p>To make a long story short, the global <code>PspSystemMitigationOptions</code> is combined with per-process (more precisely, per-image) settings stored in the registry. These are known as <code>Image File Execution Options</code> (<code>IFEO</code>). Together, they form the effective <code>MitigationFlags</code>, which are then transformed and stored in a process’s <code>_EPROCESS</code> structure. For this blog post, we don’t need to dive deep into this setup and merging procedure. But in broad strokes, the process is as follows: the system-wide and per-image settings are combined into the effective mitigation settings. They are then transformed into the three <code>MitigationOptions</code> of the <code>_EPROCESS</code> structure. This transformation consists mostly of rearranging the bit order and applying some additional checks and lookups. In the <code>_EPROCESS</code> they are called <code>MitigationOptions</code>, <code>MitigationOptions2</code> and <code>MitigationOptions3</code>. The <code>MitigationOptions</code> have evolved over time, and with new releases of Windows and new mitigations that are implemented there are now three 64-bit values that encode the <code>MitigationOptions</code>.</p>
+<p>Both, the per-image and system-wide settings are stored in the registry. The <code>IFEO</code> options are set as the name suggests, per-image. This registry key can be used to configure more than only mitigation options and is <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/xperf/image-file-execution-options">partially documented</a>. I typically use the <code>IFEO</code> options to attach a debugger (preferably a time-travel debugger) when a process launches. The <code>MitigationOptions</code> value are located for each image under:</p>
+<ul class="incremental">
+<li><code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\&lt;ImageName.exe&gt;</code></li>
+</ul>
+<p>The system-wide mitigation settings are stored under:</p>
+<ul class="incremental">
+<li><code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel</code></li>
+</ul>
+<p>This can easily be identified by changing the so-called <a href="https://learn.microsoft.com/en-us/defender-endpoint/enable-exploit-protection">“Exploit protection”</a> settings and using Procmon to trace registry usage. However, this gives the location where the settings are stored, and via the stack trace which code is responsible for setting them. But we don’t know the component that is responsible for reading them in. For the <code>IFEO</code> <code>MitigationOptions</code>, it was quite clear that they are read during process allocation in <code>PspAllocateProcess</code>. The procedure for reading the system-wide mitigation settings from the registry is not that obvious right away. While investigating, I also read a bit about what <a href="https://www.orangecyberdefense.com/global/blog/cybersecurity/fairy-law">others</a> had to say about the <code>PspSystemMitigationOptions</code>. While skimming the article, some points stood out, such as that the settings are “populated from boot-time registry configuration” and that “changes to MitigationOptions made at runtime are therefore ignored until the next reboot”. This is indeed the case, and Windows notifies a user when the system-wide “Exploit Mitigation” settings are changed that a reboot is required for the changes to take effect.</p>
+<p>The referenced article also mentions when system-wide mitigation settings are read from the registry; however, I skimmed over this part. Instead, I choose to investigate, again, with Procmon. I set up a boot trace with Procmon, rebooted the system, and to my initial surprise, the registry value was never read. So, I repeated the process, again, with the same outcome. This suggests that the value is referenced before Procmon has started! In parallel, I did some light reversing. The <code>PspSystemMitigationOptions</code> themselves are not referenced during initialization. Cross-references always expected them to be set and read them directly. But I soon found out that the <code>PspSystemMitigationOptions</code> are referenced in a larger structure, the <code>CmControlVector</code>, which is used in <code>nt!CmpGetSystemControlValues</code>. To be sure, I decided to verify my expectations from my static reversing by placing a data breakpoint on <code>PspSystemMitigationOptions</code>. Indeed, as expected, I got a hit on my breakpoint, and <code>nt!CmpGetSystemControlValues</code> was prominently located in the call stack as shown below:</p>
+<pre><code>kd&gt; k
+ # Child-SP          RetAddr               Call Site
+00 fffff802`8107b258 fffff802`ef23dacc     nt!memcpy+0x32
+01 fffff802`8107b260 fffff802`ef239bd2     nt!CmpGetBootValueData+0x210
+02 fffff802`8107b2d0 fffff802`ef239184     nt!CmpGetSystemControlValues+0x38a
+03 fffff802`8107b590 fffff802`ef1fbef0     nt!CmInitSystem0+0x1c
+04 fffff802`8107b5c0 fffff802`ef14a156     nt!InitBootProcessor+0x268
+05 fffff802`8107b7d0 fffff802`ef13c623     nt!KiInitializeKernel+0x816
+06 fffff802`8107bab0 00000000`00000000     nt!KiSystemStartup+0x283</code></pre>
+<p>Now that we have confirmed what we already expected, we need to put it into context. We are indeed dealing with configuration manager code inside the kernel. This means that we are still in phase zero of the kernel initialization. In general, the Windows kernel initialization has two phases: Phase 0 and Phase 1.</p>
+<ul class="incremental">
+<li>Phase 0 performs early, low-level setup using minimal resources, initializing core components like memory management, interrupts, and the hardware abstraction layer while the system is still single-threaded. This is also where the registry is set up and the <code>CmControlVector</code> is read.</li>
+<li>Phase 1 continues with full system initialization, enabling multitasking, and initializing device drivers and system services.</li>
+</ul>
+<p>This explains why Procmon never captured the registry access: the <code>CmControlVector</code> is processed during Phase 0, before drivers and user-land tooling is available.</p>
+<p>Now the interesting question: What is the <code>CmControlVector</code>, and how is it processed? Essentially, it is an array of type <code>CM_CONTROL_VECTOR</code>. The following list provides an overview and shows the values for the <code>PspSystemMitigationOptions</code></p>
+<ul class="incremental">
+<li><code>pKeyPath</code>: a unicode string with a registry path. In this case: <code>Session Manager\Kernel</code></li>
+<li><code>pValueName</code>: a unicode string with a value name. In this case: <code>MitigationOptions</code></li>
+<li><code>pTargetBuffer</code>: a pointer to a target buffer. Potentially, there is a default value. In this case: <code>PspSystemMitigationOptions</code>, with no default value.</li>
+<li><code>pSizeOptional</code>: a pointer to the size of the expected data. In this case: <code>PspSystemMitigationOptionsLength</code> which is <code>0x18</code>.</li>
+<li><code>typeOptional</code>: an optional type. Which is not set in this case.</li>
+<li><code>flagsOptional</code>: optional flags. Which is also not set in this case.</li>
+</ul>
+<p>During kernel initialization, the <code>CmControlVector</code> is iterated entry by entry. Each entry is used to read a value from the registry. The result is then stored in the corresponding target buffer. For our case, this would be the <code>PspSystemMitigationOptions</code>. This also confirms that this registry value is indeed only read once during early boot and then stored in the global variable <code>PspSystemMitigationOptions</code>. Afterwards this global variable is then only read, but not modified anymore. However, the <code>PspSystemMitigationOptions</code> are only a small portion of the <code>CmControlVector</code>. Considering Windows 11 LTSC 24H2, the <code>CmControlVector</code> contains 563 entries.</p>
+<p>To gain some insight into <code>CmControlVector</code>, I created a small IDA script to extract the information. While some target buffers (like <code>PspSystemMitigationOptions</code>) are referenced by a symbol, others are anonymous. To gain more insight, the script also collects cross-references for each target buffer. This helps identify which kernel component uses a given configuration entry. It is indeed only a small portion that has no symbol, and mostly related to the memory manager. This is obvious on the one hand from the registry location, and the function that uses the variable.</p>
+<p>The script to extract the data is available <a href="https://github.com/ernw/insinuator-snippets/blob/master/CmControlVector/extractBootValues.py">here</a>, and a list of all results is available <a href="https://github.com/ernw/insinuator-snippets/blob/master/CmControlVector/CmControlVectorData.json">here</a>. And finally, I collected some more or less interesting information <a href="https://github.com/ernw/insinuator-snippets/blob/master/CmControlVector/Stats.txt">here</a>. This one lists statistics on whether entries have an option size, type, or flags set, and finally, which kernel component uses the variables. This one is based on the function prefix. Note that it lists the private and non-private prefixes separately, i.e., <code>Etw</code> and <code>Etwp</code>. I did not normalize these prefixes, as some cases (e.g., <code>PnP</code>) make automated grouping ambiguous. Furthermore, with other parts, the private or internal part is referenced instead with an <code>i</code>, for example, in the case of the memory manager that uses the <code>Mi</code> prefix.</p>
+<hr>
+<p>In case you’re interested, here are other recent Windows internals contributions from <a href="https://ernw.de/">ERNW</a>:</p>
+<ul>
+<li><a href="https://blackhat.com/us-25/briefings/schedule/#windows-hell-no-for-business-45865">Windows Hell No for Business</a> @ Black Hat USA 2025
+<ul>
+<li>Related blog post: <a href="https://insinuator.net/2025/08/windows-hello-for-buiness-faceplant-planting-biometric-templates/">Windows Hello for Business – Faceplant: Planting Biometric Templates</a></li>
+<li>Related blog post: <a href="https://insinuator.net/2025/07/windows-hello-for-business-the-face-swap/">Windows Hello for Business – The Face Swap</a></li>
+<li>Related blog post: <a href="https://insinuator.net/2025/06/windows-hello-for-business-past-and-present-attacks/">Windows Hello for Business – Past and Present Attacks</a></li>
+</ul>
+</li>
+<li><a href="https://www.youtube.com/watch?v=hZjPvYSxDdM">WinpMem: Volatility’s driver that lets malware volatilize</a> @ Recon 2025
+<ul>
+<li>Related <a href="https://insinuator.net/2025/10/white-paper-73-analyzing-winpmem-driver-vulnerabilities/">white paper release</a></li>
+</ul>
+</li>
+<li><a href="https://insinuator.net/2025/01/jigsaw-rdpuzzle/">Jigsaw RDPuzzle: Piecing Attacker Actions Together</a></li>
+</ul>
+
+
+			</div><!-- .entry-content -->
+
+	<!-- .entry-footer -->
+</article><!-- #post-## -->
+
+	
+<div id="comments" class="comments-area ">
+
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://insinuator.net/wp-comments-post.php" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p><p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required=""></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" required=""></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="email" value="" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email" required=""></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="url" value="" size="30" maxlength="200" autocomplete="url"></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> 
+
+</p><p style="display: none;"></p><p style="display: none !important;" class="akismet-fields-container" data-prefix="ak_"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label>
+</p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments -->
+
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+
+		</div><!-- #content -->
+
+		<!-- #colophon -->
+	</div><!-- #page -->
+
+	
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

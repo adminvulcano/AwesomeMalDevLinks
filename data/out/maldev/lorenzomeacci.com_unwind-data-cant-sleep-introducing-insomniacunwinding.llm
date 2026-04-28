@@ -1,0 +1,25 @@
+Title:
+Unwind Data Can’t Sleep – Introducing InsomniacUnwinding
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post analyzes why common sleep-masking approaches break x64 stack walking and therefore produce suspicious/garbled call stacks when EDRs unwind threads during sleep. It explains Windows x64 unwinding (.pdata RUNTIME_FUNCTION entries and .rdata UNWIND_INFO) and shows that encrypting PE headers/.pdata/.rdata prevents RtlVirtualUnwind from reconstructing frames. The author introduces “InsomniacUnwinding”: preserve only the minimum unwind-critical bytes (PE headers, .pdata, and surgically extracted UNWIND_INFO structures) while encrypting the rest of the image to reduce signature exposure. A cross-process PoC encrypts/decrypts the beacon from an external helper via named pipes, avoiding the need for call stack spoofing when both components execute from backed (legitimate) modules. The technique is then applied in-process by modifying Ekko’s timer/NtContinue-based sleepmask to patch preserved regions via timer-queued RtlCopyMemory calls. It’s useful for red teamers and implant developers trying to combine memory encryption during sleep with clean, unwindable call stacks and reduced YARA-detectable plaintext.
+
+Technical Focus:
+- Windows x64 stack unwinding (.pdata, RUNTIME_FUNCTION, UNWIND_INFO, RtlVirtualUnwind)
+- Sleep masking / in-memory encryption tradeoffs vs call stack integrity
+- Surgical extraction/preservation of UNWIND_INFO referenced by .pdata
+- Cross-process memory modification (OpenProcess, ReadProcessMemory, WriteProcessMemory) + named pipes IPC
+- Timer-queue/NtContinue-based execution chains (Ekko) and context-driven API invocation
+
+Use Cases:
+- Implement sleep masking that keeps call stacks unwindable during sleep
+- Reduce memory-scanner/YARA hits by encrypting most of .rdata while preserving only unwind metadata
+- Build cross-process “encryptor” helpers to avoid self-encryption pitfalls and spoofing requirements
+- Enhance Ekko-style timer sleepmasks to maintain valid unwind data for main-thread stack walking
+- Research/detection testing of stack-unwinding failure modes as a signal for encrypted implants
+
+Keywords:
+Windows x64 unwinding, RtlVirtualUnwind, UNWIND_INFO, RUNTIME_FUNCTION, .pdata, .rdata, IMAGE_DIRECTORY_ENTRY_EXCEPTION, PE headers, sleep masking, memory encryption, call stack walking, YARA scanning, cross-process injection, ReadProcessMemory, WriteProcessMemory, named pipes, Ekko, CreateTimerQueueTimer, NtContinue, CONTEXT structures, RtlCopyMemory, backed vs unbacked memory, module stomping, Cobalt Strike Beacon

@@ -1,0 +1,31 @@
+Title:
+EDR/XDR Bypass and Detection Evasion Techniques: An Investigation of Advanced Evasion Strategies from a Red Team Perspective
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This article surveys modern EDR/XDR telemetry and enforcement mechanisms (user-mode hooks, ETW, kernel callbacks, memory integrity, cloud correlation) and why classic post-exploitation tradecraft increasingly fails.  
+- It breaks down several evasion primitives—API unhooking, BOF/COFF in-memory execution, indirect/direct syscalls, ETW suppression, and kernel callback tampering—explaining how each targets a specific visibility layer.  
+- The post emphasizes “layered evasion” (combining techniques like indirect syscalls + ETW patching, or in-memory execution + sleep obfuscation) rather than relying on single bypasses.  
+- It introduces “time-difference/latency” attacks that exploit delays between kernel notifications and user-mode/cloud analysis to execute actions before enforcement.  
+- Case-study style sections discuss practical constraints and detection differences across products (e.g., Bitdefender user-mode hook focus; CrowdStrike/SentinelOne behavioral/stack-tracing sensitivity) and highlight residual detection vectors (memory permission flips, syscall patterns, integrity checks).  
+- Useful for red teams/malware developers to understand where telemetry originates and for blue teams to derive hardening and detection ideas (integrity validation, syscall/stack anomaly detection, timer/APC monitoring, HVCI/LSA protections).
+
+Technical Focus:
+- User-mode API hooking and ntdll.dll unhooking (inline/IAT hooks)
+- BOF/COFF in-memory execution and custom loaders (C2 “inline-execute” model)
+- Direct/indirect system calls and syscall pattern/call-stack evasion
+- ETW provider telemetry suppression (EtwEventWrite patching) and logging blind spots
+- Kernel callbacks (PsSetCreateProcessNotifyRoutine / thread / image load) and tampering risks
+- Timing/latency exploitation (timer-based delayed execution, suspended threads)
+
+Use Cases:
+- Evaluate how a given EDR collects telemetry (hooks vs ETW vs kernel callbacks) and map likely detection points
+- Design controlled red-team tradecraft tests for fileless execution and reduced process-creation artifacts (BOF workflows)
+- Build detection engineering hypotheses: monitor ntdll .text integrity changes, ETW write patching, anomalous syscall density, timer/APC-based delayed execution
+- Develop defensive hardening plans: enable HVCI/Credential Guard, protect driver/registry keys, correlate memory-permission transitions with network/credential access
+- Create lab benchmarks comparing tool variants (standalone PE vs BOF) and measure alerting under different EDRs/policies
+
+Keywords:
+EDR, XDR, API hooking, inline hook, IAT hooking, ntdll.dll, API unhooking, BOF, COFF, Cobalt Strike, PostExpKit, in-memory execution, direct syscall, indirect syscall, ETW, EtwEventWrite, kernel callbacks, PsSetCreateProcessNotifyRoutine, stack tracing, sleep obfuscation, SetTimer, CreateRemoteThread, VirtualAllocEx, WriteProcessMemory, NtAllocateVirtualMemory, HVCI, Credential Guard, behavioral correlation, cloud telemetry

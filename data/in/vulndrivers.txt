@@ -37,3 +37,12 @@ https://www.exploitpack.com/blogs/news/windows-kernel-exploits-using-zwmapviewof
 https://www.nsideattacklogic.de/en/kernel-access-please-byovd-and-vulnerable-drivers/
 https://github.com/BlackSnufkin/HolyGrail
 https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days
+https://github.com/xM0kht4r/VEN0m-Ransomware
+https://medium.com/@s12deff/weaponizing-byovd-to-kill-and-evade-windows-defender-535ad94652b0
+https://github.com/jsacco/DataOnlyGadget
+https://core-jmp.org/2026/04/poisonx-terminating-protected-windows-processes-via-byovd/
+https://medium.com/@jehadbudagga/reverse-engineering-a-0day-used-against-crowdstrike-edr-a5ea1fbe3fd4
+https://core-jmp.org/2026/04/breaking-process-protection-exploiting-cve-2026-0828-in-processmonitordriver-sys/
+https://blog.talosintelligence.com/qilin-edr-killer/
+https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
+https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/

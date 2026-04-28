@@ -1,0 +1,30 @@
+Title:
+Injecting Code using Imported Functions into Native PE Files (Import Patching)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how to inject new code into an existing native Windows PE without source code, where the injected code needs to call external APIs not currently imported by the binary.  
+- The core problem is that extending or relocating the existing Import Lookup Table (ILT) / Import Address Table (IAT) can overwrite adjacent data or require rewriting code/data references—often infeasible without full disassembly/reassembly.  
+- The proposed solution rebuilds the import directory in a new section and uses per-import trampoline stubs so the original code can keep referencing the original IAT entries unchanged.  
+- Each original IAT entry is patched to point to a trampoline, which then jumps through the corresponding entry in the new IAT, effectively “rewiring” imports without touching `.text`.  
+- The post includes a C# implementation using AsmResolver to add new sections, generate thunk stubs, rebuild import buffers, and update PE data directories.  
+- Useful for red teamers, reverse engineers, and tool authors building binary patchers/obfuscators/loaders; interesting because it’s a generic import-extension method that avoids complex code relocation.
+
+Technical Focus:
+- PE import internals: ILT, IAT, Import Directory, Data Directories
+- IAT patching and thunk/trampoline generation (x64)
+- Adding new PE sections and updating headers/offsets
+- AsmResolver PEFile/PEImage manipulation and ImportDirectoryBuffer
+- Address fixups/relocations considerations for patched binaries
+
+Use Cases:
+- Injecting functionality into closed-source executables while preserving original code layout
+- Adding new imported APIs (e.g., CRT/Win32) to support injected payload logic
+- Building binary-level obfuscators/deobfuscators that need controlled import rewriting
+- Instrumentation/introspection by rerouting imported calls through custom stubs
+- Creating patched “loader-like” behavior by inserting a new entry stub then jumping to original entry point
+
+Keywords:
+Portable Executable, PE, Import Directory, Import Lookup Table, ILT, Import Address Table, IAT, thunk, trampoline, x86-64, code injection, binary patching, section injection, data directories, AsmResolver, C#, ucrtbase.dll, puts, entry point patching, relocations

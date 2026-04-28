@@ -1,0 +1,30 @@
+Title:
+Stealth Injection with ROP: Thread Hijacking Without Executable Memory (T(ROP)H)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post describes T(ROP)H, a Windows x64 DLL injection technique that avoids allocating executable memory in a remote process by using thread hijacking plus a minimal ROP chain.  
+- It targets a common EDR/IOC signal—`VirtualAllocEx` with executable permissions—by only allocating RW memory for the DLL path and reusing existing code in loaded modules.  
+- The core idea is to suspend a remote thread, adjust its `RIP`/`RSP`, and place a small stack buffer so execution hits a `pop rcx; ret` gadget and then returns into `LoadLibraryA` with the DLL path passed via `RCX` (x64 calling convention).  
+- It highlights a practical constraint: `SetThreadContext` can’t directly set certain volatile registers like `RCX`, motivating the ROP gadget approach.  
+- The write-up also notes detectability: despite avoiding RX allocations, the method is still visible due to `SetThreadContext` generating ETW events (Kernel-Audit-API-Calls and Threat-Intelligence).  
+- Useful for red teamers and malware developers exploring stealthier injection tradeoffs, and for blue teams building detections around thread context tampering and ETW telemetry.
+
+Technical Focus:
+- Windows x64 calling convention (RCX argument passing)
+- Thread hijacking via `SuspendThread` / `GetThreadContext` / `SetThreadContext` / `ResumeThread`
+- ROP gadget discovery and runtime address resolution (e.g., `pop rcx; ret` in `ntdll.dll`)
+- DLL injection via `LoadLibraryA` without executable memory allocation
+- Remote memory operations (`VirtualAllocEx`, `WriteProcessMemory`) for data-only payload staging
+- ETW-based detection surface for `SetThreadContext`
+
+Use Cases:
+- Stealthier DLL injection PoCs that avoid RWX/RX remote allocations
+- Evaluating EDR detection gaps between memory-permission IOCs vs. thread-context telemetry
+- Building/validating detections for thread hijacking and ROP-style control-flow manipulation
+- Red team tradecraft research on “living-off-the-module” execution using existing code pages
+
+Keywords:
+T(ROP)H, thread hijacking, ROP chain, pop rcx ret, Windows x64, calling convention, RCX, RIP, RSP, SetThreadContext, GetThreadContext, SuspendThread, ResumeThread, VirtualAllocEx, WriteProcessMemory, LoadLibraryA, kernel32.dll, ntdll.dll, ETW, Microsoft-Windows-Threat-Intelligence, Microsoft-Windows-Kernel-Audit-API-Calls, DLL injection, EDR detection

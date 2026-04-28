@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v1.1 “Stoffel’s Escape” Release (Badger core rewrite & evasion upgrades)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes Brute Ratel C4 v1.1 updates, centered on a full rewrite of the “Badger” implant core to reduce memory artifacts and known IOCs highlighted by public reverse-engineering/detection writeups.  
+- It replaces prior reflective-DLL-centric design elements with a new staged/wrapper approach, adds per-build randomized crypto keys, and introduces polymorphic shellcode generation (e.g., random register usage) to resist signature/YARA detections.  
+- Major in-memory evasion changes include on-demand DLL loading, PEB-based module discovery to avoid LoadLibrary/LdrLoadDll, proxying DLL-load calls via legitimate Windows functions to evade EDR stack-tracing/EtwTI-based heuristics, and expanded sleep masking with full-region encryption plus thread stack masquerading/start-address spoofing.  
+- It expands indirect syscall support to x86 and WOW64, adds “phantom_thread” (alertable-thread context hijack with ROP gadget redirection), and introduces “memhook” for runtime patching/hooking of arbitrary memory regions without BOFs.  
+- Operational features include built-in SOCKS with nested pivoting, “burnable” SOCKS profiles, SOCKS over DoH, improved staging (small ~7–8KB stages) and exit behaviors for APC/QAPC scenarios, plus various Commander UX/tasking improvements.  
+- Useful primarily for red teams/pentesters and adversary emulation operators; also relevant to blue teams for understanding modern C2 implant evasion patterns and telemetry gaps.
+
+Technical Focus:
+- Indirect syscalls (x64/x86/WOW64) and syscall-based evasion
+- PEB module enumeration and DLL-load proxying (LoadLibrary/LdrLoadDll avoidance)
+- Sleep masking, full-region in-memory encryption, custom heap/zeroization
+- Thread stack masquerading, start-address spoofing, APC/QAPC execution nuances
+- Alertable-thread injection via context hijacking + ROP gadgets (“phantom_thread”)
+- Pivoting via built-in SOCKS, SOCKS over DNS-over-HTTPS (DoH)
+
+Use Cases:
+- EDR-evasion-focused implant deployment and post-exploitation on Windows
+- Stealthier process injection and thread-based execution (alertable thread targeting)
+- Nested pivoting inside segmented networks (SMB/TCP pivots, SOCKS/DoH routing)
+- Runtime patching of security controls or program behavior via in-memory hooks
+- Blue-team detection engineering: hunting for PEB-walking, proxied DLL loads, stack-masqueraded threads, and indirect-syscall patterns
+
+Keywords:
+Brute Ratel, BRc4, Badger, C2, reflective DLL, shellcode loader, polymorphic shellcode, YARA evasion, RC4, randomized keys, PEB, LoadLibrary, LdrLoadDll, EtwTI, stack tracing, sleep masking, thread stack masquerading, start address spoofing, indirect syscalls, WOW64, APC, QAPC, ROP gadgets, context hijacking, SOCKS proxy, DNS over HTTPS, SMB pivoting, TCP pivoting, BOF, Coffexec, memhook, AMSI strings

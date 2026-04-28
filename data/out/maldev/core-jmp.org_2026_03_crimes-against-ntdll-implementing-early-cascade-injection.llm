@@ -1,0 +1,31 @@
+Title:
+Crimes against NTDLL – Implementing Early Cascade Injection (Rust)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how to implement Outflank’s “Early Cascade Injection” technique in Rust to execute code at the earliest stage of Windows user-mode process initialization.  
+- It abuses NTDLL’s Application Compatibility Shim Engine by enabling `g_ShimsEnabled` and redirecting the shim DLL-load callback pointer (`g_pfnSE_DllLoaded` / `g_fnSE_DllLoaded`) to attacker-controlled code.  
+- The target process is created suspended, stage-1 bootstrap code is injected, and the shim callback pointer is patched (with required pointer encoding) so execution occurs during normal loader activity (around `LdrInitializeThunk`).  
+- The stage-1 stub (written as `no_std` Rust “shellcode-like” code) disables shims immediately and queues a same-thread APC via `NtQueueApcThread` to run a stage-2 payload (e.g., reflective DLL loader).  
+- It avoids common injection artifacts like `CreateRemoteThread`, cross-process APC injection, and thread context hijacking, and can run before many user-mode EDR hooks/telemetry components initialize.  
+- The write-up also covers resolving undocumented NTDLL globals via byte-pattern scanning and handling encoded callback pointers using `SharedUserData!Cookie` at `0x7FFE0330`.  
+- Useful for red teamers/implant developers building stealthy spawn-and-inject primitives; also relevant to defenders studying early-process injection and loader/shim abuse.
+
+Technical Focus:
+- NTDLL loader internals (`LdrInitializeThunk`) and early user-mode execution
+- Application Compatibility Shim Engine abuse (`g_ShimsEnabled`, `g_pfnSE_DllLoaded`)
+- Pointer encoding/decoding using `SharedUserData!Cookie` (system pointer encoding)
+- Byte-pattern scanning to locate undocumented globals in NTDLL
+- `no_std` Rust stubs as position-independent bootstrap code
+- Same-thread APC execution via `NtQueueApcThread` / dispatch via `NtTestAlert`
+
+Use Cases:
+- Stealthy spawn-and-inject for C2 implants prior to user-mode EDR initialization
+- Fileless payload execution without remote thread creation
+- Building early-stage loaders that transition into reflective DLL injection
+- Researching/detecting shim-engine variable tampering and early loader callback abuse
+
+Keywords:
+Early Cascade Injection, ntdll.dll, Shim Engine, Application Compatibility, g_ShimsEnabled, g_pfnSE_DllLoaded, g_fnSE_DllLoaded, LdrInitializeThunk, CREATE_SUSPENDED, process injection, EDR preload, user-mode hooks, SharedUserData Cookie, 0x7FFE0330, EncodeSystemPointer, NtQueueApcThread, NtTestAlert, APC, PEB walking, reflective DLL injection, Rust no_std, byte pattern scanning, undocumented globals

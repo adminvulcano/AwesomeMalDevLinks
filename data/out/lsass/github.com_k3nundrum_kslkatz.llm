@@ -1,0 +1,26 @@
+Title:
+KslKatz — BYOVD Credential Extractor using Microsoft Defender’s KslD.sys
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+KslKatz is a standalone Windows credential extraction tool that uses a Microsoft-signed Defender driver (KslD.sys) as a BYOVD primitive to read kernel/physical memory and bypass LSASS PPL protections. It abuses an older vulnerable KslD.sys left on disk to expose an unrestricted `MmCopyMemory`-backed IOCTL read (plus info leaks for KASLR defeat), enabling direct physical reads of LSASS memory. The tool locates LSASS and required secrets by leaking kernel pointers via `NtQuerySystemInformation(SystemHandleInformation)`, walking EPROCESS lists, and performing manual page-table translation from LSASS DTB/CR3. It avoids noisy remote memory scanning by signature-scanning `lsasrv.dll` and `wdigest.dll` from disk (no `LoadLibrary`), then reads only the needed structures from LSASS to extract MSV1_0 NT/LM/SHA1 hashes and WDigest cleartext (when caching is enabled). It is primarily useful for red teams and pentesters with local admin who want a “living-off-the-land” style LSASS credential theft path using only Microsoft-signed components. It’s notable because it highlights a practical gap in driver blocklisting (Microsoft drivers excluded) and a “no CVE / no fix” posture despite a powerful kernel read primitive.
+
+Technical Focus:
+- BYOVD via Microsoft Defender KslD.sys (service ImagePath swap to vulnerable binary)
+- Arbitrary kernel/physical memory read via IOCTL (SubCmd 12) and KASLR leak (SubCmd 2)
+- PPL bypass by reading LSASS through physical memory + manual page table walks (CR3/DTB)
+- EPROCESS discovery via handle table kernel pointer leak (SystemHandleInformation)
+- Local on-disk signature scanning of lsasrv.dll/wdigest.dll to resolve internal globals
+- LSA secrets decryption (AES-CFB128 / 3DES-CBC) and BCRYPT key structure traversal
+
+Use Cases:
+- Dump MSV1_0 credential material (NT/LM/SHA1) from PPL-protected LSASS with local admin
+- Extract WDigest cleartext passwords when caching is enabled or has been enabled in-memory
+- Post-exploitation credential access without third-party vulnerable drivers (Microsoft-signed only)
+- Research/validation of Defender driver exposure, blocklist limitations, and kernel read primitives
+- Building detections around suspicious KslD service reconfiguration and `\\.\KslD` access
+
+Keywords:
+KslKatz, KslD.sys, Microsoft Defender, BYOVD, MmCopyMemory, IOCTL 0x222044, Protected Process Light, LSASS, credential dumping, MSV1_0, WDigest, LogonSessionList, l_LogSessList, NtQuerySystemInformation, SystemHandleInformation, EPROCESS, ActiveProcessLinks, CR3, DTB, page table walk, KASLR bypass, ChangeServiceConfigW, AllowedProcessName, Windows CNG, bcrypt.dll, AES-CFB128, 3DES-CBC, DriverSiPolicy.p7b, HVCI, vulnerable driver blocklist

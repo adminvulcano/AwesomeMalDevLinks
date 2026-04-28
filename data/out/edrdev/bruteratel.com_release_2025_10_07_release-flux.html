@@ -1,0 +1,160 @@
+# https://bruteratel.com/release/2025/10/07/Release-Flux/
+
+<!DOCTYPE html><html lang="en">
+
+	<body>
+		
+
+		<div class="content animated fadeInDown">
+	<section class="page">
+		<div class="blog-container">
+			
+				<h2>Release v2.3 - Flux</h2>
+			
+
+			
+
+			
+
+			<p>Brute Ratel v2.3 (codename Flux) is now available for download. A key focus of this release was complete redevelopment of the Badger implant using a custom-built compiler, designed to improve operational security (OpSec) and significantly reduce its memory footprint. During development, I noticed several limitations in the existing MinGW and Clang toolchains, particularly in how they handle certain memory regions and stack layouts. To address these issues, the MinGW/Clang compiler provided limited support, as ideally, these are not options that a general developer would ideally want to mess with. But the built-in optimizations were a tad bit problematic when dealing with my stealth requirements. Thus, I ended up creating a tailored variant, capable of optimizing the Badger’s compilation process to meet the required stealth requirements. As a result, the size of the full Badger implant has been reduced by 30% in this release, with further reductions expected to reach around 60% in the next iteration — all while retaining the full feature set.</p>
+
+<p>Due to the extended development cycle and the one-month delay already incurred, not all optimizations from the new compiler could be fully integrated into this release, however they are scheduled for inclusion in the upcoming version. It is strongly recommended to review the accompanying blog post and documentation before deploying the new release.</p>
+
+<h2 id="badger">Badger</h2>
+
+<h3 id="safe-http-requests">Safe HTTP Requests</h3>
+
+<p>A new option called <strong><em>safe_http</em></strong> has been added under the <strong><em>OpSec</em></strong> tab in listener and payload profiles. When enabled, this feature uses an extremely lightweight 2–3 Kilobyte PIC stub to send HTTP requests backed by a valid stack designed by the operator, while keeping the Badger’s entire code and heap encrypted. In practice, this means that during the request, neither the Badger nor its thread actually exists in memory until the HTTP transaction is fully parsed and completed. When the HTTP request is made, everything related to the badger is encrypted, making it extremely difficult to have yara detections as the PIC stub doesn’t have anything in it, that can be used to build a detection on. This approach helps mitigate certain detection techniques, particularly from EDRs that leverage ETW-based memory scans triggered by network activity through wininet or winhttp libraries. Do note that <strong><em>safe_http</em></strong> does not work with <strong><em>disable_http_telemetry</em></strong> option, since that feature is not required when <strong><em>safe_http</em></strong> is enabled.</p>
+
+<h3 id="advanced-async-bof-aab">Advanced Async BOF (AAB)</h3>
+
+<p>BOF execution in Brute Ratel has always been asynchronous, but until now it lacked a way to hide the Badger while the BOF ran. This release overhauls BOF behavior. Thanks to the custom compiler I developed, I was able to rewrite the BOF loader from the ground up to support new BOF APIs and a redesigned BOF loader.</p>
+
+<p>We’ve added a new command, <strong><em>coffexec_async</em></strong>, which is separate from the existing <strong><em>coffexec</em></strong>. <strong><em>coffexec_async</em></strong> runs independently of the Badger and exposes new APIs that enable the BOF to operate while the Badger remains hidden. The updated BOF APIs also provide improved stealth controls and sleep-masking interaction with the Badger. Advanced async BOFs can even run concurrently i.e. multiple BOFs can execute while the Badger stays masked and dormant.</p>
+
+<p>The core logic of the AAB would be:</p>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;">Badger Main Thread {
+    coffexec_async {
+        void coffee(...) {
+            BadgerForceSleep(dispatch, <span class="hljs-number" style="color: rgb(222, 147, 95);">60</span>);                 // induce forced sleep <span class="hljs-keyword" style="color: rgb(178, 148, 187);">for</span> <span class="hljs-number" style="color: rgb(222, 147, 95);">60</span> seconds
+            BadgerDispatch(dispatch, <span class="hljs-string" style="color: rgb(181, 189, 104);">"Hello World 1"</span>);      // <span class="hljs-keyword" style="color: rgb(178, 148, 187);">print</span> hello world <span class="hljs-number" style="color: rgb(222, 147, 95);">1</span>
+            BadgerDispatch(dispatch, <span class="hljs-string" style="color: rgb(181, 189, 104);">"Hello World 2"</span>);      // <span class="hljs-keyword" style="color: rgb(178, 148, 187);">print</span> hello world <span class="hljs-number" style="color: rgb(222, 147, 95);">2</span>
+            BadgerWakeupAndSend(dispatch);                  // send buffered data instantly before proceeding ahead
+            BadgerWakeupAndExit(dispatch);                  // Wake <span class="hljs-keyword" style="color: rgb(178, 148, 187);">up</span> the badger interrupting the above forced <span class="hljs-keyword" style="color: rgb(178, 148, 187);">sleep</span> <span class="hljs-built_in" style="color: rgb(222, 147, 95);">and</span> <span class="hljs-keyword" style="color: rgb(178, 148, 187);">return</span> <span class="hljs-keyword" style="color: rgb(178, 148, 187);">to</span> badger<span class="hljs-string" style="color: rgb(181, 189, 104);">'s main thread
+        }
+    }
+}</span></pre>
+
+<p>//
+To clarify the pseudo code above, when the Badger executes an asynchronous BOF, the operator can invoke the <strong><em>BadgerForceSleep</em></strong> API to place the Badger into sleep masking mode. This allows any sensitive tasks to be executed entirely without the Badger being present in memory. Once the task is complete, the operator can terminate the async BOF using <strong><em>BadgerWakeupAndExit</em></strong>.</p>
+
+<p>Another API, <em><strong>BadgerWakeupAndSend</strong></em>, can be used in both <strong><em>coffexec</em></strong> and <strong><em>coffexec_async</em></strong> to pause BOF execution midway and send any buffered content queued via <strong><em>BadgerDispatch</em></strong>. However, calling <strong><em>BadgerWakeupAndSend</em></strong> within <strong><em>coffexec_async</em></strong> will wake the Badger and break its sleep mask, so it should be used carefully.</p>
+
+<p>A few additional notes:</p>
+
+<ul>
+  <li>Asynchronous BOFs function differently from regular BOFs, and as of this release, <strong><em>BadgerSpoofStackFrame</em></strong> API is not yet supported within async BOFs. However, a working implementation has been identified and will be included in version 2.4.</li>
+  <li>Async Badger functionality requires sleep masking to be enabled. If the Badger’s sleep value is set to zero and coffexec_async is invoked, a minimum 1-second sleep interval will automatically be applied before executing the async BOF.</li>
+</ul>
+
+<p>Further details on the new BOF APIs are provided below.</p>
+
+<h4 id="badgerforcesleep-async-only-api"><ins>BadgerForceSleep (async only API)</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT BOOL <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerForceSleep</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch, DWORD seconds)</span></span>;
+</pre>
+
+<p>This API instructs the Badger to encrypt and conceal itself in memory. It returns TRUE if masking is successfully initiated, and FALSE otherwise. Masking only occurs when no other active tasks are running within the Badger. For example, if an asynchronous task such as <strong><em>sharpinline</em></strong> is active, invoking this API will not trigger sleep masking — the <strong><em>sharpinline</em></strong> thread must return to its designated execution context, and therefore, its executable region cannot be encrypted. The API accepts a parameter specifying the number of sleep seconds, independent of the Badger’s configured sleep/jitter settings. Once invoked, masking remains in effect until either the specified time expires or one of the wakeup APIs — <strong><em>BadgerWakeupAndExit</em></strong> or <strong><em>BadgerWakeupAndSend</em></strong> — is called. If this API is not executed within <strong><em>coffexec_async</em></strong>, the Badger will continue using its standard sleep masking behavior as defined by the operator’s <strong><em>sleep/jitter</em></strong> configuration. Essentially, this API overrides the existing sleep mask configuration and enforces a forced sleep state.</p>
+
+<h4 id="badgerwakeupandexit-async-only-api"><ins>BadgerWakeupAndExit (async only API)</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT VOID <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerWakeupAndExit</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch)</span></span>;
+</pre>
+
+<p>This API terminates the Badger’s sleep mask and returns control from the BOF to the Badger’s main thread. It is critical to invoke this API at the end of every asynchronous BOF you implement. Failing to call this API at the end of the <strong><em>coffee</em></strong> function will cause the Badger to terminate.</p>
+
+<h4 id="badgerwakeupandsend"><ins>BadgerWakeupAndSend</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT VOID <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerWakeupAndSend</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch)</span></span>;
+</pre>
+
+<p>This API is compatible with both <strong><em>coffexec</em></strong> and <strong><em>coffexec_async</em></strong> commands. It takes the data buffered by <strong><em>BadgerDispatch</em></strong> and instructs the Badger’s main thread to immediately transmit it to the Ratel server. If the Badger is currently in a sleep-masked state, invoking this API will temporarily break the sleep mask to allow the buffered content to be sent.</p>
+
+<h4 id="badgerstoptask"><ins>BadgerStopTask</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT BOOL <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerStopTask</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch)</span></span>;
+</pre>
+
+<p>This API is supported by both <strong><em>coffexec</em></strong> and <strong><em>coffexec_async</em></strong> commands. It allows a BOF to check whether the operator has issued a <strong><em>stop_task</em></strong> command. By integrating this API into your code, you can detect when a stop request has been made—if the function returns TRUE, you can gracefully exit your routine or perform any necessary cleanup operations. This approach gives the operator greater control over task management without forcefully terminating a BOF thread, which could otherwise lead to memory leaks and compromise both OpSec and overall stability.</p>
+
+<h4 id="badgerdownloadbuffer"><ins>BadgerDownloadBuffer</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT BOOL <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerDownloadBuffer</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch, CHAR *fileName, PVOID fileBuffer, <span class="hljs-keyword" style="color: rgb(178, 148, 187);">unsigned</span> <span class="hljs-keyword" style="color: rgb(178, 148, 187);">long</span> <span class="hljs-keyword" style="color: rgb(178, 148, 187);">long</span> fileSize)</span></span>;
+</pre>
+
+<p>This API is compatible with both <strong><em>coffexec</em></strong> and <strong><em>coffexec_async</em></strong> commands. It accepts multiple arguments — primarily the filename, the complete file buffer, and the actual file size to be uploaded to the Ratel server. The data is transmitted using the Badger’s main HTTP thread and is automatically sent once the BOF execution completes.</p>
+
+<h4 id="badgersettoken"><ins>BadgerSetToken</ins>:</h4>
+
+<pre class="hljs" style="display: block; overflow-x: auto; background: rgb(29, 31, 33); color: rgb(197, 200, 198); padding: 0.5em;"><span class="hljs-function">DECLSPEC_IMPORT VOID <span class="hljs-title" style="color: rgb(129, 162, 190);">BadgerSetToken</span><span class="hljs-params" style="color: rgb(222, 147, 95);">(WCHAR** dispatch, HANDLE hToken)</span></span>;
+</pre>
+
+<p>This API is supported by both <strong><em>coffexec</em></strong> and <strong><em>coffexec_async</em></strong> commands. While <strong><em>BadgerSetToken</em></strong> is not a new API, this release introduces a minor update — it now expects two arguments: the first being <strong><em>dispatch</em></strong>, and the second the token value. This adjustment was implemented to ensure compatibility with the <strong><em>coffexec_async</em></strong> command. If you’re using this API in BOFs built with earlier BRc4 versions, it is recommended to update your code to reflect this change.</p>
+
+<h3 id="features-ported-to-async-bof">Features Ported To Async BOF</h3>
+
+<p>With the introduction of the new Async BOF framework, it made sense to make certain Badger features more autonomous. After gathering feedback and discussing ideas with our customers in the Discord channel, I decided to transition several commands to run as Async BOFs. This allows them to operate independently while the Badger remains in its sleep-masked state.</p>
+
+<ul>
+  <li>crisis_monitor</li>
+  <li>portscan</li>
+  <li>samdump</li>
+  <li>pth</li>
+  <li>dcsync</li>
+  <li>shadowcloak</li>
+</ul>
+
+<p>When executing any of the above commands, it’s recommended to configure the Badger with a sleep interval of at least 30 to 60 seconds. This ensures you gain the full benefit of the sleep masking feature during their execution. And in order to make it easy to understand how Async BOFs work, there is an example BOF present in the sample_config directory in the brc4 package named <strong><em>async_bof_test.c</em></strong>, which might be more helpful to operators.</p>
+
+<h3 id="other-qol-updates">Other QOL Updates:</h3>
+
+<ul>
+  <li>Added a new b_count key to the Badger profile, which tracks the total number of connections the Badger has made to the server.</li>
+  <li>Added the <strong><em>dump_sharpinline</em></strong> command to retrieve output from partially completed <strong><em>sharpInline</em></strong> executions.</li>
+  <li>Added the <strong><em>stop_sharpinline</em></strong> command to terminate an active .NET task initiated by <strong><em>sharpInline</em></strong>.</li>
+  <li>Updated <strong><em>sharpinline</em></strong> to support running multiple versions of dotnet to run simultaneously within the same Badger instance.</li>
+  <li>Updated the <strong><em>samdump</em></strong> command so it no longer impersonates SYSTEM by default. Operators without ‘SYSTEM’ privileges can use <strong><em>get_system</em></strong> or their own privilege escalation methods before running samdump.</li>
+  <li>Improved error handling — GetLastError, HRESULT, and NTSTATUS codes are now parsed by the Ratel server and displayed directly in the Badger terminal, instead of showing generic error messages.</li>
+  <li>Updated command history behavior — the Badger terminal now logs invalid commands as well, instead of storing only successfully executed ones.</li>
+  <li>Optimized memory usage for screen recording (<strong><em>record_screen</em></strong>) functionality</li>
+  <li>Updated the Badger and Ratel server download mechanisms — when downloading a file with an existing name in the downloads directory, the old file is now deleted and replaced with the new one. Downloads are also performed on the main thread instead of a separate one.</li>
+  <li>Added a validation check to detect if a BOF is already using a stomped module; if so, any concurrently executed BOF will skip the stomping process.</li>
+  <li>Merged the <strong><em>memdump</em></strong> and <strong><em>shadowcloak</em></strong> commands — both functionalities are now available under <strong><em>shadowcloak</em></strong>.</li>
+  <li>Simplified the <strong><em>impersonate</em></strong> command to accept only the token ID, rather than both username and ID.</li>
+  <li>Improved the version mismatch dialog in Commander to make it less intrusive and more informative.</li>
+  <li>Fixed an issue with <strong><em>net group</em></strong> where group names containing spaces were not accepted.</li>
+  <li>Fixed a hardware breakpoint handling bug in <strong><em>coffexec</em></strong>.</li>
+  <li>Fixed a <strong><em>schtquery</em></strong> issue where full task names containing spaces were not being read properly.</li>
+  <li>Fixed a token parsing bug that required a double backslash.</li>
+  <li>Resolved a rare DNS mutex issue that occurred when the server was terminated and restarted.</li>
+  <li>Fixed a UI issue where the Process Manager and File Explorer windows, sometimes would not close properly.</li>
+  <li>Removed ‘0.0.0.0’ from the internal IP list displayed in the Badger tab.</li>
+  <li>Removed argument spoofing and lock screen features.</li>
+  <li>Removed YARA rules from Litterbox.</li>
+  <li>Removed legacy DLL and service executable detection logic.</li>
+</ul>
+
+<p>While this post highlights many of the major updates in the Flux release, several additional changes have intentionally been left out to keep certain features away from EDRs. A significant portion of this update also involved deep backend improvements that strengthen stability, performance (for socks/rportfwd), and OpSec capabilities.</p>
+
+<p>The next release will push things even further — with the new compiler framework designed to push Badger’s stealth and resilience against modern EDRs to an entirely new level. It’s going to be a crazy one.</p>
+
+		</div>
+	</section>
+</div>
+
+		
+		
+	
+
+</body></html>

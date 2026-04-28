@@ -1,0 +1,25 @@
+Title:
+T(ROP)H: Thread Hijacking with ROP (Thread Hijacking without Executable Memory Allocation)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post demonstrates a Windows x64 thread-hijacking DLL injection technique that avoids allocating RWX (or otherwise executable) memory in a remote process, reducing a common injection IOC. Instead of writing shellcode and redirecting RIP to it, the author builds a minimal ROP chain to call `LoadLibraryA` inside an existing remote thread. The key challenge addressed is that `SetThreadContext` can’t directly set volatile registers like `RCX` (needed for the first argument in the Windows x64 calling convention), so a `pop rcx; ret` gadget is used to load the DLL path pointer from the hijacked thread’s stack. The walkthrough covers finding a suitable gadget (e.g., in `ntdll.dll`), writing the DLL path into remote memory, suspending the thread, adjusting `RIP/RSP`, writing the ROP stack frame, and resuming execution. It’s useful for red teamers/pentesters and malware developers exploring stealthier injection tradeoffs, and for defenders understanding how “no RWX” injection can still occur. The post also notes detectability remains high due to `SetThreadContext` generating ETW telemetry (Kernel-Audit-API-Calls and Threat-Intelligence providers).
+
+Technical Focus:
+- Windows x64 calling convention (RCX argument passing) and volatile registers
+- Thread hijacking via `SuspendThread` / `GetThreadContext` / `SetThreadContext` / `ResumeThread`
+- ROP gadget discovery and runtime address resolution (e.g., `pop rcx; ret` in `ntdll.dll`)
+- DLL injection via `LoadLibraryA` with remote `VirtualAllocEx` + `WriteProcessMemory` (RW only)
+- Stack pivoting/stack frame setup for ROP (RSP adjustment, return chaining to `ExitThread`)
+- ETW-based detection of `SetThreadContext` usage
+
+Use Cases:
+- DLL injection without remote executable memory allocation (avoid RWX heuristics)
+- Proof-of-concept process injection research and tradeoff evaluation vs classic shellcode hijacking
+- Building/validating detections for thread-context tampering and ROP-based execution
+- Adversary emulation scenarios focusing on “living-off-existing-code” execution patterns
+
+Keywords:
+Windows x64, thread hijacking, ROP, return-oriented programming, SetThreadContext, GetThreadContext, SuspendThread, ResumeThread, RIP, RSP, RCX, pop rcx; ret, LoadLibraryA, ExitThread, VirtualAllocEx, WriteProcessMemory, ntdll.dll, kernel32.dll, ETW, Microsoft-Windows-Threat-Intelligence

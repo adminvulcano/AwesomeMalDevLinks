@@ -1,0 +1,31 @@
+Title:
+COMouflage: Surrogate Injection
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post describes “COMouflage,” a COM-based DLL surrogate technique that results in code execution inside `dllhost.exe` while making the process tree appear as normal COM activity (with `svchost.exe` as the parent).  
+- It solves the problem of achieving stealthy user-mode “injection”/execution without directly opening or writing into a target process and without requiring admin rights, by abusing COM registration in `HKCU`.  
+- The core method forges `AppID` and `CLSID` registry entries, sets `DllSurrogate` to an empty string to force the default surrogate host, points `InprocServer32` to the attacker DLL, and triggers activation via `CoCreateInstance` with `CLSCTX_LOCAL_SERVER`.  
+- The article includes a C++ proof-of-concept, notes on volatile vs non-volatile registry keys, and shows the resulting process lineage (`svchost.exe` → `dllhost.exe /Processid:{GUID}`) that omits the initiating process.  
+- It also provides a basic YARA rule focused on registry strings and COM-related API imports to detect binaries implementing the pattern.  
+- Useful for red teams, pentesters, and malware developers for stealth execution tradecraft, and for blue teams as a concrete COM-surrogate abuse case to hunt/detect.
+
+Technical Focus:
+- COM out-of-proc activation and DLL Surrogate (`DllSurrogate`) abuse
+- Per-user COM registration hijacking via `HKCU\Software\Classes`
+- Registry-based execution triggers (`AppID`, `CLSID`, `InprocServer32`, `ThreadingModel`)
+- Process lineage/PPID masquerading via COM SCM (`svchost.exe` → `dllhost.exe`)
+- C++ implementation using WinAPI + COM (`RegCreateKeyExW`, `RegSetValueExW`, `CoCreateInstance`)
+- Detection engineering with YARA (string + import + constant heuristics)
+
+Use Cases:
+- Stealthy user-level DLL execution inside `dllhost.exe` without remote-thread injection
+- Parent/lineage evasion against simplistic process-tree detections
+- Tradecraft component for loaders/implants that want “living-off-the-land” COM hosting
+- Defensive hunting for suspicious per-user COM registrations and surrogate activations
+- Building detections around COM surrogate registry artifacts and activation behavior
+
+Keywords:
+COM, Component Object Model, DllSurrogate, dllhost.exe, svchost.exe, COM SCM, AppID, CLSID, InprocServer32, HKCU, Software\Classes, CoCreateInstance, CLSCTX_LOCAL_SERVER, RegCreateKeyExW, RegSetValueExW, ThreadingModel, Apartment, process lineage, PPID masquerading, T1546.015, YARA, Windows internals, DLL injection (surrogate)

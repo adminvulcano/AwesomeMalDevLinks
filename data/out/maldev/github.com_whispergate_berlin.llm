@@ -1,0 +1,24 @@
+Title:
+Berlin — Cross-platform CPU-based Virtual Machine Detection Framework
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Berlin is a C library/PoC that detects whether it is running inside a virtual machine by leveraging CPU “vmexit” instructions and timing-based side channels. It targets the problem of avoiding OS/artifact-based VM checks (e.g., registry keys) that create IOCs and are easy to spoof, instead focusing on CPU behavior differences under virtualization. The core API is a single function `int isVM(int threshold);` that returns true when measured execution latency exceeds a configurable threshold (and also returns true on error). The project emphasizes portability by abstracting OS-specific dependencies and being freestanding (no C/C++ runtime requirement), intended for embedding into offensive tooling. It’s primarily useful for red teams, pentesters, and malware developers who want sandbox/VM awareness with fewer host artifacts. It’s interesting because it frames VM detection as “CPU feature emulation best-effort,” using vmexit-induced latency as a cross-platform signal.
+
+Technical Focus:
+- VM detection via vmexit-triggering CPU instructions
+- Timing attacks / latency measurement for virtualization inference
+- Freestanding C implementation (no CRT), portability abstractions
+- Threshold tuning and performance/optimization considerations (-O3)
+- Anti-analysis / sandbox evasion design tradeoffs
+
+Use Cases:
+- Embed VM/sandbox checks into loaders, implants, or droppers
+- Reduce reliance on OS-level VM artifacts (registry/files/drivers) to lower IOCs
+- Research and benchmarking of vmexit timing characteristics across hypervisors
+- Defensive testing: validate whether sandboxes/VMs leak detectable timing signals
+
+Keywords:
+virtual machine detection, vmexit, timing attack, side-channel, hypervisor, KVM, QEMU, CPU emulation, anti-analysis, sandbox evasion, freestanding C, no CRT, clang, -O3, threshold calibration, bare metal vs VM, offensive tooling, PoC, cross-platform

@@ -1,0 +1,25 @@
+Title:
+Emulat3
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Emulat3 is a Python tool that performs instruction-by-instruction emulation of x64 PE functions or raw shellcode using Vivisect (the same emulation engine used by FLARE FLOSS). It prints per-step state including disassembly, register/EFLAGS values, stack context around RSP, memory writes, and exceptions to help understand code behavior without executing it natively. The tool supports emulating from a PE entry point, targeting a specific function VA, listing discovered functions, and emulating shellcode from raw bytes or hex strings/files. It includes call-following logic that can manually step into subroutines (optionally only for a specific target VA) and rolls back state if a followed call crashes. This is useful for malware analysts, reverse engineers, and red teamers who need quick dynamic-style insight into small routines (e.g., decoders, unpacking stubs) in a controlled emulator. Its value is in providing FLOSS-like emulation visibility with a simple CLI and detailed state logging.
+
+Technical Focus:
+- Vivisect-based x64 CPU emulation and stepping
+- PE function discovery and emulation by virtual address
+- Shellcode emulation (raw/hex, configurable base/entry)
+- Call instruction handling (manual stepping into calls, selective follow)
+- Execution state introspection (registers, stack, memory write logging, exceptions)
+
+Use Cases:
+- Triage and understand shellcode behavior without running it on a host
+- Step through suspected decoder/decryptor routines inside a PE
+- Identify where and how memory is written during emulation (e.g., unpacking buffers)
+- Reproduce and inspect crash points (invalid instruction/segfault) during analysis
+- Quickly enumerate functions in a PE and emulate specific targets by VA
+
+Keywords:
+Vivisect, FLOSS, emulation, x64, amd64, PE, Portable Executable, shellcode, disassembly, registers, RIP, EFLAGS, stack, RSP, memory writes, call-following, function VA, reverse engineering, malware analysis, Python 3.12

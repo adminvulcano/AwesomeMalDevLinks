@@ -1,0 +1,26 @@
+Title:
+AnneFrankInjector
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+AnneFrankInjector is a Windows shellcode loader/builder aimed at AV/EDR evasion for CTFs, red team ops, and certification labs. It generates EXE or DLL loaders that either embed shellcode (stageless) or retrieve it over HTTP (staged), with optional on-the-fly encryption and obfuscation. The project combines multiple stealth techniques including indirect syscalls (SysWhispers-style), API hashing (Djb2), and NTDLL unhooking via KnownDLLs to reduce user-mode monitoring. Execution options include EarlyBird APC injection, spawn-and-inject into a newly created benign process, and configurable sleep delays to evade sandbox timeouts. It also includes optional persistence mechanisms (Run key, scheduled task, startup folder) plus “reflective/fileless” and LNK stager modes, wrapped in both a CLI and a tkinter GUI. Useful primarily for red teamers/pentesters and malware researchers evaluating loader tradecraft and defensive coverage.
+
+Technical Focus:
+- Indirect syscalls (SysWhispers3-style) and syscall-based evasion
+- API hashing (Djb2) and dynamic API resolution
+- NTDLL unhooking via KnownDLLs mapping
+- EarlyBird APC injection and process spawn injection
+- Payload encryption (AES-128-CBC) and string/name scrambling
+- Staged vs stageless shellcode delivery (HTTP stager)
+
+Use Cases:
+- Generate evasive EXE/DLL shellcode loaders for controlled red team engagements
+- Test EDR/AV detection of common loader primitives (APC, unhooking, indirect syscalls)
+- Build staged payload delivery over HTTP with encrypted shellcode
+- Create LNK-based initial access stagers (PowerShell) for lab simulations
+- Evaluate persistence detections (Run keys, scheduled tasks, startup folder)
+
+Keywords:
+shellcode loader, AV evasion, EDR bypass, indirect syscalls, SysWhispers3, API hashing, Djb2, NTDLL unhooking, KnownDLLs, EarlyBird APC injection, process injection, spawn injection, AES-128-CBC, staged payload, HTTP stager, reflective loader, fileless execution, persistence, Run key, scheduled task, startup folder, rundll32, LNK stager, PowerShell EncodedCommand, MinGW-w64, NASM

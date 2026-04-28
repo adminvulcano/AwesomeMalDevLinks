@@ -1,0 +1,31 @@
+Title:
+Bypassing Code Integrity Using BYOVD for Kernel R/W Primitives
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post demonstrates a Windows Code Integrity (CI) / Driver Signature Enforcement (DSE) bypass by abusing a signed-but-vulnerable driver (BYOVD) to gain kernel read/write primitives.  
+- The core idea is to locate `ci.dll` in kernel memory, compute the version-specific offset to `g_CiOptions`, and then overwrite that bitmask via an IOCTL-based kernel write primitive to relax/disable CI enforcement.  
+- It walks through enabling `SeDebugPrivilege`, enumerating loaded kernel modules with `NtQuerySystemInformation(SystemModuleInformation)`, deriving offsets using WinDbg symbol queries, and using `DeviceIoControl` against a vulnerable driver device to patch kernel memory.  
+- The example uses Gigabyte’s `gdrv.sys` (noted as widely exploited/blacklisted) and highlights the operational need for a non-blacklisted driver with equivalent R/W primitives.  
+- It includes a basic PoC implementation in C++ plus a detection section with static scan results and a YARA rule aimed at identifying tools that patch `g_CiOptions`.  
+- Useful for red teams, pentesters, and malware developers studying CI bypass tradecraft, and for blue teams building detections around BYOVD + CI tampering.
+
+Technical Focus:
+- Windows Code Integrity internals (`ci.dll`, `g_CiOptions` bitmask)
+- BYOVD abuse to obtain kernel read/write primitives via IOCTL
+- Kernel module enumeration via `NtQuerySystemInformation` (SystemModuleInformation)
+- WinDbg symbol/offset derivation for kernel variables
+- DSE/CI policy manipulation (test signing, permissive/chill checks)
+- Detection engineering (static scanning, YARA patterns)
+
+Use Cases:
+- Disable/relax DSE to load unsigned or custom kernel drivers
+- Build a CI bypass PoC for lab validation of BYOVD risk
+- Develop detections for kernel CI tampering and suspicious driver IOCTL usage
+- Assess exposure to known-vulnerable/LOLDrivers and driver blocklist effectiveness
+- Red team tradecraft research on kernel-level policy manipulation
+
+Keywords:
+Windows Code Integrity, DSE, UMCI, ci.dll, g_CiOptions, BYOVD, kernel read/write primitive, DeviceIoControl, IOCTL, NtQuerySystemInformation, SystemModuleInformation, SeDebugPrivilege, WinDbg, symbol resolution, gdrv.sys, LOLDrivers, driver blocklist, kernel memory patching, test signing, YARA detection

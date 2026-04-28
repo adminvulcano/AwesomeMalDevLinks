@@ -1,0 +1,31 @@
+Title:
+Bypassing static analysis – Deep Dive
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post breaks down how AV/EDR static scanning evaluates files when they land on disk, focusing on hashes, byte signatures, suspicious strings/IAT imports, and PE section entropy.  
+- It demonstrates a practical workflow for signature evasion: use ThreatCheck to identify flagged byte sequences, then reverse in Ghidra to locate the responsible code/constant and modify implementation details without changing behavior (example: altering AES routines in a Havoc payload).  
+- It covers packing as an alternative (PEzor + donut), including tradeoffs like packer templates being signatured and environment-bound decryption (e.g., using GetComputerNameExA/FQDN).  
+- The author then builds custom shellcode loaders (stageless and staged), showing how encrypting embedded shellcode (AES) defeats simple signature matching but can raise entropy-based flags.  
+- It also highlights static detection via suspicious imports and shows API hashing to remove obvious WinAPI names from the IAT/strings while still resolving functions at runtime.  
+- Overall, it’s most useful for red teamers/pentesters and malware developers who need to understand and iterate on disk-based evasion, and for defenders who want to recognize these evasion patterns and their artifacts.
+
+Technical Focus:
+- AV/EDR static detection primitives (hashes, signatures, strings/IAT, entropy)
+- Signature breaking via reverse engineering (ThreatCheck + Ghidra)
+- Packing and PIC shellcode conversion (PEzor, donut)
+- Windows shellcode loader patterns (VirtualAlloc/memcpy/VirtualProtect/CreateThread)
+- Payload encryption (XOR vs AES) and entropy side-effects
+- API hashing / runtime API resolution from exports (kernel32.dll)
+
+Use Cases:
+- Iteratively modifying payloads to evade Defender/AV static signatures on disk
+- Identifying which code/bytes/constants trigger detections and patching them safely
+- Building custom staged/stageless loaders with encrypted payload handling
+- Reducing static indicators by removing suspicious imports via API hashing
+- Evaluating packed/encrypted binaries for entropy-based detection risk
+
+Keywords:
+static analysis, antivirus, EDR, Windows Defender, signature-based detection, MD5, ThreatCheck, Ghidra, PE file, Import Address Table, IAT, entropy analysis, Detect It Easy, PE-bear, Havoc C2, PEzor, donut, shellcode loader, VirtualAlloc, VirtualProtect, CreateThread, WaitForSingleObject, API hashing, kernel32.dll exports, GetComputerNameExA, AES encryption, XOR, staged payload, stageless payload, msfvenom, Meterpreter

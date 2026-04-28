@@ -1,0 +1,30 @@
+Title:
+Reverse Engineering a 0day used Against CrowdStrike EDR
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post reverse engineers a set of Microsoft-signed kernel drivers (15+ variants) observed in BYOVD-style attacks targeting EDR products, including CrowdStrike.  
+- The driver exposes an IOCTL interface that allows a user-mode client to request termination of an arbitrary process by PID, enabling killing of protected EDR processes (e.g., PPL-protected services) that are difficult to terminate from user mode.  
+- The author focuses on reversing the dispatch/DeviceIoControl handler (skipping an obfuscated/non-standard DriverEntry) and identifies the “process killer” IOCTL (0x22E010).  
+- The kill path is straightforward: parse PID from an ASCII string, then use ZwOpenProcess followed by ZwTerminateProcess from kernel context.  
+- The post also covers finding the device symbolic link dynamically (WinObj) to enable user-mode access, then building a PoC that opens the device and sends the IOCTL to terminate CrowdStrike.  
+- It’s most useful for red teamers, malware developers, and defenders analyzing BYOVD tradecraft and kernel-assisted EDR tampering.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable/Abusable Driver) for EDR tampering
+- Windows kernel driver reverse engineering (IDA Pro, dispatch routines)
+- IOCTL interface discovery and abuse (DeviceIoControl)
+- Kernel-mode process termination (ZwOpenProcess, ZwTerminateProcess)
+- PPL (Protected Process Light) bypass via kernel operations
+- Device object / symbolic link enumeration (WinObj)
+
+Use Cases:
+- Terminate EDR/AV processes that resist user-mode termination (PPL)
+- Analyze suspicious signed drivers for exposed privileged IOCTLs
+- Build detections around driver loading + suspicious IOCTL usage
+- Reproduce and validate BYOVD-based EDR disruption in lab environments
+
+Keywords:
+BYOVD, kernel driver, Windows kernel, CrowdStrike, EDR bypass, PPL, Protected Process Light, IOCTL, 0x22E010, DeviceIoControl, dispatch routine, DriverEntry obfuscation, IDA Pro, ZwOpenProcess, ZwTerminateProcess, process termination, symbolic link, WinObj, CreateFileW, Microsoft-signed driver

@@ -1,0 +1,31 @@
+Title:
+Mythic C2 with EarlyBird Injection and Defender Evasion
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through building a Mythic C2 backend that is not directly internet-exposed, using Nginx HTTPS redirectors and decoy web content to mask C2 and staging traffic.  
+- It demonstrates a multi-subdomain design (www/api/dl) with Let’s Encrypt certificates, a decoy WordPress site, and reverse-proxy rules that forward “API” traffic to Mythic and “font” downloads to Mythic’s direct file hosting endpoint.  
+- On the endpoint side, it presents a custom Windows C++ loader that downloads shellcode over WinHTTP and executes it via EarlyBird APC injection (CreateProcessW with CREATE_SUSPENDED → VirtualAllocEx/WriteProcessMemory → QueueUserAPC → ResumeThread), targeting WerFault.exe.  
+- The loader includes basic evasion tradecraft such as compile-time XOR string obfuscation, jittered sleeps, rotating User-Agents, and an embedded XOR’d fallback payload if download fails.  
+- It also notes OPSEC pitfalls (e.g., WinHTTP certificate validation bypass flags) and provides high-level detection ideas (suspended process creation, APC queuing, RWX allocations, unusual network from system processes).  
+- Useful primarily for red teamers/pentesters building foundational C2 infrastructure and for defenders wanting concrete behaviors to hunt around redirectors, staging, and APC-based injection.
+
+Technical Focus:
+- Mythic C2 (Apollo agent, HTTP profile) deployment via Docker
+- HTTPS redirector architecture with Nginx reverse proxy + decoy content
+- Payload staging disguised as benign web assets (e.g., font path/content-type)
+- EarlyBird APC injection (CREATE_SUSPENDED + QueueUserAPC) into WerFault.exe
+- WinHTTP-based staged download with header/UA shaping and jitter
+- Static analysis friction: compile-time string obfuscation and simple XOR payload protection
+
+Use Cases:
+- Build a backend C2 server hidden behind redirectors (no direct exposure)
+- Stand up decoy web infrastructure to reduce immediate infrastructure attribution
+- Stage shellcode through “legitimate-looking” URLs and MIME types
+- Execute in-memory shellcode via APC-based EarlyBird injection for initial footholds
+- Create defender hunts/detections for APC injection + suspicious proxying/staging patterns
+
+Keywords:
+Mythic C2, Apollo agent, HTTP C2 profile, Nginx redirector, reverse proxy, Let’s Encrypt, certbot, WordPress decoy, HTTPS staging, payload masquerading, EarlyBird injection, APC injection, QueueUserAPC, CreateProcessW, CREATE_SUSPENDED, VirtualAllocEx, WriteProcessMemory, WerFault.exe, WinHTTP, User-Agent rotation, jittered sleep, string obfuscation, XOR obfuscation, in-memory execution, Defender evasion

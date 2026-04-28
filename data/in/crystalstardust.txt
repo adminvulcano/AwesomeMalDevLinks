@@ -22,3 +22,4 @@ https://tradecraftgarden.org/docs.html
 https://tradecraftgarden.org/pagestream.html
 https://tradecraftgarden.org/stackcutting.html
 https://github.com/kapla0011/KaplaStrike
+https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way

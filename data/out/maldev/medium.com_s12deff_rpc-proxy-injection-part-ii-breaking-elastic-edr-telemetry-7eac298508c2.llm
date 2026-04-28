@@ -1,0 +1,26 @@
+Title:
+RPC Proxy Injection Part II: Breaking Elastic EDR Telemetry
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is a continuation of an RPC-based “proxy injection” PoC that aims to mask the origin of process injection by splitting responsibilities between an RPC server (injector) and a DLL (helper). It focuses on evading Elastic EDR telemetry that flags the classic `VirtualAllocEx` + `WriteProcessMemory` pattern by replacing `WriteProcessMemory` with a “data smuggling” approach using Windows thread descriptions. The technique sets a target thread’s description to hold shellcode bytes, forces the target to allocate/return the description buffer via an APC calling `GetThreadDescription`, then copies from that buffer into the final RWX region using an APC to `RtlMoveMemory`. It also replaces `CreateRemoteThread` execution with `NtQueueApcThreadEx2` (special user APC) to trigger shellcode execution. The implementation includes chunking to bypass thread-description size limits and uses an unused PEB offset as a remote scratch location for pointer handoff. It’s mainly useful for malware developers and red team operators exploring EDR telemetry gaps, and for blue teams looking to detect unconventional injection primitives beyond the usual Win32 APIs.
+
+Technical Focus:
+- Windows RPC (ncalrpc) used as an execution/proxy orchestration channel
+- Thread Description abuse (`SetThreadDescription` / `GetThreadDescription`) for payload staging
+- APC-based injection/execution via `NtQueueApcThreadEx2` (special user APC)
+- Avoiding `WriteProcessMemory` / `CreateRemoteThread` behavioral detections
+- PEB-based remote scratch storage (unused PEB offset) and remote pointer retrieval
+- Encrypted shellcode staging/decryption (Speck CBC) and chunked copying
+
+Use Cases:
+- Bypassing EDR detections tied to `WriteProcessMemory` and `CreateRemoteThread`
+- Researching alternative cross-process memory staging primitives (thread metadata abuse)
+- Building PoCs to test telemetry coverage for undocumented/native syscalls (APC paths)
+- Developing detections for suspicious thread-description usage and special-user APC queuing
+- Demonstrating “responsibility splitting” across components (DLL + RPC server) to reduce single-process suspicious sequences
+
+Keywords:
+Windows RPC, ncalrpc, process injection, Elastic EDR, telemetry evasion, WriteProcessMemory, VirtualAllocEx, CreateRemoteThread, APC injection, NtQueueApcThreadEx2, QUEUE_USER_APC_FLAGS_SPECIAL_USER_APC, GetThreadDescription, SetThreadDescription, RtlMoveMemory, NtSetInformationThread, ThreadNameInformation, PEB, NtQueryInformationProcess, ReadProcessMemory, Speck cipher, shellcode staging, T1055

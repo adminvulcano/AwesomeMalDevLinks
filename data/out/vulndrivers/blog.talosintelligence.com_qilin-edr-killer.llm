@@ -1,0 +1,31 @@
+Title:
+Qilin EDR killer infection chain (malicious msimg32.dll analysis)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This Talos write-up reverse engineers a multi-stage loader delivered as a malicious, side-loaded `msimg32.dll` used in Qilin ransomware intrusions to disable endpoint defenses.  
+- The chain focuses on evading user-mode telemetry and hooks (including ETW suppression and syscall-hook bypass) to decrypt, map, and execute an embedded EDR-killer payload fully in memory.  
+- It uses SEH/VEH-driven control-flow obfuscation, IAT hooking (e.g., `ExitProcess`) for delayed execution, and “neighboring syscall stub” techniques (Halo’s Gate-style) to recover clean syscalls without patching hooked stubs.  
+- The final stage loads abused/renamed helper drivers (notably a signed ThrottleStop-derived driver) to gain physical memory read/write primitives, unregister kernel callbacks used by EDRs, and terminate protected EDR processes via a second driver.  
+- The malware targets and can disable/neutralize telemetry from 300+ EDR drivers across many vendors, highlighting how attackers increasingly attack the defensive layer early in execution.  
+- It’s most useful for blue teams, EDR engineers, and malware analysts for understanding modern anti-EDR tradecraft and where to build detections/mitigations; red teams can also study it as a catalog of real-world evasion patterns.
+
+Technical Focus:
+- DLL sideloading with export forwarding and `DllMain` execution
+- SEH/VEH-based control-flow obfuscation and hardware-breakpoint-triggered VEH
+- Syscall unhooking/bypass via neighboring stub scanning (Halo’s Gate-style)
+- ETW suppression and user-mode hook neutralization
+- In-memory PE loading (section mapping, dual-view mapping, relocations, module stomping)
+- Kernel callback removal and physical-memory manipulation via abused signed drivers (BYOVD-like)
+
+Use Cases:
+- Build detections for SEH/VEH abuse, hardware breakpoints, and anomalous `KiUserExceptionDispatcher`/`.mrdata` tampering
+- Hunt for DLL sideloading of `msimg32.dll` and suspicious export-forwarding behavior
+- Detect/mitigate abuse of legitimate signed drivers providing physical memory primitives (e.g., ThrottleStop/TechPowerUp lineage)
+- Create telemetry and response playbooks for EDR blinding (callback unregistering) and protected-process termination attempts
+- Develop YARA/Sigma/EDR analytics around IAT hooking of `ExitProcess`, ETW tampering, and in-memory module stomping
+
+Keywords:
+Qilin, ransomware, EDR killer, msimg32.dll, DLL sideloading, export forwarding, DllMain, SEH, VEH, KiUserExceptionDispatcher, LdrProtectMrdata, .mrdata, ETW, NtTraceEvent, NtTraceControl, NtAlpcSendWaitReceivePort, Halo’s Gate, syscall stub scanning, IAT hooking, ExitProcess, NtContinue, hardware breakpoints, module stomping, shell32.dll, NtCreateSection, NtMapViewOfSection, NtQuerySystemInformation, Superfetch PFN, physical memory read/write, MmMapIoSpace, MmMapLockedPagesSpecifyCache, IOCTL, ThrottleStop.sys, rwdrv.sys, hlpdrv.sys, protected process termination, kernel callbacks, Code Integrity, CiValidateImageHeader, BYOVD

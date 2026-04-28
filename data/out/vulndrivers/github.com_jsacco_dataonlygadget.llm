@@ -1,0 +1,27 @@
+Title:
+DOG: Data Only Gadgets (DataOnlyGadget)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+DOG is a Windows kernel post-exploitation framework that sits on top of an existing kernel read/write primitive and automates “data-only gadget” discovery and chaining. Instead of relying on kernel shellcode or classic ROP/JOP, it repurposes legitimate kernel code paths and kernel data structures as reusable building blocks to perform actions under modern mitigations (VBS, HVCI, CET/kCET). The tool dynamically resolves `ntoskrnl` symbols, walks kernel structures to recover offsets per-build, enumerates kernel objects, classifies gadget candidates, and builds runtime chains to execute operations like token stealing, callback tampering, PPL modification, and LSASS dumping. It provides a pluggable `KernelReadWrite` backend so different exploit classes (IOCTL-based R/W, win32k/GDI primitives, write-what-where, DMA/physmem access) can reuse the same discovery/chaining pipeline. Useful primarily for kernel exploit developers and red team operators who already have a primitive and want portability across Windows builds without hardcoded offsets. Interesting because it formalizes a data-oriented approach to kernel post-exploitation that aims to remain viable as code-execution-centric techniques are constrained by platform mitigations.
+
+Technical Focus:
+- Data-oriented kernel exploitation (“data-only gadgets”) and gadget chaining
+- Runtime `ntoskrnl` symbol resolution (DbgHelp) and kernel ASLR handling
+- Dynamic kernel structure walking and offset recovery (NTKernelWalkerLib)
+- Pluggable kernel virtual/physical memory R/W backends (VA/PA, VA→PA translation)
+- Kernel object enumeration and gadget candidate classification
+- Post-exploitation actions: token swap, callback manipulation, PPL/LSASS operations
+
+Use Cases:
+- Porting an existing kernel R/W primitive into a reusable post-exploitation toolkit
+- Automating per-build offset/structure discovery for Windows kernel exploitation
+- Privilege escalation via token stealing (target PID token swap)
+- Disabling/altering kernel callbacks and modifying PPL to access protected processes
+- LSASS credential access via WDigest patching, raw memory page dumping, or minidump generation
+- Hiding/unlinking processes and suspending protected processes using kernel data manipulation
+
+Keywords:
+Windows kernel, ntoskrnl, data-only exploitation, kernel gadgets, gadget chaining, arbitrary read/write, kernel VA, physical memory, VA2PA, DbgHelp, symbol resolution, kernel ASLR, VBS, HVCI, CET, kCET, PatchGuard, SSDT hijack, token stealing, PPL, LSASS, WDigest, minidump, callback removal, kernel object enumeration, NTKernelWalkerLib

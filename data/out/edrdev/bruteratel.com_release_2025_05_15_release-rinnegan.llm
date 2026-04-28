@@ -1,0 +1,27 @@
+Title:
+Brute Ratel v2.2 “Rinnegan” Release Notes
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This release post summarizes public-facing changes in Brute Ratel v2.2 (Rinnegan), covering updates to the Badger implant, Commander UI, and the Ratel server/API ecosystem. It focuses on operational and evasion-related adjustments (e.g., changes to memexec hooking strategy, removal of certain signature-prone artifacts, and tweaks intended to reduce YARA/EDR detection opportunities). A major addition is a new Python library, `bruteratel.py`, plus 32 asyncio/WebSocket-based API wrapper scripts to automate common C2 tasks (listener/badger/profile management, command queueing, file hosting, backups, activity queries). The Commander UI core moves to Qt 6.9 for better compatibility with modern Linux distros (e.g., Ubuntu 24.04). The post also notes .NET tradecraft improvements via `sharpinline` changes and new commands for encrypted in-memory storage/execution of multiple .NET assemblies, plus “working hours” callback scheduling. Useful primarily for red teams/operators who automate Brute Ratel workflows and want updated OPSEC/evasion behavior; also relevant to defenders tracking evolving C2/implant tradecraft.
+
+Technical Focus:
+- C2 framework release changes (Badger/Commander/Ratel server)
+- Evasion/OPSEC hardening (YARA/EDR signature avoidance, artifact reduction)
+- AsyncIO WebSocket API automation (`bruteratel.py` + wrapper scripts)
+- In-memory execution and command execution plumbing (memexec hooking changes)
+- .NET in-memory execution pipeline (`sharpinline`, AMSI-related behavior)
+- LDAP query tuning to reduce detection surface
+
+Use Cases:
+- Automate Brute Ratel server operations (list/add/remove listeners, badgers, profiles)
+- Script command dispatching and queue management at scale via WebSocket API
+- Manage hosted files/downloads and server backups programmatically
+- Execute .NET assemblies in-memory with reduced repeated upload needs (encrypted “dotnet store”)
+- Configure callback “working hours” to match target time zones and reduce noise
+- Adjust operational profiles to minimize signature-based detections (YARA/telemetry-aware changes)
+
+Keywords:
+Brute Ratel, BRc4, Badger, Commander, Ratel server, Qt 6.9, WebSocket API, asyncio, Python automation, bruteratel.py, memexec, indirect syscalls, YARA signatures, EDR evasion, sharpinline, CLR invocation, AMSI, LDAP Sentinel queries, BOF APIs, token manipulation

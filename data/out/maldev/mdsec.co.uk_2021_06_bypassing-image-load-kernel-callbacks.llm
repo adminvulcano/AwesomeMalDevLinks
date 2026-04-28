@@ -1,0 +1,29 @@
+Title:
+Bypassing Image Load Kernel Callbacks
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post analyzes Windows “image load” kernel callbacks (registered via `PsSetLoadImageNotifyRoutine`) that security products use to observe EXE/DLL/driver loads, and why they’re hard to evade from low-privilege userland.  
+- By tracing `LoadLibrary` behavior, it shows the callback is triggered when the loader maps an image section (`SEC_IMAGE`) and calls `NtMapViewOfSection`, meaning standard module loading inherently generates these events.  
+- The author demonstrates “spoofing” image-load telemetry by manually opening a PE on disk, creating an image section, and mapping it—generating large volumes of image-load events without actually loading the module into the process in the normal sense.  
+- To truly avoid image-load callbacks, the post describes building a custom userland PE loader that maps/copies sections without `SEC_IMAGE`, performs relocations/import resolution/TLS/exception registration, and then links the module into loader structures so `GetProcAddress`/`GetModuleHandle` work.  
+- Key work includes locating and updating undocumented loader internals like the loader hash table and the module base-address red-black tree index.  
+- It introduces **DarkLoadLibrary**, a `LoadLibrary`-like implementation designed not to trigger image-load events, plus a concealment routine to remove PEB traces and encrypt/de-exec mapped regions; useful primarily for red teams and malware developers focused on telemetry evasion and OPSEC.
+
+Technical Focus:
+- `PsSetLoadImageNotifyRoutine` image-load notify callbacks
+- Windows loader internals (`Ldrp*` routines, PEB/LDR lists)
+- `NtOpenFile` / `NtCreateSection(SEC_IMAGE)` / `NtMapViewOfSection` call chain
+- Custom in-memory PE loading (relocations, imports, TLS, SEH)
+- Loader hash table (x65599 / `RtlHashUnicodeString`) and module indexing (RB-tree)
+
+Use Cases:
+- Implementing userland module loading that avoids kernel image-load telemetry
+- Generating decoy/noise image-load events to degrade or mislead monitoring pipelines
+- Building stealthier implants that still support `GetProcAddress`/`GetModuleHandle`
+- Concealing in-memory modules from scanners by unlinking from PEB and encrypting pages
+
+Keywords:
+Windows loader, image load callbacks, PsSetLoadImageNotifyRoutine, NtMapViewOfSection, NtCreateSection, SEC_IMAGE, NtOpenFile, PEB, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList, LdrpMapDllWithSectionHandle, LdrpMinimalMapModule, GetProcAddress, GetModuleHandle, RtlHashUnicodeString, x65599, LdrpHashTable, red-black tree, RtlRbInsertNodeEx, DarkLoadLibrary, reflective loading, Sysmon image load events, telemetry evasion

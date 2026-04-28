@@ -1,0 +1,30 @@
+Title:
+Windows Early Boot Configuration: The CmControlVector and PspSystemMitigationOptions
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post reverse-engineers how Windows initializes system-wide process mitigation settings during early kernel boot, focusing on the global `PspSystemMitigationOptions`.  
+- It shows that these mitigation options are not read during normal runtime/process creation, but are populated in kernel init Phase 0 via the Configuration Manager using the `CmControlVector`.  
+- The author traces execution to `nt!CmpGetSystemControlValues` and explains why tools like Procmon miss the registry reads (they occur before userland/most drivers are available).  
+- It breaks down the `CM_CONTROL_VECTOR` entry format (registry key/value, target buffer, size/type/flags) and demonstrates that Windows 11 24H2 contains hundreds of such early-boot configuration entries.  
+- Supporting artifacts include an IDA script to extract the vector, a JSON dump of entries, and basic stats/cross-reference mapping to identify which kernel subsystems consume which boot-time values.  
+- Useful for Windows internals researchers, red teamers doing mitigation/IFEO analysis, and defenders validating when/where exploit-protection settings actually take effect (reboot-required semantics).
+
+Technical Focus:
+- Windows kernel initialization (Phase 0 vs Phase 1) and early-boot registry processing
+- Configuration Manager internals (`CmControlVector`, `CmpGetSystemControlValues`)
+- Process mitigation initialization (`PspSystemMitigationOptions`, `_EPROCESS` MitigationOptions*)
+- Registry-based mitigation configuration (system-wide vs IFEO per-image)
+- Kernel debugging/reversing workflows (data breakpoints, IDA automation, xrefs)
+
+Use Cases:
+- Determine why system-wide Exploit Protection changes require reboot and where they are latched
+- Map boot-time registry values to kernel globals and the subsystems that consume them
+- Support research into mitigation bypasses/behavior differences across Windows versions
+- Build detection/forensics logic around expected mitigation state derivation (system-wide + IFEO)
+- Automate extraction of early-boot configuration surfaces for auditing/hardening
+
+Keywords:
+Windows kernel, Configuration Manager, CmControlVector, CM_CONTROL_VECTOR, CmpGetSystemControlValues, CmInitSystem0, Phase 0 initialization, early boot, registry, Session Manager\\Kernel, MitigationOptions, PspSystemMitigationOptions, IFEO, Image File Execution Options, _EPROCESS, MitigationFlags, MitigationOptions2, MitigationOptions3, kernel debugging, IDA Pro, reversing, Procmon boot trace

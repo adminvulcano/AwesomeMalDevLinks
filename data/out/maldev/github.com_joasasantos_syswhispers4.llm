@@ -1,0 +1,31 @@
+Title:
+SysWhispers4 — Advanced Windows Syscall Stub Generator (Direct/Indirect Syscalls + Evasion)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- SysWhispers4 is a Python generator that outputs C/ASM syscall stubs to invoke NT kernel functions directly, aiming to bypass user-mode AV/EDR hooks on `ntdll.dll`.  
+- It focuses on robust syscall number (SSN) resolution across many Windows versions/builds and multiple architectures (x64, x86, WoW64, ARM64), with both direct and indirect invocation options.  
+- The project implements and extends common SSN discovery techniques (Hell’s Gate/Halo’s Gate/Tartarus’ Gate) and adds newer strategies like FreshyCalls (VA-sorting), mapping clean `ntdll` from `\KnownDlls` (“from_disk”), RecycledGate (VA-sort + opcode validation), and a hardware-breakpoint/VEH method to extract SSNs without reading hooked bytes.  
+- It also bundles optional evasion helpers such as ETW patching (`EtwEventWrite`), AMSI patching (`AmsiScanBuffer`), `ntdll` unhooking via remapping clean `.text`, call-stack spoofing, junk instruction insertion, and Ekko-style sleep encryption of `.text`.  
+- Useful primarily for red teams, pentesters, and offensive security researchers building custom loaders/injectors; secondarily for blue teams to understand syscall-based tradecraft and build detections.  
+- Interesting because it combines multiple resilient SSN resolution paths with configurable invocation and on-disk signature reduction (egg-hunt syscall opcode patching), targeting modern EDR heuristics.
+
+Technical Focus:
+- Windows NT syscalls and SSN resolution (Hell’s Gate, Halo’s Gate, Tartarus’ Gate, FreshyCalls, RecycledGate)
+- Direct vs indirect syscalls (`syscall; ret` gadgets, randomized gadget selection)
+- `\KnownDlls\ntdll.dll` mapping and `ntdll` unhooking (clean `.text` remap)
+- VEH + hardware breakpoints (DR0–DR3) for SSN extraction
+- User-mode telemetry bypasses (ETW patching) and AMSI patching
+- Obfuscation techniques (egg-hunt syscall opcode, junk instructions, XOR SSN encryption, stack spoofing, sleep encryption)
+
+Use Cases:
+- Generate syscall stubs for custom process injection (e.g., `NtAllocateVirtualMemory`, `NtWriteVirtualMemory`, `NtCreateThreadEx`)
+- Build tooling that avoids user-mode API hooks by calling NT syscalls directly/indirectly
+- Test EDR resilience against VA-sorted SSN resolution and KnownDlls-based clean mapping
+- Reduce static signatures by removing `0F 05` from disk (egg-hunt) and encrypting SSN tables
+- Research/detect syscall-based tradecraft and common user-mode patching behaviors (ETW/AMSI/ntdll)
+
+Keywords:
+SysWhispers4, Windows syscalls, SSN resolution, ntdll hooks, AV evasion, EDR evasion, Hell’s Gate, Halo’s Gate, Tartarus’ Gate, FreshyCalls, RecycledGate, KnownDlls, NtMapViewOfSection, indirect syscall, syscall gadget, RDTSC entropy, VEH, hardware breakpoints, ETW patch, EtwEventWrite, AMSI bypass, AmsiScanBuffer, ntdll unhooking, call stack spoofing, egg hunt, sleep encryption, WoW64, ARM64, sysenter, SVC #0

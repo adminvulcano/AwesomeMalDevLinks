@@ -1,0 +1,31 @@
+Title:
+PoisonX: Terminating Protected Windows Processes via BYOVD
+
+Type:
+Blog Post (with linked GitHub Tool)
+
+Short Summary (4–8 sentences max):
+- This write-up presents PoisonX, a research tool that demonstrates Bring Your Own Vulnerable Driver (BYOVD) to terminate arbitrary Windows processes, including Protected Process (PP) and Protected Process Light (PPL) targets such as EDR/AV services.  
+- It abuses a Microsoft-signed kernel driver that exposes a vulnerable IOCTL interface, allowing the driver to be loaded under Windows Code Integrity and then used as a kernel-level “kill” primitive.  
+- The user-mode controller installs/uninstalls the driver via the Service Control Manager, communicates with it using DeviceIoControl, and can enumerate processes along with their PP/PPL protection level and signer info.  
+- The tool auto-deploys by extracting one of multiple embedded driver variants and issuing an IOCTL (0x22E010) to terminate a specified PID.  
+- It’s useful for red teams and security researchers to validate endpoint resilience against BYOVD-based defense evasion, and for blue teams to understand detection points around driver loading and suspicious IOCTL usage.  
+- The key takeaway is that trusted, signed-but-vulnerable drivers can bypass user-mode protections and undermine PPL-based security controls.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable Driver) abuse
+- Windows PP/PPL process protection bypass via kernel primitives
+- Vulnerable IOCTL interfaces and DeviceIoControl user↔kernel communication
+- Microsoft-signed driver trust chain / Windows Code Integrity implications
+- Driver installation and lifecycle via Service Control Manager (SCM)
+- Process enumeration with protection level and signer attribution
+
+Use Cases:
+- Terminate EDR/AV PPL services during controlled red-team testing
+- Validate defensive controls: driver blocklists, driver-load telemetry, IOCTL monitoring
+- Research PP/PPL behavior and signer/protection-level mapping across processes
+- Build detections for suspicious kernel driver service creation and device GUID access
+- Reproduce and study real-world BYOVD tradecraft used by ransomware/malware
+
+Keywords:
+BYOVD, vulnerable driver, Microsoft-signed driver, Windows Hardware Compatibility Publisher, IOCTL, DeviceIoControl, kernel-mode, SCM, Service Control Manager, PP, Protected Process, PPL, Protected Process Light, SeDebugPrivilege, EDR bypass, process termination, driver blocklist, Code Integrity, device interface GUID, CrowdStrike Falcon

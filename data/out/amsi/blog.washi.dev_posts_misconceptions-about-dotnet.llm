@@ -1,0 +1,31 @@
+Title:
+Addressing Common Misconceptions about .NET in the InfoSec World
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post debunks frequent misinformation about .NET that shows up in security commentary, malware analysis, and reverse engineering discussions.  
+- It clarifies platform/runtime realities (cross-platform .NET vs .NET Framework vs Mono), execution model details (JIT vs “interpreted”), and why “easy decompilation” is not the same as “easy analysis” under modern obfuscation/VM protections.  
+- The author highlights that .NET assemblies are real PE files and can include native code (mixed-mode, native stubs, obfuscator-emitted native), which impacts tooling and analysis approach.  
+- It argues against common bad practices: relying on dnSpy’s C# editor for patching (prefer IL/CIL editing), over-focusing on ECMA-335 low-level parsing, and overvaluing “reflection-based packers” as novel tradecraft.  
+- It also critiques low-fidelity YARA rules for .NET malware/packers that match generic framework/obfuscator artifacts and cause false positives.  
+- Useful for malware analysts, reverse engineers, and detection engineers who handle .NET samples and want more accurate mental models and better tooling choices.
+
+Technical Focus:
+- .NET runtime ecosystem: .NET Framework vs .NET (Core) vs Mono, CLI/ECMA-335 context
+- CIL/MSIL and JIT compilation vs interpretation; runtime execution modes
+- .NET obfuscation/anti-RE: control-flow, arithmetic, virtualization (KoiVM/VMProtect), JIT hooks (DNGuard)
+- Mixed-mode assemblies and native code inside managed PE files (C++/CLI, native stubs)
+- IL-level patching/editing vs decompiler-based source editing (dnSpy)
+- Detection pitfalls for .NET: YARA false positives on packer/obfuscator artifacts
+
+Use Cases:
+- Improve analyst tradecraft when reversing obfuscated .NET malware beyond “just decompile it”
+- Choose appropriate libraries for .NET binary processing (dnlib/Mono.Cecil/AsmResolver vs raw-table Python parsers)
+- Safely patch/modify .NET samples using IL editing rather than recompiling decompiled C#
+- Dynamically invoke .NET methods via Reflection for quick string/config deobfuscation
+- Write higher-signal detection content (YARA) that avoids matching generic obfuscator/framework indicators
+
+Keywords:
+.NET, .NET Framework, .NET Core, Mono, CLI, ECMA-335, CIL, MSIL, JIT, ILSpy, dnSpy, dnlib, Mono.Cecil, AsmResolver, mixed-mode assembly, C++/CLI, Reflection, Assembly.Load, obfuscation, KoiVM, VMProtect, DNGuard, Native AOT, single-file AppHost, YARA, .NET Reactor, ConfuserEx, de4dot, pythonnet

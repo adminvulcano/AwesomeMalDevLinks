@@ -1,0 +1,31 @@
+Title:
+Bypassing EDR in a Crystal Clear Way
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through building an evasive Windows reflective loader (UDRL-style) that loads a C2 implant (Cobalt Strike Beacon used as the example) while minimizing common EDR detection signals.  
+- It explains why default rDLL/sRDI loaders get caught (MEM_PRIVATE/RWX regions, unbacked return addresses, broken stack unwinding, and in-memory signatures) and then incrementally fixes each issue.  
+- Core techniques include module overloading (stomping a legitimate SEC_IMAGE-mapped DLL) plus .pdata registration via RtlAddFunctionTable to restore valid stack unwinding, and NtContinue-based execution transfer to avoid leaving loader return addresses on the stack.  
+- It also covers load-time API call stack spoofing using synthetic frames (Draugr-style gadget-based spoofing), sleep masking by hooking Sleep via Crystal Palace import resolution, and removing Crystal Palace “islands of invariance” by rewriting instructions with ised to defeat YARA signatures.  
+- The approach is built around Crystal Palace (PIC linker) to compose tradecraft components as COFF/PIC objects and integrate with C2 payload pipelines (including raw Beacon generation via CNA).  
+- Useful primarily for red team operators, implant/loader developers, and defenders studying modern behavioral detections around call stacks, memory backing, and in-memory scanning.
+
+Technical Focus:
+- Reflective loading internals (PE mapping, relocations, IAT resolution, section permissions)
+- Module overloading / DLL stomping with SEC_IMAGE (NtCreateSection/NtMapViewOfSection)
+- Call stack evasion: .pdata registration (RtlAddFunctionTable) and NtContinue execution transfer
+- API call stack spoofing with synthetic frames and gadget selection (Draugr-style)
+- Sleep masking via API hooking / import resolution interception (GetProcAddress hooks)
+- Signature evasion: XOR payload encryption + Crystal Palace YARA island removal with ised
+
+Use Cases:
+- Building custom UDRLs for C2 frameworks (Cobalt Strike, Havoc-like loaders) with reduced behavioral IOCs
+- Avoiding “unbacked memory + suspicious stack” detections during both loader setup and beacon runtime
+- Researching/replicating EDR call-stack validation logic (unwind correctness, “preceding CALL” checks)
+- Implementing sleep masking and memory-scan resistance for long-lived implants
+- Hardening offensive artifacts against static YARA signatures generated from invariant byte sequences
+
+Keywords:
+EDR evasion, reflective loader, UDRL, Cobalt Strike Beacon, Crystal Palace, PIC linker, COFF, PICO, sRDI, module overloading, DLL stomping, NtCreateSection, NtMapViewOfSection, SEC_IMAGE, RtlAddFunctionTable, .pdata, stack unwinding, NtContinue, CONTEXT, call stack spoofing, Draugr, gadget selection, LoadLibraryA, CFG, GetProcAddress hook, sleep masking, VirtualProtect, MEM_PRIVATE, RWX, ETW, YARA, ised, islands of invariance, ROR13 hashing, PEB walking, EAT parsing

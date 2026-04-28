@@ -1,0 +1,25 @@
+Title:
+Process Preluding: Child Process Injection Before The Story Begins
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post analyzes a telemetry gap in Windows process creation where some kernel ETW Threat Intelligence (Microsoft-Windows-Threat-Intelligence / EtwTI) events are only enabled after security products receive process creation callbacks. It shows that by using legacy process creation syscalls (NtCreateProcess / NtCreateProcessEx) to create an “address-space-only” child process (no threads yet), an attacker can allocate memory, write shellcode, and set an execution trigger before the kernel notifies EDR via process creation callbacks. The PoC overwrites a low-artifact PEB field (PostProcessInitRoutine) to execute shellcode when the first thread is finally created, potentially avoiding EtwTI events like WriteProcessMemory/VirtualProtectEx that would normally be enabled per-process by EDR drivers. The technique is positioned as a timing/order-of-callbacks issue rather than a privilege escalation, and it parallels earlier “early bird / preload” concepts but applied to kernel telemetry enablement. It’s useful for red teams and malware developers exploring injection stealth, and for blue teams/EDR engineers to harden callback handling and detect legacy process creation. Defensive notes include detecting legacy creation via missing GUID_ECP_CREATE_USER_PROCESS and that WDAC policies may block these legacy APIs.
+
+Technical Focus:
+- Microsoft-Windows-Threat-Intelligence (EtwTI) per-process logging flags (PROCESS_LOGGING_INFORMATION)
+- Kernel process creation callbacks (PsSetCreateProcessNotifyRoutineEx) timing assumptions
+- Legacy process creation APIs (NtCreateProcess, NtCreateSection, section-backed SEC_IMAGE)
+- Pre-thread “address space only” processes and PEB manipulation (PostProcessInitRoutine)
+- Remote memory operations (VirtualAllocEx, WriteProcessMemory, VirtualProtectEx) and ETW visibility gaps
+- Detection opportunities: GUID_ECP_CREATE_USER_PROCESS, handle-creation callbacks, WDAC blocking behavior
+
+Use Cases:
+- Pre-callback child-process injection to reduce ETW/EDR visibility during early process lifetime
+- Researching EDR telemetry dependencies on process creation notifications and per-process ETW enablement
+- Building detections for legacy process creation and “no-thread-yet” process states
+- Hardening EDR drivers to enable TI logging earlier or treat legacy-created processes as suspicious/blockable
+
+Keywords:
+Windows ETW, Microsoft-Windows-Threat-Intelligence, EtwTI, PROCESS_LOGGING_INFORMATION, PsSetCreateProcessNotifyRoutineEx, process creation callback, NtCreateProcess, NtCreateProcessEx, NtCreateUserProcess, NtCreateSection, SEC_IMAGE, PEB, PostProcessInitRoutine, VirtualAllocEx, WriteProcessMemory, VirtualProtectEx, CreateRemoteThread, GUID_ECP_CREATE_USER_PROCESS, WDAC, process injection, telemetry gap, early bird injection

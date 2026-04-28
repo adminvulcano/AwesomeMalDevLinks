@@ -1,0 +1,30 @@
+Title:
+Awaiting the Awaitables – Building the AwaitFuscator
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how C# `async`/`await` works under the hood and abuses the awaitable pattern to build an obfuscator (“AwaitFuscator”) that turns normal .NET methods into decompiled code that appears to be only long chains of `await`.  
+- It leverages custom awaiters (via `GetAwaiter` extension methods) where `GetResult()` can execute arbitrary logic and return types that enable chaining across multiple awaiters.  
+- The author details how the C# compiler generates async state machines (`IAsyncStateMachine.MoveNext`, `Async*MethodBuilder`, state fields, lifted locals) and how to replicate that structure so decompilers recognize it as legitimate async code.  
+- To preserve locals/parameters across awaits, variables are lifted into a shared “Frame” object passed through awaiters, effectively moving the original method body into awaiter `GetResult()` implementations.  
+- It also discusses hiding the generated awaiter types from common decompilers by marking them `[CompilerGenerated]` and using anonymous-type-like names, plus limitations (binary bloat, incomplete exception handling, decompiler options can reveal compiler-generated code).  
+- Useful for reverse engineers (understanding async lowering), red teamers/malware devs (anti-decompiler tricks), and CTF authors (creating crackmes with unusual decompilation artifacts).
+
+Technical Focus:
+- C# awaitable pattern (`GetAwaiter`, `INotifyCompletion`, `IsCompleted`, `OnCompleted`, `GetResult`)
+- Async state machine lowering (`IAsyncStateMachine`, `MoveNext`, state fields, lifted locals)
+- `AsyncTaskMethodBuilder` / `AsyncVoidMethodBuilder` bootstrapping and continuation wiring
+- Obfuscation via code relocation into awaiters and await-chaining across types
+- Decompiler evasion using `[CompilerGenerated]` and anonymous-type naming conventions
+- IL/.NET decompilation behavior (pattern matching in ILSpy/dnSpy)
+
+Use Cases:
+- Build .NET crackmes/CTF challenges that decompile into misleading “only await” code
+- Prototype anti-decompiler/anti-RE transformations for managed binaries
+- Teach/learn how async/await is compiled into state machines and continuations
+- Stress-test decompilers and develop deobfuscation tooling for compiler-generated async patterns
+
+Keywords:
+C#, .NET, async, await, awaitable, GetAwaiter, INotifyCompletion, GetResult, IsCompleted, OnCompleted, IAsyncStateMachine, MoveNext, AsyncTaskMethodBuilder, AsyncVoidMethodBuilder, state machine, lifted locals, Frame object, obfuscation, anti-decompiler, ILSpy, dnSpy, CompilerGenerated attribute, extension methods, decompilation, reverse engineering

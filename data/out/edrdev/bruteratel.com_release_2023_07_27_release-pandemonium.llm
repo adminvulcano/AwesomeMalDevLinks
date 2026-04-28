@@ -1,0 +1,30 @@
+Title:
+Brute Ratel v1.7 “Pandemonium” Release (Fallback C2, Module Stomping Extensions, Apple Silicon Support)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes Brute Ratel v1.7 (“Pandemonium”), a major overhaul of the Badger implant, Ratel Server, and Commander, with breaking compatibility from v1.6.  
+- The key operational improvement is a “Fallback C2 Strategy” that lets operators chain multiple malleable profiles (HTTP/DoH) and autonomously rotate profiles/domains when blocks occur, reducing long-term reuse of a single profile across many hosts.  
+- It extends the platform’s “Advanced Module Stomping” to in-memory PE execution (memexec) and BOF execution (coffexec), including PEB patching and restoring original DLL bytes on sleep/completion to reduce memory-vs-disk detection (e.g., Pe-sieve style checks).  
+- Additional capabilities include screen recording for operator activity monitoring, full Unicode support across many file/identity commands, and a “memexec profiler” for registering in-memory executables as built-in commands via JSON profiles.  
+- Commander gains official Apple Silicon support, runtime theme/font changes, JSON profile upload for listeners/commands/autoruns/clickscripts, and several UX/reporting changes.  
+- Useful primarily for red teams and adversary emulation operators focused on resilient C2 and post-execution evasion under modern EDR scrutiny.
+
+Technical Focus:
+- C2 resilience via chained fallback malleable profiles (HTTP/DoH) and autonomous rotation
+- Module stomping for in-memory execution (PE/BOF), PEB patching, and byte restoration
+- In-memory execution workflows: memexec and coffexec (BOF)
+- Operator tooling enhancements: screen recording and Unicode-safe file/identity operations
+- Commander cross-platform support (Apple Silicon) and JSON-driven profiling/configuration
+
+Use Cases:
+- Maintain C2 connectivity by automatically failing over to alternate domains/profiles when primary infrastructure is blocked
+- Execute BOFs and PEs in memory while reducing suspicious memory artifacts via module stomping and restoration
+- Capture user workflows on sensitive systems (e.g., SWIFT operator activity) through screen recording for tradecraft/understanding
+- Standardize and rapidly deploy listener/command configurations using JSON profiles across engagements
+- Operate Brute Ratel Commander natively on macOS Apple Silicon and Windows 11 environments
+
+Keywords:
+Brute Ratel, Badger, Ratel Server, Commander, C2 fallback strategy, malleable profiles, HTTP C2, DoH, domain rotation, redirectors, module stomping, PEB patching, memexec, coffexec, BOF, in-memory execution, IAT, Pe-sieve, screen recording, Apple Silicon ARM64, Windows 11, Unicode support, JSON profiles

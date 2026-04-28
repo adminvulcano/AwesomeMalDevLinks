@@ -1,0 +1,26 @@
+Title:
+Slack UDC2 BOF (Cobalt Strike UDC2 over Slack API)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository implements a Cobalt Strike Beacon Object File (BOF) that provides a UDC2 transport channel by encapsulating Beacon frames inside Slack API requests. It solves the problem of operating C2 traffic over a common SaaS platform to blend with legitimate outbound HTTPS traffic and traverse restrictive egress controls. The project includes a Windows in-memory BOF client (no MSVCRT, WinAPI-only) and a Python server component that relays extracted UDC2 frames to a Team Server UDC2 listener. It documents core UDC2 proxy functions (`udc2Proxy`, `udc2Close`) and uses WinINet for HTTP(S) communication to Slack. The implementation is intentionally simplified for learning and lacks fragmentation and multi-beacon routing, making it more suitable for lab/education than full-scale operations. Useful primarily for red teamers/pentesters learning UDC2/BOF transport development and for defenders studying Slack-based C2 tradecraft.
+
+Technical Focus:
+- Cobalt Strike UDC2 transport implementation
+- Beacon Object File (BOF) development constraints (no CRT, in-memory)
+- Slack Web API as a C2 carrier (message size limits, channel IDs, bot tokens)
+- HTTP(S) communications via WinINet (`InternetOpenA`, `HttpSendRequestA`, etc.)
+- Relay/proxy architecture (Python server forwarding to Team Server listener)
+- Error handling and transport-layer limitations (timeouts, fragmentation)
+
+Use Cases:
+- Build a custom UDC2 transport that tunnels Beacon traffic through Slack
+- Prototype/learn BOF-based network transports and UDC2 proxy mechanics
+- Egress-restricted C2 experiments using SaaS endpoints over HTTPS
+- Defensive testing: create detections for anomalous Slack bot/API usage patterns
+- Lab simulation of “living-in-SaaS” C2 channels for threat emulation
+
+Keywords:
+Cobalt Strike, Beacon, UDC2, BOF, Beacon Object File, Slack API, Slack bot token, channel ID, WinINet, HTTP over TLS, proxy transport, C2 tunneling, Team Server, Python relay, Windows API, in-memory execution, fragmentation limit, SaaS C2, egress bypass, traffic encapsulation

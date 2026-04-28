@@ -1,0 +1,33 @@
+Title:
+Beacon Object File Visual Studio Template (bof-vs)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository provides a Visual Studio 2022 project template for developing Cobalt Strike Beacon Object Files (BOFs), including support for Sleepmask BOFs.  
+- It streamlines BOF development by offering Debug builds that compile BOFs into executables for source-level debugging without needing a live Beacon instance.  
+- The template includes mocked Beacon APIs (data parsing, output/format) plus an argument packer that emulates Aggressor’s `bof_pack`, enabling realistic local testing.  
+- It adds helper macros for Dynamic Function Resolution (DFR) to simplify Win32 API import declarations and common BOF coding patterns.  
+- A UnitTest configuration integrates GoogleTest and provides helpers to run BOFs and capture output for assertions.  
+- A Python-based linter (`boflint`) runs during Release builds to catch common BOF incompatibilities (relocations, missing entrypoints, bad imports, stack probing, exception handling).  
+- Useful primarily for red team operators and tool developers writing BOFs, and for defenders/researchers who want reproducible BOF test harnesses.
+
+Technical Focus:
+- Beacon Object File (BOF) development workflow in Visual Studio
+- Mocked Beacon API + argument packing/parsing emulation
+- Dynamic Function Resolution (Win32 API import patterns)
+- Sleepmask BOF development and “mock Beacon” memory layout
+- Unit testing BOFs with GoogleTest
+- Static analysis/linting for BOF constraints (relocations, EH, stack probing)
+
+Use Cases:
+- Rapidly scaffold and build new BOFs for Cobalt Strike
+- Debug BOF logic locally as a Windows executable before deploying to Beacon
+- Write regression tests for BOFs and validate output deterministically
+- Develop and test Sleepmask BOFs with configurable malleable C2-like settings
+- Catch BOF-breaking compiler/linker patterns early via `boflint`
+- Maintain multiple related BOFs in a single VS project (one BOF per .cpp)
+
+Keywords:
+Cobalt Strike, BOF, Beacon Object File, Visual Studio 2022, Windows x64, Win32 API, Dynamic Function Resolution, DFR macro, beacon.h, mocked Beacon API, bof_pack, argument packer, GoogleTest, unit tests, Sleepmask, malleable C2, relocations, import resolution, stack probing, exception handling, boflint, Python 3

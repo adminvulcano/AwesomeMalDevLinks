@@ -1,0 +1,26 @@
+Title:
+Malleable Rust Loader
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository provides a configurable Rust-based loader/packer designed to execute multiple payload types (notably DLLs mapped and executed from memory) while reducing static AV analysis signal. Behavior is driven by a signed, encrypted JSON configuration that can be updated at runtime from multiple “Link” sources (HTTP, file, embedded memory; DNS/WebSocket planned). Retrieved configs/payloads can be transformed through chained “DataOperation” stages (e.g., AES-GCM-SIV, Base64, ROT13, zlib compression, HTML delimiter wrapping, PNG steganography) before verification and execution. It includes “defuse” gating checks (internet reachability, hostname, domain-join) to control when config reloads and payload execution occur. The project supports cross-compilation, optional OLLVM-based obfuscation and string encryption, and can build as an EXE or a DLL (with a helper C “overlord” loader for testing). Useful primarily for red teams/pentesters and malware/implant developers experimenting with malleable staging, in-memory module loading, and resilient config distribution.
+
+Technical Focus:
+- Config-driven loader architecture with runtime config rotation
+- Ed25519 signing/verification for config trust and anti-tamper
+- In-memory DLL loading/execution (MemoryModule / memorymodule-rs)
+- Multi-stage data deobfuscation/decryption pipelines (AES-GCM-SIV, stegano, zlib)
+- Cross-compilation and binary obfuscation (OLLVM, string encryption)
+- Execution gating/“defuse” checks (hostname, domain join, internet checks)
+
+Use Cases:
+- Stage and execute an encrypted DLL from memory (e.g., C2 implant DLL) with configurable retrieval paths
+- Rotate loader behavior by pushing signed configs to multiple fallback URLs/files
+- Hide configs/payloads inside benign-looking web pages or PNG images (stegano) for staging
+- Build a Windows EXE/DLL loader from Linux and deploy/execute via SMB + Impacket tooling
+- Prototype malleable staging logic (pooling, fallback links, parallel/linear fetch strategies)
+
+Keywords:
+Rust, loader, packer, in-memory execution, DllFromMemory, MemoryModule, memorymodule-rs, Ed25519, signed configuration, JSON config, AES-GCM-SIV, AEAD, steganography, PNG stegano, zlib, Base64, ROT13, OLLVM, LLVM obfuscation, cross-compilation, x86_64-pc-windows-gnu, UPX, HTTP GET, SMB upload, Impacket, PsExec, domain join check, hostname check

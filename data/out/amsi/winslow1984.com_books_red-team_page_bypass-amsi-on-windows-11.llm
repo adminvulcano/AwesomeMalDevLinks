@@ -1,0 +1,31 @@
+Title:
+Bypass AMSI On Windows 11
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post reverse-engineers AMSI behavior on Windows 11 and explains why a common OSEP-taught AMSI bypass (patching the first DWORD of `amsiContext` checked for “AMSI”) no longer works.  
+- It walks through AMSI’s PowerShell call flow (`AmsiInitialize` → `AmsiOpenSession` → `AmsiScanBuffer`) using WinDBG breakpoints, then details multiple bypass strategies by forcing AMSI APIs to fail with `E_INVALIDARG (0x80070057)` or by toggling PowerShell’s internal `AmsiUtils` state.  
+- The author shows updated Windows 11 logic in `AmsiOpenSession` (additional NULL checks on registers/structure fields) and adapts the reflection-based context patch to target the 2nd QWORD instead.  
+- It also demonstrates in-memory patching of `AmsiOpenSession`/`AmsiScanBuffer` via `VirtualProtect` + byte overwrites, including light opcode obfuscation to evade signatures.  
+- A key section covers why some bypasses fail for `.NET Assembly.Load()` scenarios: CLR invokes `clr.dll!AmsiScan`, changing which AMSI functions are exercised, making `AmsiScanBuffer` patching the reliable approach.  
+- Useful for red teamers/pentesters developing PowerShell tradecraft and for defenders wanting to understand common AMSI tampering patterns on Windows 11.
+
+Technical Focus:
+- AMSI internals and API call sequence (`AmsiInitialize`, `AmsiOpenSession`, `AmsiScanBuffer`)
+- Windows 11 behavioral changes in `amsi.dll` validation logic
+- PowerShell reflection abuse (`System.Management.Automation.AmsiUtils`, `amsiInitFailed`, `amsiContext`)
+- In-memory patching with `VirtualProtect` and direct opcode writes
+- CLR assembly scanning path (`clr.dll!AmsiScan`) during `Assembly.Load()`
+- WinDBG breakpoint-driven analysis of runtime execution
+
+Use Cases:
+- Update legacy AMSI bypasses to work on Windows 11 by patching different `amsiContext` fields
+- Disable/impair AMSI scanning for PowerShell script execution via reflection-based state manipulation
+- Patch AMSI functions in-memory to force error returns and allow execution of flagged content
+- Enable in-memory loading of offensive .NET tooling (e.g., Rubeus) by targeting the CLR scanning path
+- Build detections around `VirtualProtect` + writes to `amsi.dll`/`clr.dll` code regions and suspicious reflection access to `AmsiUtils`
+
+Keywords:
+AMSI, amsi.dll, PowerShell, Windows 11, WinDBG, AmsiInitialize, AmsiOpenSession, AmsiScanBuffer, HAMSICONTEXT, HAMSISESSION, E_INVALIDARG, 0x80070057, reflection, System.Management.Automation.AmsiUtils, amsiInitFailed, VirtualProtect, memory patching, opcode patch, clr.dll, AmsiScan, Assembly.Load, in-memory execution, Rubeus

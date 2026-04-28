@@ -105,3 +105,15 @@ https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/process-
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/driver-loading.md
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/create-remote-thread.md
+https://bruteratel.com/release/2023/05/30/Release-Reboot/
+https://bruteratel.com/release/2023/07/27/Release-Pandemonium/
+https://bruteratel.com/release/2023/12/19/Release-Mirage/
+https://bruteratel.com/release/2024/06/27/Release-Metamorphosis/
+https://bruteratel.com/release/2025/05/15/Release-Rinnegan/
+https://bruteratel.com/release/2025/10/07/Release-Flux/
+https://www.originhq.com/blog/process-preluding
+https://www.mdsec.co.uk/2021/06/bypassing-image-load-kernel-callbacks/
+https://medium.com/@s12deff/enumerating-windows-process-creation-callbacks-98e09153e2d7
+https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/
+https://meetcyber.net/edr-xdr-bypass-and-detection-evasion-techniques-an-investigation-of-advanced-evasion-strategies-9594946ad102
+https://arth.imbeddex.com/Kernel_stuff/Windows/Kernel-Callback-Integrity-Bypass/

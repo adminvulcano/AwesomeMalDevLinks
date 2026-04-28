@@ -1,0 +1,26 @@
+Title:
+ICMP UDC2 BOF (Cobalt Strike) — ICMP Echo Request/Reply UDC2 Channel
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository provides a Cobalt Strike Beacon Object File (BOF) that implements a UDC2 communication channel over ICMP echo request/reply traffic. It encapsulates Beacon frames inside ICMP payloads and includes fragmentation/reassembly logic to handle larger messages across multiple packets. The project also includes a Python “UDC2 server” proxy that receives ICMP, extracts/assembles Beacon data, forwards it to the Team Server’s UDC2 listener, and returns tasking via ICMP replies. Reliability features include configurable retries and exponential backoff, while BOF constraints are met by avoiding MSVCRT and using Windows APIs for in-memory execution. It’s primarily useful for red teams/pentesters needing an alternate C2 transport in environments where TCP/HTTP egress is constrained but ICMP is permitted, and for defenders studying ICMP-based tunneling tradecraft. It’s interesting because it operationalizes a full request/ack/task protocol over ICMP with explicit packet types and fragmentation flags, making the traffic more structured than simple ICMP tunnels.
+
+Technical Focus:
+- Cobalt Strike UDC2 channel implementation (BOF-based)
+- ICMP echo request/reply encapsulation of C2 frames
+- Fragmentation/reassembly and sequencing flags
+- ACK/task polling protocol flow over a connectionless transport
+- Windows ICMP APIs (IPHLPAPI/IcmpSendEcho) and BOF constraints (no MSVCRT)
+- Python proxy server bridging ICMP to Team Server UDC2 listener
+
+Use Cases:
+- Establishing C2 over ICMP in restricted egress networks
+- Testing detection/monitoring for ICMP tunneling and anomalous echo payloads
+- Building/customizing alternative Beacon transports via BOFs
+- Lab research on reliability/latency tradeoffs of ICMP-based C2
+- Developing network signatures around ICMP payload structure, fragmentation patterns, and polling behavior
+
+Keywords:
+Cobalt Strike, Beacon, BOF, UDC2, ICMP, echo request, echo reply, ICMP tunneling, C2 channel, IPHLPAPI.dll, IcmpCreateFile, IcmpSendEcho, IcmpCloseHandle, packet fragmentation, reassembly, ACK, tasking, exponential backoff, Windows API, Python proxy, Wireshark, RFC 792

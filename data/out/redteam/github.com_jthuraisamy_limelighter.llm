@@ -1,0 +1,25 @@
+Title:
+LimeLighter
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+LimeLighter is a Go-based utility for Windows Authenticode code signing that can generate a spoofed (self-created) code-signing certificate for a chosen domain/FQDN and use it to sign EXE/DLL files, or alternatively sign with a real PFX certificate. It targets operational needs where signed binaries may receive less scrutiny from some security controls and reputation-based checks. The tool wraps common signing tooling (OpenSSL and osslsigncode) to create certificates, produce signed outputs, and verify signatures. It includes options for fake cert generation via a `-Domain` parameter, real cert signing via `-Real`/`-Password`, and signature verification via `-Verify`. It’s primarily useful for red teams/pentesters and malware developers testing trust/signing-related detection paths, and for blue teams to understand and detect suspicious/self-signed Authenticode usage.
+
+Technical Focus:
+- Authenticode/PE code signing for EXE/DLL
+- Spoofed/self-generated code-signing certificates (domain/FQDN-based)
+- PFX certificate handling and password-protected private keys
+- OpenSSL certificate generation workflows
+- osslsigncode signing/verification pipeline
+- Signature verification and inspection
+
+Use Cases:
+- Sign payloads/tools to evaluate EDR and application control responses to signed binaries
+- Generate “lookalike” certificates for lab testing of trust and reputation controls
+- Sign binaries with legitimate PFX certs in controlled engagements
+- Verify and triage Authenticode signatures during analysis or QA of build artifacts
+
+Keywords:
+Authenticode, code signing, PE, EXE, DLL, X.509, certificate, self-signed certificate, spoofed certificate, PFX, PKCS#12, private key, OpenSSL, osslsigncode, signature verification, Windows trust, EDR evasion testing, domain FQDN, Go (Golang)

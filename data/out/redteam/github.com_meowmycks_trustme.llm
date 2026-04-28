@@ -1,0 +1,26 @@
+Title:
+trustme — BOF to impersonate TrustedInstaller via DISM API trigger and thread impersonation
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+`trustme` is a Cobalt Strike Beacon Object File (BOF) that elevates an already-admin Beacon to a token that includes the `NT SERVICE\TrustedInstaller` group, enabling modification of TrustedInstaller-owned resources (files/registry) that SYSTEM alone may not access. Instead of starting the TrustedInstaller service via the Service Control Manager (a commonly monitored/logged path), it triggers `TrustedInstaller.exe` indirectly by loading `dismapi.dll` and running a DISM health check (`DismCheckImageHealth`) while keeping the DISM session open. It enumerates processes and threads using native NT APIs (`NtGetNextProcess`/`NtGetNextThread`) and identifies TrustedInstaller by querying process image names (`NtQueryInformationProcess`). It then impersonates a TrustedInstaller thread using `NtImpersonateThread` and applies the resulting token to the Beacon session via `BeaconUseToken` until `rev2self`. This is primarily useful for red teams/pentesters operating post-exploitation on Windows who need TrustedInstaller-level access with reduced SCM telemetry.
+
+Technical Focus:
+- TrustedInstaller token/group impersonation
+- DISM API abuse to spawn TrustedInstaller (`dismapi.dll`, `DismCheckImageHealth`)
+- Native NT process/thread enumeration (`NtGetNextProcess`, `NtGetNextThread`)
+- Thread impersonation (`NtImpersonateThread`) and token handling in Beacon (`BeaconUseToken`)
+- Privilege requirements and enablement (`SeDebugPrivilege`)
+- Evasion/telemetry reduction by avoiding SCM interactions
+
+Use Cases:
+- Modify/replace TrustedInstaller-protected system binaries and components
+- Write to protected registry hives/keys owned by TrustedInstaller
+- Post-exploitation privilege escalation from admin to TrustedInstaller-equivalent access
+- Red-team tradecraft to avoid direct `sc start TrustedInstaller` / `StartServiceW` artifacts
+- Operationalizing TrustedInstaller impersonation as a Cobalt Strike BOF + CNA command
+
+Keywords:
+Cobalt Strike, BOF, Beacon, TrustedInstaller, NT SERVICE\\TrustedInstaller, SYSTEM, token impersonation, thread impersonation, NtImpersonateThread, NtGetNextProcess, NtGetNextThread, NtQueryInformationProcess, ProcessImageFileName, DISM, dismapi.dll, DismCheckImageHealth, SeDebugPrivilege, Windows internals, SCM evasion, rev2self

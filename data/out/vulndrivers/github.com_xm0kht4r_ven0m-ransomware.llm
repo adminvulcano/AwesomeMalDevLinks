@@ -1,0 +1,26 @@
+Title:
+VEN0m Ransomware (Rust BYOVD + UAC Bypass PoC)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+VEN0m-Ransomware is a ransomware proof-of-concept written in Rust that demonstrates disabling/impairing AV/EDR protections and then encrypting user files on Windows 11. Its core evasion uses BYOVD by loading a legitimate signed driver from IObit Malware Fighter (IMFForceDelete.sys) vulnerable to arbitrary file deletion (CVE-2025-26125) to delete/“shred” security product files on disk, including locked files, rather than relying on suspicious memory tampering. It also implements a UAC bypass by hijacking auto-elevated Slui.exe via HKCU `Software\Classes\Launcher.SystemSettings\Shell\Open\Command` with `DelegateExecute`, then triggering execution with `ShellExecuteW` + `runas`. After defenses are weakened, it establishes persistence via Winlogon `Userinit` registry modification and performs extension-based file encryption with a hardcoded 32-byte key, dropping a ransom note and scheduled task to relaunch the note UI. The repo includes a decryptor (“Antid0te.exe”) that reverses encryption using the same key. It’s primarily useful for red teams/malware researchers to study BYOVD-based defense disruption and common Windows persistence/UAC bypass patterns, and for blue teams to derive detections around driver/service creation, suspicious registry keys, and mass file operations.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable Driver) using IMFForceDelete.sys (CVE-2025-26125)
+- Arbitrary file deletion via IOCTL + `DeviceIoControl` (0x8016E000)
+- UAC bypass via Slui.exe auto-elevation + `DelegateExecute` registry hijack
+- Windows service creation/loading of kernel drivers (SCM)
+- Winlogon `Userinit` persistence
+- Ransomware-style file enumeration and symmetric encryption + extension renaming
+
+Use Cases:
+- Simulate ransomware tradecraft in controlled lab environments
+- Research/detect BYOVD-based AV/EDR disruption via on-disk deletion of protected components
+- Build detections for suspicious driver loading/service names and unexpected signed-driver usage
+- Hunt for UAC bypass artifacts involving Slui.exe and `Launcher.SystemSettings` class hijacks
+- Validate incident response playbooks for ransomware behaviors (encryption, wallpaper change, scheduled tasks)
+
+Keywords:
+Rust, ransomware, BYOVD, IMFForceDelete.sys, IObit Malware Fighter, CVE-2025-26125, DeviceIoControl, IOCTL 0x8016E000, arbitrary file delete, signed driver abuse, Windows 11 24H2, UAC bypass, Slui.exe, DelegateExecute, ShellExecuteW, HKCU\Software\Classes, kernel driver service, Winlogon Userinit, scheduled task, file encryption, .vnm extension

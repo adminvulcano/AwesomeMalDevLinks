@@ -1,0 +1,30 @@
+Title:
+Windows Kernel Callback Integrity Bypass (PsSetCreateProcessNotifyRoutine from Manually Mapped Drivers)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up explains why modern Windows blocks callback registration (e.g., `PsSetCreateProcessNotifyRoutine`, `ObRegisterCallbacks`) from manually mapped/unbacked kernel drivers, typically returning `STATUS_ACCESS_DENIED`.  
+- It reverses the internal validation path (`MmVerifyCallbackFunctionCheckFlags` → `MiLockLoadedDataTableEntry` → `MmFindDataTableEntryByAddress`) and shows the core issue: the callback address must resolve to a legitimate loader entry in the kernel’s module tracking structures.  
+- The author demonstrates a bypass by crafting a fake `_KLDR_DATA_TABLE_ENTRY`-like structure with an embedded `_RTL_BALANCED_NODE` and inserting it into `MmLoadedModuleTree` (a red-black tree keyed by module base/size).  
+- The technique relies on correct structure layout/offsets (notably Win11 padding), safe initialization of list entries and persistent `UNICODE_STRING` buffers, and synchronized tree modification using `PsLoadedModuleResource`.  
+- Useful for red teamers, kernel researchers, and malware developers working on manual mapping, stealth drivers, or post-exploitation kernel tooling that needs kernel callbacks.  
+- Interesting because it documents a practical method to “re-back” an unbacked driver in kernel bookkeeping to satisfy callback integrity checks on current Windows/Defender configurations.
+
+Technical Focus:
+- Kernel callback integrity checks (`MmVerifyCallbackFunctionCheckFlags`)
+- Loader/module tracking internals (`_KLDR_DATA_TABLE_ENTRY`, `PsLoadedModuleResource`)
+- `MmLoadedModuleTree` red-black tree traversal and insertion (`_RTL_BALANCED_NODE`)
+- Manual mapping / unbacked driver constraints and evasion
+- Kernel pool allocation and lifetime-safe `UNICODE_STRING` handling
+- Race-condition avoidance via kernel resource locks
+
+Use Cases:
+- Register process/thread/image/OB callbacks from a manually mapped driver
+- Support stealthy kernel telemetry/interception without standard driver loading
+- Restore stability for kernel memory manipulation techniques needing process lifecycle hooks (e.g., VAD-related work)
+- Research/detection engineering: understand artifacts and invariants around module trees and callback registration
+
+Keywords:
+Windows kernel, PsSetCreateProcessNotifyRoutine, PsSetCreateProcessNotifyRoutineEx, STATUS_ACCESS_DENIED, MmVerifyCallbackFunctionCheckFlags, MiLockLoadedDataTableEntry, MmFindDataTableEntryByAddress, MmLoadedModuleTree, PsLoadedModuleResource, _KLDR_DATA_TABLE_ENTRY, _RTL_BALANCED_NODE, red-black tree, intrusive data structures, manual mapping, unbacked driver, ExAllocatePool2, POOL_FLAG_NON_PAGED, UNICODE_STRING, RtlInitUnicodeString, NodeModuleLink, InLoadOrderLinks, IDA Pro, WinDbg

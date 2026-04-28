@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v1.5 (Nightmare) Release – “Ghosts From The Past”
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes Brute Ratel C4 v1.5 “Nightmare,” focusing on new evasion and operator quality-of-life updates.  
+- The main technical addition is a revamped module stomping implementation that aims to avoid common detections seen in older/public approaches (e.g., Cobalt Strike-style stomping) by addressing loader/PEB anomalies and Control Flow Guard (CFG) constraints.  
+- It explains how `LoadLibraryEx(DONT_RESOLVE_DLL_REFERENCES)` affects PEB/LDR flags and entrypoint handling, why those artifacts are detectable, and how BR attempts to “fully link” the module and patch entrypoint-related metadata.  
+- The post also covers CFG-related failures (e.g., `ntdll!LdrpDispatchUserCallTarget` leading to `RtlFailFast2`) and introduces operator commands to disable/enable CFG for custom workflows.  
+- Additional features include an undocumented Remote Procedure Call-based process injection method (requires alertable target threads) and built-in Pass-the-Hash with improved OpSec compared to classic Mimikatz PTH.  
+- Useful primarily for red team operators, adversary simulation tool developers, and defenders studying modern in-memory tradecraft and detection points.
+
+Technical Focus:
+- Module stomping implementation details and detection artifacts
+- Windows loader internals (PEB/LDR, `_LDR_DATA_TABLE_ENTRY` flags, DllMain/loader lock)
+- Control Flow Guard (CFG) evasion/handling and indirect call validation
+- Undocumented RPC-based process injection (alertable state requirement)
+- Pass-the-Hash (NTLM) process creation/token impersonation
+- ETW evasion and in-memory artifact reduction during sleep (restore-on-sleep behavior)
+
+Use Cases:
+- Implementing stealthier in-memory payload hosting backed by on-disk modules
+- Building detections for module stomping via PEB/LDR inconsistencies and memory-vs-disk `.text` comparisons
+- Avoiding CFG-related crashes when executing from stomped `.text` regions
+- Performing alternative remote process injection via RPC in suitable targets
+- Conducting lateral movement/authentication abuse using NTLM hashes (PTH) with better operational controls
+
+Keywords:
+Brute Ratel, BRc4, Badger, module stomping, LoadLibraryEx, DONT_RESOLVE_DLL_REFERENCES, PEB, LDR_DATA_TABLE_ENTRY, DllMain, loader lock, IAT resolution, `.text` section, memory-vs-disk comparison, Control Flow Guard, CFG, ntdll, LdrpDispatchUserCallTarget, RtlFailFast2, STATUS_STACK_BUFFER_OVERRUN, ETW evasion, stack spoofing, heap encryption, RPC injection, alertable thread, Pass-the-Hash, NTLM, token impersonation, Mimikatz PTH

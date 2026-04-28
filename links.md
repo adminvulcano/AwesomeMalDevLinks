@@ -458,6 +458,34 @@ https://github.com/0xROOTPLS/WaveGate
 https://github.com/0xROOTPLS/PEBwalker
 https://github.com/0xROOTPLS/Doppel
 https://github.com/kapla0011/KaplaStrike
+
+
+https://github.com/Brother-x86/malleable-rust-loader
+https://bruteratel.com/release/2022/07/20/Release-Stoffels-Escape/
+https://bruteratel.com/release/2022/08/18/Release-Scandinavian-Defense/
+https://bruteratel.com/release/2022/11/17/Release-Resurgence/
+https://bruteratel.com/release/2023/03/19/Release-Nightmare/
+https://info.preludesecurity.com/hubfs/Content/Closing%20the%20Execution%20Gap.pdf
+https://github.com/Whispergate/berlin
+https://bishopfox.com/blog/rust-for-malware-development
+https://github.com/xAL6/zero-loader
+https://core-jmp.org/2026/03/crimes-against-ntdll-implementing-early-cascade-injection/
+https://www.infinitycurve.org/blog/release
+https://github.com/JoasASantos/SysWhispers4
+https://sudosiddharths.medium.com/analyzing-the-evolution-and-execution-of-syswhispers-1-3-74cbbcdaf397
+https://github.com/Cobalt-Strike/bof-vs
+https://core-jmp.org/2026/03/stealth-injection-with-rop-thread-hijacking-without-executable-memory/
+https://github.com/dadevel/xwin-starterpack?
+https://g3tsyst3m.com/lotp/Living-off-the-Process/
+https://lorenzomeacci.com/unwind-data-cant-sleep-introducing-insomniacunwinding
+https://github.com/kapla0011/InsomniacUnwinding
+https://medium.com/@s12deff/rpc-proxy-injection-part-ii-breaking-elastic-edr-telemetry-7eac298508c2
+https://blog.washi.dev/posts/import-patching/
+https://www.mdsec.co.uk/2021/06/bypassing-image-load-kernel-callbacks/
+https://github.com/bats3c/DarkLoadLibrary
+https://infosecwriteups.com/t-rop-h-thread-hijacking-without-executable-memory-allocation-d746c102a9ca
+https://github.com/Excalibra/AnneFrankInjector
+https://arth.imbeddex.com/malware/development/Reflective-DLL-Injection/
 ```
 
 
@@ -488,6 +516,7 @@ https://tradecraftgarden.org/docs.html
 https://tradecraftgarden.org/pagestream.html
 https://tradecraftgarden.org/stackcutting.html
 https://github.com/kapla0011/KaplaStrike
+https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way
 ```
 
 
@@ -605,6 +634,18 @@ https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/process-
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/driver-loading.md
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/image-loading.md
 https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/create-remote-thread.md
+https://bruteratel.com/release/2023/05/30/Release-Reboot/
+https://bruteratel.com/release/2023/07/27/Release-Pandemonium/
+https://bruteratel.com/release/2023/12/19/Release-Mirage/
+https://bruteratel.com/release/2024/06/27/Release-Metamorphosis/
+https://bruteratel.com/release/2025/05/15/Release-Rinnegan/
+https://bruteratel.com/release/2025/10/07/Release-Flux/
+https://www.originhq.com/blog/process-preluding
+https://www.mdsec.co.uk/2021/06/bypassing-image-load-kernel-callbacks/
+https://medium.com/@s12deff/enumerating-windows-process-creation-callbacks-98e09153e2d7
+https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/
+https://meetcyber.net/edr-xdr-bypass-and-detection-evasion-techniques-an-investigation-of-advanced-evasion-strategies-9594946ad102
+https://arth.imbeddex.com/Kernel_stuff/Windows/Kernel-Callback-Integrity-Bypass/
 ```
 
 
@@ -682,6 +723,7 @@ https://tlsh.org/
 https://github.com/andrivet/ADVobfuscator
 https://blog.deeb.ch/posts/avred-update/
 https://github.com/Tylous/Mangle
+https://lorenzomeacci.com/bypassing-static-analysis-deep-dive
 ```
 
 
@@ -748,6 +790,10 @@ https://thewover.github.io/Cruller/
 https://thewover.github.io/Mixed-Assemblies/
 https://www.nttdata.com/global/en/-/media/nttdataglobal/1_files/services/cybersecurity/radar_magazine/2024/radar_supplement_july.pdf
 https://github.com/vari-sh/RedTeamGrimoire/tree/main/Obolos
+https://winslow1984.com/books/red-team/page/bypass-amsi-on-windows-11
+https://winslow1984.com/books/malware/page/mutationgate
+https://blog.washi.dev/posts/misconceptions-about-dotnet/
+https://blog.washi.dev/posts/awaitfuscator/
 ```
 
 
@@ -841,6 +887,23 @@ https://binary-win.github.io/2026/02/10/Browser-Dumping-The_Core_TacticBehind_Mo
 https://www.wietzebeukema.nl/blog/bypassing-detections-with-command-line-obfuscation
 https://github.com/praetorian-inc/turnt
 https://systemweakness.com/lateral-movement-with-elastic-edr-and-asr-enabled-9c3e5dcf38b0
+https://github.com/Meowmycks/trustme
+https://github.com/WKL-Sec/slack-udc2
+https://github.com/Cobalt-Strike/icmp-udc2/
+https://github.com/dazzyddos/ClickOnceBlobber
+https://www.wietzebeukema.nl/blog/trust-me-im-a-shortcut
+https://github.com/jthuraisamy/Limelighter
+https://0xdbgman.github.io/posts/persistence-the-art-of-staying-in/
+https://0xdbgman.github.io/posts/red-team-infrastructure-the-full-picture/
+https://github.com/nicocha30/ligolo-iwa
+https://github.com/Maldev-Academy/3LayersPersistence
+https://github.com/whokilleddb/emulat3
+https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
+https://medium.com/@devraval2603/windows-persistence-techniques-0e5735740c9c
+https://github.com/mertdas/PrivKit
+https://medium.com/@s12deff/comouflage-surrogate-injection-cfb93e15afcd
+https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
+
 ```
 
 
@@ -888,6 +951,16 @@ https://www.exploitpack.com/blogs/news/windows-kernel-exploits-using-zwmapviewof
 https://www.nsideattacklogic.de/en/kernel-access-please-byovd-and-vulnerable-drivers/
 https://github.com/BlackSnufkin/HolyGrail
 https://ydinkin.substack.com/p/200-kernel-bugs-in-30-days
+https://github.com/xM0kht4r/VEN0m-Ransomware
+https://medium.com/@s12deff/weaponizing-byovd-to-kill-and-evade-windows-defender-535ad94652b0
+https://github.com/jsacco/DataOnlyGadget
+https://core-jmp.org/2026/04/poisonx-terminating-protected-windows-processes-via-byovd/
+https://medium.com/@jehadbudagga/reverse-engineering-a-0day-used-against-crowdstrike-edr-a5ea1fbe3fd4
+https://core-jmp.org/2026/04/breaking-process-protection-exploiting-cve-2026-0828-in-processmonitordriver-sys/
+https://blog.talosintelligence.com/qilin-edr-killer/
+https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
+https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/
+
 ```
 
 ## LSASS
@@ -912,6 +985,10 @@ https://github.com/Meowmycks/LetMeowIn
 https://github.com/Meowmycks/catdumper
 https://specterops.io/blog/2026/03/04/offensive-dpapi-with-nemesis/
 https://ipurple.team/2026/03/17/credential-guard/
+https://github.com/k3nundrum/KslKatz
+https://github.com/andreisss/KslDump
+https://www.hackingarticles.in/credential-dumping-local-security-authority-lsalsass-exe/
+
 ```
 
 ## COM n stuff

@@ -64,3 +64,4 @@ https://tlsh.org/
 https://github.com/andrivet/ADVobfuscator
 https://blog.deeb.ch/posts/avred-update/
 https://github.com/Tylous/Mangle
+https://lorenzomeacci.com/bypassing-static-analysis-deep-dive

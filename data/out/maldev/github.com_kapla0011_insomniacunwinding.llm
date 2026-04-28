@@ -1,0 +1,25 @@
+Title:
+InsomniacUnwinding — Surgical UNWIND_INFO preservation for sleep masking
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+InsomniacUnwinding is a Windows sleep-masking PoC based on the Ekko technique that encrypts a payload image during sleep while keeping stack unwinding functional. Instead of preserving large portions of `.rdata`, it “surgically” restores only the PE headers, `.pdata`, and the minimal `UNWIND_INFO` structures required for correct stack walking (~250 bytes). It extends the Ekko timer chain to temporarily decrypt/restore these regions before and after sleeping, maintaining a normal-looking call stack without relying on call stack spoofing. The repo includes YARA testing to demonstrate that embedded signatures disappear while sleeping because most of the image is encrypted. It’s primarily useful for red teamers and malware developers experimenting with stealthy in-memory sleep behavior and for defenders studying how sleep masking can preserve unwind metadata. The key takeaway is that call stack spoofing is often a side-effect of unbacked/invalid unwind data during sleep masking, not a strict requirement.
+
+Technical Focus:
+- Windows x64 exception handling and stack unwinding (`UNWIND_INFO`, `.pdata`)
+- Sleep masking via timed callback chains (Ekko-style)
+- In-memory image encryption/decryption (`SystemFunction032`)
+- Memory protection transitions (`VirtualProtect` RW/RX)
+- PE structure preservation (headers, section data)
+- YARA-in-memory scanning validation
+
+Use Cases:
+- Implementing sleep masking that keeps debuggers/stack walkers resolving frames correctly
+- Reducing forensic/detection artifacts while a payload is dormant (encrypted image)
+- Researching EDR telemetry around unwind metadata integrity and sleep-masked code
+- Building test cases for defensive detections on `.pdata`/unwind tampering and timed sleep chains
+
+Keywords:
+sleep masking, Ekko, UNWIND_INFO, .pdata, stack unwinding, x64 SEH, PE headers, VirtualProtect, SystemFunction032, RtlCopyMemory, WaitForSingleObject, SetEvent, timer chain, in-memory encryption, call stack spoofing, backed memory, YARA, BaseThreadInitThunk, RtlUserThreadStart

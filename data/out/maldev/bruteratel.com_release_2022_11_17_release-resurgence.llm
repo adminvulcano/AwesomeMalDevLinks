@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v1.3 “Resurgence” Release – No Strings Attached
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes Brute Ratel C4 v1.3 (“Resurgence”), focusing on payload/core changes aimed at reducing static and in-memory detections and improving C2 malleability.  
+- It explains common EDR detection surfaces (YARA on disk/memory, injection telemetry, LOLBin/sideload tracking, network signatures/certs, and behavioral/ML scoring) and maps v1.3 changes to those weaknesses.  
+- Key updates include removing embedded strings and the prior ror13 hashing artifacts, rewriting/optimizing shellcode, changing how configuration is stored (binary vs base64), and expanding malleable C2 to include response bodies and headers (plus distinct “command/no-command” responses).  
+- Operational features include reverse port forwarding (`rportfwd`), improved DoH chunking controls via “DNS interval,” and multiple server/commander QoL improvements (autosave/restore profiles, faster SOCKS, UI enhancements).  
+- The post also covers licensing/ethics, discusses prior leaks leading to vendor detections, and points defenders to community YARA rules for older versions.  
+- Useful primarily for red teams/pentesters using BRc4 and for blue teams seeking detection context around BRc4 tradecraft and artifacts.
+
+Technical Focus:
+- EDR detection surfaces: YARA (disk/memory), thread/injection telemetry, kernel callbacks (e.g., PsSetCreateThreadNotifyRoutine)
+- Payload artifact reduction: string removal, hashing algorithm changes, shellcode rewrite/size optimization
+- C2 malleability: customizable HTTP(S)/DoH request+response bodies and headers, Burp-compatible profiles
+- DoH transport constraints and chunking behavior (64-byte limit) with timing controls (“DNS interval”)
+- Reverse port forwarding and SOCKS performance/crypto changes
+- Operational security considerations: certificates, network signatures, behavioral scoring
+
+Use Cases:
+- Tuning BRc4 network profiles to evade signature-based network detections (custom responses/headers, valid certs)
+- Reducing static/memory signature hits by altering payload artifacts (strings/hashes/decryption stubs)
+- Pivoting/lateral movement support via reverse port forwarding (`rportfwd`) and improved SOCKS
+- DoH-based C2 operations with controllable chunk timing to manage traffic patterns
+- Defensive detection engineering using published YARA rules for leaked/older BRc4 payloads
+
+Keywords:
+Brute Ratel, BRc4, Badger, Ratel Server, C2 malleable profile, EDR evasion, YARA, memory scanning, code injection, CreateRemoteThread, QueueUserAPC, ETW, PsSetCreateThreadNotifyRoutine, NtProtectVirtualMemory, ntdll.dll, ror13 hashing, RC4, DNS over HTTPS (DoH), reverse port forwarding, SOCKS proxy, behavioral detection, Microsoft Defender/ATP, CrowdStrike, Elastic EDR, Burp Suite

@@ -1,0 +1,30 @@
+Title:
+Analyzing the Evolution and Execution of SysWhispers (1–3)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post breaks down how the SysWhispers project evolved from SysWhispers1 to SysWhispers3 to bypass user-mode AV/EDR hooks by invoking Windows syscalls more stealthily.  
+- It explains the core problem: EDRs commonly hook NTDLL/Native API functions (e.g., Nt* / Zw*) in userland to monitor and block suspicious behavior before it reaches kernel mode.  
+- SysWhispers1 relies on syscall number tables and OS version detection (initially via RtlGetVersion; later via PEB-based checks) to generate syscall stubs across Windows versions.  
+- SysWhispers2 moves to dynamic syscall number resolution by parsing ntdll.dll exports and inferring syscall numbers by sorting Zw* function addresses, avoiding static tables and explicit OS version checks.  
+- SysWhispers3 further reduces static signatures by avoiding custom syscall stubs and instead performing indirect syscalls by jumping into legitimate syscall stubs already present in ntdll, using a dispatcher that maps hashed names to resolved pointers.  
+- It’s primarily useful for red teamers, malware developers, and offensive security researchers; it’s also relevant to blue teams for understanding detection gaps around indirect syscalls and NTDLL-based telemetry blind spots.
+
+Technical Focus:
+- User-mode API hooking and bypass (NTDLL Nt*/Zw* hooks)
+- Direct vs indirect syscalls on Windows
+- Syscall number (SSN) resolution: static tables vs dynamic inference
+- PEB-based environment/OS discovery and anti-detection tradeoffs
+- Parsing PE structures (EAT/export directory) in ntdll.dll
+- Dispatcher patterns and hashed API name resolution
+
+Use Cases:
+- Generating syscall-capable stubs/headers for offensive tooling to evade userland hooks
+- Building loaders/injectors that avoid high-level Win32 APIs commonly monitored by EDR
+- Researching and reproducing syscall-resolution techniques for detection engineering
+- Developing detections around anomalous syscall invocation patterns and NTDLL export-walking behavior
+
+Keywords:
+SysWhispers, SysWhispers2, SysWhispers3, Windows syscalls, SSN, system service number, NTDLL, NtCreateFile, Zw* exports, Export Address Table, EAT parsing, PEB, RtlGetVersion, user-mode hooks, EDR bypass, direct syscall, indirect syscall, syscall stub, dispatcher, API hashing, ntoskrnl.exe, WoW64

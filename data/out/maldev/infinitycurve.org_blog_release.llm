@@ -1,0 +1,33 @@
+Title:
+Havoc Professional Release (Kaine-kit)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post announces the initial release of Havoc Professional and its Kaine-kit implant ecosystem, describing operator-focused features aimed at working in hardened environments.  
+- It highlights new C2 transport options (including encrypted DNS via DoH/DoT), plus runtime listener/profile and even protocol switching (e.g., HTTP↔SMB, DNS↔HTTP) without respawning an agent.  
+- The release adds support for Async BOFs (event-driven/background BOF jobs using the standardized Beacon APIs) and “Adaptive BOFs” where the loader proxies Win32 API calls so BOFs inherit the agent’s evasion features without embedding spoofing logic.  
+- Kaine-kit emphasizes modular, runtime-loadable extensions (e.g., SOCKS, process/filesystem tooling) and introduces “PowerSafe” for native PowerShell execution with bypasses for AMSI and multiple PowerShell logging controls.  
+- It previews “Firebeam,” a VM/bytecode execution pipeline intended to run existing tooling via transpilation, with optional runtime Win32 proxying/stack spoofing via extensions.  
+- Evasion R&D includes a callstack spoofing extension (desync and synthetic modes) and “ALLURE,” a custom bin2bin obfuscator designed to raise static detection cost while preserving semantics.  
+- Useful primarily for professional red teams/pentesters and security researchers evaluating modern C2/implant tradecraft and evasion modularity.
+
+Technical Focus:
+- Encrypted DNS C2 (DNS, DoH, DoT) and layered channel strategies  
+- Runtime C2 profile/protocol switching (listener reconfiguration, P2P vs direct)  
+- Async BOFs and Beacon API compatibility (BeaconWakeup, stop-job events)  
+- BOF loader API proxying / “adaptive” execution with evasion inheritance  
+- Modular implant extensions (static embed vs dynamic load) and operator tooling (SOCKS, process mgmt)  
+- Evasion: callstack spoofing (desync/synthetic), native PowerShell bypasses, bin2bin obfuscation, VM/bytecode execution (Firebeam)
+
+Use Cases:
+- Establish low-signature initial access/persistence via DNS and later upgrade to higher-bandwidth channels
+- Rotate burned infrastructure and change C2 profiles without losing an active session
+- Run long-lived host monitoring (process/logon notifications) using Async BOFs
+- Reuse existing Cobalt Strike/Outflank/TrustedSec BOFs with minimal porting (argument packing scripts)
+- Execute PowerShell natively while suppressing AMSI and common PowerShell telemetry controls
+- Apply runtime evasion (stack spoofing, API proxying) to third-party tooling/BOFs without modifying their source
+
+Keywords:
+Havoc Professional, Kaine-kit, C2 framework, DNS over HTTPS, DoH, DNS over TLS, DoT, runtime channel switching, listener reconfiguration, SMB C2, HTTP C2, P2P, Beacon Object Files, BOF, Async BOF, Beacon API, BeaconWakeup, callstack spoofing, AMSI bypass, Script Block Logging, Constrained Language Mode, PowerShell, Firebeam VM, bytecode transpilation, Win32 API proxying, bin2bin obfuscation, ALLURE, SOCKS proxy, modular extensions

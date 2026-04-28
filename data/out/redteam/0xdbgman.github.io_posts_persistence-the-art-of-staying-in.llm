@@ -1,0 +1,31 @@
+Title:
+Persistence: Advanced Red Team Persistence Techniques (The Art of Staying In)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A long-form, phase-based guide to persistence techniques across Windows, Active Directory, Linux, macOS, and cloud/Kubernetes environments, mapped to MITRE ATT&CK TA0003.  
+- It focuses on maintaining access through reboots, credential rotation, endpoint reimaging, and incident response by layering redundant footholds with OPSEC tradecraft.  
+- Windows coverage includes registry autoruns (Winlogon, IFEO/VerifierDlls, SSP/auth packages, time providers, netsh helpers), stealth scheduled tasks (including “invisible” tasks via security descriptor deletion), services (including SDDL hiding and svchost-hosted DLL services), WMI event subscriptions, and DLL/COM hijacking.  
+- AD persistence sections cover Kerberos ticket forgery (Golden/Silver plus newer Diamond/Sapphire), DCSync rights backdooring, AdminSDHolder, SIDHistory, DCShadow, Skeleton Key, DSRM abuse, and GPO-based domain-wide execution.  
+- Linux/macOS/cloud sections extend persistence into systemd/cron/SSH/PAM/eBPF rootkits, launchd/login items/dylib hijacking, and identity-plane backdoors in Entra/AWS/GCP plus Kubernetes RBAC/DaemonSets.  
+- Useful primarily for red teams and pentesters designing post-exploitation persistence, and for blue teams translating these mechanisms into hunt/detection coverage; it’s notable for emphasizing stealth variants and real-world APT case studies.
+
+Technical Focus:
+- Windows persistence primitives (Registry autoruns, IFEO/GlobalFlag/VerifierDlls, services, scheduled tasks, WMI subscriptions)
+- Execution-flow hijacking (DLL search order hijacking, COM hijacking, .NET AppDomainManager injection)
+- Active Directory persistence (Kerberos ticket forgery, DCSync, AdminSDHolder, DCShadow, GPO abuse)
+- Pre-OS / kernel persistence (UEFI bootkits, kernel drivers, Linux eBPF/LKM rootkits)
+- Cloud & identity persistence (Entra ID app backdoors, Golden SAML, AWS IAM backdoors, GCP service accounts, Kubernetes RBAC/DaemonSets)
+- OPSEC and persistence layering strategies (decoys vs stealth footholds, naming, timing, decoupled C2)
+
+Use Cases:
+- Designing multi-layer persistence plans for red team operations across endpoint + AD + cloud
+- Building detection/hunting checklists for stealth persistence (e.g., WMI subscriptions, hidden services/tasks, COM hijacks)
+- Training content for post-exploitation tradecraft and MITRE ATT&CK TA0003 mapping
+- Purple-team validation using atomic tests and targeted telemetry (Sysmon/WMI/task/service/AD audit)
+- Incident response scoping: identifying persistence that survives reimage/password resets (AD/cloud identity plane)
+
+Keywords:
+MITRE ATT&CK TA0003, Windows Registry Run keys, Winlogon Userinit, IFEO Debugger, GlobalFlag, VerifierDlls, SilentProcessExit, Scheduled Tasks, TaskCache Security subkey, service SDDL, svchost ServiceDll, WMI Event Subscription, __EventFilter, CommandLineEventConsumer, COM hijacking, DLL search order hijacking, AppDomainManager injection, UEFI bootkit, BlackLotus, CVE-2022-21894, Active Directory persistence, Golden Ticket, Silver Ticket, Diamond Ticket, Sapphire Ticket, DCSync, AdminSDHolder, SIDHistory, DCShadow, Skeleton Key, DSRM, GPO persistence, systemd, PAM backdoor, LD_PRELOAD, eBPF rootkit, LaunchAgents, LaunchDaemons, macOS Login Items, Golden SAML, Entra ID app registration, AWS IAM access keys, EventBridge, GCP service account keys, Kubernetes ClusterRoleBinding, DaemonSet

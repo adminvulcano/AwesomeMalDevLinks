@@ -1,0 +1,31 @@
+Title:
+Trust me, I’m a shortcut — deceptive Windows LNK targets and Explorer Properties spoofing
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post analyzes how Windows Explorer’s shortcut (LNK) Properties dialog can misrepresent what a shortcut will actually execute, enabling social-engineering-friendly payload delivery.  
+- It breaks down the LNK binary format (ShellLinkHeader, LinkTargetIDList, LinkInfo, StringData, ExtraData) and shows how multiple “target” representations can conflict.  
+- It covers CVE-2025-9491 (Explorer truncating displayed command-line arguments to 260 chars) and several additional variants where arguments are hidden or the displayed target is spoofed via EnvironmentVariableDataBlock and fallback parsing behavior.  
+- Key techniques include padding/whitespace abuse, disabling the Target field, and crafting invalid paths so Explorer displays one target but executes another (sometimes after “repairing” the LNK).  
+- The post also introduces the open-source “lnk-it-up” toolkit: a generator for crafting these deceptive LNKs and a tester that uses native Windows APIs to predict displayed vs executed behavior.  
+- Useful for red teams/pentesters building initial access lures and for blue teams/DFIR to understand and detect LNK deception beyond simple static parsing.
+
+Technical Focus:
+- Windows Shell Link (LNK) file format internals and flags (LinkFlags, IsUnicode, HasExpString, HasLinkInfo, HasLinkTargetIDList)
+- Explorer Properties UI inconsistencies (display vs execution) and truncation behavior (260-char display limit)
+- EnvironmentVariableDataBlock (TargetAnsi/TargetUnicode) manipulation and Unicode/ANSI edge cases
+- Target resolution precedence and fallback between LinkTargetIDList, LinkInfo, and ExtraData
+- LNK-based social engineering and LOLBIN/LOLBAS execution chains
+- Detection approaches: native API-based evaluation vs strict parsers vs YARA keywording
+
+Use Cases:
+- Crafting phishing lures where the shortcut’s displayed target/arguments look benign but execution is malicious
+- Building and testing LNK payloads that hide command-line arguments (e.g., PowerShell/mshta/rundll32 chains)
+- Defensive triage: identify LNKs where Explorer-displayed target differs from actual executed target
+- DFIR enrichment: extract and interpret LinkInfo/IDList artifacts (original paths, volumes, UNC hints)
+- Creating detection rules for suspicious LNK structures/flags and malformed target fields
+
+Keywords:
+Windows LNK, Shell Link, Explorer Properties, target spoofing, command-line argument hiding, CVE-2025-9491, LinkTargetIDList, LinkInfo, StringData, ExtraData, EnvironmentVariableDataBlock, HasExpString, IsUnicode, ANSI vs UTF-16LE, path validation, reserved characters, UNC paths, LOLBAS, mshta.exe, PowerShell, YARA, lnk-it-up, native Windows APIs

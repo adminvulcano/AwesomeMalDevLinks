@@ -1,0 +1,26 @@
+Title:
+ClickOnceBlobber (ClickOnce AppDomainManager Injection Toolkit)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+ClickOnceBlobber is a toolkit to weaponize legitimate, signed .NET ClickOnce applications by hijacking a dependency DLL and forcing the CLR to load it via AppDomainManager injection using an added `.exe.config`. It automates rebuilding a ClickOnce deployment by replacing a target DLL, inserting the config, and patching ClickOnce manifests (hashes, sizes, deployment provider URL, and related metadata) so the modified app still installs and runs. The primary payload is a C# port of Quarkslab’s ProxyBlob agent, providing a SOCKS5 tunnel whose C2 traffic is tunneled through Azure Blob Storage over HTTPS to blend into environments where `*.blob.core.windows.net` is allowed. The repo also includes alternative payload examples (message box PoC and a shellcode loader) and a built-in web server with correct ClickOnce MIME types for hosting. It’s mainly useful for red teams/pentesters focusing on initial access and stealthy egress, and it’s interesting because it combines trusted ClickOnce execution paths with cloud-based tunneling to reduce obvious C2 indicators.
+
+Technical Focus:
+- ClickOnce deployment internals (.application/.manifest/.deploy) and hash patching
+- .NET CLR AppDomainManager injection via `.exe.config`
+- DLL dependency hijacking within ClickOnce app bundles
+- ProxyBlob-style C2 over Azure Blob Storage (raw REST over HTTPS)
+- Cryptography/protocol details: X25519, HKDF-SHA3-256, XChaCha20-Poly1305 (HChaCha20 derivation), GUID/UUID byte-order pitfalls
+- Build/packaging automation: csc.exe, NuGet, ILMerge, BouncyCastle
+
+Use Cases:
+- Backdooring a discovered ClickOnce `.application` URL for initial access in an engagement
+- Establishing a SOCKS5 pivot channel that blends into Azure Blob Storage traffic
+- Rapid PoC validation of AppDomainManager injection in a target ClickOnce app
+- Delivering alternate payloads (custom DLL or shellcode loader) while keeping the signed host EXE unchanged
+- Testing/defending ClickOnce supply-chain and deployment integrity controls
+
+Keywords:
+ClickOnce, AppDomainManager, .exe.config, CLR, .NET Framework, DLL hijacking, manifest patching, SHA256 hashes, SmartScreen reputation, signed binary abuse, ProxyBlob, SOCKS5, Azure Blob Storage, blob.core.windows.net, HTTPS tunneling, X25519, HKDF-SHA3-256, XChaCha20-Poly1305, HChaCha20, BouncyCastle, ILMerge, NuGet, dfshim CleanOnlineAppCache

@@ -1,0 +1,26 @@
+Title:
+Closing the Execution Gap: Hardware-Backed Telemetry for Detecting Out-Of-Context Execution
+
+Type:
+Research Paper
+
+Short Summary (4–8 sentences max):
+This paper proposes an endpoint detection approach that shifts the “chokepoint” from OS-level telemetry (hooks, syscalls, ETW providers) to CPU-level execution evidence to detect code running from private (non-image-backed) memory. It targets modern fileless/in-memory tradecraft and common EDR evasion (direct syscalls, hook bypass, missing/dropped telemetry) by using hardware-assisted tracing that attackers can’t easily suppress. The system correlates Windows scheduler/context-switch events and PMU-driven Performance Monitor Interrupts (PMIs) with Intel Last Branch Record (LBR) and Intel Processor Trace (IPT) data, collected from user mode via ETW, to observe branch targets and instruction pointers that land in private executable regions. It maintains a memory tracker for private allocations and state transitions (alloc/write/protect/free) and, upon detecting execution in private memory, builds a provenance graph linking processes, threads, memory regions, and contextual artifacts (e.g., network/registry/image loads) from a local context database. Case studies show detection of both canonical remote injection (VirtualAllocEx/WriteProcessMemory/CreateRemoteThread) and “un-instrumentable” local indirect-call execution that lacks OS telemetry. It’s most useful for EDR/defensive engineers and threat hunters building durable detections against in-memory implants and injection, and it’s interesting because it operationalizes LBR/IPT via ETW as a practical, execution-centric detection primitive rather than behavior-rule chasing.
+
+Technical Focus:
+- ETW-based collection of context switches, call stacks, and (Windows 24H2) context registers
+- Hardware execution telemetry: Intel LBR and Intel Processor Trace (IPT), branch/TIP decoding
+- PMU interval sampling and Performance Monitor Interrupt (PMI) as inflection points
+- Correlation of execution events to private memory allocations (VAD/private vs image-backed)
+- Provenance/graph modeling of process-thread-memory relationships and enrichment via local context DB
+- Injection/execution primitives coverage (APC, remote thread, SetThreadContext, indirect calls, section mapping)
+
+Use Cases:
+- Detect execution of shellcode/implants from private executable memory (local or remote injection)
+- Catch execution primitives that evade OS instrumentation (e.g., indirect function-call into shellcode)
+- Attribute in-memory execution to the correct actor process/thread via correlated scheduler + trace data
+- Generate investigation-ready provenance graphs for triage (who allocated/wrote/protected/executed)
+- Build anomaly/embedding baselines over execution+provenance graphs to reduce false positives (e.g., JIT)
+
+Keywords:
+ETW, Windows scheduler, context switch, CONTEXT registers, Windows 24H2, Performance Monitor Interrupt, PMU, Intel LBR, Last Branch Record, Intel Processor Trace, IPT, MSR, TraceSetInformation, NtSetSystemInformation, ipt.sys, branch tracing, TIP packets, private memory, VAD, VirtualAllocEx, WriteProcessMemory, CreateRemoteThread, QueueUserAPC, SetThreadContext, NtCreateSection, code injection, in-memory execution, EDR evasion, direct syscalls, SysWhispers, Hell’s Gate, graph provenance, Threat Intelligence ETW provider (Microsoft-Windows-Threat-Intelligence)

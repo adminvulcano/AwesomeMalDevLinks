@@ -1,0 +1,25 @@
+Title:
+Windows Persistence Techniques
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is a lab-tested walkthrough of basic Windows user-level persistence methods to regain execution after reboot, logon, or user activity. It demonstrates several common autostart vectors using simple command-line actions (copying binaries, adding registry values, and modifying user configuration). Techniques covered include Startup folder placement, HKCU Run key persistence, user logon scripts via `UserInitMprLogonScript`, screensaver executable hijacking, and PowerShell profile abuse. The author notes tradeoffs between reliability and noise, and shows that stacking multiple methods can yield multiple callbacks after login. It’s primarily useful for red teamers/pentesters validating persistence options, and for blue teamers mapping common persistence locations to hunt and harden.
+
+Technical Focus:
+- Startup folder autostart (`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`)
+- Registry persistence (HKCU `...\CurrentVersion\Run`)
+- Logon script persistence (HKCU `Environment\UserInitMprLogonScript`)
+- Screensaver persistence (HKCU `Control Panel\Desktop\SCRNSAVE.EXE`, `ScreenSaveTimeOut`)
+- PowerShell profile execution (`Documents\WindowsPowerShell\profile.ps1`)
+- Persistence chaining / multiple execution triggers
+
+Use Cases:
+- Establish user-context persistence for a payload across logoff/reboot
+- Validate which autostart vectors work in a given Windows environment
+- Create detection/hunting checks for common HKCU persistence keys and profile scripts
+- Purple-team exercises to test alerting on registry modifications and autostart locations
+
+Keywords:
+Windows persistence, Startup folder, HKCU Run key, CurrentVersion\\Run, reg add, UserInitMprLogonScript, logon script, Control Panel\\Desktop, SCRNSAVE.EXE, ScreenSaveTimeOut, screensaver hijack, PowerShell profile, profile.ps1, autostart extensibility, user context persistence, callback, registry modification, living-off-the-land, endpoint hardening

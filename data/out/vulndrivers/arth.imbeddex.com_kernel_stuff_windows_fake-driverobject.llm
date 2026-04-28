@@ -1,0 +1,26 @@
+Title:
+Forging a Fake `DRIVER_OBJECT` for Manually Mapped Windows Kernel Drivers
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This write-up explains how to construct a “fake” Windows kernel `DRIVER_OBJECT` so a manually mapped (reflectively loaded) driver can interact with the standard I/O Manager subsystems instead of being “deaf and mute.” It reverse engineers `IoCreateDriver` to replicate how Windows allocates and initializes `DRIVER_OBJECT` + `DRIVER_EXTENSION` as a contiguous block (0x150 + 0x58 = 0x1A8 bytes), including key fields like `Type`, `Size`, dispatch table defaults, and the extension back-pointer. The post also covers how to obtain the required `IoDriverObjectType` without a static import by querying an always-present device (e.g., `\Device\Tcp`) and using `ObGetObjectType`-style logic. The end result is a kernel object that the OS can safely reference, enabling use of common driver APIs and IRP dispatching while reducing instability and obvious artifacts. It’s primarily useful for red teamers, kernel implant developers, and researchers working on manual mapping/reflective loading and stealthy kernel execution. It’s interesting because it bridges Windows Object Manager internals with practical loader design and highlights detection-relevant artifacts (imports, namespace visibility, ETW TI logging).
+
+Technical Focus:
+- Windows kernel `DRIVER_OBJECT` / `DRIVER_EXTENSION` layout and initialization
+- Reverse engineering `IoCreateDriver` (IDA/WinDbg) and object allocation via `ObCreateObjectEx`
+- IRP dispatch table (`MajorFunction`) and default handlers (`IopInvalidDeviceRequest`)
+- Object Manager types (`IoDriverObjectType`, `_OBJECT_TYPE`) and dynamic resolution via existing devices
+- Kernel object attributes (`OBJECT_ATTRIBUTES`, `OBJ_KERNEL_HANDLE`) and namespace anonymity
+- ETW TI driver load logging (`EtwTiLogDriverObjectLoad`) implications
+
+Use Cases:
+- Enabling IRP handling and `DeviceIoControl`-style communication for manually mapped kernel drivers
+- Building reflective/manual kernel loaders that mimic legitimate driver object creation
+- Researching Windows Object Manager behavior and kernel object construction patterns
+- Developing and testing stealth tradeoffs (imports, object naming, ETW telemetry) for kernel implants
+- Creating more stable “ghost” drivers that interact with I/O subsystems without immediate crashes
+
+Keywords:
+Windows kernel, DRIVER_OBJECT, DRIVER_EXTENSION, IoCreateDriver, ObCreateObjectEx, IoDriverObjectType, OBJECT_TYPE, OBJECT_ATTRIBUTES, OBJ_KERNEL_HANDLE, IRP, MajorFunction, I/O Manager, DEVICE_OBJECT, IoGetDeviceObjectPointer, \Device\Tcp, ObReferenceObjectByHandle, ExAllocatePool2, RtlPcToFileHeader, EtwTiLogDriverObjectLoad, manual mapping, reflective loader, YetAnotherReflectiveLoader, IDA Pro, WinDbg

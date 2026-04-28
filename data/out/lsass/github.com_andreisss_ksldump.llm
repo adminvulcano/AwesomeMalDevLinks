@@ -1,0 +1,25 @@
+Title:
+KslDump – BMVD (Bring the Microsoft Vulnerable Driver)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+KslDump is a Python proof-of-concept/tool that dumps credentials from PPL-protected LSASS by abusing a Microsoft Defender kernel driver (KslD.sys) that exposes powerful IOCTLs to user mode. It leverages a leftover vulnerable, Microsoft-signed KslD.sys on disk and re-points the service ImagePath to that version, avoiding BYOVD-style third‑party driver loading. The driver’s IOCTL `0x222044` subcommands provide KASLR defeat (leaking CR3/IDTR) and an arbitrary kernel/physical memory read primitive via an attacker-controlled `MmCopyMemory()` call. With physical memory reads, the tool walks kernel structures to locate LSASS, translates LSASS virtual addresses via page tables, extracts LSA encryption material (AES/3DES/IV), and decrypts logon session credentials to recover NT hashes. It’s primarily useful for red teams, pentesters, and security researchers evaluating credential theft paths that rely only on built-in Microsoft-signed components. It’s notable because it highlights a “blocklist paradox” (Microsoft drivers excluded from the vulnerable driver blocklist) and a practical PPL bypass that depends mainly on local admin plus weak driver access control.
+
+Technical Focus:
+- Microsoft Defender KslD.sys IOCTL abuse (`0x222044`, SubCmd 2/12)
+- Arbitrary physical/kernel memory read via `MmCopyMemory`
+- PPL/LSASS protection bypass through kernel primitives
+- KASLR defeat using CR3/IDTR leakage and IDT-based ntoskrnl base discovery
+- Kernel structure walking (EPROCESS, ActiveProcessLinks) and page table translation
+- LSA secrets/key extraction and credential decryption (MSV1_0)
+
+Use Cases:
+- Dumping LSASS credentials/NT hashes on systems where LSASS runs as PPL
+- Post-exploitation credential access using only Microsoft-signed, on-box components
+- Researching/validating kernel-driver exposed attack surface in Defender components
+- Purple-team testing of detections around service/registry tampering and suspicious driver IOCTL usage
+
+Keywords:
+KslDump, KslD.sys, Microsoft Defender, BMVD, BYOVD, IOCTL 0x222044, MmCopyMemory, physical memory read, kernel memory disclosure, PPL, LSASS, KASLR bypass, CR3, IDTR, IDT, ntoskrnl, EPROCESS, ActiveProcessLinks, LSA secrets, MSV1_0, NTLM hash, registry ImagePath, AllowedProcessName, DriverSiPolicy.p7b, HVCI

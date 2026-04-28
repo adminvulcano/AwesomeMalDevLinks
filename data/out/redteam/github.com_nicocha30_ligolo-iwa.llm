@@ -1,0 +1,24 @@
+Title:
+Ligolo-IWA
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Ligolo-IWA is a JavaScript-based Ligolo-ng agent designed to run inside Chrome/Chromium by leveraging the Isolated Web Applications (IWA) platform. It enables tunneling/pivoting capabilities from within a browser context, using a signed Isolated Web App bundle rather than a traditional native agent binary. The repo focuses on building and installing a signed web bundle (`.swbn`) and using Chrome’s IWA dev/testing flow (`chrome://web-app-internals`) to deploy it. This is useful for red teams and pentesters exploring alternative agent execution and delivery paths that blend into browser application workflows. It’s interesting because it applies the emerging IWA standard to post-exploitation-style networking (Ligolo-ng) and highlights current ecosystem limitations (e.g., Edge not supported).
+
+Technical Focus:
+- Ligolo-ng tunneling architecture (agent/proxy model)
+- Isolated Web Applications (IWA) and Signed Web Bundles (.swbn)
+- Chromium installation/testing flow (chrome://flags, chrome://web-app-internals)
+- JavaScript/TypeScript agent implementation in a browser sandbox
+- Build/signing pipeline for IWA artifacts (Makefile-based)
+
+Use Cases:
+- Deploy a Ligolo-ng agent via a browser-installed Isolated Web App for internal pivoting
+- Test feasibility of browser-native post-execution networking channels in Chromium environments
+- Research/assess IWA security boundaries and operational constraints for offensive tooling
+- Demonstrate alternative agent delivery mechanisms where native binaries are restricted
+
+Keywords:
+Ligolo-IWA, ligolo-ng, tunneling, pivoting, Isolated Web Applications, IWA, Signed Web Bundle, SWBN, Chromium, Chrome 120, chrome://web-app-internals, chrome://flags, dev mode, JavaScript agent, TypeScript, pentesting, proxy/agent, browser sandbox, Edge limitation

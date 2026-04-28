@@ -1,0 +1,31 @@
+Title:
+Brute Ratel v2.0 “Metamorphosis” Release – Everything Everywhere All At Once
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This release post describes major architectural and operational changes in Brute Ratel v2.0, including a heavily rewritten “Badger” implant, server optimizations, and Commander QoL updates.  
+- It addresses two main problems: improving evasion/OPSEC capabilities in the implant (sleep masking, stack-chain control, loader/entry-point options) and tightening licensing enforcement to prevent multi-user/large-scale misuse of single-user licenses.  
+- The Badger gains configurable sleep masking that preserves a valid stack-chain, operator-defined/custom stack frames for execution and library loading, improved SOCKS proxy performance, and new WinRM/COM-based pivoting commands.  
+- The server adds mechanisms to “resurrect” removed/deauthed agents by importing agent profiles (JSON) and tracking a badger_counter, plus faster/more stable DoH comms and shellcode changes aimed at reducing static detections.  
+- Commander improvements focus on safer profile/listener editing, better help/escaping guidance, and trimming/formatting to reduce operator errors.  
+- Useful primarily for experienced red team operators and toolsmiths who need malleable C2/implant behavior and understand OPSEC tradeoffs; it’s notable for explicit stack-chain/sleep-masking configurability and operational handling of deauthed agents.
+
+Technical Focus:
+- Sleep masking with stack-chain validity
+- Operator-defined stack frames / call stack spoofing controls
+- Implant execution configuration (entry point, offset, core-thread execution method)
+- WinRM + COM object lateral movement/pivoting
+- DNS-over-HTTPS (DoH) C2 performance/stability
+- Agent lifecycle management (deauth handling, profile import/restore)
+
+Use Cases:
+- Configure stealthier implant runtime behavior (sleep masking + believable stack traces) for EDR-heavy environments
+- Run stable SOCKS pivoting for internal network access through compromised hosts
+- Lateral movement/pivoting via WinRM using COM automation
+- Recover/re-authenticate “removed” agents that later beacon back (deauth.log → JSON profile import)
+- Operate DoH-based comms for environments where DNS/HTTPS blending is advantageous
+
+Keywords:
+Brute Ratel, Badger, Commander, Ratel Server, sleep masking, stack chain, call stack spoofing, custom stack frames, OPSEC, evasion, SOCKS4a, SOCKS5, WinRM, COM objects, lateral movement, pivoting, DNS over HTTPS, DoH C2, shellcode, deauth.log, agent resurrection, JSON profile import, licensing enforcement, hardware-bound licensing

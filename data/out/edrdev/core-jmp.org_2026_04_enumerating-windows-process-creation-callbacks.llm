@@ -1,0 +1,31 @@
+Title:
+Enumerating Windows Process Creation Callbacks
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post shows how to enumerate Windows kernel process-creation notify callbacks from user mode by abusing a vulnerable signed driver (BYOVD) that provides an arbitrary kernel memory read primitive.  
+- It targets `PspCreateProcessNotifyRoutine`, a 64-entry kernel callback array commonly used by EDR and security drivers to receive process creation notifications.  
+- The methodology: enumerate loaded kernel modules via `NtQuerySystemInformation(SystemModuleInformation)`, find `ntoskrnl.exe` base, compute the callback array address using a known symbol offset, read each slot via IOCTL-based kernel reads, decode the stored pointer/flags, dereference the `EX_CALLBACK` structure, and map callback addresses back to owning drivers by range matching.  
+- A C++ PoC using the GIO/GDRV driver demonstrates identifying callbacks belonging to drivers like `WdFilter.sys`, `ksecdd.sys`, `tcpip.sys`, etc., on Windows 11.  
+- It’s useful for red teams/pentesters for situational awareness of kernel monitoring, and for defenders/researchers to understand and detect callback enumeration behavior.  
+- The post also notes detection realities: the technique may evade direct detection while the vulnerable driver is what typically gets flagged, and includes a YARA rule idea to detect the enumeration pattern.
+
+Technical Focus:
+- `PspCreateProcessNotifyRoutine` / process notify routines enumeration
+- BYOVD kernel memory read primitives via IOCTL (`DeviceIoControl`)
+- `NtQuerySystemInformation(SystemModuleInformation)` kernel module enumeration
+- Kernel pointer decoding / callback slot flag masking and `EX_CALLBACK` dereference
+- Mapping kernel addresses to driver images (base+size range matching)
+- Basic detection content (YARA patterning for callback enumeration)
+
+Use Cases:
+- Identify which kernel drivers/EDRs are monitoring process creation on a host
+- Pre-op host telemetry reconnaissance for kernel-based monitoring components
+- Validate whether a driver successfully registered process notify callbacks
+- Build defensive detections for suspicious kernel callback enumeration behavior
+- Research Windows callback internals and common EDR kernel instrumentation points
+
+Keywords:
+Windows kernel, PspCreateProcessNotifyRoutine, PsSetCreateProcessNotifyRoutine, process creation callbacks, kernel callbacks, EX_CALLBACK, BYOVD, vulnerable signed driver, GIO, GDRV, IOCTL, DeviceIoControl, NtQuerySystemInformation, SystemModuleInformation, ntoskrnl.exe, kernel memory read primitive, driver enumeration, WdFilter.sys, EDR telemetry, YARA detection
