@@ -472,4 +472,14 @@ https://github.com/bats3c/DarkLoadLibrary
 https://infosecwriteups.com/t-rop-h-thread-hijacking-without-executable-memory-allocation-d746c102a9ca
 https://github.com/Excalibra/AnneFrankInjector
 https://arth.imbeddex.com/malware/development/Reflective-DLL-Injection/
-
+https://robinx0.github.io/blogs/malware-analysis/reflective-dll/
+https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/
+https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/
+https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/
+https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/
+https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/
+https://robinx0.github.io/blogs/malware-analysis/anti-analysis-techniques/
+https://iliascyber.com/2026/05/04/reflective-dll-loader.html
+https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
+https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/
+https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/

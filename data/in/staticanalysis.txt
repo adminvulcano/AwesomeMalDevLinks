@@ -65,3 +65,6 @@ https://github.com/andrivet/ADVobfuscator
 https://blog.deeb.ch/posts/avred-update/
 https://github.com/Tylous/Mangle
 https://lorenzomeacci.com/bypassing-static-analysis-deep-dive
+https://github.com/DosX-dev/obfus.h
+https://github.com/DosX-dev/Astral-PE
+https://github.com/haunted-zeroday/PE-XRay-EDR

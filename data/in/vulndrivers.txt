@@ -46,3 +46,4 @@ https://core-jmp.org/2026/04/breaking-process-protection-exploiting-cve-2026-082
 https://blog.talosintelligence.com/qilin-edr-killer/
 https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
 https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/
+https://adhdmurky.github.io/posts/post3/

@@ -91,3 +91,4 @@ https://medium.com/@devraval2603/windows-persistence-techniques-0e5735740c9c
 https://github.com/mertdas/PrivKit
 https://medium.com/@s12deff/comouflage-surrogate-injection-cfb93e15afcd
 https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
+https://www.zerotracelab.com/blog/dll-sideloading

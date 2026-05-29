@@ -458,8 +458,6 @@ https://github.com/0xROOTPLS/WaveGate
 https://github.com/0xROOTPLS/PEBwalker
 https://github.com/0xROOTPLS/Doppel
 https://github.com/kapla0011/KaplaStrike
-
-
 https://github.com/Brother-x86/malleable-rust-loader
 https://bruteratel.com/release/2022/07/20/Release-Stoffels-Escape/
 https://bruteratel.com/release/2022/08/18/Release-Scandinavian-Defense/
@@ -486,6 +484,17 @@ https://github.com/bats3c/DarkLoadLibrary
 https://infosecwriteups.com/t-rop-h-thread-hijacking-without-executable-memory-allocation-d746c102a9ca
 https://github.com/Excalibra/AnneFrankInjector
 https://arth.imbeddex.com/malware/development/Reflective-DLL-Injection/
+https://robinx0.github.io/blogs/malware-analysis/reflective-dll/
+https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/
+https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/
+https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/
+https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/
+https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/
+https://robinx0.github.io/blogs/malware-analysis/anti-analysis-techniques/
+https://iliascyber.com/2026/05/04/reflective-dll-loader.html
+https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
+https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/
+https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/
 ```
 
 
@@ -646,6 +655,8 @@ https://medium.com/@s12deff/enumerating-windows-process-creation-callbacks-98e09
 https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/
 https://meetcyber.net/edr-xdr-bypass-and-detection-evasion-techniques-an-investigation-of-advanced-evasion-strategies-9594946ad102
 https://arth.imbeddex.com/Kernel_stuff/Windows/Kernel-Callback-Integrity-Bypass/
+https://github.com/Kudaes/Puzzle
+https://trustedsec.com/blog/the-defensive-stack-is-exposed
 ```
 
 
@@ -724,6 +735,9 @@ https://github.com/andrivet/ADVobfuscator
 https://blog.deeb.ch/posts/avred-update/
 https://github.com/Tylous/Mangle
 https://lorenzomeacci.com/bypassing-static-analysis-deep-dive
+https://github.com/DosX-dev/obfus.h
+https://github.com/DosX-dev/Astral-PE
+https://github.com/haunted-zeroday/PE-XRay-EDR
 ```
 
 
@@ -903,7 +917,7 @@ https://medium.com/@devraval2603/windows-persistence-techniques-0e5735740c9c
 https://github.com/mertdas/PrivKit
 https://medium.com/@s12deff/comouflage-surrogate-injection-cfb93e15afcd
 https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
-
+https://www.zerotracelab.com/blog/dll-sideloading
 ```
 
 
@@ -960,7 +974,7 @@ https://core-jmp.org/2026/04/breaking-process-protection-exploiting-cve-2026-082
 https://blog.talosintelligence.com/qilin-edr-killer/
 https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
 https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/
-
+https://adhdmurky.github.io/posts/post3/
 ```
 
 ## LSASS

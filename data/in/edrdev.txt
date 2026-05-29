@@ -117,3 +117,7 @@ https://medium.com/@s12deff/enumerating-windows-process-creation-callbacks-98e09
 https://insinuator.net/2026/04/windows-early-boot-configuration-the-cmcontrolvector-and-pspsystemmitigationoptions/
 https://meetcyber.net/edr-xdr-bypass-and-detection-evasion-techniques-an-investigation-of-advanced-evasion-strategies-9594946ad102
 https://arth.imbeddex.com/Kernel_stuff/Windows/Kernel-Callback-Integrity-Bypass/
+https://github.com/Kudaes/Puzzle
+https://trustedsec.com/blog/the-defensive-stack-is-exposed
+https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
+https://github.com/HackingLZ/defender_overview
