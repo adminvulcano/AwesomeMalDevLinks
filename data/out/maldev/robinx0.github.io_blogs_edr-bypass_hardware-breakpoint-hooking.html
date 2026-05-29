@@ -1,0 +1,358 @@
+# https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Apr 14, 2026</span>
+      
+        <span class="wu-diff insane">ELITE</span>
+      
+      <span>· 5 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Hardware Breakpoint Hooking: Bypassing Inline EDR Hooks Without Touching Memory</h1>
+    <p class="article-desc">A practical C++ guide to using x86-64 debug registers (DR0-DR7) for user-mode API hooking - how EDRs are blind to hardware breakpoints, when HWBPs beat patching, and how to build a minimal HWBP engine.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#edr-bypass</span><span class="pill">#hardware-breakpoints</span><span class="pill">#hooking</span><span class="pill">#windows</span><span class="pill">#c++</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#why-hardware-breakpoints" data-target="why-hardware-breakpoints" class="active">Why Hardware Breakpoints</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#the-debug-register-model" data-target="the-debug-register-model">The Debug Register Model</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#installation" data-target="installation">Installation</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#handling-the-exception" data-target="handling-the-exception">Handling the Exception</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#where-this-beats-patching" data-target="where-this-beats-patching">Where This Beats Patching</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#the-detection-vectors-you-must-think-about" data-target="the-detection-vectors-you-must-think-about">The Detection Vectors You Must Think About</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#1-reading-dr-registers" data-target="1-reading-dr-registers">1. Reading DR Registers</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#2-single-step-events-via-etw" data-target="2-single-step-events-via-etw">2. Single-step Events via ETW</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#3-ntcontinue--setthreadcontext-frequency" data-target="3-ntcontinue--setthreadcontext-frequency">3. NtContinue / SetThreadContext frequency</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#minimal-working-example---blocking-createremotethread-injection" data-target="minimal-working-example---blocking-createremotethread-injection">Minimal Working Example - Blocking CreateRemoteThread Injection</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#pairing-with-other-techniques" data-target="pairing-with-other-techniques">Pairing with Other Techniques</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#summary" data-target="summary">Summary</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <h2 id="why-hardware-breakpoints">Why Hardware Breakpoints<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#why-hardware-breakpoints" aria-label="Copy link to Why Hardware Breakpoints"><span aria-hidden="true">#</span></a></h2>
+
+<p>Most EDRs hook user-mode APIs by patching the first few bytes of the function in <code class="language-plaintext highlighter-rouge">ntdll.dll</code> / <code class="language-plaintext highlighter-rouge">kernelbase.dll</code> with a <code class="language-plaintext highlighter-rouge">jmp</code> to telemetry code. This is <strong>inline hooking</strong>. Everything unhooks this eventually - restore bytes from a fresh disk copy, map a clean ntdll, direct syscalls - but all of those <em>modify memory</em>, which is itself a signal.</p>
+
+<p>Hardware breakpoints are different. The CPU has four <strong>debug registers</strong> (DR0-DR3) that hold addresses to break on. When execution reaches that address, the CPU raises <code class="language-plaintext highlighter-rouge">EXCEPTION_SINGLE_STEP</code> - regardless of what bytes are at that location. No memory is modified. No <code class="language-plaintext highlighter-rouge">VirtualProtect</code> call. No <code class="language-plaintext highlighter-rouge">WriteProcessMemory</code>. Just an MSR write.</p>
+
+<p>If you install a vectored exception handler that filters on the breakpoint address and rewrites the CPU context to redirect execution, you have a <strong>hook</strong> that leaves zero memory footprint.</p>
+
+<h2 id="the-debug-register-model">The Debug Register Model<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#the-debug-register-model" aria-label="Copy link to The Debug Register Model"><span aria-hidden="true">#</span></a></h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>DR0-DR3  - breakpoint linear addresses
+DR6      - status (which DR triggered)
+DR7      - control (enable / len / rw bits)
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>Four HWBPs per thread. They’re <strong>per-thread</strong>, not process-wide, which is both a feature (stealth - only the threads you install on break) and a constraint (you must hook every relevant thread, including ones spawned after).</p>
+
+<p>DR7 layout - the interesting bits:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bits</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0,2,4,6 (L0-L3)</td>
+      <td>Local enable for DR0-DR3</td>
+    </tr>
+    <tr>
+      <td>16-17 (R/W0)</td>
+      <td>00=exec, 01=write, 11=rw</td>
+    </tr>
+    <tr>
+      <td>18-19 (LEN0)</td>
+      <td>00=1 byte, 01=2, 11=4</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For an execution breakpoint on DR0 at <code class="language-plaintext highlighter-rouge">NtOpenProcess</code>:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">ctx</span><span class="p">.</span><span class="n">Dr0</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">target_fn</span><span class="p">;</span>
+<span class="n">ctx</span><span class="p">.</span><span class="n">Dr7</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">);</span>  <span class="c1">// L0 = 1, RW0 = 00 (exec), LEN0 = 00 (1 byte)</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h2 id="installation">Installation<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#installation" aria-label="Copy link to Installation"><span aria-hidden="true">#</span></a></h2>
+
+<p><code class="language-plaintext highlighter-rouge">SetThreadContext</code> with <code class="language-plaintext highlighter-rouge">CONTEXT_DEBUG_REGISTERS</code> is the clean way:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+</span>
+<span class="kt">bool</span> <span class="nf">SetHwBp</span><span class="p">(</span><span class="n">HANDLE</span> <span class="n">hThread</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">addr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">slot</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">CONTEXT</span> <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span> <span class="p">.</span><span class="n">ContextFlags</span> <span class="o">=</span> <span class="n">CONTEXT_DEBUG_REGISTERS</span> <span class="p">};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GetThreadContext</span><span class="p">(</span><span class="n">hThread</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ctx</span><span class="p">))</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="n">ctx</span><span class="p">.</span><span class="n">Dr0</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">addr</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="n">ctx</span><span class="p">.</span><span class="n">Dr1</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">addr</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="p">:</span> <span class="n">ctx</span><span class="p">.</span><span class="n">Dr2</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">addr</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="p">:</span> <span class="n">ctx</span><span class="p">.</span><span class="n">Dr3</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">addr</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="nl">default:</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Clear the two control bits for this slot, then enable L and set exec+1byte</span>
+    <span class="n">ctx</span><span class="p">.</span><span class="n">Dr7</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mb">0b11</span><span class="n">ULL</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">slot</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+    <span class="n">ctx</span><span class="p">.</span><span class="n">Dr7</span> <span class="o">|=</span>  <span class="p">(</span><span class="mb">0b01</span><span class="n">ULL</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">slot</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>          <span class="c1">// L_i = 1</span>
+    <span class="n">ctx</span><span class="p">.</span><span class="n">Dr7</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mb">0b1111</span><span class="n">ULL</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">16</span> <span class="o">+</span> <span class="n">slot</span> <span class="o">*</span> <span class="mi">4</span><span class="p">));</span>   <span class="c1">// RW_i=00, LEN_i=00</span>
+
+    <span class="k">return</span> <span class="n">SetThreadContext</span><span class="p">(</span><span class="n">hThread</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ctx</span><span class="p">);</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">cpp</span></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">GetCurrentThread()</code> returns a pseudo-handle; for current-thread use, that’s fine.</p>
+
+<h2 id="handling-the-exception">Handling the Exception<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#handling-the-exception" aria-label="Copy link to Handling the Exception"><span aria-hidden="true">#</span></a></h2>
+
+<p>Register a <strong>vectored exception handler</strong> early. When the CPU hits the breakpoint, Windows walks the VEH chain before the SEH chain, so you see it first:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">LONG</span> <span class="n">CALLBACK</span> <span class="nf">VehHandler</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ExceptionRecord</span><span class="o">-&gt;</span><span class="n">ExceptionCode</span> <span class="o">!=</span> <span class="n">EXCEPTION_SINGLE_STEP</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ExceptionRecord</span><span class="o">-&gt;</span><span class="n">ExceptionAddress</span><span class="p">;</span>
+
+    <span class="c1">// Is this our hook?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">addr</span> <span class="o">==</span> <span class="n">g_ntOpenProcess</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// RCX = first arg on x64, RDX = second, R8 = third, R9 = fourth</span>
+        <span class="n">HANDLE</span><span class="o">*</span> <span class="n">phProc</span>    <span class="o">=</span> <span class="p">(</span><span class="n">HANDLE</span><span class="o">*</span><span class="p">)</span>   <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rcx</span><span class="p">;</span>
+        <span class="n">ACCESS_MASK</span> <span class="n">mask</span>  <span class="o">=</span> <span class="p">(</span><span class="n">ACCESS_MASK</span><span class="p">)</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rdx</span><span class="p">;</span>
+
+        <span class="c1">// Sanitize: drop PROCESS_VM_WRITE / PROCESS_CREATE_THREAD so injection chains fail</span>
+        <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rdx</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">PROCESS_VM_WRITE</span> <span class="o">|</span> <span class="n">PROCESS_CREATE_THREAD</span><span class="p">);</span>
+
+        <span class="c1">// Re-arm: set the Resume Flag so we don't re-trigger on the same instruction</span>
+        <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">EFlags</span> <span class="o">|=</span> <span class="mh">0x10000</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_EXECUTION</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">AddVectoredExceptionHandler</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">VehHandler</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">cpp</span></pre></div></div>
+
+<p>The <strong>Resume Flag (RF, bit 16 of EFlags)</strong> is critical: it tells the CPU to skip the breakpoint check for the <em>next</em> instruction, so you don’t loop forever on your own hook.</p>
+
+<h2 id="where-this-beats-patching">Where This Beats Patching<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#where-this-beats-patching" aria-label="Copy link to Where This Beats Patching"><span aria-hidden="true">#</span></a></h2>
+
+<p>Scenarios where HWBP hooking wins over inline patching:</p>
+
+<ol>
+  <li><strong>EDR inline-hook integrity checks.</strong> Some mature EDRs (SentinelOne, CrowdStrike) compute hashes of hot functions every few seconds. If you’ve overwritten the first 5 bytes, they’ll detect it. HWBPs leave those bytes untouched.</li>
+  <li><strong>PatchGuard-friendly (kernel analog).</strong> In kernel work, writing to SSDT or syscall handlers trips PatchGuard. DR-based kernel hooking via <code class="language-plaintext highlighter-rouge">KeSetAffinityThread</code> + IPI dance can evade.</li>
+  <li><strong>Self-healing telemetry.</strong> EDRs that monitor <code class="language-plaintext highlighter-rouge">NtProtectVirtualMemory</code> and <code class="language-plaintext highlighter-rouge">NtWriteVirtualMemory</code> will flag any <code class="language-plaintext highlighter-rouge">VirtualProtect(PAGE_EXECUTE_READWRITE)</code> in <code class="language-plaintext highlighter-rouge">ntdll</code>. HWBPs don’t touch either.</li>
+</ol>
+
+<h2 id="the-detection-vectors-you-must-think-about">The Detection Vectors You Must Think About<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#the-detection-vectors-you-must-think-about" aria-label="Copy link to The Detection Vectors You Must Think About"><span aria-hidden="true">#</span></a></h2>
+
+<p>HWBP hooking is not invisible. It’s just <strong>differently</strong> visible.</p>
+
+<h3 id="1-reading-dr-registers">1. Reading DR Registers<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#1-reading-dr-registers" aria-label="Copy link to 1. Reading DR Registers"><span aria-hidden="true">#</span></a></h3>
+
+<p>EDRs can call <code class="language-plaintext highlighter-rouge">GetThreadContext</code> on their own threads (or inject a probe thread) and check if DR0-DR3 are non-zero. Unusual, but Elastic’s endpoint agent does this in some configurations.</p>
+
+<p><strong>Mitigation</strong>: only install HWBPs on the thread actually making the call, clear them immediately after, and avoid installing on EDR-owned threads you can identify via <code class="language-plaintext highlighter-rouge">NtQueryInformationThread(ThreadBasicInformation).ClientId.UniqueProcess</code>.</p>
+
+<h3 id="2-single-step-events-via-etw">2. Single-step Events via ETW<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#2-single-step-events-via-etw" aria-label="Copy link to 2. Single-step Events via ETW"><span aria-hidden="true">#</span></a></h3>
+
+<p><code class="language-plaintext highlighter-rouge">Microsoft-Windows-Kernel-Power</code> and <code class="language-plaintext highlighter-rouge">Microsoft-Windows-Threat-Intelligence</code> expose single-step exceptions to ETW consumers. A high rate of single-step from a non-debugger process is weird.</p>
+
+<p><strong>Mitigation</strong>: batch your hooks, avoid tight loops that re-trigger, and consider pairing with ETW patching (<code class="language-plaintext highlighter-rouge">EtwEventWrite</code> NOP) to quiet the telemetry channel entirely.</p>
+
+<h3 id="3-ntcontinue--setthreadcontext-frequency">3. <code class="language-plaintext highlighter-rouge">NtContinue</code> / <code class="language-plaintext highlighter-rouge">SetThreadContext</code> frequency<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#3-ntcontinue--setthreadcontext-frequency" aria-label="Copy link to 3. NtContinue / SetThreadContext frequency"><span aria-hidden="true">#</span></a></h3>
+
+<p><code class="language-plaintext highlighter-rouge">SetThreadContext</code> on another thread’s handle from user-mode is rare in benign applications. Call-pattern detection (Elastic ML rules) picks this up.</p>
+
+<p><strong>Mitigation</strong>: self-context only. If you need to hook another thread, use <code class="language-plaintext highlighter-rouge">NtQueueApcThread</code> to have <em>it</em> install its own HWBPs.</p>
+
+<h2 id="minimal-working-example---blocking-createremotethread-injection">Minimal Working Example - Blocking CreateRemoteThread Injection<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#minimal-working-example---blocking-createremotethread-injection" aria-label="Copy link to Minimal Working Example - Blocking CreateRemoteThread Injection"><span aria-hidden="true">#</span></a></h2>
+
+<p>A full PoC that prevents the current process from being injected into:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp">
+</span>
+<span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="n">g_ntCreateThreadEx</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="n">LONG</span> <span class="n">CALLBACK</span> <span class="nf">Veh</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ExceptionRecord</span><span class="o">-&gt;</span><span class="n">ExceptionCode</span> <span class="o">!=</span> <span class="n">EXCEPTION_SINGLE_STEP</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ExceptionRecord</span><span class="o">-&gt;</span><span class="n">ExceptionAddress</span> <span class="o">==</span> <span class="n">g_ntCreateThreadEx</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// NtCreateThreadEx(HANDLE* ThreadHandle, ACCESS_MASK, POBJECT_ATTRIBUTES,</span>
+        <span class="c1">//                  HANDLE ProcessHandle, ...)</span>
+        <span class="c1">// RCX = thread handle ptr, R8 = attributes, R9 = process handle</span>
+        <span class="n">HANDLE</span> <span class="n">hTargetProc</span> <span class="o">=</span> <span class="p">(</span><span class="n">HANDLE</span><span class="p">)</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">R9</span><span class="p">;</span>
+
+        <span class="c1">// Deny if target isn't our own process</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">hTargetProc</span> <span class="o">!=</span> <span class="p">(</span><span class="n">HANDLE</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rax</span> <span class="o">=</span> <span class="mh">0xC0000022</span><span class="p">;</span>  <span class="c1">// STATUS_ACCESS_DENIED</span>
+            <span class="c1">// Skip the function body - return to caller</span>
+            <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rip</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">DWORD64</span><span class="o">*</span><span class="p">)</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="p">;</span>
+            <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">Rsp</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">;</span>
+            <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">EFlags</span> <span class="o">|=</span> <span class="mh">0x10000</span><span class="p">;</span>
+            <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_EXECUTION</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="o">-&gt;</span><span class="n">EFlags</span> <span class="o">|=</span> <span class="mh">0x10000</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HMODULE</span> <span class="n">nt</span> <span class="o">=</span> <span class="n">GetModuleHandleA</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">);</span>
+    <span class="n">g_ntCreateThreadEx</span> <span class="o">=</span> <span class="n">GetProcAddress</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="s">"NtCreateThreadEx"</span><span class="p">);</span>
+
+    <span class="n">AddVectoredExceptionHandler</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Veh</span><span class="p">);</span>
+
+    <span class="n">CONTEXT</span> <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span> <span class="p">.</span><span class="n">ContextFlags</span> <span class="o">=</span> <span class="n">CONTEXT_DEBUG_REGISTERS</span> <span class="p">};</span>
+    <span class="n">GetThreadContext</span><span class="p">(</span><span class="n">GetCurrentThread</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">ctx</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="p">.</span><span class="n">Dr0</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">g_ntCreateThreadEx</span><span class="p">;</span>
+    <span class="n">ctx</span><span class="p">.</span><span class="n">Dr7</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// L0=1, RW0=00, LEN0=00</span>
+    <span class="n">SetThreadContext</span><span class="p">(</span><span class="n">GetCurrentThread</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">ctx</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"HWBP installed. Try to inject now.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">Sleep</span><span class="p">(</span><span class="n">INFINITE</span><span class="p">);</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">cpp</span></pre></div></div>
+
+<p>Run it, then try <code class="language-plaintext highlighter-rouge">process hollowing</code> or <code class="language-plaintext highlighter-rouge">CreateRemoteThread</code> from another process - the injection syscall returns <code class="language-plaintext highlighter-rouge">STATUS_ACCESS_DENIED</code> without the target process ever losing context.</p>
+
+<h2 id="pairing-with-other-techniques">Pairing with Other Techniques<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#pairing-with-other-techniques" aria-label="Copy link to Pairing with Other Techniques"><span aria-hidden="true">#</span></a></h2>
+
+<p>HWBP hooking really shines in combination:</p>
+
+<ul>
+  <li><strong>HWBP + indirect syscalls</strong>: the HWBP hooks your own stub before it hits the syscall - useful for telemetry spoofing (lie about <code class="language-plaintext highlighter-rouge">NtOpenProcess</code> args before the real syscall fires).</li>
+  <li><strong>HWBP + stack spoofing</strong>: mask the call stack <em>and</em> avoid inline hook detection. Two independent detection vectors blinded at once.</li>
+  <li><strong>HWBP + module stomping</strong>: load a legit signed DLL, stomp its <code class="language-plaintext highlighter-rouge">.text</code> with your code, install HWBPs to redirect its imports. No <code class="language-plaintext highlighter-rouge">VirtualAlloc(RWX)</code> ever.</li>
+</ul>
+
+<h2 id="summary">Summary<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/#summary" aria-label="Copy link to Summary"><span aria-hidden="true">#</span></a></h2>
+
+<p>Hardware breakpoints trade a small detection surface (DR register snooping, single-step ETW) for a huge benefit: <strong>no memory modifications</strong>. For operators facing mature EDRs that baseline module hashes, they’re one of the cleanest primitives available.</p>
+
+<p>The reference implementation above is deliberately minimal. Production-quality HWBP engines handle thread creation callbacks, exception chaining conflicts, WOW64 compatibility, and slot allocation across multiple concurrent hooks - but the core is 40 lines of code.</p>
+
+<blockquote>
+  <p>Inline hooking changes the program. Hardware breakpoints change the CPU’s interpretation of the program. Defenders instrumented for the former still mostly miss the latter.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · Edr bypass</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/" class="related-card">
+            <span class="related-date">Apr 17, 2026</span>
+            <span class="related-t">The Userland EDR Bypass Stack: Unhooking, Syscalls, ETW/AMSI, and Kernel Callbacks</span>
+            <span class="related-desc">A comprehensive guide to the layered techniques that make up modern userland EDR evasio...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/" class="related-card">
+            <span class="related-date">Mar 29, 2026</span>
+            <span class="related-t">Sleep Obfuscation Deep Dive: Ekko, Zilean, and Foliage</span>
+            <span class="related-desc">Advanced sleep obfuscation techniques that encrypt implant memory during sleep cycles t...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/" class="related-card">
+            <span class="related-date">Mar 25, 2026</span>
+            <span class="related-t">Call Stack Spoofing: Defeating EDR Stack Telemetry</span>
+            <span class="related-desc">Advanced techniques for spoofing thread call stacks to evade EDR behavioral detection -...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=Edr+bypass" class="btn-g">More Edr bypass →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

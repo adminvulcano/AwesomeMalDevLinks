@@ -1,0 +1,391 @@
+# https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Mar 25, 2026</span>
+      
+        <span class="wu-diff hard">HARD</span>
+      
+      <span>· 4 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Call Stack Spoofing: Defeating EDR Stack Telemetry</h1>
+    <p class="article-desc">Advanced techniques for spoofing thread call stacks to evade EDR behavioral detection - covering return address spoofing, synthetic frames, and thread stack manipulation.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#stack-spoofing</span><span class="pill">#edr-evasion</span><span class="pill">#call-stack</span><span class="pill">#return-address</span><span class="pill">#windows-internals</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#why-call-stacks-matter-to-edr" data-target="why-call-stacks-matter-to-edr">Why Call Stacks Matter to EDR</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-1-return-address-spoofing" data-target="technique-1-return-address-spoofing">Technique 1: Return Address Spoofing</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept" data-target="concept">Concept</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#implementation" data-target="implementation">Implementation</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#the-problem" data-target="the-problem">The Problem</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#solution-frame-spoofing-with-desync" data-target="solution-frame-spoofing-with-desync">Solution: Frame Spoofing with Desync</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-2-synthetic-stack-frames" data-target="technique-2-synthetic-stack-frames">Technique 2: Synthetic Stack Frames</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-1" data-target="concept-1">Concept</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#implementation-with-silentmoonwalk" data-target="implementation-with-silentmoonwalk">Implementation with SilentMoonwalk</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#challenges" data-target="challenges">Challenges</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-3-thread-stack-spoofing-sleep-time" data-target="technique-3-thread-stack-spoofing-sleep-time">Technique 3: Thread Stack Spoofing (Sleep-Time)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-2" data-target="concept-2">Concept</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#callstackmasker-approach" data-target="callstackmasker-approach">CallStackMasker Approach</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#combined-with-sleep-obfuscation" data-target="combined-with-sleep-obfuscation">Combined with Sleep Obfuscation</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-4-hardware-breakpoint-based-spoofing" data-target="technique-4-hardware-breakpoint-based-spoofing">Technique 4: Hardware Breakpoint-Based Spoofing</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-3" data-target="concept-3">Concept</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#flow" data-target="flow">Flow</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#advantages" data-target="advantages">Advantages</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#detection-and-counter-detection" data-target="detection-and-counter-detection">Detection and Counter-Detection</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#how-edr-detects-spoofing" data-target="how-edr-detects-spoofing">How EDR Detects Spoofing</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#counter-detection" data-target="counter-detection">Counter-Detection</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#comparison" data-target="comparison">Comparison</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <h2 id="why-call-stacks-matter-to-edr">Why Call Stacks Matter to EDR<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#why-call-stacks-matter-to-edr" aria-label="Copy link to Why Call Stacks Matter to EDR"><span aria-hidden="true">#</span></a></h2>
+
+<p>When your implant calls <code class="language-plaintext highlighter-rouge">NtAllocateVirtualMemory</code> via indirect syscalls, the syscall itself might bypass userland hooks. But modern EDR products don’t just hook - they inspect the <strong>call stack</strong> of the calling thread via kernel callbacks or ETW stack walking.</p>
+
+<p>A legitimate call to <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> from <code class="language-plaintext highlighter-rouge">kernel32.dll</code> has a predictable call stack:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>ntdll!NtAllocateVirtualMemory
+kernelbase!VirtualAlloc
+kernel32!VirtualAllocStub
+application!SomeFunction
+application!main
+ntdll!RtlUserThreadStart
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>But when your implant calls the same syscall, the stack shows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>ntdll!NtAllocateVirtualMemory
+&lt;UNKNOWN MODULE&gt;     ← Your implant (unbacked memory)
+&lt;UNKNOWN MODULE&gt;     ← More implant code
+ntdll!RtlUserThreadStart
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>The presence of return addresses pointing to <strong>unbacked memory</strong> (not backed by a file on disk) is a strong indicator of malicious in-memory execution. This is what call stack spoofing defeats.</p>
+
+<h2 id="technique-1-return-address-spoofing">Technique 1: Return Address Spoofing<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-1-return-address-spoofing" aria-label="Copy link to Technique 1: Return Address Spoofing"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="concept">Concept<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept" aria-label="Copy link to Concept"><span aria-hidden="true">#</span></a></h3>
+
+<p>Before making a sensitive API call, overwrite the return address on the stack to point to a legitimate module (like <code class="language-plaintext highlighter-rouge">kernel32.dll</code>), make the call, then restore the original return address.</p>
+
+<h3 id="implementation">Implementation<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#implementation" aria-label="Copy link to Implementation"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">; Save real return address</span>
+<span class="nf">pop</span> <span class="nb">rax</span>                    <span class="c1">; Pop real return address into RAX</span>
+<span class="nf">mov</span> <span class="p">[</span><span class="nv">saved_ret</span><span class="p">],</span> <span class="nb">rax</span>       <span class="c1">; Save it</span>
+
+<span class="c1">; Push fake return address (points into kernel32)</span>
+<span class="nf">mov</span> <span class="nb">rcx</span><span class="p">,</span> <span class="p">[</span><span class="nv">kernel32_gadget</span><span class="p">]</span> <span class="c1">; Address of 'ret' instruction in kernel32.dll</span>
+<span class="nf">push</span> <span class="nb">rcx</span>                   <span class="c1">; Fake return address on stack</span>
+
+<span class="c1">; Make the API call</span>
+<span class="c1">; When EDR walks the stack, it sees kernel32 as the caller</span>
+<span class="nf">call</span> <span class="nv">target_api</span>
+
+<span class="c1">; The 'ret' in kernel32 will return to... nowhere useful</span>
+<span class="c1">; So we need to handle the return ourselves</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">nasm</span></pre></div></div>
+
+<h3 id="the-problem">The Problem<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#the-problem" aria-label="Copy link to The Problem"><span aria-hidden="true">#</span></a></h3>
+
+<p>Simple return address spoofing breaks the return flow. When the API returns, it <code class="language-plaintext highlighter-rouge">ret</code>s to your fake address (a <code class="language-plaintext highlighter-rouge">ret</code> gadget in kernel32), which then <code class="language-plaintext highlighter-rouge">ret</code>s to whatever is next on the stack - likely crashing.</p>
+
+<h3 id="solution-frame-spoofing-with-desync">Solution: Frame Spoofing with Desync<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#solution-frame-spoofing-with-desync" aria-label="Copy link to Solution: Frame Spoofing with Desync"><span aria-hidden="true">#</span></a></h3>
+
+<p>Use a more sophisticated approach where you construct a full fake frame and use a trampoline to redirect execution after the API call returns:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// 1. Save current RSP and RBP</span>
+<span class="c1">// 2. Set up a fake stack frame that looks legitimate</span>
+<span class="c1">// 3. Make the API call from this fake frame</span>
+<span class="c1">// 4. API returns to your trampoline gadget</span>
+<span class="c1">// 5. Trampoline restores the real RSP/RBP</span>
+<span class="c1">// 6. Execution continues normally</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h2 id="technique-2-synthetic-stack-frames">Technique 2: Synthetic Stack Frames<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-2-synthetic-stack-frames" aria-label="Copy link to Technique 2: Synthetic Stack Frames"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="concept-1">Concept<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-1" aria-label="Copy link to Concept"><span aria-hidden="true">#</span></a></h3>
+
+<p>Instead of just spoofing one return address, construct an entire fake call stack that mimics a legitimate execution path. The stack looks like a normal chain of kernel32 → kernelbase → ntdll calls.</p>
+
+<h3 id="implementation-with-silentmoonwalk">Implementation with SilentMoonwalk<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#implementation-with-silentmoonwalk" aria-label="Copy link to Implementation with SilentMoonwalk"><span aria-hidden="true">#</span></a></h3>
+
+<p>The SilentMoonwalk technique (by KlezVirus) constructs synthetic frames by:</p>
+
+<ol>
+  <li><strong>Finding ROP gadgets</strong> in legitimate modules (<code class="language-plaintext highlighter-rouge">add rsp, X; ret</code> sequences)</li>
+  <li><strong>Building a fake frame chain</strong> where each return address points to a gadget that adjusts RSP and returns to the next fake frame</li>
+  <li><strong>The final gadget</strong> returns to your real code</li>
+</ol>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Desired fake call stack:</span>
+<span class="c1">// kernel32!BaseThreadInitThunk+0x14</span>
+<span class="c1">// ntdll!RtlUserThreadStart+0x21</span>
+
+<span class="c1">// Find the right gadgets</span>
+<span class="n">PVOID</span> <span class="n">k32_gadget</span> <span class="o">=</span> <span class="n">FindGadget</span><span class="p">(</span><span class="s">"kernel32.dll"</span><span class="p">,</span> <span class="s">"add rsp, 0x38; ret"</span><span class="p">);</span>
+<span class="n">PVOID</span> <span class="n">ntdll_gadget</span> <span class="o">=</span> <span class="n">FindGadget</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">,</span> <span class="s">"add rsp, 0x28; ret"</span><span class="p">);</span>
+
+<span class="c1">// Construct frames on the stack</span>
+<span class="o">*</span><span class="p">(</span><span class="n">PVOID</span><span class="o">*</span><span class="p">)(</span><span class="n">fake_stack</span> <span class="o">+</span> <span class="mh">0x00</span><span class="p">)</span> <span class="o">=</span> <span class="n">api_to_call</span><span class="p">;</span>
+<span class="o">*</span><span class="p">(</span><span class="n">PVOID</span><span class="o">*</span><span class="p">)(</span><span class="n">fake_stack</span> <span class="o">+</span> <span class="mh">0x38</span><span class="p">)</span> <span class="o">=</span> <span class="n">k32_gadget</span><span class="p">;</span>   <span class="c1">// After API returns</span>
+<span class="o">*</span><span class="p">(</span><span class="n">PVOID</span><span class="o">*</span><span class="p">)(</span><span class="n">fake_stack</span> <span class="o">+</span> <span class="mh">0x70</span><span class="p">)</span> <span class="o">=</span> <span class="n">ntdll_gadget</span><span class="p">;</span>  <span class="c1">// After k32 gadget</span>
+<span class="o">*</span><span class="p">(</span><span class="n">PVOID</span><span class="o">*</span><span class="p">)(</span><span class="n">fake_stack</span> <span class="o">+</span> <span class="mh">0x98</span><span class="p">)</span> <span class="o">=</span> <span class="n">real_return</span><span class="p">;</span>    <span class="c1">// Back to our code</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="challenges">Challenges<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#challenges" aria-label="Copy link to Challenges"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>Gadget addresses change across Windows versions</li>
+  <li>Stack alignment must be maintained (16-byte on x64)</li>
+  <li>Some EDRs validate frame pointer chains (RBP linkage)</li>
+  <li>Fake frames must have plausible local variable space</li>
+</ul>
+
+<h2 id="technique-3-thread-stack-spoofing-sleep-time">Technique 3: Thread Stack Spoofing (Sleep-Time)<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-3-thread-stack-spoofing-sleep-time" aria-label="Copy link to Technique 3: Thread Stack Spoofing (Sleep-Time)"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="concept-2">Concept<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-2" aria-label="Copy link to Concept"><span aria-hidden="true">#</span></a></h3>
+
+<p>During sleep, spoof the entire thread’s call stack. When EDR scans sleeping threads (Hunt-Sleeping-Beacons), it sees a normal-looking stack instead of your implant.</p>
+
+<h3 id="callstackmasker-approach">CallStackMasker Approach<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#callstackmasker-approach" aria-label="Copy link to CallStackMasker Approach"><span aria-hidden="true">#</span></a></h3>
+
+<ol>
+  <li>Before sleep, capture the current thread context</li>
+  <li>Overwrite the stack with a legitimate-looking chain:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>ntdll!NtWaitForSingleObject
+ntdll!RtlpTpWaitCallback
+ntdll!TppWorkerThread
+kernel32!BaseThreadInitThunk
+ntdll!RtlUserThreadStart
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div>    </div>
+  </li>
+  <li>Enter sleep</li>
+  <li>After waking, restore the real stack</li>
+</ol>
+
+<h3 id="combined-with-sleep-obfuscation">Combined with Sleep Obfuscation<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#combined-with-sleep-obfuscation" aria-label="Copy link to Combined with Sleep Obfuscation"><span aria-hidden="true">#</span></a></h3>
+
+<p>The most effective approach combines stack spoofing with memory encryption:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>1. Encrypt implant memory (Ekko/Foliage)
+2. Spoof the call stack (CallStackMasker)
+3. Sleep
+   → EDR scans: memory is encrypted, stack looks normal
+4. Wake → Restore stack → Decrypt memory → Execute
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h2 id="technique-4-hardware-breakpoint-based-spoofing">Technique 4: Hardware Breakpoint-Based Spoofing<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#technique-4-hardware-breakpoint-based-spoofing" aria-label="Copy link to Technique 4: Hardware Breakpoint-Based Spoofing"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="concept-3">Concept<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#concept-3" aria-label="Copy link to Concept"><span aria-hidden="true">#</span></a></h3>
+
+<p>Use hardware breakpoints and a Vectored Exception Handler (VEH) to intercept execution at the point of the API call and modify the stack in the exception handler - before EDR can inspect it.</p>
+
+<h3 id="flow">Flow<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#flow" aria-label="Copy link to Flow"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// 1. Set hardware breakpoint on NtAllocateVirtualMemory</span>
+<span class="n">SetHardwareBreakpoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NtAllocateVirtualMemory</span><span class="p">,</span> <span class="n">DR_EXECUTE</span><span class="p">);</span>
+
+<span class="c1">// 2. Register VEH</span>
+<span class="n">AddVectoredExceptionHandler</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">SpoofHandler</span><span class="p">);</span>
+
+<span class="c1">// 3. When the API is called, breakpoint fires → VEH executes</span>
+<span class="n">LONG</span> <span class="nf">SpoofHandler</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ExceptionRecord</span><span class="o">-&gt;</span><span class="n">ExceptionCode</span> <span class="o">==</span> <span class="n">EXCEPTION_SINGLE_STEP</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Modify the stack to look legitimate</span>
+        <span class="n">SpoofCallStack</span><span class="p">(</span><span class="n">ex</span><span class="o">-&gt;</span><span class="n">ContextRecord</span><span class="p">);</span>
+        <span class="c1">// Continue execution</span>
+        <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_EXECUTION</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="advantages">Advantages<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#advantages" aria-label="Copy link to Advantages"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>No inline assembly required</li>
+  <li>Works with indirect syscalls</li>
+  <li>Can be applied selectively to specific API calls</li>
+  <li>Hardware breakpoints don’t modify code memory</li>
+</ul>
+
+<h2 id="detection-and-counter-detection">Detection and Counter-Detection<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#detection-and-counter-detection" aria-label="Copy link to Detection and Counter-Detection"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="how-edr-detects-spoofing">How EDR Detects Spoofing<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#how-edr-detects-spoofing" aria-label="Copy link to How EDR Detects Spoofing"><span aria-hidden="true">#</span></a></h3>
+
+<ol>
+  <li><strong>Frame pointer validation</strong> - Check if RBP chains are consistent</li>
+  <li><strong>Return address validation</strong> - Verify each return address is preceded by a <code class="language-plaintext highlighter-rouge">call</code> instruction</li>
+  <li><strong>Stack size analysis</strong> - Fake frames often have unusual gaps</li>
+  <li><strong>Module backing</strong> - Check if return addresses are in legitimate, file-backed modules</li>
+</ol>
+
+<h3 id="counter-detection">Counter-Detection<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#counter-detection" aria-label="Copy link to Counter-Detection"><span aria-hidden="true">#</span></a></h3>
+
+<ol>
+  <li><strong>Use real call instructions</strong> - Ensure each fake return address is preceded by a valid <code class="language-plaintext highlighter-rouge">call</code> in the module</li>
+  <li><strong>Maintain RBP chains</strong> - Link frame pointers correctly</li>
+  <li><strong>Match frame sizes</strong> - Use the real function’s expected frame size</li>
+  <li><strong>Vary your spoofing</strong> - Don’t always use the same fake chain</li>
+</ol>
+
+<h2 id="comparison">Comparison<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/#comparison" aria-label="Copy link to Comparison"><span aria-hidden="true">#</span></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th>Complexity</th>
+      <th>Stealth</th>
+      <th style="text-align: center">Covers Sleep</th>
+      <th>Performance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Return Address Spoof</td>
+      <td>Low</td>
+      <td>Medium</td>
+      <td style="text-align: center">No</td>
+      <td>Minimal</td>
+    </tr>
+    <tr>
+      <td>Synthetic Frames</td>
+      <td>High</td>
+      <td>High</td>
+      <td style="text-align: center">No</td>
+      <td>Low</td>
+    </tr>
+    <tr>
+      <td>Thread Stack Spoof</td>
+      <td>High</td>
+      <td>Very High</td>
+      <td style="text-align: center">Yes</td>
+      <td>Moderate</td>
+    </tr>
+    <tr>
+      <td>HW Breakpoint Based</td>
+      <td>Medium</td>
+      <td>High</td>
+      <td style="text-align: center">No</td>
+      <td>Minimal</td>
+    </tr>
+    <tr>
+      <td>Combined (all)</td>
+      <td>Very High</td>
+      <td>Maximum</td>
+      <td style="text-align: center">Yes</td>
+      <td>Moderate</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>Call stack telemetry is the next frontier in the EDR arms race. Indirect syscalls bypass hooks, sleep obfuscation defeats memory scanning, and stack spoofing completes the trifecta by defeating behavioral analysis. Master all three for modern red team operations.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · Edr bypass</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/" class="related-card">
+            <span class="related-date">Apr 17, 2026</span>
+            <span class="related-t">The Userland EDR Bypass Stack: Unhooking, Syscalls, ETW/AMSI, and Kernel Callbacks</span>
+            <span class="related-desc">A comprehensive guide to the layered techniques that make up modern userland EDR evasio...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/" class="related-card">
+            <span class="related-date">Apr 14, 2026</span>
+            <span class="related-t">Hardware Breakpoint Hooking: Bypassing Inline EDR Hooks Without Touching Memory</span>
+            <span class="related-desc">A practical C++ guide to using x86-64 debug registers (DR0-DR7) for user-mode API hooki...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/" class="related-card">
+            <span class="related-date">Mar 29, 2026</span>
+            <span class="related-t">Sleep Obfuscation Deep Dive: Ekko, Zilean, and Foliage</span>
+            <span class="related-desc">Advanced sleep obfuscation techniques that encrypt implant memory during sleep cycles t...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=Edr+bypass" class="btn-g">More Edr bypass →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

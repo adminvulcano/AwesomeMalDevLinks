@@ -1,0 +1,26 @@
+Title:
+Puzzle — PoCs to Abuse Windows Minifilters for Stealthy Malware Drop/Execution
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Puzzle is a collection of proof-of-concepts and utilities that abuse Windows filesystem minifilters to drop and execute payloads in monitored environments with reduced scanning/visibility. It focuses on leveraging minifilter architecture and altitude ordering to bypass or degrade static and some dynamic inspection performed by endpoint security products. The repo includes a malicious Cloud Filter sync engine (CldFlt/Cloud Filter API) to materialize files without typical static analysis, a WOF-based approach (Wof/WOF API) using WIM-backed external data sources, and bindlink tooling (bindflt) to conceal payload content at runtime. An additional component (IdMapper) helps execute binaries hidden behind bindlinks via File Reference Numbers (FRN). It’s primarily useful for red teams and offensive security researchers exploring Windows-native evasion primitives, and for blue teams to understand detection gaps around minifilter-backed file virtualization and bindlinks. The projects are implemented mainly in Rust with supporting Python utilities and are tested on Windows 10/11 and Windows Server.
+
+Technical Focus:
+- Windows minifilter architecture and filter altitudes
+- Cloud Filter API (CldFlt) file hydration/sync-provider abuse
+- Windows Overlay Filter / WOF API (Wof) with WIM external backing
+- bindflt bindlinks for runtime concealment
+- FRN (File Reference Number) / NTFS file identity-based access
+- EDR evasion via reduced static scanning and altered file content visibility
+
+Use Cases:
+- Dropping payloads to disk while minimizing static AV/EDR scanning opportunities
+- Hiding executable content behind bindlinks to complicate runtime inspection
+- Executing concealed binaries by resolving targets via FRN rather than path-based access
+- Researching and validating detections for Cloud Filter and WOF-backed file behaviors
+- Building red-team tradecraft around Windows-native file virtualization features
+
+Keywords:
+Windows minifilter, filter altitude, CldFlt, Cloud Filter API, sync provider, file hydration, Wof, WOF API, wofapi, WIM, external backing store, bindflt, bindlink, NTFS, FRN, File Reference Number, fltmc, static analysis evasion, runtime concealment, Rust tooling

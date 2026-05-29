@@ -1,0 +1,27 @@
+Title:
+The Defensive Stack is Exposed: LLMs, Reverse Engineering, and the End of Opaque Defense
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post argues that LLMs materially reduce the time and expertise needed to reverse engineer endpoint security products (AV/EDR) and other defensive tooling, shifting the advantage toward attackers who can now rapidly map detection logic and blind spots. It highlights that many products share common architectures (local rules, scripted engines, ML classifiers, cloud lookups, exclusions), making “universal” analysis workflows transferable across vendors. The core problem is the collapse of “security through obscurity” assumptions: if decision logic exists on/near the host (rules, policies, models, thresholds), it can be extracted or inferred, and LLMs accelerate that process. The author outlines practical attacker outcomes (rule/model/policy mining, version diffing, gap analysis, and even vulnerability discovery in the defensive product itself). For defenders, the recommendation is to treat EDR as one signal, and invest in layers less dependent on opaque endpoint logic: host hardening (WDAC/AppLocker, ASR, Credential Guard/RunAsPPL), SIEM correlation on raw telemetry, and identity-centric detections. It’s important because it reframes AI impact from “LLMs find 0-days” to “LLMs make defensive stacks inspectable and bypass development cheaper and faster.”
+
+Technical Focus:
+- LLM-assisted reverse engineering workflows for EDR/AV tooling
+- Extraction/inference of local detection logic (rules, thresholds, scripted engines)
+- Policy/exclusion mining and identification of least-monitored execution paths
+- Cross-version diffing of agent/rule/model updates to infer vendor changes
+- Defensive product attack surface: parsers, IPC, services, kernel callbacks, update mechanisms, tamper protection
+- Defense-in-depth guidance: application control, ASR, SIEM correlation, identity telemetry
+
+Use Cases:
+- Rapidly triage and understand EDR agent artifacts (configs, rule packs, scripts, models) during red team prep
+- Identify detection gaps/exclusions and plan quieter tradecraft paths before execution
+- Compare EDR updates to infer newly-detected behaviors and adjust tooling
+- Hunt for vulnerabilities in security agents (local SYSTEM services, IPC endpoints, update channels)
+- Build defensive architecture that remains effective even when endpoint logic is known to attackers
+- Create SIEM detections from raw endpoint/Windows telemetry independent of EDR alerting
+
+Keywords:
+LLM, reverse engineering, EDR, antivirus, YARA, behavioral rules, Lua scripted engine, local ML model, feature extraction, scoring thresholds, policy extraction, exclusions, allowlists, version diffing, tamper protection, IPC interfaces, kernel callbacks, WDAC, AppLocker, ASR rules, Credential Guard, RunAsPPL, SIEM correlation, Sysmon, PowerShell script block logging, Entra ID, Conditional Access, token theft, OAuth abuse, Active Directory detection

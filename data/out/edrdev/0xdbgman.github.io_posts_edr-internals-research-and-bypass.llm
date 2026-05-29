@@ -1,0 +1,32 @@
+Title:
+EDR Tradecraft: Internals, Detection, Evasion & Advanced Research
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A deep technical write-up on how modern Windows EDR agents are built (user-mode service + injected DLL hooks + kernel drivers/minifilters + ETW consumers + optional WFP callouts) and how detections are derived from subscribed telemetry rather than architecture alone.  
+- It maps common detection surfaces (kernel callbacks, minifilter IRPs, ETW providers like Threat-Intelligence, AMSI/PowerShell/.NET telemetry, memory scanning, and network filtering) to the kinds of behavioral rules EDRs implement.  
+- The post then surveys evasion/bypass tradecraft across layers: static/IAT evasion, injection technique selection, direct/indirect syscalls (FreshyCalls/RecycledGate/SysWhispers4/Acheron/Sysplant), sleep-masking (Ekko/FOLIAGE/Zilean/DreamWalkers), and call-stack spoofing (SilentMoonwalk/VulcanRaven).  
+- It highlights “residual” kernel-mode telemetry that persists even after user-mode hook bypass (ETW-TI, kernel callbacks, handle stripping, stack-walk signals) and discusses BYOVD and PPL bypass constraints (blocklists, HVCI/VBS).  
+- Useful for red teams and malware/tool developers building engagement-grade tradecraft, and for blue teams/detection engineers validating what signals remain reliable and how to hunt for these bypass patterns.  
+- Interesting because it ties Windows internals (callbacks/IRPs/ETW/WFP/PPL) directly to practical bypass methods and research methodology, with explicit notes on what still triggers in 2026-era defenses.
+
+Technical Focus:
+- Windows EDR architecture (services, injected DLL hooks, kernel drivers, minifilters, WFP callouts)
+- Kernel telemetry sources: Ps/Ob/Cm callbacks, image-load/process/thread notifications, IRP monitoring
+- ETW ecosystem (ETW-TI, Kernel-* providers, AMSI, PowerShell, .NET runtime)
+- Syscall-gate techniques (direct/indirect syscalls, SSN resolution: Hell/Halo/Tartarus/FreshyCalls/RecycledGate)
+- Memory scanning & evasion (VAD/PEB consistency, MEM_PRIVATE RWX, module stomping/phantom DLL hollowing)
+- Anti-tamper/PPL, BYOVD, and the impact of HVCI/VBS on kernel-write bypasses
+
+Use Cases:
+- Reverse engineer an EDR’s drivers/IPC/IOCTLs to understand telemetry and enforcement points
+- Design payload execution/injection paths with lower kernel-callback and ETW-TI signal
+- Implement syscall stubs resilient to ntdll inline hooks and stack-walk scrutiny (indirect syscalls)
+- Add sleep-masking and stack-spoofing to reduce memory-scan and call-stack based detections
+- Build defensive detections for bypass tradecraft (VirtualProtect toggle patterns, unusual NtContinue/VEH usage, WFP cloud-blocking)
+- Evaluate feasibility of BYOVD/PPL bypass given blocklists and HVCI/VBS posture
+
+Keywords:
+EDR, Windows internals, kernel driver, minifilter, fltmgr, IRP, PsSetCreateProcessNotifyRoutineEx, PsSetCreateThreadNotifyRoutine, PsSetLoadImageNotifyRoutine, ObRegisterCallbacks, CmRegisterCallbackEx, ETW, Microsoft-Windows-Threat-Intelligence, ETW-TI, AMSI, AmsiScanBuffer, Vectored Exception Handler, hardware breakpoints, NtContinue, direct syscalls, indirect syscalls, SSN, Hell’s Gate, Halo’s Gate, Tartarus’ Gate, FreshyCalls, RecycledGate, SysWhispers4, Sysplant, Acheron, sleep masking, Ekko, call stack spoofing, SilentMoonwalk, VulcanRaven, BYOVD, LOLDrivers, PPL, PsProtectedSignerAntimalware, HVCI, VBS, WFP, FwpmFilterAdd, MITRE ATT&CK

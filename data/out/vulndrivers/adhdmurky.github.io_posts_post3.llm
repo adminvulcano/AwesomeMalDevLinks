@@ -1,0 +1,29 @@
+Title:
+Abusing a Lenovo “BootRepair” Driver IOCTL to Terminate Arbitrary Processes (PhantomKiller for dummies)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through reversing a signed Lenovo kernel driver to find an exposed IOCTL that enables terminating arbitrary processes from user mode.  
+- The author identifies the vulnerable code path by hunting for sensitive ntoskrnl imports (notably `ZwTerminateProcess`) and tracing cross-references in IDA to the `IRP_MJ_DEVICE_CONTROL` handler.  
+- The driver’s IOCTL handler takes a 4-byte PID, uses `PsLookupProcessByProcessId` to get an `EPROCESS`, converts it to a process handle via `ObOpenObjectByPointer`, then calls `ZwTerminateProcess`, effectively bypassing normal user-mode access checks.  
+- The write-up shows how to recover the device name/symbolic link (`\\.\BootRepair`), the IOCTL code, and the required input buffer size, then build a minimal C/C++ console app using `CreateFile` + `DeviceIoControl`.  
+- It demonstrates a BYOVD-style primitive useful for killing protected/high-integrity processes (e.g., security tools) without needing Test Mode or an unsigned driver.  
+- Useful for red teamers/pentesters and defenders analyzing driver attack surface and IOCTL abuse patterns.
+
+Technical Focus:
+- Windows driver IOCTL reversing (IDA, xrefs, `IRP_MJ_DEVICE_CONTROL`)
+- BYOVD (Bring Your Own Vulnerable Driver) process-kill primitive
+- Kernel APIs: `ZwTerminateProcess`, `PsLookupProcessByProcessId`, `ObOpenObjectByPointer`
+- Device object namespaces and symbolic links (`\DosDevices\`, `\\.\` paths)
+- User-mode exploitation via `CreateFile` / `DeviceIoControl`
+
+Use Cases:
+- Terminate EDR/AV or other high-integrity processes using a signed vulnerable driver
+- Validate and reproduce a driver IOCTL vulnerability during research
+- Build detections around suspicious IOCTL usage and known-abusable device names
+- Driver attack-surface auditing by scanning for dangerous kernel imports and weak IOCTL validation
+
+Keywords:
+BYOVD, Lenovo driver, BootRepair, PhantomKiller, IOCTL, IRP_MJ_DEVICE_CONTROL, DeviceIoControl, CreateFile, \DosDevices, symbolic link, ZwTerminateProcess, PsLookupProcessByProcessId, ObOpenObjectByPointer, EPROCESS, process termination, kernel driver exploitation, DriverEntry, ntoskrnl imports, Driver Signature Enforcement (DSE)

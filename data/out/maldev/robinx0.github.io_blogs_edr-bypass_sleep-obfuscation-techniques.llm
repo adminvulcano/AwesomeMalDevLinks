@@ -1,0 +1,25 @@
+Title:
+Sleep Obfuscation Deep Dive: Ekko, Zilean, and Foliage
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains “sleep obfuscation” for Windows implants: encrypting an implant’s in-memory code/data during sleep to evade periodic EDR memory scanning and signature/YARA sweeps. It breaks down three implementations—Ekko (timer queue callbacks), Zilean (thread pool timers + memory protection cycling), and Foliage (APC-based execution on the same thread during alertable sleep). The article highlights the core challenge (encryption code must remain runnable while the main region is encrypted) and how each technique solves it via alternate execution contexts. It also covers operational improvements like avoiding RWX by toggling RX↔RW, choosing less-flagged crypto primitives than `SystemFunction032` (RC4), and encrypting relevant stack pages to prevent plaintext artifacts. Detection ideas are included, focusing on suspicious protection flips, timer/APC patterns, and sleeping threads adjacent to encrypted regions. Useful primarily for red teamers/implant developers and blue teams building detections for in-memory beacons.
+
+Technical Focus:
+- EDR periodic vs event-triggered memory scanning threat model
+- Timer queue callbacks (`RtlCreateTimer`) and thread pool timers (`CreateThreadpoolTimer`)
+- APC-based execution with alertable sleep (`QueueUserAPC`, `SleepEx`)
+- In-place memory encryption and key handling (RC4 `SystemFunction032`, alternatives)
+- Memory protection transitions (RX→RW→RX via `VirtualProtect`)
+- Stack encryption considerations and detection heuristics
+
+Use Cases:
+- Implementing sleep-masking in custom implants/loaders to reduce memory-scan exposure
+- Hardening beacon-like payloads against periodic YARA/signature sweeps
+- Designing EDR detections around protection-flip telemetry and timer/APC crypto patterns
+- Evaluating tradeoffs between timer-based vs APC-based sleep obfuscation in OPSEC reviews
+
+Keywords:
+sleep obfuscation, sleep masking, EDR evasion, memory scanning, YARA, Ekko, Zilean, Foliage, RtlCreateTimer, CreateThreadpoolTimer, QueueUserAPC, SleepEx, VirtualProtect, PAGE_EXECUTE_READ, PAGE_READWRITE, SystemFunction032, RC4, ntdll, call stack cleanliness, RX RWX detection

@@ -1,0 +1,26 @@
+Title:
+The Userland EDR Bypass Stack: Unhooking, Syscalls, ETW/AMSI, and Kernel Callbacks
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post lays out a layered “stack” for evading modern Windows EDR visibility from user mode, explaining why single techniques (e.g., direct syscalls) are insufficient. It covers restoring a clean `ntdll.dll` to remove inline hooks, then dynamically resolving syscall numbers at runtime (Hell’s Gate / Halo’s Gate / Tartarus’ Gate) to stay portable across Windows builds. It explains indirect syscalls (jumping to an `ntdll` `syscall; ret` gadget) to avoid kernel-side detections that flag syscalls originating outside `ntdll`. It then describes patching AMSI (`AmsiScanBuffer`) and ETW (`EtwEventWrite`) to suppress script/content scanning and telemetry, including ordering/OPSEC considerations and mention of HWBP-based alternatives when patches are re-checked. Finally, it discusses the “nuclear option” of removing kernel callbacks via BYOVD-provided kernel R/W to blind process/thread/image/handle telemetry, and closes with defender detection angles for each layer. Useful primarily for red teams, implant/tooling developers, and detection engineers validating coverage.
+
+Technical Focus:
+- Userland `ntdll.dll` unhooking (.text restoration) via disk mapping, KnownDlls, or suspended donor process
+- Runtime syscall number (SSN) discovery: Hell’s Gate, Halo’s Gate, Tartarus’ Gate
+- Indirect syscalls using `ntdll` `syscall; ret` gadgets to blend return addresses
+- AMSI bypass by patching `AmsiScanBuffer` and related OPSEC/ordering
+- ETW suppression by patching `EtwEventWrite` and telemetry implications
+- Kernel callback removal via BYOVD and callback array manipulation (process/thread/image/Ob callbacks)
+
+Use Cases:
+- Building a Windows loader/implant initialization routine that reduces userland EDR telemetry
+- Making syscall-based tooling resilient across Windows versions without hardcoded SSNs
+- Avoiding detections based on syscall return address / “syscall from non-ntdll” heuristics
+- Silencing AMSI/ETW prior to in-process PowerShell/.NET execution
+- Evaluating blue-team detections for KnownDlls mapping, patch integrity, ETW dropouts, and driver-load/BYOVD activity
+
+Keywords:
+EDR evasion, userland hooks, ntdll unhooking, inline hooking, KnownDlls, NtOpenSection, NtMapViewOfSection, Hell’s Gate, Halo’s Gate, Tartarus’ Gate, syscall stub, SSN resolution, indirect syscalls, syscall gadget, AMSI, AmsiScanBuffer, ETW, EtwEventWrite, BYOVD, vulnerable signed driver, ObRegisterCallbacks, PsSetCreateProcessNotifyRoutineEx, PatchGuard, HVCI, VBS, Windows 11 24H2, kernel callbacks

@@ -1,0 +1,26 @@
+Title:
+Call Stack Spoofing: Defeating EDR Stack Telemetry
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains how modern EDRs use kernel/ETW-based stack walking to detect suspicious API/syscall activity even when userland hooks are bypassed (e.g., via indirect syscalls). It focuses on defeating “unbacked memory” indicators in thread call stacks by making malicious execution appear to originate from legitimate, file-backed modules like kernel32/kernelbase/ntdll. It covers four approaches: simple return address spoofing, full frame spoofing with stack desynchronization/trampolines, synthetic call stacks built from ROP-style stack-adjust gadgets (e.g., SilentMoonwalk), and sleep-time thread stack rewriting (e.g., CallStackMasker) often paired with memory encryption sleep obfuscation (Ekko/Foliage). It also introduces a hardware-breakpoint + VEH method to modify stack context at the moment of sensitive API calls without patching code. The write-up includes common EDR validation checks (RBP chain integrity, “return address preceded by call”, stack gap heuristics, module backing) and countermeasures to keep spoofed stacks plausible. Useful primarily for red teams/implant developers and also for blue teams to understand stack-telemetry evasion patterns and detection opportunities.
+
+Technical Focus:
+- EDR call stack telemetry (ETW/kernel callbacks) and stack walking
+- Return address spoofing and trampoline-based control-flow repair
+- Synthetic stack frame construction using ROP gadgets (add rsp; ret)
+- Thread stack spoofing during sleep + sleep obfuscation (memory encryption)
+- Hardware breakpoints (DR0–DR7) with Vectored Exception Handling (VEH)
+- Anti-detection: RBP chain consistency, call-site validation, frame sizing
+
+Use Cases:
+- Making indirect syscalls/API usage appear to originate from legitimate modules
+- Evading “unbacked memory” / suspicious caller heuristics in EDR telemetry
+- Hardening in-memory implants against hunt-sleeping-beacon style scans
+- Building selective per-API stack spoofing without inline patching (HW BP + VEH)
+- Creating defensive detections around inconsistent frame pointers/call-site validation failures
+
+Keywords:
+call stack spoofing, stack telemetry, EDR evasion, ETW stack walking, kernel callbacks, NtAllocateVirtualMemory, VirtualAlloc, indirect syscalls, unbacked memory, return address spoofing, stack frame spoofing, trampoline, ROP gadgets, SilentMoonwalk, CallStackMasker, sleep obfuscation, Ekko, Foliage, hardware breakpoints, DR0-DR7, VEH, RBP chain validation

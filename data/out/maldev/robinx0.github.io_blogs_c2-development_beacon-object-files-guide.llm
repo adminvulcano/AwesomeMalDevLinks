@@ -1,0 +1,26 @@
+Title:
+Beacon Object Files from Scratch: COFF Loading, Dynamic Resolution, and Battle-Tested Tradecraft
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is a practical guide to writing Cobalt Strike Beacon Object Files (BOFs) from first principles, focusing on how COFF objects are loaded and executed in-process. It explains the BOF loader’s model (section mapping, symbol resolution via naming conventions, relocation patching, calling `go()`, and cleanup) and the constraints that shape BOF development (no CRT, no persistent globals, minimal scope). It walks through a “whoami” BOF using Windows token APIs, then covers argument handling with the BeaconData API and output via Beacon’s callback channels. A key section details dynamic function resolution beyond the `MODULE$Function` pattern using `GetModuleHandleA`/`GetProcAddress`, with OPSEC guidance to avoid plaintext strings in `.rdata`. It also provides “battle-tested” tradecraft around thread safety, handle/memory hygiene, and string obfuscation, culminating in a production-style token duplication/impersonation BOF example plus an Aggressor wrapper. Useful for red teamers and C2/tooling developers building stealthier in-process post-exploitation capabilities and wanting reliable, crash-resistant BOFs.
+
+Technical Focus:
+- COFF object format basics (sections, symbols, relocations) and BOF loader behavior  
+- Cobalt Strike BOF runtime APIs (BeaconPrintf, BeaconOutput, BeaconDataParse/Extract)  
+- Dynamic import resolution (`MODULE$Function`, `LoadLibrary`/`GetProcAddress`)  
+- Windows access token operations (OpenProcessToken, DuplicateTokenEx, ImpersonateLoggedOnUser)  
+- OPSEC tradecraft: string placement avoidance, obfuscation, memory/handle hygiene, thread lifecycle  
+- BOF debugging workflow (PDBs, bof_runner, local harnessing)
+
+Use Cases:
+- Build custom in-process post-exploitation actions without spawning new processes or using PowerShell
+- Implement token theft/impersonation primitives as small composable BOFs
+- Add dynamic API resolution for ntdll/undocumented calls while reducing static IoCs
+- Create reliable BOFs that avoid crashes via proper cleanup and thread synchronization
+- Debug BOFs locally before deployment using bof_runner and instrumented logging
+
+Keywords:
+Beacon Object Files, BOF, Cobalt Strike, COFF, relocations, symbol table, go entrypoint, BeaconDataParse, BeaconDataExtract, BeaconPrintf, BeaconOutput, Aggressor Script, dynamic imports, LoadLibrary, GetProcAddress, GetModuleHandleA, ntdll.dll, OpenProcessToken, DuplicateTokenEx, ImpersonateLoggedOnUser, token impersonation, OPSEC, string obfuscation, handle hygiene, thread safety, bof_runner, MSVC cl.exe, /GS-

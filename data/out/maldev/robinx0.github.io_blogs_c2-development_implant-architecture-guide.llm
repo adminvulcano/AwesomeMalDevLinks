@@ -1,0 +1,27 @@
+Title:
+Designing a Modern C2 Implant: Architecture and OPSEC
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post outlines key design decisions for building a modern command-and-control (C2) implant with an emphasis on operational security and detection resistance. It compares communication models (HTTPS polling, DNS, WebSockets, and named pipes) and recommends a layered architecture where an external “edge” host beacons out while internal hosts relay via SMB/named pipes. It breaks down the beacon loop (sleep → check-in → tasking → results) and explains why jitter is critical to avoid timing-based detection. The author contrasts in-process execution (BOFs, inline .NET via CLR hosting, reflective DLL loading, direct syscalls) with legacy fork-and-run approaches that generate high telemetry. Anti-forensics topics include compile-time string encryption, API hashing with PEB/export walking, ETW/AMSI patching, and reducing memory indicators commonly used to signature popular beacons. Network OPSEC guidance covers domain fronting, malleable HTTP profiles, certificate/domain hygiene, and safer process injection target selection, plus practical testing against Defender, Falcon, Elastic, and public YARA rules. Useful primarily for red teamers and C2/implant developers designing custom implants and tradecraft.
+
+Technical Focus:
+- C2 communication models (HTTPS, DNS, WebSockets, named pipes/SMB relays)
+- Beacon loop design and sleep/jitter evasion
+- In-process task execution (BOFs, CLR hosting, reflective loading, direct syscalls)
+- Anti-forensics: string encryption, API hashing, PEB/export resolution
+- Telemetry suppression: ETW and AMSI patching, memory indicator reduction
+- Network OPSEC: domain fronting, malleable traffic profiles, certificate management
+
+Use Cases:
+- Designing a custom implant architecture for constrained/internal networks (egress-less hosts)
+- Implementing beacon timing/jitter to reduce network periodicity detection
+- Building in-process execution pipelines to avoid child-process telemetry
+- Hardening implants against static signatures and memory scanning
+- Shaping C2 traffic to blend with legitimate SaaS/API patterns
+- Pre-op testing of payloads against AV/EDR and YARA rule sets
+
+Keywords:
+C2 implant, beacon loop, jitter, HTTPS polling, DNS C2, WebSockets, named pipes, SMB relay, in-process execution, Beacon Object Files, COFF, CLR hosting, reflective DLL loading, direct syscalls, string encryption, API hashing, PEB walking, ETW patching, AMSI bypass, domain fronting, malleable C2 profile, TLS SNI, certificate rotation, process injection OPSEC, Sysmon Event ID 1, Windows Event 4688, YARA, CrowdStrike Falcon, Windows Defender, Elastic Security

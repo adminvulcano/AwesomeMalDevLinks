@@ -1,0 +1,26 @@
+Title:
+Astral-PE — Low-level PE headers/entrypoint mutator for native Windows binaries
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Astral-PE is a post-build mutator for native Windows PE files (.exe/.dll/.sys) that rewrites structural metadata and certain loader-relevant fields without packing, encrypting, injecting, or otherwise changing runtime behavior. It targets “static structure” indicators used by unpackers, YARA rules, and sandbox clustering by removing or randomizing items like timestamps, Rich header, section names, debug directories/PDB paths, and unused data directories. It can also patch/shuffle entrypoint prologues, mutate import DLL name formatting, and optionally fake an export table to confuse simplistic scanners. The tool is positioned as a final hardening step after a protector/packer, or as a component in a custom protection pipeline. It is useful primarily for red teams, malware developers, and reverse-engineering challenge authors; defenders may use it to understand how metadata-based detections can be evaded. It explicitly does not support .NET binaries (native PE only) and includes a legacy compatibility mode for older Windows versions with reduced obfuscation.
+
+Technical Focus:
+- PE header/metadata mutation (COFF/Optional Header/Data Directories)
+- Rich Header removal and toolchain fingerprint disruption
+- Debug directory stripping (PDB path wiping) and version info removal
+- Import table name mutation and export table spoofing
+- Entrypoint patching/prologue shuffling and AddressOfEntryPoint changes
+- Section/header flag manipulation, reloc/TLS/load-config cleanup
+
+Use Cases:
+- Post-process packed/protected binaries to break static unpacker heuristics
+- Reduce signature stability for YARA rules relying on PE structure/metadata
+- Strip build/debug artifacts (PDB paths, Rich signature) before distribution
+- Generate “structurally weird” samples for sandbox/cluster evasion testing
+- Build crackmes or RE challenges with misleading PE metadata
+
+Keywords:
+Portable Executable, PE, COFF, Optional Header, Data Directory, Rich Header, TimeDateStamp, section names, Debug Directory, PDB path, Import Table, Export Table, AddressOfEntryPoint, TLS Directory, Load Config, CFG, relocations, checksum, overlay stripping, static analysis evasion, YARA evasion

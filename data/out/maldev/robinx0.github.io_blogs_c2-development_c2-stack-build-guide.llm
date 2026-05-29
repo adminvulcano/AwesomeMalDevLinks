@@ -1,0 +1,26 @@
+Title:
+Building a C2 Stack: Implants, BOF Loaders, Redirectors, and DoH Channels
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is an end-to-end build guide for a modular offensive C2 “stack” composed of a minimal Rust implant, a custom COFF/BOF loader, resilient redirector infrastructure, and a DNS-over-HTTPS (DoH) fallback channel. It focuses on understanding and re-implementing the core components so operators can adapt when commercial frameworks get signatured or blocked. Techniques covered include beacon loop design with jitter, implant OPSEC hardening (string encryption, PPID spoofing, TLS pinning), COFF parsing and relocation handling for BOF execution, and redirector patterns using Nginx plus optional domain fronting. The DoH channel section explains tasking/exfil via TXT/A queries tunneled inside HTTPS to public resolvers and discusses throughput limits and detection considerations. It’s primarily useful for red teamers and C2/implant developers, with some value to blue teams for understanding infrastructure and DoH-based C2 tradecraft. The key takeaway is treating C2 as replaceable layers (agent, execution extension, infra, transport) to improve resilience under active defense.
+
+Technical Focus:
+- Rust beacon/implant architecture (state machine, jitter, HTTP tasking)
+- Implant OPSEC: compile-time string obfuscation, PPID spoofing, TLS pinning, UA rotation
+- BOF execution via COFF loading: section mapping, symbol resolution, relocations, `go` entrypoint
+- Beacon API emulation/dispatch (`BeaconPrintf`, `BeaconDataParse`, etc.)
+- Redirector design with Nginx reverse proxy, URI/UA filtering, VPN-isolated teamserver
+- DNS-over-HTTPS C2: TXT tasking, label-chunked exfil, resolver behavior, detection signals
+
+Use Cases:
+- Build a minimal custom beacon for controlled red team operations
+- Add post-exploitation capabilities without recompiling by executing BOFs from a non-CS framework
+- Deploy disposable redirectors to protect teamserver origin and reduce burn impact
+- Implement a DoH-based fallback channel when direct HTTPS C2 is blocked or too noisy
+- Create infrastructure filtering rules to prevent scanning/fingerprinting from reaching the origin
+
+Keywords:
+C2, command-and-control, Rust implant, beacon, jitter, OPSEC, TLS pinning, PPID spoofing, string encryption, BOF, Beacon Object File, COFF, relocations, VirtualAlloc, GetProcAddress, LoadLibraryA, BeaconPrintf, Nginx redirector, reverse proxy, domain fronting, CDN, DNS-over-HTTPS, DoH, TXT record, authoritative nameserver, exfiltration, Cloudflare DNS, teamserver, VPN-only origin

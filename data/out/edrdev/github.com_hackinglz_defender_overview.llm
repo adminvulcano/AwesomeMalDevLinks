@@ -1,0 +1,26 @@
+Title:
+Windows Defender Scan Pipeline — Reverse Engineering Reference (mpengine.dll)
+
+Type:
+GitHub Tool (Research/Documentation)
+
+Short Summary (4–8 sentences max):
+This repository documents a reverse-engineered, stage-by-stage model of Microsoft Defender Antivirus’s scanning pipeline implemented in `mpengine.dll` (v1.1.24120.x). It breaks the engine into 13 sequential stages, describing how inputs (files, scripts, memory buffers, extracted content) are processed, rescanned recursively, and ultimately resolved into a single verdict. The material includes reconstructed data structures (e.g., `ScanContext`, `ThreatRecord`), pseudocode, RTTI class hierarchies, string-table artifacts, and address-level references intended to help validate findings in a disassembler. Key coverage includes signature-engine cascades, CPU emulation/unpacking, container extraction, script deobfuscation, Lua-based detection logic, attribute aggregation, and MAPS cloud escalation. It’s useful for red teamers, malware analysts, and security researchers trying to understand Defender’s detection surfaces and where telemetry/detections can originate, and for blue teamers validating detection behavior and triage paths. The interesting value is the consolidated “mental model” of Defender’s internal decision pipeline and how multiple detection layers combine into final verdicting.
+
+Technical Focus:
+- `mpengine.dll` internal scan pipeline and exported scan APIs (`__rsignal` / `rsignal`)
+- Static signature engine cascade and BRUTE/content matching
+- Embedded CPU emulation (x86/x64/ARM), API emulation, dynamic unpacking and recursive rescans
+- Container/format handlers (nUFS) and child-object extraction
+- Script deobfuscation (NScript) for PowerShell/VBScript/JScript/Batch
+- Lua 5.1 rule runtime (`mp.*` APIs), attribute collection, AAGGREGATOR boolean evaluation, MAPS cloud lookup
+
+Use Cases:
+- Map where Defender detections can trigger (static, emulation, script, Lua, cloud) during payload testing
+- Guide reverse engineering workflows (RTTI, strings, address references) for `mpengine.dll`
+- Build hypotheses for why a sample is detected and which stage likely produced the verdict
+- Support defensive triage by understanding verdict resolution, deduplication, and severity ranking
+- Research detection engineering surfaces (attributes, boolean logic trees, Lua rules, cloud escalation)
+
+Keywords:
+Microsoft Defender, Windows Defender, mpengine.dll, reverse engineering, scan pipeline, __rsignal, rsignal, ScanContext, ThreatRecord, signature engines, PE emulation, API emulation, unpacking, nUFS, container extraction, NScript, script deobfuscation, PowerShell, Lua 5.1, mp.* APIs, AAGGREGATOR, MAPS cloud, verdict resolution

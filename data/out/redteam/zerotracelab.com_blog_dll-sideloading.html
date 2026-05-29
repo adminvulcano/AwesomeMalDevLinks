@@ -1,0 +1,178 @@
+# https://www.zerotracelab.com/blog/dll-sideloading
+
+<!DOCTYPE html><html lang="en">
+
+<body>
+  <div id="root"><div class="blog-post"><a href="https://www.zerotracelab.com/blog" data-discover="true">← Back to Blog</a><hr style="margin: 24px 0px;"><div class="blog-content"><!-- # DLL Sideloading & Proxying for Advance Red Team Engagements -->
+
+<p>Before diving into the technique itself, let's quickly walk through some fundamentals.</p>
+<p>A <strong>Dynamic-Link Library (DLL)</strong> is a shared library that contains exported functions, data, and resources (such as icons, strings, dialogs, and version information). Multiple programs can load the same DLL into memory simultaneously, avoiding code duplication and reducing overall memory usage. This shared design is efficient for legitimate software, but it also creates predictable loading behavior that threat actors &amp; red teamers can abuse.</p>
+<h3>How DLL Sideloading Works</h3>
+<p><strong>SafeDllSearchMode</strong> is a Windows security feature introduced in Windows XP Service Pack 2 (and enabled by default on all modern Windows versions, including Windows 10 and Windows 11). It was designed to mitigate classic DLL preloading attacks by changing the order in which the operating system searches for DLLs.</p>
+<p>When enabled, SafeDllSearchMode moves the <strong>current working directory</strong> further down in the search order. The typical DLL search order with SafeDllSearchMode enabled is:</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image1.png" alt="image1"><br>Fig 1: SafeDLLSideloadMode Structure</p>
+<p>This change significantly reduces the risk of attacks that rely on planting malicious DLLs in the current working directory. However, it does <strong>not</strong> protect against sideloading in the application's own directory which remains the highest priority location. This is exactly where most modern DLL sideloading techniques operate.</p>
+<p>However, there is an important limitation. Many core system DLLs (such as <code>kernel32.dll</code>, <code>user32.dll</code>, <code>advapi32.dll</code>, <code>rpcrt4.dll</code>, and <code>ntdll.dll</code>) are registered as <strong>KnownDlls</strong>. These are pre-mapped by the Windows kernel from the protected <code>\KnownDlls\</code> object directory and are loaded directly from <code>System32</code>, bypassing the normal search order entirely.</p>
+<p>As a result, it is <strong>not possible</strong> to hijack these common system DLLs through standard sideloading. Instead, the technique works when the target executable attempts to load a DLL that is <strong>not</strong> in the KnownDlls list and is referenced by a relative path (or implicit dependency) from its own directory. In such cases, Windows will load the attacker-controlled DLL placed in the application’s folder instead of the legitimate one. This is the core mechanism of <strong>DLL sideloading</strong>.</p>
+<h5>Advantages of DLL Sideloading</h5>
+<ul>
+<li>It works against a wide range of legitimate, signed binaries.</li>
+<li>The payload executes under the context of a trusted, signed process, which typically receives less scrutiny from EDRs and security tools.</li>
+<li>It can be leveraged for persistence when the targeted application is launched frequently by the user or as part of normal system operation.</li>
+</ul>
+<h4>Hunting for DLL Sideloading Opportunities</h4>
+<p>There are two primary options when hunting for suitable targets:</p>
+<ul>
+<li>Built-in Microsoft applications (e.g., <code>sc.exe</code>, <code>Msdtc.exe</code>, or other system binaries).</li>
+<li>Third-party applications (e.g., media players, archivers, or productivity tools).</li>
+</ul>
+<p><strong>OPSEC Tip</strong>: I strongly recommend prioritizing <strong>third-party applications</strong>. Built-in Microsoft binaries are heavily monitored by modern EDR solutions through YARA rules, behavioral heuristics, and strict code-signing enforcement. Third-party software tends to receive less scrutiny, making it a safer choice for blending in.</p>
+<h3>Let the Hunting Begin</h3>
+<p>For this demonstration, we will use <strong>VLC Media Player</strong>. There is a specific reason for this choice, which I will explain at the end of the section.</p>
+<p>First, we need to identify which DLLs are loaded when VLC starts. To do this, we will use <strong>Process Monitor</strong> (ProcMon) from the Sysinternals suite.</p>
+<ol>
+<li>Download and run ProcMon.</li>
+<li>Press <strong>Ctrl + L</strong> to open the filter dialog.</li>
+<li>Add filters to focus on the VLC process and DLL loading activity<br>- Process Name → is → <code>vlc.exe</code><br>- Result → is <code>NANE NOT FOUND</code><br>- Path → ends with <code>.dll</code>.</li>
+<li>Apply the filter and clear the log (Ctrl + X) before launching VLC.</li>
+</ol>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image2.png" alt="image2"></p>
+<p>Fig 2: Procmon Filter settings</p>
+<p>In the filter, enter specific conditions to remove unrelated processes and streamline our hunt. After applying the settings, copy <strong>vlc.exe</strong> to a separate folder and execute it. </p>
+<p>I am executing the vlc.exe from <code>D:\test\talk\VLC\</code> </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image3.png" alt="image3"><br>Fig 3: Procmon Lists applications flow.</p>
+<p>As you can see in ProcMon, the standalone <code>vlc.exe</code> is actively trying to locate and load multiple <code>.dll</code> files from its current directory.</p>
+<p>In this test, we copied only <code>vlc.exe</code> into a new folder. According to Windows DLL search order, the OS first checks the directory from which the executable was launched. Since the legitimate DLLs are not present in this new folder, it attempts to load them from here, creating the perfect condition for sideloading.</p>
+<p>We will use <strong><code>libvlc.dll</code></strong> as our primary target for this demonstration. While VLC loads several other DLLs that could also be sideloaded, there is a specific reason I chose <code>libvlc.dll</code>. I'll explain it at the end of this article.</p>
+<p>Next, we need to understand which functions <code>libvlc.dll</code> exports. This is critical because our malicious DLL must export the same function names so that VLC continues to run without crashing. To inspect the export table, we can use <strong>x64dbg</strong> for that. </p>
+<h3>Analyzing libvlc.dll with x64dbg</h3>
+<p>Open <strong>x64dbg</strong> (x64 version). Go to <strong>File → Open</strong> and select the vlc.exe from the original VLC installation folder.</p>
+<p>Once loaded, switch to the <strong>Symbols</strong> tab. there you can see the libvlc.dll.</p>
+<p>Tip: In the Hunting Process if you didn't find an DLL. Just Run the program until you see the executable calls our target dll.  </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image4.png" alt="image4"><br>Fig 4: x64dbg Symbol view</p>
+<p>In the right side you will see a long list of exported functions (e.g., <code>libvlc_new</code>, <code>libvlc_retain</code>, <code>libvlc_release</code>, etc.).</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image5.png" alt="image5"><br>Fig 5: Toggling Breakpoints on exported functions</p>
+<p>Just select all the export function and Toggle Breakpoint. So that whenever our target exe executes the function, it will trigger the breakpoint !! </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image6.png" alt="image6"><br>Fig 6: Breakpoint Triggers on function</p>
+<p>Gotcha! This is our first trigger, <code>VLC.exe</code> is calling the function <code>libvlc_new</code>.</p>
+<p>So what now? There’s one issue: we don't know the function parameters or signature.</p>
+<p>To figure this out, let's disassemble the original DLL and do a little reverse engineering.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image7.png" alt="image7"><br>Fig 7: Loading dll in IDA Pro</p>
+<p>in the IDA PRO go to exports tab and search our function </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image8.png" alt="image8"><br>Fig 8: Finding target funciton</p>
+<p>Click it and you can see the function code. </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image9.png" alt="image9"><br>Fig 9: Assembler code of the functions</p>
+<p>as you can see it has 2 function parameters, in that, first parameter is byte which is i32 type and the second one is *<strong>const c void</strong> i guess. </p>
+<p>Lets clarify a bit. Pressing F5 will convert it into pseudocode</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image10.png" alt="image10"><br>Fig 10: Pseudocode generations</p>
+<p>as you can see we can now see the function parameters clearly. it has 2 parameters </p>
+<p>now we know the structure, lets construct our weapon !</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image11.png" alt="image11"><br>Fig 11: Sideload Program in Rust</p>
+<p>Now lets compile this into .dll and test weather it works or not !! place it near the vlc dir and run the exe </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image12.png" alt="image12"><br>Fig 12: Placing malicious DLL.</p>
+<p>libvlc_org.dll -&gt; original dll renamed it for testing &amp; debug<br>libvlc.dll -&gt; our malicious dll</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image13.png" alt="image13"><br>Fig 13: Error triggers.</p>
+<p>wait what so the entry point is missing ? i see. ok so lets the run the x64dbg &amp; exec it and note what are the functions are being loaded from the dll !! </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image14.png" alt="image14"><br>Fig 14: x64dbg function views </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image15.png" alt="image15"><br>Fig 15: basics exec functions from dll.</p>
+<p>after executing till the end, i found these functions are executing at the start.... !!</p>
+<p>next we can just include them in the code !</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image16.png" alt="image16"><br>Fig 16: Updated Sideload template</p>
+<p>now lets compile it again and check. </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image17.png" alt="image17"><br>Fig 17: Sideload execution</p>
+<p>This is an manual process. You can use automatic tools to generate exports for all the functions. </p>
+<p>Always first do the painful way then go for automation tools. It works! Our function has been executed.</p>
+<p>We have seen <strong>DLL sideloading</strong> in action.</p>
+<p>Instead of displaying a message box, you can place your actual implant (shellcode) right here.</p>
+<p>But let’s take it even further for better stealth.</p>
+<p>If you click OK, as you can see, the MessageBox function finishes executing and then the application continues normally. However, you’ll notice an error appears shortly after.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image18.png" alt="image18"><br>Fig 18: Error occurs on vlc after sideloading</p>
+<p>This happens because, when you click OK, the function continues executing, calls subsequent functions, and eventually VLC displays an error popup before exiting.</p>
+<p>However, in most real-world red-team scenarios, this is more than sufficient for executing your C2 implant, especially if you don't want to use the application functionality because as the libvlc_new function executes your shellcode loader and waits until you finish the execution of that function.</p>
+<p>So when the job is done. Either you terminate the process, or the shellcode, it will either exit the process or exit the thread and the whole process terminates.</p>
+<blockquote>
+<p>If you are sending the whole application as the target then its an different story because from an <strong>OPSEC</strong> perspective, this is considered a poor practice. During these phases, it is crucial to display the genuine binary's output to the target user to trick them into believing that they have installed the legitimate software.</p>
+</blockquote>
+<p>There is one approach to solve this problem. This is to forward the functions to original DLL and return the results to the process... </p>
+<p>Yes, like an proxy this method is called Proxy DLL Loader. </p>
+<p>Here is the flow diagram of how this works. </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image19.png" alt="image19"><br>Fig 19: Execution Flow of Proxyed DLL.</p>
+<p>When the legitimate <code>VLC.exe</code> calls an exported function such as <code>libvlc_new</code>, our malicious <code>libvlc.dll</code> acts as a <strong>proxy</strong>. It first loads the <code>libvlc.dll</code> and forwards it to the original <code>libvlc.dll</code> (the legitimate one which we will rename into libvlccore.dll) and forwards the function call to it. The original function then executes and returns the result back through our malicious DLL to <code>VLC.exe</code>, allowing the application to continue running normally.</p>
+<p>However, before forwarding the call, our DLL will execute its own payload. This ensures the payload runs silently while the rest of the program behaves as expected from the user’s perspective.</p>
+<p>There are plenty of C/C++ tools available on internet, but I will demonstrate it in <strong>Rust</strong>. Because i have seen an less resource across internet demonstrating this technique.</p>
+<p>Why Rust ? Because rust is an excellent choice for modern red team tooling, it produces clean, compact binaries with minimal dependencies and is still relatively uncommon in malware samples, making it more painful for reverse engineers and EDR signature writers. In the future, i will be demonstrating how you can make your rust implants stealthy and make it more OPSEC to evade in the Static &amp; Dynamic Analysis.  </p>
+<h3>Forwarding All Exported Functions</h3>
+<p>To make sideloading work without breaking VLC, our malicious DLL <strong>must export every function</strong> that the original <code>libvlc.dll</code> exports. If even one expected function is missing, VLC will crash or fail to load the DLL.</p>
+<p>To find out exactly how many functions we need to forward, we can use Microsoft's <code>dumpbin.exe</code> tool (included with Visual Studio or the Windows SDK).</p>
+<p>Run the following command on the original <code>libvlc.dll</code>:</p>
+<pre><code class="language-cmd">dumpbin.exe /exports "C:\Path\To\Original\libvlc.dll"
+</code></pre>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image20.png" alt="image20"><br>Fig 20: Viewing Exported functions..</p>
+<p>in the above file i have changed the original libvlc.dll to libvlc_org.dll. </p>
+<p>You can see the ordinal an unique identifier for exported functions within DLL </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image21.png" alt="image21"><br>Fig 21: Listing total exported function.</p>
+<p>I was genuinely surprised to see that there are <strong>316 functions</strong> exported, certainly more than expected. It appears I'll need to create forwarding stubs for all of them. quite a substantial task.</p>
+<p>With that in mind, let's proceed. I've already used an automated tool to parse and extract the full list of exported functions from the original libvlc.dll, reducing manual human efforts. The tool that i have used to create files: <a href="https://github.com/Whitecat18/LazyDLLSideload.git">LazyDLLSideload</a>. </p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image22.png" alt="image22"><br>Fig 22: .def structure for function forwarding.</p>
+<p> Here i have copied the generated content from the generated tool into our project <code>.def</code> file to instruct the linker to export the same functions as the original <code>libvlc.dll</code>, forwarding them to the legitimate <code>libnetcore.dll</code> using their <strong>original ordinal numbers</strong>.</p>
+<p><strong>Why do we need a .def file?</strong></p>
+<p>We create a <code>.def</code> file to tell the linker to:</p>
+<ul>
+<li>Export <strong>exactly</strong> the same function names as the original <code>libvlc.dll</code></li>
+<li>Preserve the <strong>original ordinal numbers</strong> (e.g. <code>@273</code>)</li>
+<li>Forward each call directly to the legitimate <code>libnetcore.dll</code></li>
+</ul>
+<p>In <code>forward.rs</code>, I have created a structure for managing proxy entries.</p>
+<p>Unlike C/C++, where you can usually just use linker-level forwarding via <code>.def</code>, Rust’s Cargo/build system often forces you to handle this in code.</p>
+<p>The key point: we don't implement the actual function logic, we just intercept the call and forward it straight to the original function.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image23.png" alt="image23"><br>Fig 23: Forward functions.</p>
+<p>To execute our malicious payload in parallel without disrupting the host application's normal execution flow, we spawn a separate thread for it.</p>
+<p>Once the thread is created, we load the original DLL, resolve the address of the target function (the one we are sideloading), and forward the call to the legitimate implementation.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image24.png" alt="image24"><br>Fig 24: Proxy load Code Snippets.</p>
+<p>Finally i am replacing the functions as below.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image25.png" alt="image25"><br>Fig 25: Replacing the original functions.</p>
+<p>Lets execute the program and see if our proxy is working or not</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image26.png" alt="image26"><br>Fig 26: Application Execution flow</p>
+<p>This works </p>
+<p>This is called <strong>proxying</strong>: all functions are forwarded to their original implementations in the legitimate DLL, while our malicious code executes silently from a new thread, letting the normal program flow continue uninterrupted. </p>
+<p>For example, you can play a video in VLC as usual while our malicious code continues running silently in a separate thread.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image27.png" alt="image27"><br>Fig 27: Real Execution flow usage.</p>
+<p>Now lets test in an real-world environment.</p>
+<h4>OPSEC TESTING</h4>
+<p>We now have our implant shellcode generated from the C2 framework.</p>
+<p>Time to combine everything and compile our malicious DLL.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image28-1.png" alt="Compile Image"><br>Fig 28: Compiling implant</p>
+<p>Nice. For the payload inside our malicious DLL, I am using a common <strong>self-injecting shellcode</strong> technique that injects directly into its own process (the host process of the sideloaded DLL).</p>
+<p>To properly test the implant, we will evaluate it against two popular EDR solutions that i commonly used for testing C2 frameworks and red team payloads.</p>
+<p>First, let’s check the detection results with these EDRs.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image28-2.png" alt="image28"><br>Fig 29: Target Environment 1.</p>
+<p>Replace the DLL. here i have renamed the original dll name into libnetcore.dll and our malicious dll as libvnc.dll !</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image29.png" alt="image29"><br>Fig 30: Replacing the original functions in the target environment.</p>
+<p>Now lets execute the VLC and lets see we get an callback from the victim machine !</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image30.png" alt="image30"><br>Fig 31: Got callback from target</p>
+<p>Got it. Now lets execute some commands..</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image31.png" alt="image31"><br>Fig 32: Executing BoFs to display Drivers.</p>
+<p>Success. Now i have an another EDR for testing, which is an pretty popular one.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image32.png" alt="image32"><br>Fig 33: Target Environment 2.</p>
+<p>Now execute the VLC.exe in the EDR Environment.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image33.png" alt="image33"></p>
+<p>Fig 34: Got call back from new Target.</p>
+<p>After some seconds, we got an callback from Target machine.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image34.png" alt="image34"><br>Fig 35: More info on the callback.</p>
+<p>The full dashboard view for your references.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image35.png" alt="image35"><br>Fig 36: Full dashboard for references.</p>
+<p>And now lets check what are the drivers are present and currently running using BOF script.</p>
+<p><img src="https://www.zerotracelab.com/blog-images/dll-sideloading/image36.png" alt="image36"><br>Fig 37: Executing inline BoFs to display Drivers.</p>
+<p>We can see and conform that the EDR drivers are present and running.</p>
+<p>The target can continue using VLC normally, our implant will run silently in the background on a separate thread.</p>
+<h4>Conclusion &amp; OPSEC Recommendations</h4>
+<ul>
+<li>Whenever possible, <strong>prefer third-party applications</strong> for DLL sideloading. Built-in Windows binaries are usually monitored much more aggressively (YARA rules, behavioral baselines, strict signing checks).</li>
+<li>The <strong>executable path</strong> matters. Carefully plan where you place or launch the target binary in your initial stage. the path influences both DLL search order and how suspicious the activity looks in logs/telemetry.</li>
+</ul>
+<p>Thanks for reading</p>
+</div></div></div>
+
+
+
+</body></html>

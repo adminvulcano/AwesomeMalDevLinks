@@ -1,0 +1,26 @@
+Title:
+Reflective DLL Loader (CustomRDI) — rewriting Stephen Fewer’s ReflectiveLoader with modern implementation details
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post walks through a from-scratch implementation of a reflective DLL loader (RDI) that maps and runs a DLL from memory without using `LoadLibrary`. It explains the full inner-loader workflow: locating the DLL base in a raw blob, allocating memory, copying headers/sections, resolving imports (including forwarded exports), applying relocations, setting per-section protections, flushing the instruction cache, and calling `DllMain`. The author highlights design changes versus Fewer’s original loader, including PEB-walking with djb2 API hashing, avoiding `GetProcAddress`/`LoadLibraryA` by parsing exports directly and using `LdrLoadDll` as a fallback, and using indirect syscalls by extracting SSNs and jumping to ntdll’s `syscall` instruction. It also documents practical debugging pitfalls (e.g., `.data` RIP-relative globals and MSVC `/GS` stack cookies breaking when executing from disk-layout bytes) and how they were fixed. The post closes with detection surface considerations and a clear limitations list (no TLS callbacks, no API set schema, no unwind metadata registration, etc.). Useful for red teamers and malware dev learners implementing custom in-memory loaders, and for defenders understanding common RDI artifacts.
+
+Technical Focus:
+- Reflective DLL injection / in-memory PE loading
+- PE parsing: sections, imports, relocations, export resolution, forwarded exports
+- PEB module enumeration (InMemoryOrderModuleList) and API hashing (djb2)
+- Indirect syscalls (SSN extraction from ntdll stubs, syscall trampolines)
+- Memory protections via `NtProtectVirtualMemory` (RW → per-section RX/R)
+- WinDbg-based debugging of position-independence issues in raw PE blobs
+
+Use Cases:
+- Building a custom reflective loader for payload DLL execution without `LoadLibrary`
+- Studying/teaching PE loader internals and common implementation pitfalls
+- Prototyping EDR-evasion-adjacent techniques (hash-based API resolution, indirect syscalls)
+- Creating test artifacts for defensive detection of in-memory PE mapping
+- Debugging and validating IAT patching, forwarders, and relocation handling in loaders
+
+Keywords:
+Reflective DLL injection, ReflectiveLoader, PE format, in-memory loader, PEB walking, InMemoryOrderModuleList, export table parsing, import resolution, IAT patching, forwarded exports, base relocations, IMAGE_REL_BASED_DIR64, NtAllocateVirtualMemory, NtProtectVirtualMemory, NtFlushInstructionCache, LdrLoadDll, indirect syscalls, syscall number (SSN), djb2 hashing, WinDbg, /GS- stack cookies, API set schema

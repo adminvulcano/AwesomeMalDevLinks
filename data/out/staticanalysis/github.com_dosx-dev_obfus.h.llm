@@ -1,0 +1,31 @@
+Title:
+obfus.h — Macro-only compile-time C obfuscation library for TinyCC on Windows
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- obfus.h is a header-only, macro-based library that applies compile-time obfuscation to C programs compiled with Tiny C Compiler (tcc), targeting Windows x86/x64.  
+- It aims to make reverse engineering harder by transforming control flow, obscuring function calls, hiding strings, and degrading decompiler output.  
+- The project includes anti-debugging hooks (including an `ANTI_DEBUG;` construct), optional “v2” modes for heavier control-flow and anti-debug logic, and a “fake signatures” feature to mislead tooling/signature-based analysis.  
+- It also provides an optional arithmetic “virtualization” layer where math/logic operations are expressed via VM-like macros (e.g., `VM_ADD`, `VM_IF`) to complicate static understanding.  
+- It is primarily useful for red team tooling authors, malware developers, and CTF/payload developers who want lightweight source-level obfuscation without external packers.  
+- Notably, it is tcc-specific (MSVC/GCC/Clang not supported), and the repo references third-party audits/deobfuscation research and a scanner (ObfusHunter).
+
+Technical Focus:
+- Macro-based compile-time obfuscation (tcc-specific)
+- Control-flow flattening/mutation (“spaghetti” CFG)
+- Anti-debugging triggers and inline anti-debug constructs
+- String hiding via runtime stack construction (mov-based assembly)
+- Anti-decompilation output degradation techniques
+- Arithmetic/logic virtualization via embedded VM-like macro ops
+
+Use Cases:
+- Obfuscating Windows-native C payloads compiled with TinyCC
+- Hindering static analysis and decompiler readability of small tools/loaders
+- Hiding high-signal strings (URLs, commands, mutex names) from basic string scanning
+- Adding anti-debug checks around sensitive code paths
+- Creating CTF crackme-style binaries with intentionally hostile reversing properties
+
+Keywords:
+obfus.h, TinyCC, tcc, Windows x86, Windows x64, C obfuscation, macro obfuscation, control-flow obfuscation, anti-debugging, anti-decompilation, string hiding, stack string construction, decompiler breaking, fake signatures, virtualization, arithmetic VM, VM_ADD, VM_IF, MSVCRT, reverse engineering resistance

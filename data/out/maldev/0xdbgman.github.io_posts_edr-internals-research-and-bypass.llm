@@ -1,0 +1,31 @@
+Title:
+EDR Tradecraft: Internals, Detection, Evasion & Advanced Research
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A deep technical walkthrough of modern Windows EDR architecture, focusing on what telemetry sources EDRs use (user-mode hooks, kernel callbacks, minifilters, ETW—including ETW Threat Intelligence—and WFP) and how detections are built from those signals.  
+- It explains how common detection engines (static, dynamic, heuristic, ML) map to concrete Windows primitives like Ps/Ob/Cm callbacks, IRPs, VAD/memory scanning, and ETW provider subscriptions.  
+- The post then catalogs evasion/bypass tradecraft by layer: static/IAT evasion, injection technique selection, direct vs indirect syscalls (FreshyCalls/RecycledGate/SysWhispers4/Acheron/Sysplant), sleep-masking (Ekko/FOLIAGE/Zilean/DreamWalkers), call-stack spoofing (SilentMoonwalk/VulcanRaven), and patchless AMSI/ETW-TI bypass using hardware breakpoints + VEH/NtContinue.  
+- It covers anti-tamper and PPL (Protected Process Light) constraints and the BYOVD landscape under Microsoft’s vulnerable-driver blocklist, including why HVCI/VBS changes feasibility.  
+- Finally, it provides an iterative methodology for EDR reverse engineering (lab setup → lead gathering → instrumentation → IOCTL/IPC mapping → experiments → detection validation), making it useful for both offensive research and defensive detection engineering.  
+- Most useful for red team operators, malware/tooling developers, and defenders doing EDR evaluation or writing high-fidelity detections.
+
+Technical Focus:
+- Windows EDR component model (service, injected DLL, kernel drivers, minifilter, ETW consumer, WFP callouts)
+- Kernel telemetry: PsSetCreate* callbacks, ObRegisterCallbacks, CmRegisterCallbackEx, image-load callbacks
+- ETW internals (sessions/providers/consumers) and ETW-TI constraints (PPL-Antimalware)
+- Syscall bypass tradecraft (direct/indirect syscalls, SSN resolution: Hell’s/Halo’s/Tartarus’ Gate, FreshyCalls/RecycledGate)
+- Memory scanning heuristics (VADs, MEM_PRIVATE vs MEM_IMAGE, PEB.Ldr inconsistencies, module stomping)
+- Evasion primitives: sleep masks, call-stack spoofing, patchless AMSI via HW breakpoints + VEH, BYOVD/PPL bypass
+
+Use Cases:
+- Reverse engineer an EDR’s drivers/services to identify telemetry sources, IPC endpoints, and IOCTL interfaces
+- Design red-team payload tradecraft to reduce user-mode hook visibility and behavioral signatures
+- Build detections for syscall-gate usage, sleep-mask patterns, stack spoofing artifacts, and AMSI/ETW-TI tampering
+- Evaluate feasibility of BYOVD/PPL bypass given blocklists, HVCI/VBS, and anti-tamper controls
+- Map EDR detections and bypasses to MITRE ATT&CK for reporting and coverage analysis
+
+Keywords:
+EDR, Windows internals, kernel driver, minifilter, fltmgr.sys, IRP, IOCTL, ETW, Microsoft-Windows-Threat-Intelligence, ETW-TI, AMSI, AmsiScanBuffer, Vectored Exception Handler, hardware breakpoints, NtContinue, PsSetCreateProcessNotifyRoutineEx, PsSetCreateThreadNotifyRoutine, PsSetLoadImageNotifyRoutine, ObRegisterCallbacks, CmRegisterCallbackEx, WFP, PPL, Protected Process Light, BYOVD, HVCI, VBS, direct syscalls, indirect syscalls, SysWhispers4, FreshyCalls, RecycledGate, Ekko, SilentMoonwalk, VulcanRaven, DreamWalkers, module stomping, reflective DLL loading, process hollowing, doppelgänging, ghosting, VAD, PEB.Ldr

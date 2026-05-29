@@ -1,0 +1,25 @@
+Title:
+PE-XRay (PE-XRay-EDR)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PE-XRay is a lightweight static analyzer for Windows PE files (.exe/.dll) that uses heuristic scoring rather than signature matching to highlight suspicious traits. It targets common malware/packer/protector indicators by inspecting PE structure, section properties, imports, entropy, and embedded strings. The tool flags anomalies such as malformed headers, unusual entry points, RWX (write+execute) sections, high entropy regions suggestive of packing/encryption, and risky WinAPI imports (e.g., CreateRemoteThread, SetWindowsHookExW). It provides both a GUI (IUP) and a CLI build, aimed at quickly triaging binaries and surfacing “evidence” for analyst decision-making. Useful for malware analysts, incident responders, and red teamers validating payload OPSEC against static heuristics.
+
+Technical Focus:
+- PE header/section parsing and structural anomaly detection
+- Heuristic-based risk scoring engine
+- Entropy analysis (global + sliding-window)
+- Import table inspection for suspicious WinAPI usage
+- String extraction/intelligence (commands, URLs, tooling artifacts)
+
+Use Cases:
+- Rapid triage of unknown executables and DLLs during investigations
+- Identifying packed/encrypted binaries via entropy and section traits
+- Spotting injection/persistence-related API imports in samples
+- Pre-deployment OPSEC checks of red team payloads against static heuristics
+- Hunting for malformed/weaponized PE structures in malware collections
+
+Keywords:
+Portable Executable, PE parsing, static analysis, heuristic detection, entropy scanning, sliding-window entropy, packer detection, import table analysis, WinAPI, CreateRemoteThread, SetWindowsHookExW, RWX sections, section flags, entry point anomalies, malformed headers, string extraction, malware triage, Windows executables, MinGW-w64, IUP GUI

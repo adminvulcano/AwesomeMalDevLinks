@@ -1,0 +1,26 @@
+Title:
+Hardware Breakpoint Hooking: Bypassing Inline EDR Hooks Without Touching Memory
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains how to implement user-mode API “hooking” on Windows using x86-64 hardware breakpoints (DR0–DR7) instead of inline patching in `ntdll.dll`/`kernelbase.dll`. It targets the problem of EDR inline-hook integrity checks and telemetry triggered by memory modifications (e.g., `VirtualProtect`, `WriteProcessMemory`) by redirecting execution via `EXCEPTION_SINGLE_STEP` without changing code bytes. The guide walks through the debug register model, installing per-thread breakpoints via `GetThreadContext`/`SetThreadContext`, and handling breakpoints with a vectored exception handler (VEH) that edits the thread context and uses the Resume Flag (RF) to avoid re-trigger loops. It includes a minimal PoC that blocks remote thread injection by intercepting `NtCreateThreadEx` and forcing `STATUS_ACCESS_DENIED` or skipping the function body. The author also discusses detection vectors (DR register inspection, ETW single-step visibility, and anomalous `SetThreadContext`/`NtContinue` usage) and mitigations like self-context installation and APC-based self-install on other threads. Useful for red teams, implant developers, and researchers evaluating stealthy user-mode interception primitives and their defensive telemetry.
+
+Technical Focus:
+- x86-64 debug registers (DR0–DR7) and DR7 configuration (RW/LEN/L bits)
+- Vectored Exception Handling (VEH) and `EXCEPTION_SINGLE_STEP` control flow
+- Thread context manipulation (`GetThreadContext`/`SetThreadContext`, `CONTEXT_DEBUG_REGISTERS`)
+- EFLAGS Resume Flag (RF) to prevent breakpoint re-entry
+- EDR detection/telemetry considerations (ETW single-step, DR snooping, context-call frequency)
+- Hooking/argument tampering for NT syscalls (e.g., `NtOpenProcess`, `NtCreateThreadEx`)
+
+Use Cases:
+- Bypass or avoid inline-hook integrity checks without modifying module code bytes
+- Intercept and sanitize sensitive syscall arguments (e.g., strip `PROCESS_VM_WRITE` / `PROCESS_CREATE_THREAD`)
+- Block or disrupt injection primitives by trapping `NtCreateThreadEx`/`CreateRemoteThread`-style flows
+- Build a minimal HWBP-based hook engine for research and tradecraft prototyping
+- Evaluate defensive detections around DR register usage and single-step ETW telemetry
+
+Keywords:
+hardware breakpoints, DR0, DR1, DR2, DR3, DR6, DR7, CONTEXT_DEBUG_REGISTERS, GetThreadContext, SetThreadContext, AddVectoredExceptionHandler, VEH, EXCEPTION_SINGLE_STEP, EFLAGS RF, NtOpenProcess, NtCreateThreadEx, ETW, Microsoft-Windows-Threat-Intelligence, inline hooks, ntdll.dll

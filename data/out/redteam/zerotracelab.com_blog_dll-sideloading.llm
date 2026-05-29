@@ -1,0 +1,26 @@
+Title:
+DLL Sideloading & Proxy DLL Loader in Rust (VLC case study)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains modern Windows DLL sideloading, focusing on how SafeDllSearchMode changes DLL search order but still allows hijacking DLLs loaded from an application’s own directory. It highlights constraints like KnownDlls (e.g., ntdll/kernel32) that cannot be sideloaded via normal search order, and shows how to hunt viable targets using ProcMon “NAME NOT FOUND” DLL load events. Using VLC as an example, it walks through identifying a target DLL (libvlc.dll), reverse engineering required exports/signatures with x64dbg and IDA, and building a malicious replacement DLL in Rust. It then improves stealth and usability by implementing a Proxy DLL: exporting/forwarding all original functions (hundreds of exports) to the legitimate DLL while executing a payload in a separate thread. The post also discusses OPSEC tradeoffs (prefer third-party apps over Microsoft binaries due to EDR scrutiny) and demonstrates running an implant inside the trusted signed process context.
+
+Technical Focus:
+- Windows DLL search order (SafeDllSearchMode) and application-directory precedence
+- KnownDlls and limitations of DLL hijacking
+- Sideload target discovery with Sysinternals ProcMon
+- Export table analysis and function signature recovery (x64dbg, IDA)
+- Proxy DLL / export forwarding via .def files and ordinal preservation
+- Payload execution via threaded loader/self-injection inside host process
+
+Use Cases:
+- Establishing execution/persistence by planting a malicious DLL next to a legitimate signed executable
+- Building proxy DLL loaders that preserve application functionality while running an implant
+- Red team tradecraft for selecting low-noise third-party sideload targets
+- Reverse engineering DLL exports to create compatible stubs/forwarders
+- Testing EDR visibility of signed-binary execution with in-process payloads
+
+Keywords:
+DLL sideloading, SafeDllSearchMode, DLL search order, KnownDlls, System32, ProcMon, Sysinternals, x64dbg, IDA Pro, dumpbin, export table, ordinals, .def file, proxy DLL, DLL forwarding, Rust, libvlc.dll, VLC, shellcode loader, self-injection
