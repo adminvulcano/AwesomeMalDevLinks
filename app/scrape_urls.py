@@ -7,6 +7,9 @@ import re
 import json
 from pathlib import Path
 from firecrawl import FirecrawlApp
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuration
 INPUT_DIR = Path("data/in")

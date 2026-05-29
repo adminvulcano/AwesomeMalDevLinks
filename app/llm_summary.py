@@ -13,6 +13,9 @@ import argparse
 from pathlib import Path
 from typing import Optional
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 PROMPT = """
