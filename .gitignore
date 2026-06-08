@@ -1,2 +1,7 @@
 .env
 log.txt
+*.pyc
+__pycache__/
+.git/
+scripts/*.csv
+bak/
