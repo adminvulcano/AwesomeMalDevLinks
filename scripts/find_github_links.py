@@ -137,11 +137,11 @@ def check_repo_status(repo_urls, csv_path=DEFAULT_DB_PATH, delay=0.5):
             existing_status = existing_data["status"]
             
             if existing_status == "valid":
-                print(f"  Skipping already checked URL: {url} [valid]")
+                #print(f"  Skipping already checked URL: {url} [valid]")
                 results["valid"].append((url, "Cached"))
                 continue
             elif existing_status == "invalid":
-                print(f"  Skipping already checked URL: {url} [invalid]")
+                #print(f"  Skipping already checked URL: {url} [invalid]")
                 results["invalid"].append((url, "Cached", "Previously marked invalid"))
                 continue
 

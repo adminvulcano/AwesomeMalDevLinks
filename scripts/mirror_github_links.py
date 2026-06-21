@@ -12,7 +12,7 @@ import sys
 import time
 import requests
 
-DEFAULT_DB_PATH = "githublinks.csv"
+DEFAULT_DB_PATH = "scripts/githublinks.csv"
 MIRROR_URL = "https://gitadd.r00ted.ch"
 
 
