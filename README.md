@@ -137,3 +137,39 @@ Note: It cannot handle more than 50 source files lol.
 * [Surfsense](https://github.com/MODSetter/SurfSense)
 * [AnythingLLM](https://anythingllm.com/)
 
+
+## Scripts 
+
+Define the keys in command line, or in .env:
+```
+FIRECRAWL_API_KEY=fc-...
+OPENAI_API_KEY=sk-...
+```
+
+
+`app/scrape_urls.py` gonna download links in `data/in/` using Firecrawl:
+```
+PS C:\Users\dobin\Repos\AwesomeMalDevLinks> python.exe .\app\scrape_urls.py
+Found 11 input files
+
+Processing topic: aioffense
+Found 16 URLs
+  [1/16] Processing: https://github.com/nuryslyrt/ORPHEUS
+    Saved to: data\out\aioffense\github.com_nuryslyrt_orpheus.md
+    Saved to: data\out\aioffense\github.com_nuryslyrt_orpheus.html
+    Saved to: data\out\aioffense\github.com_nuryslyrt_orpheus.json
+...
+```
+
+Then, use `app/llm_summary.py` to generate the .llm:
+
+```
+PS C:\Users\dobin\Repos\AwesomeMalDevLinks> python.exe .\app\llm_summary.py
+Found 1075 .md files total.
+
+[1/1075] aioffense\battlebench.ai.md
+  Content length: 4657 chars
+  Saved: battlebench.ai.llm
+
+...
+```
