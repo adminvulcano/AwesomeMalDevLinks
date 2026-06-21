@@ -1,0 +1,26 @@
+Title:
+LOLGlobs — Process execution through wildcard pattern evasion
+
+Type:
+Documentation / Reference (Web Catalog)
+
+Short Summary (4–8 sentences max):
+LOLGlobs is a curated catalog of “living off the land” commands across Linux, macOS, Windows CMD, and PowerShell that can be invoked using wildcard/globbing patterns to evade simplistic detections and allowlists. It focuses on abusing wildcard characters (e.g., `*`, `?`, character classes like `[a-z]`) to match and execute binaries/cmdlets without typing the exact command string defenders may be filtering on. Entries are organized by platform and operational category (discovery, download, execution, exfiltration, lateral movement, etc.) and mapped to MITRE ATT&CK technique IDs. The resource highlights how common utilities (e.g., `certutil`, `bitsadmin`, `rundll32`, `mshta`, `bash`, `curl`, `ssh`, PowerShell cmdlets) can be leveraged when command-line monitoring relies on naive substring or exact-match rules. It’s primarily useful for red teams and pentesters for tradecraft and for blue teams to harden detections against wildcard/regex bypasses. Its value is in turning “string-based detection gaps” into concrete, testable examples across multiple OS ecosystems.
+
+Technical Focus:
+- Wildcard/globbing-based command evasion (`*`, `?`, `[]`, brace patterns)
+- LOLBins/LOLBAS and native utility abuse across OSes
+- Command-line detection bypass (naive allowlists/blacklists, brittle regex)
+- MITRE ATT&CK mapping for execution, download, discovery, exfiltration, lateral movement
+- PowerShell cmdlet abuse patterns (e.g., `Invoke-*`, `Add-Type`, `New-Object`)
+- Windows signed binary proxy execution (e.g., `mshta`, `regsvr32`, `rundll32`)
+
+Use Cases:
+- Build and validate detection rules resilient to wildcard/glob obfuscation
+- Generate adversary emulation test cases for command-line telemetry pipelines
+- Identify alternative native tooling for download/execution when common strings are blocked
+- Train analysts on how “benign” utilities become execution and staging primitives
+- Create allowlisting policies based on behavior/parent-child/process lineage rather than exact command strings
+
+Keywords:
+LOLGlobs, globbing, wildcard evasion, command-line obfuscation, LOLBins, LOLBAS, PowerShell, Windows CMD, Linux, macOS, MITRE ATT&CK, T1059, T1105, T1218, mshta, rundll32, regsvr32, certutil, bitsadmin, WMI, wmic, Invoke-WebRequest, Invoke-RestMethod

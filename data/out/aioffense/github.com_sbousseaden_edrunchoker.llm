@@ -1,0 +1,26 @@
+Title:
+EDRUnChoker — Fileless WMI remediation for EDRChoker QoS throttling
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+EDRUnChoker is a defensive PowerShell toolkit that mitigates EDRChoker-style abuse of Windows QoS (via `pacer.sys`) used to throttle EDR agent network telemetry to near-zero bandwidth. It deploys a fileless WMI permanent event subscription in `root\subscription` that runs on a 5-second timer and executes embedded VBScript to enumerate and remove malicious QoS policies. The key implementation detail is using WMI with `WbemContext` `PolicyStore` to correctly enumerate policies in both `ActiveStore` and `GPO:localhost`, since plain WMI `ExecQuery` can miss ActiveStore policies created by `New-NetQosPolicy`/EDRChoker. It targets throttles based on known security product app paths and/or aggressive bandwidth limits (≤ 1 Mbps). The tool also emits Application log events under provider `EDRChokerDefense` for SOC visibility and recommends Sysmon monitoring for tampering with the WMI subscription objects. Useful primarily for Blue Teams/IR and endpoint engineering teams responding to or hardening against telemetry-throttling attacks.
+
+Technical Focus:
+- Windows QoS policy abuse and remediation (`New-NetQosPolicy`, `pacer.sys`)
+- WMI permanent event subscriptions (`root\subscription`, timers, consumers)
+- WMI enumeration with `WbemContext` and `PolicyStore` (ActiveStore vs GPO stores)
+- Fileless persistence/automation via `ActiveScriptEventConsumer` (VBScript)
+- Windows Event Log instrumentation for remediation evidence
+- Sysmon detections for WMI subscription tampering (Event IDs 19/20/21)
+
+Use Cases:
+- Detect and remove malicious QoS throttling policies targeting EDR/AV agents
+- Deploy host-based self-healing remediation against EDRChoker-like techniques
+- Provide SOC telemetry (Application log) for incident correlation and proof of cleanup
+- Baseline and monitor WMI subscription objects to detect attacker defense evasion
+- Validate QoS policy state across ActiveStore and local GPO policy stores
+
+Keywords:
+EDRChoker, EDRUnChoker, QoS, pacer.sys, New-NetQosPolicy, Get-NetQosPolicy, Windows Filtering Platform, WMI, root\\subscription, permanent event subscription, __EventFilter, ActiveScriptEventConsumer, VBScript, WbemContext, PolicyStore, ActiveStore, GPO:localhost, Application event log, Sysmon 19, Sysmon 20, Sysmon 21

@@ -1,0 +1,456 @@
+# https://titansoftwork.com/insight/doing_what_edrs_wont/
+
+<!DOCTYPE html><!-- AUTO-GENERATED INSIGHT POST PAGE --><html lang="en" class="is-blog-post" style="--blog-floating-top: 162px; --blog-progress-height: 596px;">
+  <body class="is-blog-post">
+    <div id="app" class="blog-app">
+      <div class="blog-loader" id="blog-loader" aria-hidden="true">
+        <div class="blog-loader__fill" id="blog-loader-fill" style="width: 0%;"></div>
+      </div>
+
+      
+
+      <main class="page blog-page" role="main">
+        <section class="section blog-hero" aria-label="Insights overview">
+          <div class="container">
+            <div class="section__eyebrow">Insights</div>
+            <div class="section__title">Blackbird: Doing What EDRs Won't.</div>
+            <p class="section__lead">There's a reason security products avoid kernel hooking. They are fragile, build-sensitive, and BSOD prone. Advanced malware analysis demands the visibility they provide. This post delves into the hook engine behind Blackbird and the struggle developing it.</p>
+          </div>
+        </section>
+
+        <section class="section blog-feed" aria-label="Insights">
+          <div class="container">
+            <div id="blog-status" class="blog-status" data-state="info"></div>
+
+            <div class="blog-view" data-blog-view="list">
+              <div id="blog-grid" class="blog-grid" aria-live="polite"><!-- BLOG-STATIC-LINKS-START -->
+        <article class="blog-card blog-card--no-thumb">
+          <a class="blog-card__link" href="https://titansoftwork.com/insight/detecting_syscalls/" aria-label="Read K2: Detecting Syscalls">
+            
+            <div class="blog-card__body">
+              <div class="blog-card__metaRow"><div class="blog-card__meta">20-05-2026 • 8damon</div><div class="blog-card__metaReading">8 min read</div></div>
+              <h2 class="blog-card__title">K2: Detecting Syscalls</h2>
+              <p class="blog-card__excerpt">SysWhispers, HellsGate, HeavensGate, SidewaysGate, SpoofGate, TFGate, DoomGate, whatever gate your tool is being detected before the initial handle fully opens. How do EDR's detect &amp; deny direct and indirect syscalls?</p>
+              <span class="blog-card__cta">Read article</span>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card blog-card--no-thumb">
+          <a class="blog-card__link" href="https://titansoftwork.com/insight/defeating_antivirtualization/" aria-label="Read Blackbird: Defeating Anti-Virtualization Technologies">
+            
+            <div class="blog-card__body">
+              <div class="blog-card__metaRow"><div class="blog-card__meta">20-04-2026 • 8damon</div><div class="blog-card__metaReading">13 min read</div></div>
+              <h2 class="blog-card__title">Blackbird: Defeating Anti-Virtualization Technologies</h2>
+              <p class="blog-card__excerpt">How does Blackbird make Windows lie to malware's faces? Most anti-analysis checks trust the kernel because they have no choice. Blackbird weaponizes this by modifying syscall, timing &amp; registry return data, erasing VM-identifiers and much, much more.</p>
+              <span class="blog-card__cta">Read article</span>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card blog-card--no-thumb">
+          <a class="blog-card__link" href="https://titansoftwork.com/insight/doing_what_edrs_wont/" aria-label="Read Blackbird: Doing What EDRs Won't.">
+            
+            <div class="blog-card__body">
+              <div class="blog-card__metaRow"><div class="blog-card__meta">13-03-2026 • 8damon</div><div class="blog-card__metaReading">9 min read</div></div>
+              <h2 class="blog-card__title">Blackbird: Doing What EDRs Won't.</h2>
+              <p class="blog-card__excerpt">There's a reason security products avoid kernel hooking. They are fragile, build-sensitive, and BSOD prone. Advanced malware analysis demands the visibility they provide. This post delves into the hook engine behind Blackbird and the struggle developing it.</p>
+              <span class="blog-card__cta">Read article</span>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card blog-card--no-thumb">
+          <a class="blog-card__link" href="https://titansoftwork.com/insight/syscall_execution/" aria-label="Read ActiveBreach Engine: Rethinking Syscall Execution Under EDR">
+            
+            <div class="blog-card__body">
+              <div class="blog-card__metaRow"><div class="blog-card__meta">05-02-2026 • 8damon</div><div class="blog-card__metaReading">16 min read</div></div>
+              <h2 class="blog-card__title">ActiveBreach Engine: Rethinking Syscall Execution Under EDR</h2>
+              <p class="blog-card__excerpt">Modern defensive tooling doesn’t need to see payloads to stop you, it only needs to see the call path. This post breaks down how Windows system calls are intercepted, how syscall stubs became signatures, and why ActiveBreach takes a fundamentally different approach.</p>
+              <span class="blog-card__cta">Read article</span>
+            </div>
+          </a>
+        </article>
+      <!-- BLOG-STATIC-LINKS-END --></div>
+              <div id="blog-pagination" class="blog-pagination" aria-label="Blog pagination"></div>
+            </div>
+
+            <div class="blog-view" data-blog-view="post">
+              <div class="blog-post-hero" aria-hidden="true">
+                <div class="blog-post-hero__overlay"></div>
+                <div class="blog-post-hero__content">TITAN INSIGHTS</div>
+              </div>
+
+              <div class="blog-post__layout">
+                <div class="blog-post__content">
+                  <div class="blog-post__header">
+                    <div class="blog-post__meta" id="blog-post-meta"><div class="blog-post__meta">13-03-2026 • 8damon</div><div class="blog-post__metaReading">9 min read</div></div>
+                    <h1 class="blog-post__title" id="blog-post-title">Blackbird: Doing What EDRs Won't.</h1>
+                  </div>
+                  <div class="blog-post__body markdown-body" id="blog-post-body"><h2 id="intro">Intro</h2>
+<p>Fair warning, this blogpost gets quite technical, goodluck!</p>
+<p>Kernel hooking is not difficult because a jump is difficult, that's easy.</p>
+<p>So why do <strong>EDR</strong> avoid kernel hooks? In itself they sound great, telemetry directly from the routines themselves, no callbacks required, full control over kernel components. It's not that easy.</p>
+<p>Controlling <em>all</em> of the conditions around kernel routines well enough so that the target routine still behaves exactly as it did before is extremely difficult. That means respecting instruction boundaries, patchguard, register state, paged pools, IRQL constraints, memory protections, SMP visibility, handler lifetime, unload sequencing, performance and failure atomicity. Miss any one of those and bugcheck!</p>
+<p>Sadly, EDRs also have to behave, since they are deployed on thousands, even millions of corporate and consumer systems. They can't afford to BSOD. <a href="https://github.com/8damon/Blackbird-Platform">Blackbird</a> has no such problem;</p>
+<p>This post covers the <a href="https://github.com/8damon/Blackbird-Platform/tree/stable/kernel">Blackbirds Kernel Hook Engine</a> AKA the most challenging component I've ever built.</p>
+<p>The paths under instrumentation are:</p>
+<ul>
+<li><code>NtQuerySystemInformation(Ex)</code></li>
+<li><code>NtQueryInformationProcess</code></li>
+<li><code>NtWriteVirtualMemory</code></li>
+<li><code>NtProtectVirtualMemory</code></li>
+<li><code>NtCreateSection</code></li>
+<li><code>NtMapViewOfSection</code></li>
+<li><code>NtAllocateVirtualMemory</code></li>
+<li><code>NtQuerySystemInformationEx</code></li>
+</ul>
+<p>Flow:</p>
+<ul>
+<li>if Blackbird is disarmed, pass through immediately</li>
+<li>if Blackbird is armed, only continue instrumentation when the caller PID is in the monitored set</li>
+<li>keep the instrument path safe under kernel execution constraints</li>
+<li>never violate the original routines execution semantics(!)</li>
+</ul>
+<p>Sounds simple right?</p>
+<hr>
+<h2 id="the-goal">The Goal</h2>
+<p>Blackbird needed lightweight telemetry on a narrow set of kernel-facing APIs that tend to matter for memory manipulation, section activity, and process inspection, I wanted this because Ob* &amp; Ps* callbacks provide too little information.</p>
+<p><img src="https://titansoftwork.com/content/insights/media/blackbird/NtAllocateVirtualMemoryBkHook.png" alt="BK_HOOK_NTALLOC" loading="lazy"></p>
+<p>This, is the goal. That's a clean, working, hooked <code>ntoskrnl.exe!NtAllocateVirtualMemory</code>.</p>
+<h2 id="problems-complexities-problems">Problems, Complexities &amp; Problems</h2>
+<p>The original hook logic inherited too much user-mode thinking.</p>
+<p>Usermode hooking is easy, especially <code>NtXxx</code> calls, as they all follow the same exact stub, with differing SSN's. Kernel? Not so much, did chatgpt just tell you to hook the SSDT? Bugcheck!</p>
+<p>The assumptions were:</p>
+<ul>
+<li>overwrite enough bytes to fit the hook</li>
+<li>build a trampoline and jump back</li>
+<li>if installation fails, free state and move on</li>
+<li>if the patch disassembles cleanly, the hook is probably fine</li>
+</ul>
+<p>That includes:</p>
+<ul>
+<li>complete instruction boundaries</li>
+<li>correct register state</li>
+<li>correct cross-core patch visibility</li>
+<li>failure handling that restores executable state before freeing anything</li>
+</ul>
+<p>This was NOT considered early on.</p>
+<h2 id="what-actually-broke">What Actually Broke</h2>
+<p>There were three real failure classes.</p>
+<h3 id="1-truncated-prologues">1. Truncated Prologues</h3>
+<p>The first issue was boundary selection.</p>
+<p>Some overwrite lengths cut through live instructions, which meant the trampoline replayed instruction fragments instead of complete instructions. Control flow then returned into a function that was already semantically poisoned.</p>
+<p>First major lesson was that just because it covers the hook length doesn't mean it doesn't slice the kernel routine mid-instruction.</p>
+<p>The logs that made this obvious were the live prologue dumps from install.</p>
+<p>A one-byte miss was enough to Bugcheck!</p>
+<p>This happened a lot.</p>
+<h3 id="2-register-clobbering-hook-shape">2. Register-Clobbering Hook Shape</h3>
+<p>The second issue was the hook encoding itself.</p>
+<p>A <code>mov rax, imm64; jmp rax</code> style redirect is convenient, but it mutates <code>RAX</code>. That is not automatically safe just because it is common. A lot of targets care.</p>
+<p><code>NtAllocateVirtualMemory</code> was the clearest case. Early routine state was sensitive enough that clobbering <code>RAX</code> would destroy the kernel routine itself. The jump worked. The routine itself did not.</p>
+<h3 id="3-unsafe-rollback">3 Unsafe Rollback</h3>
+<p>The third issue was failure handling.</p>
+<p>One install failure path could leave the target routine patched while the trampoline state was already being torn down. That is a stale live entry point into freed executable memory, which is exactly the kind of bug that turns debugging into archaeology. Now if install fails, original bytes must be restored before anything else is released.</p>
+<hr>
+<h2 id="how-the-hook-engine-works-now">How the Hook Engine Works Now</h2>
+<p>The engine is descriptor driven. Each hook target is described up front by <code>BLACKBIRD_NTAPI_HOOK_DESCRIPTOR</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">BLACKBIRD_NTAPI_HOOK_DESCRIPTOR</span>
+{</span>
+    PCSTR ApiName;
+    PCWSTR Name0;
+    PCWSTR Name1;
+    PCWSTR Name2;
+    PVOID HookFunction;
+    ULONG OverwriteLength;
+    BOOLEAN Required;
+    ULONGLONG FallbackNtosOffset;
+    UCHAR FallbackSignature[<span class="hljs-number">8</span>];
+    ULONG FallbackSignatureSize;
+} BLACKBIRD_NTAPI_HOOK_DESCRIPTOR;
+</code></pre>
+<p>That descriptor specs:</p>
+<ul>
+<li>the logical API name</li>
+<li>the export names to try</li>
+<li>the hook entry point</li>
+<li>the overwrite length validated for that target</li>
+<li>whether the hook is required</li>
+<li>optional fallback signature metadata if export resolution fails</li>
+</ul>
+<p>Runtime state is stored in <code>BLACKBIRD_NTAPI_HOOK</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">BLACKBIRD_NTAPI_HOOK</span>
+{</span>
+    BLACKBIRD_NTAPI_HOOK_DESCRIPTOR Descriptor;
+    PVOID RoutineAddress;
+    PVOID Trampoline;
+    UCHAR OriginalPatch[BLACKBIRD_NTAPI_MAX_OVERWRITE];
+    BOOLEAN Installed;
+} BLACKBIRD_NTAPI_HOOK;
+</code></pre>
+<h3 id="resolving-the-target-routine">Resolving the Target Routine</h3>
+<p>Install begins by resolving the target export using <code>MmGetSystemRoutineAddress</code>, trying up to three names:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">Hook-&gt;RoutineAddress =
+    BLACKBIRDNtApiResolveAddress(
+        Hook-&gt;Descriptor.Name0,
+        Hook-&gt;Descriptor.Name1,
+        Hook-&gt;Descriptor.Name2
+    );
+</code></pre>
+<p>If export resolution misses, the engine can fall back to SSDT/signature-based resolution.</p>
+<p>That fallback exists because <code>MmGetSystemRoutineAddress</code> ignores certain symbols.</p>
+<pre><code class="language-c hljs" data-highlighted="yes"><span class="hljs-keyword">if</span> (!BLACKBIRDNtApiIsKernelPointer(Hook-&gt;RoutineAddress))
+{
+    <span class="hljs-keyword">return</span> STATUS_PROCEDURE_NOT_FOUND;
+}
+</code></pre>
+<h3 id="capturing-the-prologue">Capturing the Prologue</h3>
+<p>Once the routine is resolved, the engine copies the original bytes from the target prologue into <code>OriginalPatch</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">RtlCopyMemory(Hook-&gt;OriginalPatch, Hook-&gt;RoutineAddress, overwriteLength);
+</code></pre>
+<p>Debug printing. Even in the kernel, I found myself spamming <code>DbgPrintEx</code> everywhere to see what WinDbg would pick up on, if you run Blackbird with a KdDebugger attached you'll see exactly what I mean.</p>
+<hr>
+<h2 id="the-final-hook">The Final Hook</h2>
+<p><img src="https://titansoftwork.com/content/capabilities/blackbird/BlackbirdHookDisassembly.png" alt="BLACKBIRD_HOOK" loading="lazy"></p>
+<p>The hook now uses a RIP-indirect absolute jump generated by <code>BLACKBIRDNtApiBuildJump</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">VOID <span class="hljs-title function_">BLACKBIRDNtApiBuildJump</span><span class="hljs-params">(UCHAR *Patch, PVOID Destination)</span>
+{
+    ULONGLONG destination64;
+    ULONG displacement = <span class="hljs-number">0</span>;
+
+    destination64 = (ULONGLONG)(ULONG_PTR)Destination;
+    Patch[<span class="hljs-number">0</span>] = <span class="hljs-number">0xFF</span>;
+    Patch[<span class="hljs-number">1</span>] = <span class="hljs-number">0x25</span>;
+    RtlCopyMemory(&amp;Patch[<span class="hljs-number">2</span>], &amp;displacement, <span class="hljs-keyword">sizeof</span>(displacement));
+    RtlCopyMemory(&amp;Patch[<span class="hljs-number">6</span>], &amp;destination64, <span class="hljs-keyword">sizeof</span>(destination64));
+}
+</code></pre>
+<p>Which produces:</p>
+<pre><code class="language-x86asm hljs" data-highlighted="yes">FF <span class="hljs-number">25</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>
+&lt;<span class="hljs-number">8</span>-<span class="hljs-built_in">byte</span> <span class="hljs-meta">absolute</span> target&gt;
+</code></pre>
+<p>Patch size is 14 bytes.</p>
+<p>The hook no longer needs to burn a general-purpose register just to redirect control flow. No <code>mov rax, imm64; jmp rax</code>, which caused huge problems before. The patch bytes after the jump are padded with NOPs out to the validated overwrite length.</p>
+<h3 id="building-the-trampoline">Building the Trampoline</h3>
+<p>The trampoline is allocated from <code>NonPagedPoolExecute</code> and contains:</p>
+<ul>
+<li>the stolen prologue bytes</li>
+<li>a jump back to <code>RoutineAddress + overwriteLength</code></li>
+</ul>
+<p><code>BLACKBIRDNtApiHookInstall</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">trampoline =
+    ExAllocatePoolWithTag(
+        NonPagedPoolExecute,
+        overwriteLength + BLACKBIRD_NTAPI_PATCH_SIZE,
+        BLACKBIRD_NTAPI_HOOK_TAG
+    );
+
+RtlCopyMemory(trampoline, Hook-&gt;OriginalPatch, overwriteLength);
+BLACKBIRDNtApiBuildJump(
+    trampolineJump,
+    (PVOID)((PUCHAR)Hook-&gt;RoutineAddress + overwriteLength)
+);
+RtlCopyMemory(
+    (PUCHAR)trampoline + overwriteLength,
+    trampolineJump,
+    BLACKBIRD_NTAPI_PATCH_SIZE
+);
+</code></pre>
+<p>The trampoline is then stored as the "original" function pointer for that hook target. Every hook handler calls through that trampoline, not through some reconstructed fantasy of the original routine.</p>
+<h3 id="writing-into-read-only-kernel-text">Writing Into Read-Only Kernel Text</h3>
+<p>You may be wondering, how?</p>
+<p>Yeah me too.</p>
+<p>The engine remaps the target through an MDL and temporarily gives that mapping executable read-write protection.</p>
+<p>What's an MDL?</p>
+<blockquote>
+<p>An <a href="https://medium.com/@WaterBucket/understanding-memory-descriptor-lists-mdls-for-windows-vulnerability-research-exploit-7de8729caee7">MDL (Memory Descriptor List)</a> describes physical pages and allows the kernel to map them with different protections. Here it's used to temporarily create a writable mapping of normally read-only kernel code.</p>
+</blockquote>
+<pre><code class="language-c hljs" data-highlighted="yes">mdl = IoAllocateMdl(Destination, (ULONG)Size, FALSE, FALSE, <span class="hljs-literal">NULL</span>);
+MmProbeAndLockPages(mdl, KernelMode, IoReadAccess);
+mappedAddress = MmMapLockedPagesSpecifyCache(
+    mdl,
+    KernelMode,
+    MmCached,
+    <span class="hljs-literal">NULL</span>,
+    FALSE,
+    NormalPagePriority
+);
+MmProtectMdlSystemAddress(mdl, PAGE_EXECUTE_READWRITE);
+</code></pre>
+<p>Worth noting the cache type here: <code>MmCached</code>, not <code>MmNonCached</code>. I originally used <code>MmNonCached</code> and it caused problems. Creating overlapping UC and WB aliases to the same physical page is undefined behaviour per <a href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf">Intel Vol. 3A §11.12.4</a>, and it means the write can bypass the L1/L2 cache entirely, leaving remote CPU icaches stale in a way that MFENCE alone can't fix. With <code>MmCached</code> the store goes through the normal WB cache hierarchy and the IPI-forced serialisation on each remote CPU is enough.</p>
+<p>Then came another problem... Cores! Yes, the CPU ones. Turns out writing directly to kernel memory without any sort of synchronization causes problems. I've had to learn what <a href="https://en.wikipedia.org/wiki/Inter-processor_interrupt">IPI's</a> are.</p>
+<p>Basically, in usermode when you write to memory, the kernel memory handler will automatically do this for you, when working in kernel space it's on you. An IPI (<a href="https://en.wikipedia.org/wiki/Inter-processor_interrupt">Inter-Processor Interrupt</a>) is exactly what it sounds like: an <a href="https://en.wikipedia.org/wiki/Interrupt">interrupt</a> sent from one CPU to the others. It forces all processors to rendezvous so they can observe the same memory state before continuing execution. Without this, one CPU could execute invalid kernel memory, bugcheck!</p>
+<pre><code class="language-c hljs" data-highlighted="yes">KeIpiGenericCall(BLACKBIRDNtApiBroadcastWrite, (ULONG_PTR)&amp;patchContext);
+</code></pre>
+<p>Inside the broadcast callback, one core performs the write while the rest rendezvous under the generic call mechanism:</p>
+<pre><code class="language-c hljs" data-highlighted="yes"><span class="hljs-keyword">if</span> (InterlockedCompareExchange(&amp;patchContext-&gt;Applied, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>) == <span class="hljs-number">0</span>)
+{
+    <span class="hljs-comment">// Commit bytes 1..Size-1 first, byte 0 last.</span>
+    <span class="hljs-comment">// Byte 0 is 0xFF, the JMP opcode. Writing the tail first means any</span>
+    <span class="hljs-comment">// concurrent observer reading the hook site before we're done still</span>
+    <span class="hljs-comment">// sees the original byte 0, so the site stays in a valid pre-hook</span>
+    <span class="hljs-comment">// state until the final store makes the jump live.</span>
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">1</span>; i &lt; patchContext-&gt;Size; ++i)
+    {
+        patchContext-&gt;Destination[i] = patchContext-&gt;Source[i];
+    }
+    patchContext-&gt;Destination[<span class="hljs-number">0</span>] = patchContext-&gt;Source[<span class="hljs-number">0</span>];
+
+    KeMemoryBarrier();
+    {
+        <span class="hljs-type">int</span> cpuInfo[<span class="hljs-number">4</span>];
+        __cpuid(cpuInfo, <span class="hljs-number">0</span>);
+    }
+}
+</code></pre>
+<p><code>KeMemoryBarrier()</code> issues an MFENCE but it isn't a serialising instruction, so it doesn't flush the instruction cache on remote processors. Self-modifying code on x86-64 needs a serialising instruction on the writing CPU after the stores complete. <code>CPUID</code> is the lightest one available in ring 0 on both Intel and AMD. The IPI delivery already forced a serialising interrupt on every remote CPU before they resumed, so the <code>CPUID</code> here only covers the writing core itself.</p>
+<h3 id="verification-and-rollback">Verification and Rollback</h3>
+<p>After the patch is applied, the engine immediately re-reads the modified bytes and compares them against the expected patch.</p>
+<pre><code class="language-c hljs" data-highlighted="yes">RtlCopyMemory(verifyPatch, Hook-&gt;RoutineAddress, overwriteLength);
+
+<span class="hljs-keyword">if</span> (RtlCompareMemory(verifyPatch, patch, overwriteLength) != overwriteLength)
+{
+    BLACKBIRDNtApiRollbackPatchOnInstallFailure(Hook, overwriteLength);
+    <span class="hljs-keyword">return</span> STATUS_DATA_ERROR;
+}
+</code></pre>
+<p>If verification fails, rollback restores the original prologue bytes before anything else is freed:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">rollbackStatus = BLACKBIRDNtApiWriteReadonlyMemory(
+    Hook-&gt;RoutineAddress,
+    Hook-&gt;OriginalPatch,
+    OverwriteLength
+);
+</code></pre>
+<hr>
+<h2 id="hook-execution">Hook Execution</h2>
+<p>Each hook follows the same broad structure:</p>
+<ol>
+<li>increment the in-flight counter</li>
+<li>validate the original trampoline pointer</li>
+<li>call the original routine</li>
+<li>sanitize or observe output if needed</li>
+<li>check whether logging should occur</li>
+<li>emit ETW telemetry</li>
+<li>release rundown protection</li>
+<li>decrement the in-flight counter</li>
+</ol>
+<p>For example, <code>BLACKBIRDNtWriteVirtualMemoryHook</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">BLACKBIRDNtApiHookEnter();
+
+<span class="hljs-keyword">if</span> (g_OriginalNtWriteVirtualMemory == <span class="hljs-literal">NULL</span>)
+{
+    status = STATUS_INVALID_DEVICE_STATE;
+    <span class="hljs-keyword">goto</span> Exit;
+}
+
+status = g_OriginalNtWriteVirtualMemory(
+    ProcessHandle,
+    BaseAddress,
+    Buffer,
+    BufferSize,
+    NumberOfBytesWritten
+);
+
+<span class="hljs-keyword">if</span> (!BLACKBIRDNtApiShouldLog(&amp;callerPid))
+{
+    <span class="hljs-keyword">goto</span> Exit;
+}
+
+observedWritten = BLACKBIRDNtApiReadSizeTSafe(NumberOfBytesWritten);
+BLACKBIRDNtApiLog(
+    <span class="hljs-string">"NtWriteVirtualMemory"</span>,
+    callerPid,
+    (UINT64)(ULONG_PTR)ProcessHandle,
+    (UINT64)(ULONG_PTR)BaseAddress,
+    (UINT64)(ULONG_PTR)Buffer,
+    (UINT64)BufferSize,
+    (UINT64)observedWritten,
+    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+    status
+);
+</code></pre>
+<h3 id="why-ntallocatevirtualmemory-gets-special-treatment">Why <code>NtAllocateVirtualMemory</code> Gets Special Treatment</h3>
+<p><code>NtAllocateVirtualMemory</code> is not hooked through the same plain C path as the rest. The hook descriptor points to <code>BLACKBIRDNtAllocateVirtualMemoryHookStub</code> instead of a normal C handler.</p>
+<p><code>NtAllocateVirtualMemory</code> was one of the routines that proved especially sensitive to ABI and entry-state assumptions. Using a dedicated stub path reduces how much glue code gets to interfere with the call state before execution reaches the original trampoline.</p>
+<p>There is also a pre-log path, <code>BLACKBIRDNtAllocateVirtualMemoryPreLog</code>, which records arguments only after the same gating logic is satisfied:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">observedBase = BLACKBIRDNtApiReadPointerSafe(BaseAddress);
+observedRegionSize = BLACKBIRDNtApiReadSizeTSafe(RegionSize);
+
+BLACKBIRDNtApiLog(
+    <span class="hljs-string">"NtAllocateVirtualMemory"</span>,
+    callerPid,
+    (UINT64)(ULONG_PTR)ProcessHandle,
+    (UINT64)(ULONG_PTR)observedBase,
+    (UINT64)observedRegionSize,
+    (UINT64)ZeroBits,
+    (UINT64)AllocationType,
+    (UINT64)Protect,
+    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+    STATUS_SUCCESS
+);
+</code></pre>
+<h3 id="in-flight-tracking-unloads">In-Flight Tracking &amp; Unloads</h3>
+<p>Every hook entry increments <code>g_NtApiHookInFlight</code>:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">VOID <span class="hljs-title function_">BLACKBIRDNtApiHookEnter</span><span class="hljs-params">(VOID)</span>
+{
+    InterlockedIncrement(&amp;g_NtApiHookInFlight);
+}
+</code></pre>
+<p>Every exit decrements it and corrects underflow if anything goes wrong:</p>
+<pre><code class="language-c hljs" data-highlighted="yes">remaining = InterlockedDecrement(&amp;g_NtApiHookInFlight);
+<span class="hljs-keyword">if</span> (remaining &lt; <span class="hljs-number">0</span>)
+{
+    InterlockedExchange(&amp;g_NtApiHookInFlight, <span class="hljs-number">0</span>);
+}
+</code></pre>
+<p>During uninitialize, Blackbird does not immediately free trampolines. It first:</p>
+<ol>
+<li>marks the monitor unloading</li>
+<li>deactivates all hooks by restoring original bytes</li>
+<li>waits for rundown release</li>
+<li>waits for in-flight hook entries to drain</li>
+<li>only then frees trampoline state</li>
+</ol>
+<pre><code class="language-c hljs" data-highlighted="yes"><span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; BLACKBIRD_HOOK_COUNT; ++i)
+{
+    BLACKBIRDNtApiHookDeactivate(&amp;g_Hooks[i]);
+}
+
+ExWaitForRundownProtectionRelease(&amp;g_NtApiRundown);
+BLACKBIRDNtApiWaitForInFlightCalls();
+
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; BLACKBIRD_HOOK_COUNT; ++i)
+{
+    BLACKBIRDNtApiHookFreeTrampoline(&amp;g_Hooks[i]);
+}
+</code></pre>
+<h3 id="performance">Performance</h3>
+<p>Drivers have to be fast. Very fast. <a href="https://en.wikipedia.org/wiki/IRQL">IRQL</a>'s must be cleared very quickly. If you've ever opened <a href="https://systeminformer.sourceforge.io/">SystemInformer</a> and watched the <em>System Calls Delta</em> stat you'll see that hundreds and thousands of syscalls execute every delta cycle. Now imagine a extra routine (a hook), on a lot of the core kernel functions, doing a bunch of processing and copying in that extremely critical path. Sounds slow right? It is.</p>
+<p>I don't want to slow the system to a crawl, so I use a very simple state machine;</p>
+<p>If the driver is not armed, the path exits quickly.</p>
+<p>If the PID is not monitored, the path exits quickly.</p>
+<p>If the current IRQL is wrong, the path exits quickly.</p>
+<p>The hook engine still exists in the function entry path, but if the driver isnt armed, and if the PID the syscall is coming from isn't in the drivers armed list, it ignores it.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I see why people dislike kernel development. The amount of variables to constantly consider, reconsider and recheck again and again cause huge cognitive load. The debugging mechanisms being WinDbg, printing and <code>analyze -v</code> on bugchecks is extremely frustrating and causes slow debugging.</p>
+<p>I also see how powerful it is, and why AntiCheats &amp; EDRs live down here. There's a lot of misconcepts about Patchguard (KPP), people seem to think it protects the whole kernel, it does not. It is a telemetry goldmine, unfortunately any sophisticated EDR will make it almost impossible for userland malware to stay undetected, unless their heuristics are off. Not even getting started on the Hypervisors being brought in.</p>
+<p>After spending significant time developing Blackbird to first of all detect my <em>own</em> frameworks, I realized what a large misconception a large part of the "maldev" community has surrounding EDRs. My project <strong>ActiveBreach</strong> is effective yes, until it faces a real EDR. That project is seen as "modern" and <strong>SysWhispers5</strong> just released, still with the same misconcepts it had 5 years ago. Stackwalking and spoofing is one thing, but your allocations, threads, queries, handles, <em>every</em> single thing is monitored.</p>
+</div>
+                </div>
+
+                
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      
+    </div>
+
+  
+
+
+<div class="imageViewer">
+    <div class="imageViewer__viewport" data-image-viewer-viewport="">
+      <img class="imageViewer__image" alt="" data-image-viewer-image="">
+    </div>
+    <div class="imageViewer__caption" data-image-viewer-caption=""></div>
+  </div></body></html>

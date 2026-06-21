@@ -1,0 +1,24 @@
+Title:
+Invoke-NetLoader
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Invoke-NetLoader is a PowerShell wrapper around Flangvik’s NetLoader, inspired by PowerSharpPack-style in-memory execution workflows. It is designed to help operators load and execute arbitrary C#/.NET binaries via PowerShell, with the stated intent of combining it with PowerShell obfuscation and AMSI bypass techniques to evade AV/EDR. The repository primarily provides a single PowerShell script (`Invoke-NetLoader.ps1`) plus a brief README and usage example. It’s most useful for red teams and pentesters who need a flexible .NET payload loader in post-exploitation scenarios. The interesting aspect is the focus on integrating a known .NET loader into a PowerShell-based tradecraft chain (obfuscation + AMSI bypass + in-memory execution).
+
+Technical Focus:
+- PowerShell-based .NET payload loading
+- In-memory execution of C# assemblies
+- AMSI bypass integration (operator-supplied)
+- PowerShell obfuscation compatibility
+- NetLoader/PowerSharpPack-style execution patterns
+
+Use Cases:
+- Execute C# post-exploitation tooling from PowerShell without writing binaries to disk
+- Wrap and deliver .NET tradecraft through PowerShell launchers
+- Combine with AMSI bypass + script obfuscation for AV/EDR evasion testing
+- Rapid operator workflow for loading multiple .NET utilities during engagements
+
+Keywords:
+PowerShell, Invoke-NetLoader, NetLoader, PowerSharpPack, .NET, C#, in-memory execution, assembly loading, AMSI, AMSI bypass, obfuscation, AV evasion, EDR evasion, post-exploitation, loader, red team, pentest, Windows, offensive tooling

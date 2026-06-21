@@ -1,0 +1,25 @@
+Title:
+PPLShade
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PPLShade is a BYOVD (Bring Your Own Vulnerable Driver) tool designed to manipulate Windows Protected Process Light (PPL) protections from kernel mode. It targets the problem of accessing, dumping, or tampering with security-sensitive processes (e.g., LSASS or AV/EDR components) that are protected by PPL and normally resist user-mode access. The repository includes a Visual Studio solution and bundled kernel drivers (e.g., LECOMAx64.sys, ipctype.sys) used as the vulnerable primitives to achieve kernel-level memory/process manipulation. The core concept is leveraging a signed-but-vulnerable driver to perform privileged operations that can downgrade/alter process protection state. It is primarily useful for red teams and pentesters validating defensive controls around driver loading, PPL enforcement, and credential theft protections, and for blue teams to build detections around BYOVD and PPL tampering. It’s interesting because it operationalizes a common real-world bypass path: kernel-assisted defeat of PPL without needing a bespoke kernel exploit.
+
+Technical Focus:
+- BYOVD tradecraft (signed vulnerable driver abuse)
+- Windows Protected Process Light (PPL) internals and tampering
+- Kernel-mode process/memory manipulation primitives
+- Driver loading and abuse paths on Windows x64
+- EDR/AV and LSASS access bypass patterns
+
+Use Cases:
+- Disabling/downgrading PPL to enable LSASS dumping in controlled assessments
+- Testing EDR/AV resilience against BYOVD-based kernel tampering
+- Validating enterprise controls: driver blocklists (WDAC), HVCI/Memory Integrity, vulnerable driver mitigation
+- Building detections for suspicious driver loads and PPL state changes
+- Reproducing and studying PPL bypass techniques in a lab
+
+Keywords:
+PPL, Protected Process Light, BYOVD, vulnerable driver, Windows kernel, kernel-mode, driver exploitation, LSASS, credential dumping, EDR bypass, AV tampering, signed driver abuse, WDAC, HVCI, Memory Integrity, process protection, SeDebugPrivilege, Nt/Zw APIs, Windows internals

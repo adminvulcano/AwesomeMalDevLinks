@@ -35,13 +35,13 @@ https://github.com/jdu2600/Etw-SyscallMonitor
 https://github.com/jdu2600/EtwTi-FluctuationMonitor
 https://github.com/jdu2600/Windows10EtwEvents?tab=readme-ov-file
 https://github.com/jonny-jhnson/JonMon
-https://github.com/jonny-jhnson/TelemetrySource/tree/main/Microsoft-Windows-Threat-Intelligence
+https://github.com/jonny-jhnson/TelemetrySource/
 https://github.com/jsecurity101/JonMon/wiki/Event-Mapping
 https://github.com/jsecurity101/Presentations/blob/main/JonMon.pdf
 https://github.com/jsecurity101/TelemetrySource
 https://github.com/mandiant/SilkETW
 https://github.com/microsoft/krabsetw
-https://github.com/nasbench/EVTX-ETW-Resources/tree/main
+https://github.com/nasbench/EVTX-ETW-Resources
 https://github.com/pathtofile/SealighterTI
 https://github.com/rabbitstack/fibratus
 https://github.com/sensepost/mydumbedr
@@ -121,3 +121,11 @@ https://github.com/Kudaes/Puzzle
 https://trustedsec.com/blog/the-defensive-stack-is-exposed
 https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
 https://github.com/HackingLZ/defender_overview
+https://github.com/adanto/EtwTiViewer
+https://github.com/idov31/EtwSuite
+https://jonny-johnson.medium.com/no-agent-no-problem-discovering-remote-edr-8ca60596559f
+https://titansoftwork.com/insight/doing_what_edrs_wont/
+https://github.com/TwoSevenOneT/EDRChoker
+https://github.com/sbousseaden/EDRUnChoker
+https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags
+https://github.com/winterknife/EVENSTAR/tree/master/KernelToUserInjector

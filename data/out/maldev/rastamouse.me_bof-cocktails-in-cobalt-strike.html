@@ -1,0 +1,273 @@
+# https://rastamouse.me/bof-cocktails-in-cobalt-strike/
+
+<!DOCTYPE html><html lang="en">
+
+<body class="post-template tag-cobalt-strike tag-crystal-palace is-head-left-logo is-dropdown-loaded">
+<div class="site">
+
+    
+
+
+    <div class="site-content">
+        
+<main class="site-main">
+
+        <article class="single post tag-cobalt-strike tag-crystal-palace no-image">
+
+        
+
+    <div class="single-content gh-content gh-canvas">
+        <p>In a previous post, I wrote about <a href="https://rastamouse.me/bof-cocktails/" rel="noreferrer">BOF Cocktails</a> - an execution pattern to merge tradecraft into postex BOFs so they didn't have to rely on an agent/loader for their evasion.  That post outlines the problem areas more fully, so I encourage you to read that first.</p><p>At the time, Cobalt Strike did not have a nice way to intercept BOF execution, so we had to hack around it using <code>alias_clear</code> to override commands exposed by other Aggressor scripts.  Fortunately, as was announced in the CS 4.13 release party <a href="https://www.cobaltstrike.com/resources/videos/cobalt-strike-technical-walkthrough" rel="noreferrer">webinar</a>, Cobalt Strike has a new Aggressor hook called <a href="https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics_aggressor-scripts/as-resources_hooks.htm#BEACON_INLINE_EXECUTE" rel="noreferrer"><strong>BEACON_INLINE_EXECUTE</strong></a>.  Thank you for reading my blog CS team 😄.</p><p>This hook is fired whenever Beacon is instructed to execute a BOF and presents the opportunity for operators to perform actions/processing on it before it's sent to Beacon.</p><p>The hook receives the original BOF in raw bytes, <code>$1</code>, and expects us to return a modified BOF, also in raw bytes.  When using Crystal Palace, we process it through a specification file and return the transformed object.</p><figure class="kg-card kg-code-card"><pre class="language-perl" tabindex="0"><code class="language-perl">import crystalpalace<span class="token operator">.</span>spec<span class="token operator">.</span><span class="token operator">*</span> from<span class="token punctuation">:</span> crystalpalace<span class="token operator">.</span>jar<span class="token punctuation">;</span>
+import java<span class="token operator">.</span>util<span class="token operator">.</span>HashMap<span class="token punctuation">;</span>
+
+<span class="token comment"># $1 - raw BOF bytes</span>
+set BEACON_INLINE_EXECUTE
+<span class="token punctuation">{</span>
+    <span class="token keyword">local</span><span class="token punctuation">(</span> <span class="token string">'$bof $spec_path $spec $capability $final'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token variable">$bof</span> <span class="token operator">=</span> <span class="token variable">$1</span><span class="token punctuation">;</span>
+
+    <span class="token variable">$spec_path</span>  <span class="token operator">=</span> script_resource<span class="token punctuation">(</span> <span class="token string">"cocktail.spec"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$spec</span>       <span class="token operator">=</span> <span class="token punctuation">[</span> LinkSpec Parse<span class="token punctuation">:</span> <span class="token variable">$spec_path</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token variable">$capability</span> <span class="token operator">=</span> <span class="token punctuation">[</span> Capability Parse<span class="token punctuation">:</span> cast<span class="token punctuation">(</span> <span class="token variable">$bof</span><span class="token punctuation">,</span> <span class="token string">'b'</span> <span class="token punctuation">)</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token variable">$final</span>      <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token variable">$spec</span> run<span class="token punctuation">:</span> <span class="token variable">$capability</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> new HashMap <span class="token punctuation">]</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token variable">$final</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><figcaption><p><span style="white-space: pre-wrap;">cocktail.cna</span></p></figcaption></figure><p>You're free to do anything you want in the spec file.  The following is a simple example of instrumenting calls to OpenProcessToken.</p><figure class="kg-card kg-code-card"><pre class="language-text" tabindex="0"><code class="language-text">x86:
+    push $OBJECT              # grab the bof
+        make coff +optimize   # turn it into a coff-exporter object
+    
+    load "bin/hooks.x86.o"    # grab the hooks
+        merge                 # merge with the bof
+
+    mergelib "libtcg.x86.zip" # merge the tcg library
+    
+    attach "ADVAPI32$OpenProcessToken" "__OpenProcessToken"  # add a hook
+
+    export  # export the merged bof
+
+
+x64:
+    push $OBJECT
+        make coff +optimize
+    
+    load "bin/hooks.x64.o"
+        merge
+
+    mergelib "libtcg.x64.zip"
+    
+    attach "ADVAPI32$OpenProcessToken" "_OpenProcessToken"
+
+    export
+</code></pre><figcaption><p><span style="white-space: pre-wrap;">cocktail.spec</span></p></figcaption></figure><figure class="kg-card kg-code-card"><pre class="language-c" tabindex="0"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;windows.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"tcg.h"</span></span>
+
+DECLSPEC_IMPORT BOOL WINAPI ADVAPI32$<span class="token function">OpenProcessToken</span><span class="token punctuation">(</span> HANDLE<span class="token punctuation">,</span> DWORD<span class="token punctuation">,</span> PHANDLE <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+BOOL WINAPI <span class="token function">_OpenProcessToken</span><span class="token punctuation">(</span> HANDLE ProcessHandle<span class="token punctuation">,</span> DWORD DesiredAccess<span class="token punctuation">,</span> PHANDLE TokenHandle <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">dprintf</span><span class="token punctuation">(</span> <span class="token string">"[*] _OpenProcessToken\n"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dprintf</span><span class="token punctuation">(</span> <span class="token string">"  -&gt; ProcessHandle: 0x%p\n"</span><span class="token punctuation">,</span> ProcessHandle <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dprintf</span><span class="token punctuation">(</span> <span class="token string">"  -&gt; DesiredAccess: %d\n"</span><span class="token punctuation">,</span> DesiredAccess <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> ADVAPI32$<span class="token function">OpenProcessToken</span><span class="token punctuation">(</span> ProcessHandle<span class="token punctuation">,</span> DesiredAccess<span class="token punctuation">,</span> TokenHandle <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><figcaption><p><span style="white-space: pre-wrap;">hooks.c</span></p></figcaption></figure><figure class="kg-card kg-image-card"><img src="https://storage.ghost.io/c/36/91/36918caa-651a-469a-9d4d-1ba06e2217bf/content/images/2026/06/image-1.png" class="kg-image" alt="" loading="lazy" width="1920" height="1139"></figure><p>There's no much else to say other than thanks for the feature 👍</p>
+    </div>
+
+    <div class="gh-canvas">
+    
+    </div>
+
+</article>
+            <section class="related-wrapper gh-canvas">
+        <h3 class="related-title">You might also like...</h3>
+        <div class="related-feed">
+                <article class="feed public post no-image">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-day">
+            26
+        </div>
+        <div class="feed-calendar-month">
+            May
+        </div>
+    </div>
+
+    <h2 class="feed-title">Module Stomping PIC</h2>
+
+    <div class="feed-right">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon icon-star">
+    <path d="M16 23.027L24.24 28l-2.187-9.373 7.28-6.307-9.587-.827-3.747-8.827-3.747 8.827-9.587.827 7.267 6.307L7.759 28l8.24-4.973z"></path>
+</svg>        <div class="feed-length">
+            4 min read
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon feed-icon">
+    <path d="M11.453 22.107L17.56 16l-6.107-6.12L13.333 8l8 8-8 8-1.88-1.893z"></path>
+</svg>
+    <a class="u-permalink" href="https://rastamouse.me/module-stomping-pic/" aria-label="Module Stomping PIC"></a>
+
+</article>                <article class="feed public post no-image">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-day">
+            25
+        </div>
+        <div class="feed-calendar-month">
+            Apr
+        </div>
+    </div>
+
+    <h2 class="feed-title">Atomic BOFs</h2>
+
+    <div class="feed-right">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon icon-star">
+    <path d="M16 23.027L24.24 28l-2.187-9.373 7.28-6.307-9.587-.827-3.747-8.827-3.747 8.827-9.587.827 7.267 6.307L7.759 28l8.24-4.973z"></path>
+</svg>        <div class="feed-length">
+            5 min read
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon feed-icon">
+    <path d="M11.453 22.107L17.56 16l-6.107-6.12L13.333 8l8 8-8 8-1.88-1.893z"></path>
+</svg>
+    <a class="u-permalink" href="https://rastamouse.me/atomic-bofs/" aria-label="Atomic BOFs"></a>
+
+</article>                <article class="feed public post no-image">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-day">
+            09
+        </div>
+        <div class="feed-calendar-month">
+            Apr
+        </div>
+    </div>
+
+    <h2 class="feed-title">Crystal Mask</h2>
+
+    <div class="feed-right">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon icon-star">
+    <path d="M16 23.027L24.24 28l-2.187-9.373 7.28-6.307-9.587-.827-3.747-8.827-3.747 8.827-9.587.827 7.267 6.307L7.759 28l8.24-4.973z"></path>
+</svg>        <div class="feed-length">
+            8 min read
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon feed-icon">
+    <path d="M11.453 22.107L17.56 16l-6.107-6.12L13.333 8l8 8-8 8-1.88-1.893z"></path>
+</svg>
+    <a class="u-permalink" href="https://rastamouse.me/crystal-mask/" aria-label="Crystal Mask"></a>
+
+</article>                <article class="feed public post no-image">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-day">
+            04
+        </div>
+        <div class="feed-calendar-month">
+            Mar
+        </div>
+    </div>
+
+    <h2 class="feed-title">Islands of Invariance</h2>
+
+    <div class="feed-right">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon icon-star">
+    <path d="M16 23.027L24.24 28l-2.187-9.373 7.28-6.307-9.587-.827-3.747-8.827-3.747 8.827-9.587.827 7.267 6.307L7.759 28l8.24-4.973z"></path>
+</svg>        <div class="feed-length">
+            6 min read
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon feed-icon">
+    <path d="M11.453 22.107L17.56 16l-6.107-6.12L13.333 8l8 8-8 8-1.88-1.893z"></path>
+</svg>
+    <a class="u-permalink" href="https://rastamouse.me/islands-of-invariance/" aria-label="Islands of Invariance"></a>
+
+</article>                <article class="feed public post no-image">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-day">
+            03
+        </div>
+        <div class="feed-calendar-month">
+            Jan
+        </div>
+    </div>
+
+    <h2 class="feed-title">BOF Cocktails</h2>
+
+    <div class="feed-right">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon icon-star">
+    <path d="M16 23.027L24.24 28l-2.187-9.373 7.28-6.307-9.587-.827-3.747-8.827-3.747 8.827-9.587.827 7.267 6.307L7.759 28l8.24-4.973z"></path>
+</svg>        <div class="feed-length">
+            5 min read
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" class="icon feed-icon">
+    <path d="M11.453 22.107L17.56 16l-6.107-6.12L13.333 8l8 8-8 8-1.88-1.893z"></path>
+</svg>
+    <a class="u-permalink" href="https://rastamouse.me/bof-cocktails/" aria-label="BOF Cocktails"></a>
+
+</article>        </div>
+    </section>
+
+        
+</main>
+    </div>
+
+    
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="sodo-search-root"></div></body></html>

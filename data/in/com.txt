@@ -17,3 +17,5 @@ https://www.linkedin.com/pulse/unseen-magic-com-steven-dejean-o7ipf
 https://www.r-tec.net/r-tec-blog-revisiting-cross-session-activation-attacks.html
 https://www.r-tec.net/r-tec-blog-windows-is-and-always-will-be-a-potatoland.html
 https://www.synacktiv.com/en/publications/dissecting-dcom-part-1
+https://jonny-johnson.medium.com/wsl-com-hooking-rtti-3abbf873d61f
+https://github.com/DylanDavis1/DSCourier

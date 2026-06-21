@@ -1,0 +1,29 @@
+Title:
+Patchless AMSI Bypass via Hardware Breakpoints — Implementation Notes
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- Describes a “patchless” AMSI bypass that avoids modifying `amsi.dll` by using x64 hardware breakpoints (DR0) on `amsi!AmsiScanBuffer` and a vectored exception handler (VEH) to intercept execution.  
+- The VEH fires on `STATUS_SINGLE_STEP`, rewrites the caller-provided `AMSI_RESULT*` (6th argument at `[RSP+0x30]`) to `AMSI_RESULT_CLEAN`, sets `RAX = S_OK`, and redirects `RIP` to the caller’s return address to skip the function body entirely.  
+- It focuses on implementation details that matter in practice: MS x64 calling convention stack layout, clearing `DR6`, setting the Resume Flag (RF) to avoid re-trigger loops, and probing pointers with `VirtualQuery` to prevent crashes.  
+- The post reports lab validation against a commercial EDR where classic inline AMSI patch detections did not trigger because no `.text` bytes were changed.  
+- It also outlines defender detection ideas: enumerating VEH chains, polling debug registers per thread, monitoring `NtSetContextThread`/context writes, and stack-walk inconsistencies.  
+- Useful for red teams/pentesters building in-memory execution pipelines, and for blue teams designing telemetry to catch HWBP/VEH-based tampering.
+
+Technical Focus:
+- AMSI internals (`AmsiScanBuffer`, `AMSI_RESULT`, provider model)
+- x64 hardware debug registers (DR0–DR7), execute breakpoints, `STATUS_SINGLE_STEP`
+- Vectored Exception Handling (VEH) and `CONTEXT` manipulation (`RIP/RSP/RAX/EFLAGS`)
+- MS x64 calling convention and stack argument offsets (`[RSP+0x30]`)
+- EDR evasion tradeoffs and detection strategies (VEH chain, DR polling, context-write monitoring)
+
+Use Cases:
+- Bypass AMSI scanning for in-memory PowerShell/.NET payload execution without patching `amsi.dll`
+- Build “patchless” user-mode tamper primitives that evade simple memory-integrity signatures
+- Combine with ETW suppression via similar HWBP/VEH patterns (e.g., `EtwEventWrite`/`NtTraceControl`)
+- Defensive engineering: implement detections for VEH abuse and suspicious debug-register targeting
+
+Keywords:
+AMSI, amsi.dll, AmsiScanBuffer, AMSI_RESULT_CLEAN, hardware breakpoints, HWBP, DR0, DR6, DR7, STATUS_SINGLE_STEP, vectored exception handler, AddVectoredExceptionHandler, CONTEXT, SetThreadContext, GetThreadContext, EFLAGS Resume Flag, MS x64 calling convention, NtSetContextThread, ETW, EtwEventWrite

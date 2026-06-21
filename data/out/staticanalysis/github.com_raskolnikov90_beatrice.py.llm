@@ -1,0 +1,24 @@
+Title:
+Beatrice.py — x64 opcode patching for YARA/AV signature evasion
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Beatrice.py is a Python tool that rewrites x64 machine code in existing binaries by swapping instructions with same-size alternative opcode encodings to change byte patterns without changing functionality. Its goal is to bypass static detections such as YARA rules, byte-signature scanners, and some memory scanners by altering the exact sequences those rules match. It focuses on strictly matching machine-code regions (not arbitrary data) to reduce the chance of corrupting complex PE files that contain embedded strings/data. The README notes it does not change imports/API usage or fully defeat behavior-based detection, and some binaries may still break (a “safe mode” exists). It’s primarily useful for red teamers/pentesters and malware/tooling developers who need to mutate payload/tool binaries to test or evade signature-based detections, and for defenders to understand how brittle byte-pattern signatures can be.
+
+Technical Focus:
+- x86-64 instruction substitution and alternative opcode encodings
+- Static signature evasion (YARA byte patterns)
+- Binary patching while preserving semantics and instruction size
+- Handling immediates/edge-case instructions for pattern generation
+- PE/executable mutation constraints and breakage modes (e.g., Go/garble)
+
+Use Cases:
+- Mutate known offensive tooling binaries to evade YARA/AV byte signatures
+- Generate variant samples for testing detection robustness and rule quality
+- Pre-processing stage before loaders/packers/shellcode embedding
+- Researching which instruction sequences are commonly signatured and how to alter them safely
+
+Keywords:
+Beatrice.py, YARA, signature evasion, static detection, x64, x86-64, opcode substitution, instruction encoding, binary patching, machine code, PE executable, shellcode, Windows Defender, Elastic YARA rules, DefenderCheck, Import Address Table, IAT obfuscation, Metasploit, Mimikatz, Sliver, Havoc, Cobalt Strike, Donut

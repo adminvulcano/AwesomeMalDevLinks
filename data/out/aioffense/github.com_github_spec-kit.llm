@@ -1,0 +1,31 @@
+Title:
+GitHub Spec Kit (specify-cli) — Spec-Driven Development toolkit with “bundle” support
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository contains GitHub’s “Spec Kit”, a CLI/workflow toolkit for spec-driven development (SDD) that scaffolds specs/plans/tasks and enforces a project “constitution” (quality/security/UX principles) during implementation.  
+- The highlighted change adds a `specify bundle` command group to package and distribute role-based setups (e.g., security-researcher, developer) as reproducible artifacts.  
+- It introduces bundle manifests/catalogs, search/info/list/install/update/remove/validate/build/init subcommands, and supports offline-first operation plus JSON output for automation.  
+- The implementation emphasizes supply-chain and safety controls: HTTPS enforcement (except localhost), redirect validation, trust/verification indicators, schema validation, SemVer pinning/constraints, and path/symlink confinement to prevent out-of-tree reads/writes.  
+- It’s useful for engineering teams, platform/tooling maintainers, and security-minded developers who want standardized, auditable project setups and controlled distribution of tooling/config.  
+- Interesting due to its focus on reproducible builds, deterministic packaging, and hardening against common local/remote config and artifact abuse patterns.
+
+Technical Focus:
+- Spec-driven development (SDD) workflow automation (spec/plan/tasks/constitution checks)
+- Bundle manifests, catalogs, and role-based environment packaging
+- Reproducible builds (deterministic ZIP creation, timestamp/permission normalization)
+- Offline-first installation and network gating (`--offline`)
+- Supply-chain hardening (HTTPS-only, redirect validation, auth token handling)
+- Filesystem safety (path traversal defenses, symlink confinement, safe slug/IDs)
+
+Use Cases:
+- Standardize and distribute “known-good” project/tooling setups across teams
+- Build/install/update/remove curated bundles of presets/extensions/workflows
+- Run CI automation using JSON outputs and deterministic artifacts
+- Operate in restricted environments using offline catalogs and offline installs
+- Validate bundle/catalog integrity (schema, references, SemVer constraints, trust flags)
+
+Keywords:
+Spec Kit, specify-cli, spec-driven development, SDD, bundle manifest, catalog, Typer, Python, JSON output, offline-first, reproducible builds, deterministic ZIP, SemVer, version pinning, HTTPS enforcement, redirect validation, supply chain security, symlink confinement, path traversal, schema validation

@@ -1,0 +1,31 @@
+Title:
+A Technical Deep Dive: Comparing Anti-Cheat Bypass and EDR Bypass
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post compares anti-cheat bypass techniques used to evade game integrity controls with EDR bypass techniques used to evade endpoint detection in enterprise environments.  
+- It frames the different goals, motivations, impacts, and legal/ethical boundaries between cheating ecosystems and malware/attacker tradecraft, while noting overlap in underlying methods.  
+- The article highlights common Windows user-mode primitives used in both domains (e.g., remote thread injection and memory allocation/writes) and contrasts them with EDR-centric tactics like persistence, privilege manipulation, and anti-analysis.  
+- It provides illustrative code snippets for DLL injection, function hooking (Detours-style), packet manipulation, and obfuscation, then discusses EDR evasion concepts such as polymorphism, rootkit-style hiding, encoded shellcode, string obfuscation, and anti-debugging.  
+- A small demo section shows how XOR-based API name obfuscation and runtime resolution (GetModuleHandle/GetProcAddress) can reduce obvious static indicators in a malicious DLL (referencing a Notepad++ DLL sideloading scenario).  
+- Useful for red teamers and malware analysts as a conceptual mapping between anti-cheat and EDR evasion tradecraft, and for blue teamers to understand shared primitives and detection opportunities.
+
+Technical Focus:
+- Windows process injection (CreateRemoteThread, VirtualAllocEx, WriteProcessMemory, LoadLibrary)
+- API hooking / detouring and user-mode manipulation
+- Obfuscation & polymorphism (junk code, XOR string/API obfuscation, runtime API resolution)
+- Anti-analysis / anti-debugging (IsDebuggerPresent, conditional logic)
+- Kernel/rootkit concepts (NtQuerySystemInformation tampering) and hiding artifacts
+- Persistence and privilege/token manipulation (registry/services, AdjustTokenPrivileges)
+
+Use Cases:
+- Map anti-cheat bypass primitives to EDR evasion patterns for threat modeling
+- Build detection logic around common injection and runtime API-resolution behaviors
+- Improve static analysis by recognizing XORed strings and delayed API imports
+- Red team tradecraft education: comparing gaming vs enterprise defensive stacks
+- Defensive research: identify telemetry points for injection, hooking, and obfuscation
+
+Keywords:
+anti-cheat, EDR bypass, DLL injection, CreateRemoteThread, VirtualAllocEx, WriteProcessMemory, LoadLibraryA, GetProcAddress, GetModuleHandle, API hooking, Detours, packet manipulation, polymorphic malware, string obfuscation, XOR, shellcode encoding, anti-debugging, IsDebuggerPresent, NtQuerySystemInformation, rootkit, DLL sideloading, Notepad++ v8.5.4

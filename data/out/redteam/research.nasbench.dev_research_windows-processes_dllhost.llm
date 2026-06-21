@@ -1,0 +1,25 @@
+Title:
+Windows Process Internals - Dllhost Explained
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This write-up reverse engineers `dllhost.exe` to explain what it actually does when launched and how it participates in COM surrogate activation. It shows that `dllhost.exe` mainly parses a GUID from the command line (`{GUID}` or `/ProcessID:{GUID}`), converts it via `IIDFromString`, initializes COM (`CoInitializeEx`), and registers itself as a surrogate (`CoRegisterSurrogateEx`). The post highlights a special GUID-specific branch where, if a Windows feature flag is enabled and the GUID matches a specific value, an elevated token triggers `SetProcessMitigationPolicy` before surrogate registration. It then connects runtime behavior to registry configuration (`AppID\...\DllSurrogate`) that determines whether COM uses the default system surrogate (`DllHost.exe /ProcessID:{AppID}`) or a custom surrogate executable built as `<path> {CLSID} -Embedding`. This is useful for defenders and red teamers to correctly interpret `dllhost.exe` executions as evidence of COM surrogate activity rather than a standalone LOLBin. It’s interesting because it ties together command-line parsing, COM internals, and registry-driven surrogate selection with concrete code-level observations.
+
+Technical Focus:
+- `dllhost.exe` command-line parsing (`/ProcessID:{GUID}` vs `{GUID}`)
+- COM initialization and surrogate registration (`CoInitializeEx`, `CoRegisterSurrogateEx`)
+- GUID parsing (`IIDFromString`)
+- Registry-driven COM surrogate selection (`HKCR/HKLM ... AppID\...\DllSurrogate`)
+- `-Embedding` activation pattern and COM command construction (via `combase.dll`)
+- Token elevation checks and process mitigation policy (`GetTokenInformation`, `SetProcessMitigationPolicy`)
+
+Use Cases:
+- Triage and interpret `dllhost.exe` process executions and command lines during incident response
+- Hunt for suspicious/custom COM surrogate configurations via `AppID\DllSurrogate` registry values
+- Validate whether observed `dllhost.exe /ProcessID:{GUID}` corresponds to an AppID-based surrogate activation
+- Build detections around anomalous surrogate paths or unexpected `-Embedding` COM activation chains
+
+Keywords:
+dllhost.exe, COM surrogate, CoRegisterSurrogateEx, CoInitializeEx, IIDFromString, AppID, CLSID, DllSurrogate, HKCR, HKLM, combase.dll, -Embedding, COM activation, registry persistence, GetTokenInformation, TokenElevation, SetProcessMitigationPolicy, COMSysAppRedirectionTrustPolicy, Windows internals, reverse engineering

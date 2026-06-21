@@ -1,0 +1,26 @@
+Title:
+goLoL — Windows LOLBAS + LOLDrivers Host Scanner
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+goLoL is a Windows host enumeration tool that pulls live LOLBAS and LOLDrivers catalogs and correlates them with what exists on a target machine. In LOLBAS mode, it resolves documented binary paths to local locations (e.g., %WINDIR%, %ProgramFiles%, WindowsApps), checks presence on disk, and lists techniques that are runnable at the current privilege tier (user/admin/SYSTEM) with MITRE ATT&CK mappings. In LOLDrivers mode, it hashes local `.sys` files and matches them against the LOLDrivers JSON catalog to identify known vulnerable or malicious drivers. It supports sorting/grouping by binary, privilege tier, or ATT&CK technique and includes a plain ASCII output mode for unstable terminals. It’s useful for red teams/pentesters doing rapid on-host tradecraft discovery and for defenders validating exposure to LOLBins and risky drivers. The project explicitly notes it is not OPSEC-safe and requires network access to fetch catalogs each run.
+
+Technical Focus:
+- Live ingestion/parsing of LOLBAS and LOLDrivers JSON catalogs
+- Privilege-context detection (standard user vs local admin group vs SYSTEM token)
+- Local path resolution and on-disk binary presence checks
+- MITRE ATT&CK technique ID to name mapping and reporting
+- Driver inventory hashing and hash-based matching against known-bad/vulnerable sets
+- Terminal output modes (interactive vs ASCII/plain)
+
+Use Cases:
+- Identify available LOLBAS binaries and applicable techniques on a compromised/assessed Windows host
+- Quickly scope what actions are feasible at current privilege level (user/admin/SYSTEM)
+- Detect presence of known vulnerable/malicious drivers that could enable kernel exploitation or EDR bypass chains
+- Generate host-specific “living off the land” execution options mapped to ATT&CK for reporting
+- Triage endpoints for LOLBin exposure and risky driver footprint during incident response or hardening
+
+Keywords:
+goLoL, LOLBAS, LOLDrivers, Windows, living-off-the-land, LOLBins, .sys drivers, driver hashing, JSON catalog, MITRE ATT&CK, privilege detection, SYSTEM token, local Administrators group, on-disk enumeration, path resolution, WindowsApps, Go, endpoint triage, technique mapping, host scanner

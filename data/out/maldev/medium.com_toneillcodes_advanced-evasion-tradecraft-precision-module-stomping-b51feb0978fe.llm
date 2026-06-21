@@ -1,0 +1,31 @@
+Title:
+Advanced Evasion Tradecraft: Precision Module Stomping
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post refines “module stomping” into a repeatable workflow for stable Windows process injection by carefully selecting which already-loaded DLL code region to overwrite.  
+- It addresses common operational failures (crashes from missing modules or insufficient `.text` space) and the detection risk of “sacrificial DLL” loading, which is noisy and often flagged by EDR.  
+- The author proposes a data-driven pipeline: enumerate loaded modules in a target process, find DLLs whose in-memory `.text` capacity can fit the payload, choose a specific exported function as an overwrite start point, and calculate collateral overwrite (“blast radius”) across adjacent exports.  
+- Tooling is provided (in the author’s `windows-process-injection` repo) to automate module inventory, PE parsing, export enumeration, and blast-radius analysis.  
+- A PoC targets Microsoft Edge and demonstrates overwriting an export in `ffmpeg.dll` and executing a large stageless C2 payload via a new thread.  
+- It’s most useful for red teamers, implant developers, and malware researchers focused on stealthier in-process execution and reliability tradeoffs.
+
+Technical Focus:
+- Module stomping (overwriting file-backed DLL code in memory)
+- Remote process module enumeration (PEB/module list)
+- PE parsing and `.text` section capacity analysis (`Misc_VirtualSize`)
+- Export Address Table (EAT) mapping and export selection
+- “Blast radius” / adjacent function overwrite impact analysis
+- Thread-based execution from a stomped export entry point
+
+Use Cases:
+- Selecting low-noise, already-loaded DLL targets for code injection in high-value processes (e.g., browsers)
+- Pre-flight validation to prevent crashes due to insufficient code space or bad module assumptions
+- Automating candidate DLL discovery based on payload size constraints
+- Assessing functional collateral damage before overwriting code to preserve process stability
+- Building more reliable module-stomping tradecraft for long-lived implants
+
+Keywords:
+module stomping, process injection, Windows internals, PEB, loaded modules, DLL, PE format, .text section, Misc_VirtualSize, pefile, Export Address Table, EAT, RVA, remote thread, memory overwrite, Edge msedge.exe, ffmpeg.dll, EDR evasion, sacrificial DLL, Cobalt Strike beacon

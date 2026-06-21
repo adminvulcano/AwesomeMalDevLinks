@@ -1,0 +1,31 @@
+Title:
+Mythic C2 with EarlyBird Injection and Defender Evasion
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- The post walks through building a Mythic C2 deployment that hides the real backend server behind HTTPS redirectors and uses a custom Windows loader to execute an Apollo agent payload in-memory.  
+- It focuses on practical C2 OPSEC: separating a decoy web presence (e.g., WordPress) from C2 and payload delivery subdomains, using Nginx reverse proxying and legitimate TLS certificates to reduce infrastructure attribution and casual inspection.  
+- For execution, it demonstrates EarlyBird APC injection by creating a suspended process, writing shellcode into it, queueing an APC with `QueueUserAPC`, and resuming the thread so code runs during early process initialization.  
+- The loader includes basic evasion tradecraft such as compile-time string obfuscation, jittered sleeps, browser-like WinHTTP headers/User-Agent rotation, and a multi-tier download/fallback flow.  
+- It also calls out OPSEC pitfalls (notably WinHTTP certificate-validation bypass flags) and provides defender-oriented detection ideas around suspended process creation, APC usage, and RWX memory allocations.  
+- Useful primarily for red teamers and malware/tooling developers building Mythic-based operations, and secondarily for blue teams modeling detections for redirector-backed C2 and APC-based injection.
+
+Technical Focus:
+- Mythic C2 architecture (Apollo agent + HTTP profile)
+- HTTPS redirectors / Nginx reverse proxy design with decoy content
+- EarlyBird APC injection (`CREATE_SUSPENDED`, `VirtualAllocEx`, `WriteProcessMemory`, `QueueUserAPC`, `ResumeThread`)
+- In-memory payload delivery (shellcode staging via “legit-looking” URLs)
+- WinHTTP-based payload retrieval + traffic shaping (headers, UA rotation, jitter)
+- Basic obfuscation (compile-time XOR string obfuscation, XOR payload fallback)
+
+Use Cases:
+- Stand up a Mythic backend protected by redirectors and decoy web infrastructure
+- Stage and deliver shellcode via benign-looking paths (e.g., font assets) over HTTPS
+- Execute an agent via EarlyBird APC injection into a chosen target process (e.g., WerFault.exe)
+- Prototype OPSEC improvements/detections for redirector-based C2 and APC injection tradecraft
+- Build lab exercises for testing EDR/Defender visibility into suspended-process + APC patterns
+
+Keywords:
+Mythic, Apollo agent, HTTP C2 profile, Nginx redirector, reverse proxy, HTTPS, Let’s Encrypt, Certbot, decoy site, WordPress, payload staging, shellcode, EarlyBird injection, APC injection, QueueUserAPC, CreateProcessW CREATE_SUSPENDED, VirtualAllocEx, WriteProcessMemory, ResumeThread, WinHTTP, User-Agent rotation, jitter sleep, string obfuscation, Windows Defender evasion, WerFault.exe, RWX memory allocation, process injection detection

@@ -1,0 +1,24 @@
+Title:
+DSCourier: Abusing WinGet Configuration COM API for Winget-less DSC/PowerShell Execution
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post describes a technique and tool (“DSCourier”) that abuses WinGet’s configuration (DSC) capability to achieve arbitrary code execution without launching `winget.exe`, `powershell.exe`, or `cmd.exe` in the initiating process tree. Instead of using `winget configure`, it directly invokes the WinGet Configuration engine via the `Microsoft.Management.Configuration` WinRT/COM API, causing Microsoft-signed components (`WindowsPackageManagerServer.exe` and `ConfigurationRemotingServer.exe`) to execute DSC resources (including `PSDscResources/Script`). The approach reduces common telemetry artifacts (no `winget.exe` command line with YAML path/URL, no obvious shell parentage) while still executing attacker-controlled PowerShell embedded in a DSC YAML. It includes requirements (WinGet full package with configuration support, WinGet v1.6.2631+, modern Windows builds), outlines the COM call chain, and provides detection ideas focusing on child processes spawned by `ConfigurationRemotingServer.exe`. It’s useful for red teams/pentesters exploring LOLBIN-style execution paths and for defenders updating detections beyond `winget.exe` process creation.
+
+Technical Focus:
+- WinGet Configuration / DSC YAML abuse (`PSDscResources/Script`)
+- WinRT/COM activation of `Microsoft.Management.Configuration` (ConfigurationStaticFunctions)
+- Process chain shifting to Microsoft-signed hosts (`WindowsPackageManagerServer.exe`, `ConfigurationRemotingServer.exe`)
+- .NET interop via CsWinRT projections and `.winmd` metadata
+- Detection engineering for anomalous child processes from configuration hosts
+
+Use Cases:
+- Execute PowerShell payloads via DSC without spawning `winget.exe` or PowerShell host binaries
+- Build stealthier execution chains that blend into legitimate WinGet COM consumer behavior
+- Purple-team validation of detections around `WindowsPackageManagerServer.exe` / `ConfigurationRemotingServer.exe`
+- Hardening guidance validation (GPO disabling App Installer or WinGet Configuration)
+
+Keywords:
+WinGet, Windows Package Manager, winget configure, DSC, Desired State Configuration, PSDscResources/Script, YAML, Microsoft.Management.Configuration, WinRT, COM, CoCreateInstance, CsWinRT, .winmd, WindowsPackageManagerServer.exe, ConfigurationRemotingServer.exe, LOLBIN, process tree evasion, GPO Desktop App Installer, WDAC, AppLocker

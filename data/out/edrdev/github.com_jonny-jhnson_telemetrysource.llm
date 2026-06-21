@@ -1,0 +1,25 @@
+Title:
+TelemetrySource
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+TelemetrySource is a research repository that maps Windows telemetry events back to the specific functions/APIs responsible for generating them. It focuses on understanding how common defensive data sources (Sysmon, Windows Security Auditing events, and Microsoft-Windows-Threat-Intelligence ETW provider) are triggered at the OS/API level. The project provides per-source documentation, visual mapping diagrams, and a central Google Sheet for event-to-API correlations. This helps defenders reason about event fidelity, coverage gaps, and what attacker behaviors or API alternatives may evade specific telemetry. It’s useful for Blue Teams building detections, as well as Red Teams validating which actions generate which logs and exploring telemetry-aware tradecraft. The linked blog series documents the methodology used to trace events down to their generating code paths.
+
+Technical Focus:
+- Windows event generation and telemetry provenance (event → API/function mapping)
+- Sysmon event triggers and instrumentation points
+- Windows Security Auditing (Microsoft-Windows-Security-Auditing) event sources
+- ETW provider analysis (Microsoft-Windows-Threat-Intelligence)
+- Methodology for tracing/attributing events to underlying Windows APIs
+
+Use Cases:
+- Validate which Windows APIs/actions trigger specific Sysmon or Security log events
+- Identify detection blind spots and improve logging/detection engineering
+- Support threat hunting by understanding event semantics and prerequisites
+- Red-team tradecraft testing to measure telemetry impact of different techniques
+- Build higher-fidelity detections based on true event provenance
+
+Keywords:
+Windows telemetry, Sysmon, Microsoft-Windows-Security-Auditing, Windows Security Events, ETW, Microsoft-Windows-Threat-Intelligence, event tracing, API mapping, Windows internals, detection engineering, threat hunting, log provenance, event generation, instrumentation, defensive telemetry, attacker tradecraft, auditing, provider GUID, Medium write-up, Google Sheets mapping

@@ -1,0 +1,25 @@
+Title:
+GitHub Repository (Unavailable / 404)
+
+Type:
+GitHub Tool (link resolves to 404)
+
+Short Summary (4–8 sentences max):
+- The provided GitHub link returns a 404 error (“This is not the web page you are looking for”), so the repository content is not accessible from the extracted page.  
+- No README, code, release notes, or metadata (name, description, language, topics) are available to determine the project’s purpose or techniques.  
+- This could indicate the repo was deleted, made private, renamed, or the URL is malformed.  
+- Without accessible content, a technical summary of functionality, tradecraft, or defensive relevance cannot be produced.  
+- If you provide the correct URL, a repo name, or pasted README/content, I can generate the requested structured summary.
+
+Technical Focus:
+- Not available (content inaccessible)
+- Not available (content inaccessible)
+- Not available (content inaccessible)
+
+Use Cases:
+- Validate whether a GitHub repo has been removed/privatized/renamed
+- Re-attempt access with correct URL or authenticated session
+- Summarize tool/research once README or source is provided
+
+Keywords:
+GitHub, 404, repository unavailable, deleted repository, private repository, renamed repository, URL validation, access control, content extraction, OSINT

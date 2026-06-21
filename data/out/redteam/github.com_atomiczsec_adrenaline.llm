@@ -1,0 +1,27 @@
+Title:
+Adrenaline BOF Kit
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Adrenaline is a C2-agnostic collection of Windows Beacon Object Files (BOFs) organized by attack-chain phase (MITRE-style) for reconnaissance, enumeration, credential access, and post-exploitation. It targets the problem of running common situational-awareness and collection tasks without spawning noisy child processes, enabling small, modular, automation-friendly execution inside a beacon/agent. The kit includes BOFs for artifact collection (clipboard, PowerShell history, window handle abuse), credential-oriented checks (cert store exportability, cloud instance metadata probing, process token enumeration), and host/security posture discovery (AMSI/ETW presence, AppLocker, Defender ASR, BitLocker, WEF, proxy state, MDM artifacts). Execution-focused modules interact with Windows subsystems via APIs/COM (firewall rules via INetFwPolicy2, service control via SCM, COM instantiation probing, Security event log queries via wevtapi). It’s primarily useful for red teams and pentesters operating on Windows endpoints who need low-footprint telemetry and targeted collection at scale. Interesting due to its breadth of modern enterprise posture checks (MDM/Intune, ASR, WEF) and cloud metadata credential exposure probing from within compromised hosts.
+
+Technical Focus:
+- Beacon Object Files (BOF) development in C for Windows
+- Win32 API and COM-based enumeration/interaction (Task Scheduler, INetFwPolicy2, IDesktopWallpaper)
+- Credential and artifact collection (clipboard, PSReadLine/transcripts, certificate stores, tokens)
+- Security control and posture discovery (AMSI/ETW, AppLocker, Defender ASR, BitLocker, WSC, WEF)
+- Cloud instance metadata service probing (AWS/Azure/GCP)
+- Windows event log querying via wevtapi (4624/4625/4672)
+
+Use Cases:
+- Rapid situational awareness on Windows endpoints with minimal process creation
+- Identify defensive controls and logging centralization (ASR, AppLocker, WEF, AMSI/ETW) to guide tradecraft
+- Loot operator-relevant artifacts (clipboard contents, PowerShell history, Notepad in-memory text)
+- Enumerate and assess credential opportunities (exportable cert keys, accessible process tokens, cloud metadata creds)
+- Modify/query local firewall rules and manage services for lateral movement/pivot prep
+- Enumerate scheduled tasks and terminal services sessions for persistence and user activity insights
+
+Keywords:
+BOF, Beacon Object File, Windows, Win32 API, COM, IDesktopWallpaper, INetFwPolicy2, SCM, wevtapi, AMSI, ETW, AppLocker, Defender ASR, BitLocker, Windows Security Center, Windows Event Forwarding, PSReadLine, clipboard, process tokens, SeDebugPrivilege, certificate store, cloud metadata, AWS IMDS, Azure IMDS, GCP metadata, Task Scheduler COM, scheduled tasks, Terminal Services sessions

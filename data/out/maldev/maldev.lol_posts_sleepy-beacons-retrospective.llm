@@ -1,0 +1,26 @@
+Title:
+Sleepy Beacons: A retrospective on how implants take naps
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post surveys the evolution of “sleep masking” techniques used by modern implants/beacons to reduce in-memory and thread-state exposure while idle. It starts from naive `Sleep()` loops and moves through Gargoyle-style protection cycling, then the Ekko/Foliage/Cronos family that chains `NtContinue` with crafted `CONTEXT` structures to flip `.text` protections and encrypt/decrypt code during sleep. It explains how these approaches are implemented (timers, thread-pool callbacks, APC chains, helper threads) and why defenders can still detect them via stack artifacts, timer/APC telemetry, and `CONTEXT` carving. The author highlights the arms race around passive call stack spoofing (AceLdr/VulcanRaven/SilentMoonwalk/Moonwalk++) and notes how Intel CET Shadow Stack breaks common `SetThreadContext`-based spoofing. The key takeaway is that kernel visibility via ETW Threat Intelligence (notably `NtProtectVirtualMemory` “ProtectVM” events) makes periodic IMAGE-VAD protection cycling a high-confidence detection signal, pushing attackers toward approaches that avoid `NtProtectVirtualMemory` entirely. Useful for red team/malware developers designing implants and for blue teams building detections around sleep obfuscation primitives.
+
+Technical Focus:
+- Sleep masking / sleep obfuscation design patterns
+- `NtContinue` + crafted `CONTEXT` chains (timers/APCs/thread-pool)
+- Memory protection cycling (`NtProtectVirtualMemory` / `VirtualProtect`)
+- In-place code encryption (RC4 `SystemFunction032`, KsecDD IOCTL encrypt/decrypt)
+- Call stack spoofing & unwinding tricks (`RtlVirtualUnwind`, `.pdata`/UNWIND_INFO)
+- Detection via ETW-TI ProtectVM and userland stack/timer/APC artifacts
+
+Use Cases:
+- Implementing stealthier beacon sleep loops in custom implants
+- Evaluating trade-offs between timer-queue, APC, and thread-pool based sleep masks
+- Building detections for sleeping beacons (stack frames, timer queues, `CONTEXT` scans)
+- Assessing CET impact on thread-context/stack spoofing techniques
+- Hunting for ETW-TI `NtProtectVirtualMemory` fluctuation patterns in EDR telemetry
+
+Keywords:
+sleep mask, beacon, implant, Gargoyle, Ekko, Foliage, Cronos, DeathSleep, NtContinue, CONTEXT, RtlCaptureContext, APC, NtTestAlert, timer queue, thread pool, VirtualProtect, NtProtectVirtualMemory, SystemFunction032, KsecDD, IOCTL_KSEC_ENCRYPT_MEMORY, ETW Threat Intelligence, Microsoft-Windows-Threat-Intelligence, ProtectVM, IMAGE VAD, call stack spoofing, RtlVirtualUnwind, UNWIND_INFO, CET, Shadow Stack, NtSetContextThread, KiUserApcDispatcher, RtlpTpTimerCallback, Patriot, Hunt-Sleeping-Beacons, Moneta

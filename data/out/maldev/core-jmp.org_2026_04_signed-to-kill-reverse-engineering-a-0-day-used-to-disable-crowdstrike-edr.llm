@@ -1,0 +1,30 @@
+Title:
+Signed to Kill: Reverse Engineering a 0-Day Used to Disable CrowdStrike EDR
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up reverse engineers a Microsoft-signed Windows kernel driver abused in a BYOVD scenario to disable security products, including CrowdStrike Falcon.  
+- The driver exposes an unsafe IOCTL interface that allows arbitrary process termination from user mode by passing a PID (as an ASCII string) to the driver.  
+- The analysis walks through identifying the relevant IOCTL (0x22E010), understanding the dispatch handler, and tracing the kill path via ZwOpenProcess → ZwTerminateProcess.  
+- It highlights why Protected Process Light (PPL) protections don’t help when termination is performed from kernel context.  
+- The author also demonstrates how to discover the device symbolic link dynamically (WinObj) and provides a PoC that opens the device and issues DeviceIoControl to kill the target process.  
+- Useful for red teamers, malware developers, and defenders researching BYOVD/driver abuse and EDR tampering tradecraft.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable Driver) abuse
+- Windows kernel driver reverse engineering (IDA Pro)
+- IOCTL interface analysis (IRP_MJ_DEVICE_CONTROL)
+- Process termination from kernel (ZwOpenProcess, ZwTerminateProcess)
+- PPL/EDR tamper bypass via kernel-mode primitives
+- Device object / symbolic link discovery (WinObj)
+
+Use Cases:
+- Disabling EDR/AV agents prior to payload execution (tamper step)
+- Hunting and analyzing malicious/abused signed drivers in incident response
+- Building detections around suspicious driver loads and IOCTL usage
+- Validating defensive controls (WDAC, driver blocklists, vulnerable driver mitigation)
+
+Keywords:
+BYOVD, Microsoft-signed driver, kernel-mode, Windows driver, IOCTL, IRP_MJ_DEVICE_CONTROL, DeviceIoControl, CreateFileW, symbolic link, WinObj, IDA Pro, ZwOpenProcess, ZwTerminateProcess, process killing, PPL, CrowdStrike Falcon, EDR bypass, vulnerable driver, sc.exe, OSRLOADER

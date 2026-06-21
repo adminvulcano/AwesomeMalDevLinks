@@ -1,0 +1,24 @@
+Title:
+SharpCOM
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+SharpCOM is a C# “weaponized” port of Invoke-DCOM, implementing DCOM-based lateral movement for remote command execution on Windows systems. It builds on the SharpSploit DCOM module work and packages it as a standalone executable suitable for in-memory execution (e.g., Cobalt Strike `execute-assembly`). The tool supports multiple DCOM execution methods (example shown: `ShellWindows`) and targets a specified remote computer name to launch an arbitrary command. It’s primarily useful for red teams and pentesters operating in Windows/AD environments where DCOM is available and remote execution is needed without traditional service creation techniques. The project is interesting because it operationalizes a well-known lateral movement primitive into a practical C# implant-friendly utility.
+
+Technical Focus:
+- DCOM-based remote code execution (lateral movement)
+- COM object instantiation and method invocation over the network
+- Windows RPC/DCOM communication paths
+- Tradecraft for in-memory .NET execution (e.g., Beacon execute-assembly)
+- Porting PowerShell tradecraft to C# tooling
+
+Use Cases:
+- Remote command execution on Windows hosts via DCOM
+- Lateral movement in AD environments where DCOM is permitted
+- Post-exploitation execution through Cobalt Strike Beacon `execute-assembly`
+- Testing and validating DCOM-related detections and hardening controls
+
+Keywords:
+SharpCOM, Invoke-DCOM, DCOM, COM, lateral movement, remote command execution, Windows RPC, ShellWindows, Cobalt Strike, Beacon, execute-assembly, SharpSploit, .NET, C#, post-exploitation, Windows internals, remote activation, OPSEC, red team tooling

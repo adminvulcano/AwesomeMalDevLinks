@@ -1,0 +1,32 @@
+Title:
+Red Team Grimoire
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- A collection of offensive Windows tradecraft projects focused on credential access, stealthy execution, and EDR/AV evasion.  
+- It aggregates multiple tools: an LSASS dumper with PPL bypass (“Doppelganger”), a process hollowing implementation (“HollowReaper”), a shellcode artifact/builder (“Charon”), and an evasion engine providing indirect syscalls and synthetic stack techniques (“Obolos”).  
+- The repo also includes PowerShell utilities for Kerberos ticket injection (“TGTConjuring”), dumping registry hives from Volume Shadow Copies (“NecroMirror”), and LSASS dumping (“SoulDumper”).  
+- Techniques center on minimizing user-mode API visibility (syscall indirection), stealthy memory/process manipulation, and credential material extraction.  
+- Primarily useful for red teams, pentesters, and malware developers building or studying modern Windows post-exploitation and evasion patterns.  
+- Interesting because it combines multiple “maldev” primitives (execution + evasion + credential access) in one codebase, including PPL-related LSASS access approaches.
+
+Technical Focus:
+- LSASS dumping and PPL (Protected Process Light) bypass concepts  
+- Process hollowing / code injection tradecraft  
+- Dynamic indirect syscalls (user-mode API avoidance)  
+- Synthetic stack / call stack spoofing (“stack weaving”)  
+- Kerberos TGT injection (ticket manipulation)  
+- Volume Shadow Copy-based registry hive dumping (SAM/SECURITY/SYSTEM/SOFTWARE)
+
+Use Cases:
+- Dumping credentials from LSASS in hardened environments
+- Building shellcode loaders/artifacts with evasion features
+- Executing payloads via process hollowing for stealth
+- Kerberos ticket injection for lateral movement/impersonation
+- Offline credential extraction by dumping registry hives from VSS
+- Researching/detecting syscall evasion and stack spoofing techniques
+
+Keywords:
+LSASS, PPL, Protected Process Light, credential dumping, process hollowing, shellcode loader, indirect syscalls, syscalls, synthetic stack, stack spoofing, Kerberos, TGT, ticket injection, Volume Shadow Copy, VSS, SAM, SECURITY hive, SYSTEM hive, EDR bypass, AV bypass, Windows internals, PowerShell, maldev

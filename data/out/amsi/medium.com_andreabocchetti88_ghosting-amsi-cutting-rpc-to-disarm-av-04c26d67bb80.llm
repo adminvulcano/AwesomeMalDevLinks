@@ -1,0 +1,30 @@
+Title:
+Ghosting AMSI: Cutting RPC to disarm AV
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post describes an AMSI bypass that targets the RPC layer AMSI uses to communicate with antimalware providers, rather than patching `amsi.dll` directly.  
+- The technique hooks/patches `rpcrt4.dll!NdrClientCall3` (the RPC marshaling stub used by auto-generated AMSI RPC calls) to short-circuit scan requests before they are serialized and sent to the AV engine.  
+- By forcing controlled return values (e.g., `S_OK` plus an error like `0x80070002`), it triggers AMSI’s fallback path (`ScanStatus = 2`), which results in `AMSI_RESULT_NOT_DETECTED` without a real scan.  
+- A PowerShell PoC demonstrates in-memory patching with a trampoline (`mov rax, addr; jmp rax`) and discusses why this can be stealthier than common `AmsiScanBuffer`/`amsiInitFailed` bypasses that are heavily monitored.  
+- It’s primarily useful for red teamers and offensive researchers studying AMSI internals and bypass surfaces, and for blue teamers looking to detect RPC-layer tampering and anomalous AMSI telemetry.  
+- The interesting angle is exploiting AMSI’s “provider unavailable” resilience logic by breaking the communication bridge (RPC) while keeping the apparent AMSI call flow intact.
+
+Technical Focus:
+- AMSI architecture and provider communication model (COM/RPC)
+- RPC runtime internals: `rpcrt4.dll!NdrClientCall3` and stub-based calls
+- In-memory patching/trampoline hooks (x64 `mov rax; jmp rax`)
+- AMSI fallback behavior and telemetry (`ScanStatus`, HRESULTs)
+- PowerShell + P/Invoke for `VirtualProtect`, `VirtualAlloc`, `FlushInstructionCache`
+- Evasion tradeoffs vs direct `amsi.dll` patching and integrity monitoring
+
+Use Cases:
+- Bypassing AMSI content scanning for PowerShell payload execution in controlled red team ops
+- Researching AMSI’s RPC dependency and identifying additional choke points for interception
+- Building detections for RPC function patching and AMSI fallback-path anomalies (e.g., `ScanStatus=2`)
+- Validating EDR/AV resilience against user-mode memory patching of `rpcrt4.dll`
+
+Keywords:
+AMSI, AmsiScanBuffer, rpcrt4.dll, NdrClientCall3, RPC, COM, trampoline hook, in-memory patching, VirtualProtect, VirtualAlloc, FlushInstructionCache, PowerShell, P/Invoke, HRESULT, ERROR_FILE_NOT_FOUND, 0x80070002, ERROR_NOT_READY, 0x80070015, AMSI ScanStatus, ETW telemetry, Windows Defender

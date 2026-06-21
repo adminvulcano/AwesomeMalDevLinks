@@ -1,0 +1,26 @@
+Title:
+EtwSuite
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+EtwSuite is a Windows desktop ETW (Event Tracing for Windows) inspection suite for browsing registered providers, inspecting provider metadata/schema, and consuming live ETW events. It aims to consolidate provider discovery, session configuration, live viewing, recording to native `.etl`, and offline inspection of `.etl`/exported `.json`/`.csv` in one GUI tool (inspired by EtwExplorer). It includes event filtering via simple wildcard search or a safe SQL-like expression parser over event fields (provider, event_id, process_name, payload fields, etc.). The tool supports exporting captured events to JSON/CSV and saving reusable “session templates” to a local SQLite database. It highlights practical limitations of ETW metadata availability and notes that some providers require elevation or special permissions (e.g., Threat-Intelligence requiring an allowed PPL signer). Useful for defenders, threat hunters, and red teamers who need to quickly explore ETW telemetry, validate detections, or understand what specific providers emit during activity.
+
+Technical Focus:
+- ETW provider enumeration and metadata/schema inspection
+- Live ETW session consumption (levels/keywords masks)
+- ETL trace recording and offline parsing (TraceEvent)
+- Event filtering (wildcards and SQL-like expression parsing)
+- Export pipelines (JSON/CSV) and session persistence (SQLite)
+- Windows permissions constraints for sensitive providers (e.g., PPL-gated)
+
+Use Cases:
+- Rapidly identify which ETW providers/events fire for a given technique or tool execution
+- Build and validate detection logic by filtering on process/event/payload fields
+- Record `.etl` traces during tests and review them offline on another machine
+- Create reusable ETW collection “templates” for common investigations (PowerShell, process creation, security auditing)
+- Troubleshoot ETW provider access/metadata issues across Windows versions
+
+Keywords:
+ETW, Event Tracing for Windows, provider GUID, event schema, TraceEvent, ETL, Microsoft-Windows-Security-Auditing, Microsoft-Windows-Threat-Intelligence, PPL, Protected Process Light, keyword mask, event level, WinUI, Windows App SDK, .NET 8, C#, SQLite, JSON export, CSV export, telemetry filtering

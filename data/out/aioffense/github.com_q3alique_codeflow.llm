@@ -1,0 +1,31 @@
+Title:
+codeflow — Static taint-analysis and visualization tool for source code security review
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- codeflow is a static taint-analysis tool that traces user-controlled inputs (sources) through a codebase to dangerous operations (sinks) and visualizes the resulting flows.  
+- It targets security code review by building a call/data-flow graph and highlighting source→sink paths that may indicate injection, RCE, unsafe deserialization, file access, etc.  
+- The tool supports “deep” taint extraction for Python, JS/TS, Java, Go, and C# with framework-aware entry-point detection, and provides structural-only graphs for other languages.  
+- Outputs include an interactive single-file HTML graph report, a Markdown “review” document with code snippets per hop for human triage, and an optional Burp-compatible JSON export.  
+- It’s useful for red teams, pentesters, and appsec reviewers to quickly prioritize manual review and map attack surfaces across large repos.  
+- Interesting because it combines multi-language AST parsing (tree-sitter), graph-based propagation, and reviewer-oriented artifacts designed to handle false positives conservatively.
+
+Technical Focus:
+- Static taint tracking (forward propagation) from sources to sinks
+- Multi-language AST parsing via tree-sitter and framework entry-point detection
+- Call graph + data-flow graph construction (networkx) and path finding (BFS)
+- Sink classification and severity scoring (CRITICAL/HIGH/MEDIUM/LOW)
+- Interactive visualization (SVG/HTML) with clustering and layout (Sugiyama-style DAG)
+- Export formats for human triage (Markdown) and tooling integration (Burp JSON)
+
+Use Cases:
+- Identify potential injection/RCE/deserialization/file-path issues during source review
+- Map web/API endpoints and their user-controlled parameters to risky code paths
+- Generate reviewer-friendly evidence (per-hop snippets) for audit/triage workflows
+- Feed endpoint/taint-path metadata into custom tooling or Burp extensions
+- Offline/corporate environments needing self-bootstrapped dependency installs
+
+Keywords:
+static analysis, taint analysis, source-to-sink, call graph, data flow, tree-sitter, networkx, Flask, FastAPI, Django, Express, Spring Boot, net/http, Gin, ASP.NET Core, command execution, SQL injection, template injection, unsafe deserialization, Burp Suite JSON export, HTML SVG report

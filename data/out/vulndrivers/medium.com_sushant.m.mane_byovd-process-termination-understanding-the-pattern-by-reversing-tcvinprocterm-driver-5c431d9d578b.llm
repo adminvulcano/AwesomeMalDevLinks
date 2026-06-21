@@ -1,0 +1,31 @@
+Title:
+BYOVD & Process Termination: Understanding The Pattern By Reversing TCVINProcTerm Driver
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- Walkthrough of the BYOVD (Bring Your Own Vulnerable Driver) pattern specifically for kernel-assisted process termination via a driver-exposed IOCTL.  
+- Uses an educational sample driver (TCVINProcTerm.sys) that accepts a PID from user mode and terminates the target process in kernel mode using ZwOpenProcess + ZwTerminateProcess.  
+- Demonstrates how to reverse a Windows kernel driver to recover the device name/symlink, IOCTL value, and input buffer contract by following DriverEntry → MajorFunction[IRP_MJ_DEVICE_CONTROL] → DeviceControl.  
+- Covers the user↔kernel boundary (CreateFile on `\\.\DeviceName`, DeviceIoControl, IRPs, METHOD_BUFFERED) and how the I/O manager routes requests to dispatch routines.  
+- Validates findings in a test-signed VM by loading the driver via SCM (`sc create/start`) and sending the recovered IOCTL with a 4-byte PID buffer to kill a process.  
+- Useful for red teamers/malware analysts to understand common “EDR-killer” mechanics, and for defenders to recognize telemetry points (driver load + device handle + IOCTL-driven termination).  
+
+Technical Focus:
+- BYOVD mechanics (signed driver abuse via IOCTL)
+- Windows driver internals: DriverEntry, device objects, symbolic links, MajorFunction dispatch table
+- IRP handling and IOCTL parsing (IRP_MJ_DEVICE_CONTROL, METHOD_BUFFERED, SystemBuffer)
+- Kernel process termination primitives (ZwOpenProcess, ZwTerminateProcess, ZwClose, ACCESS_MASK/PROCESS_TERMINATE)
+- Reverse engineering workflow (Ghidra/IDA strings, xrefs, constant IOCTL recovery)
+- Lab validation (test signing, SCM driver loading, user-mode IOCTL client)
+
+Use Cases:
+- Reverse unknown/suspicious drivers to extract device names and IOCTL “contracts”
+- Build minimal user-mode clients to reproduce driver behavior in a controlled lab
+- Understand and emulate BYOVD-style process termination tradecraft for testing detections
+- Create detection hypotheses around driver load + `\\.\` device access + DeviceIoControl patterns
+- Validate whether kernel termination attempts fail against protected targets (e.g., PPL scenarios)
+
+Keywords:
+BYOVD, Bring Your Own Vulnerable Driver, Windows kernel driver, IOCTL, DeviceIoControl, IRP_MJ_DEVICE_CONTROL, IRP, METHOD_BUFFERED, IoCreateDevice, IoCreateSymbolicLink, DriverEntry, MajorFunction, \\Device\\, \\DosDevices\\, \\\\.\\ device path, ZwOpenProcess, ZwTerminateProcess, PROCESS_TERMINATE, ACCESS_MASK, OBJECT_ATTRIBUTES, CLIENT_ID, test signing, bcdedit testsigning, sc create, sc start, Ghidra, IDA Pro, driver reverse engineering, EDR kill, process termination, PPL, Microsoft vulnerable driver blocklist, WDAC

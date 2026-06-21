@@ -68,3 +68,8 @@ https://lorenzomeacci.com/bypassing-static-analysis-deep-dive
 https://github.com/DosX-dev/obfus.h
 https://github.com/DosX-dev/Astral-PE
 https://github.com/haunted-zeroday/PE-XRay-EDR
+https://secret.club/2026/05/21/striga.html
+https://github.com/eversinc33/MogVMP
+https://f00crew.org/0x48
+https://blog.quarkslab.com/obfuscation-vs-the-optimizer-an-llvm-middle-end-arms-race.html
+https://github.com/raskolnikov90/Beatrice.py

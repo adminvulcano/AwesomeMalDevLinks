@@ -16,3 +16,11 @@ https://ipurple.team/2026/03/17/credential-guard/
 https://github.com/k3nundrum/KslKatz
 https://github.com/andreisss/KslDump
 https://www.hackingarticles.in/credential-dumping-local-security-authority-lsalsass-exe/
+https://github.com/kimd155/WerWolf
+https://github.com/ricardojoserf/NativeDump
+https://medium.com/@tanrikuluatahan/fixing-mimikatz-sekurlsa-logonpasswords-on-windows-11-24h2-25h2-253e82866197
+https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/
+https://github.com/vari-sh/RedTeamGrimoire/
+https://github.com/BlackSnufkin/CredsHunter
+https://specterops.io/blog/2025/10/23/catching-credential-guard-off-guard/
+https://github.com/AabyssZG/HashDump-BypassEDR

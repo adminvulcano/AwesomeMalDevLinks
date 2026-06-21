@@ -1,0 +1,31 @@
+Title:
+CredsHunter — CVE-2026-3609 XIGNCODE3 xhunter1.sys PPL-bypass LSASS credential dump PoC
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- CredsHunter is a Rust proof-of-concept that dumps LSASS credentials by abusing a handle-leak vulnerability in Wellbia’s XIGNCODE3 anti-cheat driver `xhunter1.sys` (CVE-2026-3609).  
+- The driver’s `IRP_MJ_WRITE` command interface (cmd 785) calls `ObOpenObjectByPointer` with `AccessMode=KernelMode` and without `OBJ_KERNEL_HANDLE`, resulting in a kernel-minted `PROCESS_ALL_ACCESS` handle being placed into the attacker’s user-mode handle table, bypassing PPL protections.  
+- With that handle, the tool reads LSASS memory (via `ReadProcessMemory`, with a fallback to a driver-assisted attach+memcpy primitive) and extracts LSA cryptographic material from `lsasrv.dll`.  
+- It pattern-scans `lsasrv.dll` to locate AES/3DES key material and IV, then decrypts entries from `LogonSessionList` to recover NTLM and SHA1 hashes for active logon sessions; WDigest plaintext recovery is included as best-effort.  
+- The repo bundles a vulnerable signed `xhunter1.sys`, making it a reproducible BYOVD-style primitive where driver loading is possible.  
+- Useful for red teams/pentesters validating kernel-assisted PPL bypass and for defenders researching detection opportunities around vulnerable driver loading and anomalous handle creation.
+
+Technical Focus:
+- BYOVD via signed vulnerable driver (XIGNCODE3 `xhunter1.sys`)
+- PPL bypass through kernel-mode process handle acquisition (`ObOpenObjectByPointer`, `AccessMode=KernelMode`)
+- Windows driver IOCTL/IRP write command interface abuse (cmd 785/787)
+- LSASS memory parsing: `lsasrv.dll` pattern scanning and key extraction
+- LSA protected memory / BCrypt key structures and 3DES decryption
+- `LogonSessionList` walking and MSV1_0 credential blob offsets (per-build)
+
+Use Cases:
+- Reproducing CVE-2026-3609 to obtain LSASS access on PPL-protected systems
+- Testing EDR/blue-team detections for vulnerable driver load + suspicious handle grants
+- Researching kernel-to-user handle leakage and access-check bypass patterns
+- Building alternative memory readers by reusing the `MemReader` abstraction (e.g., BOF/agent integration)
+- Validating credential extraction logic (LSA keys, logon session parsing) across Windows builds
+
+Keywords:
+CVE-2026-3609, XIGNCODE3, Wellbia, xhunter1.sys, BYOVD, LSASS, PPL bypass, ObOpenObjectByPointer, AccessMode KernelMode, OBJ_KERNEL_HANDLE, IRP_MJ_WRITE, PROCESS_ALL_ACCESS, ReadProcessMemory, KeStackAttachProcess, lsasrv.dll, LogonSessionList, MSV1_0, BCrypt, 3DES, WDigest

@@ -1,0 +1,1510 @@
+# https://github.com/mandiant/gopacket
+
+<!DOCTYPE html><html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system" data-a11y-link-underlines="true" data-turbo-loaded="">
+
+  <body class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+    <div data-turbo-body="" class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+      <div id="__primerPortalRoot__" style="z-index: 1000; position: absolute; width: 100%;" data-turbo-permanent=""></div>
+      
+
+    <div class="position-relative header-wrapper js-header-wrapper ">
+      <a href="https://github.com/mandiant/gopacket#start-of-content" data-skip-target-assigned="false" class="px-2 tmp-py-4 color-bg-accent-emphasis color-fg-on-emphasis show-on-focus js-skip-to-content">Skip to content</a>
+
+      <span data-view-component="true" class="progress-pjax-loader Progress position-fixed width-full">
+    <span style="width: 0%;" data-view-component="true" class="Progress-item progress-pjax-loader-bar left-0 top-0 color-bg-accent-emphasis"></span>
+</span>      
+      <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-react-css.97f54ffef8be5c78.module.css">
+<link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/keyboard-shortcuts-dialog.182bb7552d3acdf1.module.css">
+
+<react-partial partial-name="keyboard-shortcuts-dialog" data-ssr="false" data-attempted-ssr="false" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-partial.reactRoot"><div class="d-none"></div></div>
+</react-partial>
+
+
+
+
+
+      
+
+          
+
+              
+
+
+
+
+
+
+
+
+      <div data-view-component="true" class="js-stale-session-flash stale-session-flash flash flash-warn flash-full">
+  
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+        <span class="js-stale-session-flash-signed-in">You signed in with another tab or window. <a class="Link--inTextBlock" href="https://github.com/mandiant/gopacket">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-signed-out">You signed out in another tab or window. <a class="Link--inTextBlock" href="https://github.com/mandiant/gopacket">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-switched">You switched accounts on another tab or window. <a class="Link--inTextBlock" href="https://github.com/mandiant/gopacket">Reload</a> to refresh your session.</span>
+
+    <button id="icon-button-6851d122-d607-4efb-935f-e3a0dff8cb45" aria-labelledby="tooltip-f8dd9e64-d32d-49fc-ac24-114136729c1e" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+</button><tool-tip id="tooltip-f8dd9e64-d32d-49fc-ac24-114136729c1e" for="icon-button-6851d122-d607-4efb-935f-e3a0dff8cb45" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute" aria-hidden="true" role="tooltip"><slot></slot>Dismiss alert</tool-tip>
+
+
+  
+</div>
+    </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+
+
+
+
+
+
+
+    <div id="js-flash-container" class="flash-container" data-turbo-replace="">
+
+
+
+
+  
+    
+<div class="flash flash-full   {{ className }}">
+  <div>
+    <button autofocus="" class="flash-close js-flash-close" type="button" aria-label="Dismiss this message">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    <div aria-atomic="true" role="alert" class="js-flash-alert">
+      
+      <div>{{ message }}</div>
+
+    </div>
+  </div>
+</div>
+  
+</div>
+
+
+    
+
+
+
+
+
+
+  <div class="application-main " data-commit-hovercards-enabled="" data-discussion-hovercards-enabled="" data-issue-and-pr-hovercards-enabled="" data-project-hovercards-enabled="">
+        <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode" class="">
+    <main id="js-repo-pjax-container">
+      
+      
+    
+
+    
+
+    
+
+
+
+
+
+
+
+  
+
+  <div id="repository-container-header" class="tmp-pt-3 hide-full-screen" style="background-color: var(--page-header-bgColor, var(--color-page-header-bg));" data-turbo-replace="">
+
+      <div class="d-flex flex-nowrap flex-justify-end tmp-mb-3  tmp-px-3 tmp-px-lg-5" style="gap: 1rem;">
+
+        <div class="flex-auto min-width-0 width-fit">
+            
+  <div class=" d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo color-fg-muted mr-2 tmp-mr-2">
+    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
+</svg>
+    
+    <span class="author flex-self-stretch" itemprop="author">
+      <a class="url fn" rel="author" data-hovercard-type="organization" data-hovercard-url="/orgs/mandiant/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/mandiant" aria-keyshortcuts="Alt+ArrowUp">
+        mandiant
+</a>    </span>
+    <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
+    <strong itemprop="name" class="mr-2 flex-self-stretch">
+      <a data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame" href="https://github.com/mandiant/gopacket">gopacket</a>
+    </strong>
+
+    <span></span><span class="Label Label--secondary v-align-middle mr-1">Public</span>
+  </div>
+
+
+        </div>
+
+        <div id="repository-details-container" class="flex-shrink-0" data-turbo-replace="" style="max-width: 70%;">
+            <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
+    
+      
+
+  <li>
+            <a href="https://github.com/login?return_to=%2Fmandiant%2Fgopacket" rel="nofollow" id="repository-details-watch-button" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/mandiant/gopacket&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="5830238b62eca44ad45ac5b5167558f440cd618979deaf112b9e013760d824ce" aria-label="You must be signed in to change notification settings" data-view-component="true" class="btn-sm btn" aria-describedby="tooltip-8c005019-1380-4e2c-b08c-ac12f3ba6437">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-bell mr-2 tmp-mr-2">
+    <path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z"></path>
+</svg>Notifications
+</a>    <tool-tip id="tooltip-8c005019-1380-4e2c-b08c-ac12f3ba6437" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute" role="tooltip"><slot></slot>You must be signed in to change notification settings</tool-tip>
+
+  </li>
+
+  <li>
+          <a icon="repo-forked" id="fork-button" href="https://github.com/login?return_to=%2Fmandiant%2Fgopacket" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:1207268571,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/mandiant/gopacket&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="c7fc4941af88e02138e159b2c62c74692d0007e53d42e5dc91d8eb50111fed55" data-view-component="true" class="btn-sm btn">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>Fork
+    <span id="repo-network-counter" data-pjax-replace="true" data-turbo-replace="true" title="56" data-view-component="true" class="Counter">56</span>
+</a>
+  </li>
+
+  <li>
+        <div data-view-component="true" class="BtnGroup d-flex">
+        <a href="https://github.com/login?return_to=%2Fmandiant%2Fgopacket" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:1207268571,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/mandiant/gopacket&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="47da429e3f16fb740263df9f7dabb078ea85bc1e90f36abc81c1e95a2a9c11b1" aria-label="You must be signed in to star a repository" data-view-component="true" class="tooltipped tooltipped-sw btn-sm btn">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star v-align-text-bottom d-inline-block mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg><span data-view-component="true" class="d-inline">
+          Star
+</span>          <span id="repo-stars-counter-star" aria-label="677 users starred this repository" data-singular-suffix="user starred this repository" data-plural-suffix="users starred this repository" data-turbo-replace="true" title="677" data-view-component="true" class="Counter js-social-count">677</span>
+</a></div>
+  </li>
+
+</ul>
+
+        </div>
+      </div>
+
+        <div id="responsive-meta-container" data-turbo-replace="">
+</div>
+
+
+          
+
+  </div>
+  
+
+
+
+<turbo-frame id="repo-content-turbo-frame" target="_top" data-turbo-action="advance" class="">
+    <div id="repo-content-pjax-container" class="repository-content ">
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+
+<react-app app-name="code-view" initial-path="/mandiant/gopacket" style="display: block; min-height: calc(100vh - 64px);" data-attempted-ssr="true" data-ssr="true" data-lazy="false" data-alternate="false" data-data-router-enabled="true" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-app.reactRoot"> <!-- --> <a id="code-view-repo-link" href="https://github.com/mandiant/gopacket" data-discover="true"></a> <div class="d-none"></div><div><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d" data-component="PageLayout"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div data-component="PageLayout.Content" class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden-narrow="false"><div class="prc-PageLayout-Content-xWL-A" data-width="full" style="--spacing:var(--spacing-none)"><div class="SharedPageLayout-module__content__IwGAp" data-selector="repos-split-pane-content" tabindex="0"><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d container-xl" data-component="PageLayout"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div data-component="PageLayout.Content" class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden="false"><div class="prc-PageLayout-Content-xWL-A" data-width="large" style="--spacing:var(--spacing-condensed)"><div class="OverviewContent-module__Box__PF75K tmp-pl-lg-3 mt-0"><div class="OverviewHeader-module__Box__cC1RH"></div><div class="OverviewContent-module__Box_1__MPS0U"><div class="OverviewContent-module__Box_2__Di8Pb"><div class="OverviewContent-module__Box_3__wzlJx"><button data-component="Button" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" style="min-width:0" aria-label="main branch" data-testid="anchor-button" data-icv-name="Switch branches/tags" class="prc-Button-ButtonBase-9n-Xk overview-ref-selector width-full RefSelectorAnchoredOverlay-module__RefSelectorOverlayBtn__a3WK3" data-loading="false" data-size="medium" data-variant="default" id="ref-picker-repos-header-ref-selector"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayContainer__yaf4p"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayHeader__XtXRG"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></div><div class="ref-selector-button-text-container RefSelectorAnchoredOverlay-module__RefSelectorBtnTextContainer__Di3rk"><span class="RefSelectorAnchoredOverlay-module__RefSelectorText__w_fmP">&nbsp;<!-- -->main</span></div></div></span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="d-none"></div></div><div class="OverviewContent-module__Box_4__qf73o"><a data-component="Button" type="button" href="https://github.com/mandiant/gopacket/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">1 </strong>Branch</span></span></span></a><a data-component="Button" type="button" href="https://github.com/mandiant/gopacket/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">0 </strong>Tags</span></span></span></a></div><div class="OverviewContent-module__Box_5__Zc3i7"><a data-component="Button" type="button" aria-label="Go to Branches page" href="https://github.com/mandiant/gopacket/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></a><a data-component="Button" type="button" aria-label="Go to Tags page" href="https://github.com/mandiant/gopacket/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></a></div></div><div class="OverviewContent-module__Box_6__Y_Yb_"><div class="OverviewContent-module__Box_7__JuRXo"><div class="d-none"></div><div class="OverviewContent-module__Box_8__UZCZh"><div class="OverviewContent-module__FileResultsList__EjrTH"><span class="d-flex FileResultsList-module__FilesSearchBox__ivVkc TextInput-wrapper prc-components-TextInputWrapper-Hpdqi prc-components-TextInputBaseWrapper-wY-n0" data-no-trailing-action="true" data-component="TextInput" data-leading-visual="true" data-trailing-visual="true" aria-busy="false"><span class="TextInput-icon" id="_r_0_" aria-hidden="true" data-component="TextInput.LeadingVisual"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-search" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg></span><input aria-label="Go to file" role="combobox" aria-controls="file-results-list" aria-expanded="false" aria-haspopup="dialog" autocorrect="off" spellcheck="false" placeholder="Go to file" aria-describedby="_r_0_ _r_1_" data-component="input" class="prc-components-Input-IwWrt" type="text" value=""><span class="TextInput-icon" id="_r_1_" aria-hidden="true" data-component="TextInput.TrailingVisual"></span></span></div></div><div class="OverviewContent-module__Box_9__bqMPw"><button data-component="Button" type="button" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Go to file</span></span></button></div></div><button data-component="Button" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-size="medium" data-variant="primary" id="_R_94ql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-code hide-sm" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3">Code</span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="OverviewContent-module__Box_10__mGSb4"><button data-component="IconButton" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_R_7r4ql3al1d_" id="_R_b4ql3al1d_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" data-component="Tooltip" aria-hidden="true" id="_R_7r4ql3al1d_" popover="auto">Open more actions menu</span></div></div></div><div class="OverviewContent-module__Box_11__F19kY"><div data-hpc="true" containertiming="hpc"><div class="d-none"></div><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading" id="folders-and-files">Folders and files</h2><table class="Table-module__Box__HZKiQ" aria-labelledby="folders-and-files"><thead class="DirectoryContent-module__OverviewHeaderRow__hOrKy Table-module__Box_1__VacXC"><tr class="Table-module__Box_2__PBp9s"><th colspan="2" class="DirectoryContent-module__Box__iC_5e"><span class="text-bold">Name</span></th><th colspan="1" class="DirectoryContent-module__Box_1__fuSBO"><span class="text-bold">Name</span></th><th class="hide-sm"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit message" style="--truncate-max-width:125px"><span class="text-bold">Last commit message</span></div></th><th colspan="1" class="DirectoryContent-module__Box_2__Ccrx7"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit date" style="--truncate-max-width:125px"><span class="text-bold">Last commit date</span></div></th></tr></thead><tbody><tr class="DirectoryContent-module__Box_3__gl6dE"><td colspan="3" class="bgColor-muted p-1 rounded-top-2"><div class="LatestCommit-module__Box__B25ZT"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading">Latest commit</h2><div data-testid="latest-commit" class="LatestCommit-module__Box_1__YkEgg"><div class="CommitAttribution-module__CommitAttributionContainer__I_rfs"><div data-testid="author-avatar" class="AuthorAvatar-module__AuthorAvatarContainer__n0MVc"><a class="prc-Link-Link-9ZwDx" data-component="Link" href="https://github.com/psycep" data-testid="avatar-icon-link" data-hovercard-url="/users/psycep/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp"><img data-component="Avatar" class="AuthorAvatar-module__authorAvatarImage__a3R8x prc-Avatar-Avatar-0xaUi" alt="psycep" width="20" height="20" data-testid="github-avatar" aria-label="psycep" src="https://avatars.githubusercontent.com/u/93807253?v=4&amp;size=40" style="--avatarSize-regular: 20px;"></a><a class="AuthorAvatar-module__authorHoverableLink__MHTT8 prc-Link-Link-9ZwDx" data-component="Link" href="https://github.com/mandiant/gopacket/commits?author=psycep" aria-label="commits by psycep" data-hovercard-url="/users/psycep/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" style="--author-font-weight: var(--base-text-weight-semibold); --author-font-color: var(--fgColor-default);">psycep</a></div><span class=""></span></div><div class="d-none d-sm-flex LatestCommit-module__Box_2__pSPKJ"><div class="Truncate flex-items-center f5"><span class="Truncate-text prc-Text-Text-9mHv3" data-testid="latest-commit-html"><a data-hovercard-url="/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558/hovercard" data-pjax="true" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558" aria-keyshortcuts="Alt+ArrowUp">Merge pull request</a> <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="4595932473" data-permission-text="Title is private" data-url="https://github.com/mandiant/gopacket/issues/35" data-hovercard-type="pull_request" data-hovercard-url="/mandiant/gopacket/pull/35/hovercard" href="https://github.com/mandiant/gopacket/pull/35" aria-keyshortcuts="Alt+ArrowUp">#35</a> <a data-hovercard-url="/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558/hovercard" data-pjax="true" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558" aria-keyshortcuts="Alt+ArrowUp">from ahm3dgg/allow-multiple-smb-dialects</a></span></div><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_b_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" data-component="Tooltip" aria-hidden="true" id="_r_b_" popover="auto">Open commit details</span></div><span class="d-flex d-sm-none fgColor-muted f6"><relative-time tense="past" datetime="2026-06-09T03:00:45.000Z" title="Jun 8, 2026, 11:00 PM EDT"><span part="root">2 weeks ago</span>Jun 8, 2026</relative-time></span></div><div class="d-flex flex-shrink-0 gap-2"><div data-testid="latest-commit-details" class="d-none d-sm-flex flex-items-center"><span class="d-flex flex-nowrap fgColor-muted f6"><a class="Link--secondary prc-Link-Link-9ZwDx" data-component="Link" aria-label="Commit f638237" data-hovercard-url="/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558/hovercard" data-hovercard-type="commit" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" href="https://github.com/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558" data-discover="true">f638237</a>&nbsp;·&nbsp;<relative-time tense="past" datetime="2026-06-09T03:00:45.000Z" title="Jun 8, 2026, 11:00 PM EDT"><span part="root">2 weeks ago</span>Jun 8, 2026</relative-time></span></div><div class="d-flex gap-2"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading">History</h2><a data-component="LinkButton" href="https://github.com/mandiant/gopacket/commits/main/" class="prc-Button-ButtonBase-9n-Xk d-none d-lg-flex LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span class="fgColor-default">55 Commits</span></span></span></a><div class="d-sm-none"><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_d_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" data-component="Tooltip" aria-hidden="true" id="_r_d_" popover="auto">Open commit details</span></div><div class="d-flex d-lg-none"><a data-component="LinkButton" aria-label="View commit history for this file." href="https://github.com/mandiant/gopacket/commits/main/" class="prc-Button-ButtonBase-9n-Xk LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible" aria-describedby="_R_iqj6oql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span></span></a><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" data-component="Tooltip" role="tooltip" aria-hidden="true" id="_R_iqj6oql3al1d_" popover="auto">55 Commits</span></div></div></div></div></td></tr><tr class="react-directory-row undefined" id="folder-row-0"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="This path skips through empty directories" aria-label="internal/build, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/internal/build" data-discover="true"><span class="react-directory-default-color" data-testid="path-name-segment">internal/</span><span class="" data-testid="path-name-segment">build</span></a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="This path skips through empty directories" aria-label="internal/build, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/internal/build" data-discover="true"><span class="react-directory-default-color" data-testid="path-name-segment">internal/</span><span class="" data-testid="path-name-segment">build</span></a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Initial commit" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/160b6a42805e2c782bfa5b929a303332944baeef">Initial commit</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-17T19:20:41.000Z" title="Apr 17, 2026, 3:20 PM EDT"><span part="root">2 months ago</span>Apr 17, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-1"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="pkg" aria-label="pkg, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/pkg" data-discover="true">pkg</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="pkg" aria-label="pkg, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/pkg" data-discover="true">pkg</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Merge pull request #35 from ahm3dgg/allow-multiple-smb-dialects
+
+Allow Multiple SMB Dialects" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558">Merge pull request</a> <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="4595932473" data-permission-text="Title is private" data-url="https://github.com/mandiant/gopacket/issues/35" data-hovercard-type="pull_request" data-hovercard-url="/mandiant/gopacket/pull/35/hovercard" href="https://github.com/mandiant/gopacket/pull/35" aria-keyshortcuts="Alt+ArrowUp">#35</a> <a data-pjax="true" title="Merge pull request #35 from ahm3dgg/allow-multiple-smb-dialects
+
+Allow Multiple SMB Dialects" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f638237f7d0fdb456b6eb10b2b9d945a08a30558">from ahm3dgg/allow-multiple-smb-dialects</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-06-09T03:00:45.000Z" title="Jun 8, 2026, 11:00 PM EDT"><span part="root">2 weeks ago</span>Jun 8, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-2"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="tools" aria-label="tools, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/tools" data-discover="true">tools</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="tools" aria-label="tools, (Directory)" class="Link--primary" href="https://github.com/mandiant/gopacket/tree/main/tools" data-discover="true">tools</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="exec-tools: fix output polling for long-running commands
+
+Two compounding bugs in wmiexec / atexec / smbexec / dcomexec made
+the output-retrieval loop return early on any command that didn't
+finish within the first 100ms poll, leaking the temp file in ADMIN$
+/ C$. Issue #22 reports the symptom for wmiexec (systeminfo, ping);
+the same broken pattern existed in all four tools.
+
+1. Wrong call site. The polling loop treated a sharing-violation
+   on smbClient.Cat as the signal &quot;command still running.&quot; Cat
+   opens with FILE_SHARE_READ-compatible access — it succeeds
+   against the writer on the first poll and returns the file as
+   it currently exists (typically empty). The conflict actually
+   lives on Rm: deleting the file requires DELETE access, which
+   conflicts with the writer's share mode. Moved the sharing-
+   violation check from Cat to Rm. Matches Impacket's wmiexec.py.
+
+2. Dead string match. The check was
+   strings.Contains(err.Error(), &quot;STATUS_SHARING_VIOLATION&quot;). The
+   underlying smb2 library's NtStatus.Error() returns only the
+   human-readable description (&quot;A file cannot be opened because
+   the share access flags are incompatible.&quot;) — the literal
+   constant name never appears in err.Error(), so the check could
+   never fire. Same issue for STATUS_OBJECT_NAME_NOT_FOUND in the
+   not-found branch (further muddled by smb2/conn.go translating
+   that NTSTATUS to os.ErrNotExist before wrapping).
+
+Added typed helpers in pkg/smb (IsSharingViolation, IsNotFound)
+that unwrap through *os.PathError and match on
+*smb2.ResponseError.Code plus the os.ErrNotExist sentinel.
+NTSTATUS values are hardcoded since the smb2/internal/erref
+package can't be imported from outside the smb2 tree.
+
+The dcomexec &quot;broken / connection reset / use of closed&quot; branch
+stays string-matched — those errors come from net, not smb2.
+
+Thanks to @aimogging in #22 for the diagnosis and proof-of-concept
+in #29; this change applies the same Cat-vs-Rm insight across all
+four exec tools and replaces the err.Error() substring matching
+with typed-error helpers so future smb2 library changes don't
+silently break the check again.
+
+Verified against GOAD winterfell: wmiexec whoami / systeminfo /
+ping -n 4 1.1.1.1 all return full output, exit 0, no ADMIN$
+residue, both directly from the operator box and over SOCKS5H
+proxy." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/dfe4d2ea7b83f703d588bd76d6995a4d6c807271">exec-tools: fix output polling for long-running commands</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-12T06:30:10.000Z" title="May 12, 2026, 2:30 AM EDT"><span part="root">last month</span>May 12, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-3"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title=".gitignore" aria-label=".gitignore, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/.gitignore" data-discover="true">.gitignore</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title=".gitignore" aria-label=".gitignore, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/.gitignore" data-discover="true">.gitignore</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Initial commit" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/160b6a42805e2c782bfa5b929a303332944baeef">Initial commit</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-17T19:20:41.000Z" title="Apr 17, 2026, 3:20 PM EDT"><span part="root">2 months ago</span>Apr 17, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-4"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="CONTRIBUTING.md" aria-label="CONTRIBUTING.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/CONTRIBUTING.md" data-discover="true">CONTRIBUTING.md</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="CONTRIBUTING.md" aria-label="CONTRIBUTING.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/CONTRIBUTING.md" data-discover="true">CONTRIBUTING.md</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Initial commit" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/160b6a42805e2c782bfa5b929a303332944baeef">Initial commit</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-17T19:20:41.000Z" title="Apr 17, 2026, 3:20 PM EDT"><span part="root">2 months ago</span>Apr 17, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-5"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KNOWN_ISSUES.md" aria-label="KNOWN_ISSUES.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/KNOWN_ISSUES.md" data-discover="true">KNOWN_ISSUES.md</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KNOWN_ISSUES.md" aria-label="KNOWN_ISSUES.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/KNOWN_ISSUES.md" data-discover="true">KNOWN_ISSUES.md</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="kerberos, dcerpc: tunnel KDC traffic through pkg/transport
+
+The embedded gokrb5/v8 library hard-coded net.DialTimeout for AS/TGS
+exchanges, bypassing -proxy and leaking the operator's source IP to the
+KDC (UDP/88 first, TCP/88 fallback). The DCERPC Kerberos auth path used
+a separate library (oiweiwei/gokrb5.fork/v9 via go-msrpc) that leaked the
+same way.
+
+Vendor jcmturner/gokrb5/v8 in-tree at pkg/third_party/gokrb5 with a
+required KDCDialer first argument on every client constructor, so
+proxy-bypass becomes a compile error. Wire kerberos.TransportKDCDialer
+everywhere a gokrb5 client is built. Stamp udp_preference_limit=1 and
+dns_lookup_kdc/realm=false unconditionally so KRB5 is TCP-only and the
+OS resolver is never consulted; /etc/krb5.conf and $KRB5_CONFIG are
+deliberately not read.
+
+For DCERPC: set krbConfig.KDCDialer on every krb5.Config, pass
+dcerpc.WithDialer(transport.ContextDialer{}) on every dcerpc.Dial, and
+use the &quot;ncacn_ip_tcp:&quot; StringBinding prefix on the OXID-pivot dial so
+go-msrpc's hard-coded pre-dial net.LookupIP is skipped (defers FQDN
+resolution to the SOCKS5 proxy).
+
+Verified against a live GOAD lab: 8 Kerberos-touching tools plus 5
+NTLM/password/PtH regressions all operate through SOCKS5 with zero
+direct packets to the AD subnet. Negative control (no -proxy)
+immediately emits direct SYNs to the KDC, confirming both the leak
+class and the fix." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/8eea02943132c064aeb89372ad76777ab8213bd9">kerberos, dcerpc: tunnel KDC traffic through pkg/transport</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-12T04:23:21.000Z" title="May 12, 2026, 12:23 AM EDT"><span part="root">last month</span>May 12, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-6"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="LICENSE" aria-label="LICENSE, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/LICENSE" data-discover="true">LICENSE</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="LICENSE" aria-label="LICENSE, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/LICENSE" data-discover="true">LICENSE</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Initial commit" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/160b6a42805e2c782bfa5b929a303332944baeef">Initial commit</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-17T19:20:41.000Z" title="Apr 17, 2026, 3:20 PM EDT"><span part="root">2 months ago</span>Apr 17, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-7"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="Makefile" aria-label="Makefile, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/Makefile" data-discover="true">Makefile</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="Makefile" aria-label="Makefile, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/Makefile" data-discover="true">Makefile</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Initial commit" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/160b6a42805e2c782bfa5b929a303332944baeef">Initial commit</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-17T19:20:41.000Z" title="Apr 17, 2026, 3:20 PM EDT"><span part="root">2 months ago</span>Apr 17, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-8"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="NOTICE" aria-label="NOTICE, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/NOTICE" data-discover="true">NOTICE</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="NOTICE" aria-label="NOTICE, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/NOTICE" data-discover="true">NOTICE</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="kerberos, dcerpc: tunnel KDC traffic through pkg/transport
+
+The embedded gokrb5/v8 library hard-coded net.DialTimeout for AS/TGS
+exchanges, bypassing -proxy and leaking the operator's source IP to the
+KDC (UDP/88 first, TCP/88 fallback). The DCERPC Kerberos auth path used
+a separate library (oiweiwei/gokrb5.fork/v9 via go-msrpc) that leaked the
+same way.
+
+Vendor jcmturner/gokrb5/v8 in-tree at pkg/third_party/gokrb5 with a
+required KDCDialer first argument on every client constructor, so
+proxy-bypass becomes a compile error. Wire kerberos.TransportKDCDialer
+everywhere a gokrb5 client is built. Stamp udp_preference_limit=1 and
+dns_lookup_kdc/realm=false unconditionally so KRB5 is TCP-only and the
+OS resolver is never consulted; /etc/krb5.conf and $KRB5_CONFIG are
+deliberately not read.
+
+For DCERPC: set krbConfig.KDCDialer on every krb5.Config, pass
+dcerpc.WithDialer(transport.ContextDialer{}) on every dcerpc.Dial, and
+use the &quot;ncacn_ip_tcp:&quot; StringBinding prefix on the OXID-pivot dial so
+go-msrpc's hard-coded pre-dial net.LookupIP is skipped (defers FQDN
+resolution to the SOCKS5 proxy).
+
+Verified against a live GOAD lab: 8 Kerberos-touching tools plus 5
+NTLM/password/PtH regressions all operate through SOCKS5 with zero
+direct packets to the AD subnet. Negative control (no -proxy)
+immediately emits direct SYNs to the KDC, confirming both the leak
+class and the fix." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/8eea02943132c064aeb89372ad76777ab8213bd9">kerberos, dcerpc: tunnel KDC traffic through pkg/transport</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-12T04:23:21.000Z" title="May 12, 2026, 12:23 AM EDT"><span part="root">last month</span>May 12, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-9"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="README.md" aria-label="README.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/README.md" data-discover="true">README.md</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="README.md" aria-label="README.md, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/README.md" data-discover="true">README.md</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="README: add author byline" class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/901986d7fda69fdd9955898f38526ae43064ac8c">README: add author byline</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-14T21:36:32.000Z" title="May 14, 2026, 5:36 PM EDT"><span part="root">last month</span>May 14, 2026</relative-time></div></td></tr><tr class="react-directory-row truncate-for-mobile" id="folder-row-10"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="go.mod" aria-label="go.mod, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/go.mod" data-discover="true">go.mod</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="go.mod" aria-label="go.mod, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/go.mod" data-discover="true">go.mod</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="go.mod: bump x/crypto to v0.45.0 to clear ssh CVEs
+
+Clears GHSA-f6x5-jh6r-wrfv (ssh/agent OOB panic) and GHSA-j5w8-q4qc-rx2x
+(ssh unbounded memory). We only import x/crypto/md4 and x/crypto/pbkdf2,
+so neither vuln is reachable from this repo, but bumping silences the
+Dependabot alerts. x/net and x/text pulled forward by go mod tidy." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f83dc52479e1becc12dc6834c140eefe22216e41">go.mod: bump x/crypto to v0.45.0 to clear ssh CVEs</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-14T21:41:55.000Z" title="May 14, 2026, 5:41 PM EDT"><span part="root">last month</span>May 14, 2026</relative-time></div></td></tr><tr class="react-directory-row truncate-for-mobile" id="folder-row-11"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="go.sum" aria-label="go.sum, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/go.sum" data-discover="true">go.sum</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="go.sum" aria-label="go.sum, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/go.sum" data-discover="true">go.sum</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="go.mod: bump x/crypto to v0.45.0 to clear ssh CVEs
+
+Clears GHSA-f6x5-jh6r-wrfv (ssh/agent OOB panic) and GHSA-j5w8-q4qc-rx2x
+(ssh unbounded memory). We only import x/crypto/md4 and x/crypto/pbkdf2,
+so neither vuln is reachable from this repo, but bumping silences the
+Dependabot alerts. x/net and x/text pulled forward by go mod tidy." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/f83dc52479e1becc12dc6834c140eefe22216e41">go.mod: bump x/crypto to v0.45.0 to clear ssh CVEs</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-05-14T21:41:55.000Z" title="May 14, 2026, 5:41 PM EDT"><span part="root">last month</span>May 14, 2026</relative-time></div></td></tr><tr class="react-directory-row truncate-for-mobile" id="folder-row-12"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="install.sh" aria-label="install.sh, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/install.sh" data-discover="true">install.sh</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="install.sh" aria-label="install.sh, (File)" class="Link--primary" href="https://github.com/mandiant/gopacket/blob/main/install.sh" data-discover="true">install.sh</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="install.sh: prefix cross-compile outputs with gopacket-
+
+The native install already renamed each tool to gopacket-<toolname>
+before copying to /usr/local/bin, but the portable and windows cross-
+compile targets dropped raw binaries like ping.exe, net.exe, reg.exe,
+attrib.exe, services.exe into ./dist/. When a user copies one of those
+to a Windows host and runs it from the same directory, cmd.exe's PATH
+resolution picks up the local binary before the Windows built-in of
+the same name, shadowing tools users rely on. The portable target on
+Linux has the same risk for binaries named ping, net, etc.
+
+Applies the same normalization (lowercase, underscores to hyphens)
+and gopacket- prefix the native install already uses, but at build
+time for the cross-compile targets. Native behavior is unchanged:
+./bin/ still gets raw names so install_native can prefix on copy." class="Link--secondary" href="https://github.com/mandiant/gopacket/commit/cae9eb3c79e4fdf2a17a3a4a2d3d28030839dedb">install.sh: prefix cross-compile outputs with gopacket-</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-04-22T17:28:37.000Z" title="Apr 22, 2026, 1:28 PM EDT"><span part="root">2 months ago</span>Apr 22, 2026</relative-time></div></td></tr><tr class="show-for-mobile DirectoryContent-module__Box_4__RhIsE" data-testid="view-all-files-row"><td colspan="3" class="DirectoryContent-module__Box_5__GaE8N"><div><button class="prc-Link-Link-9ZwDx" data-component="Link">View all files</button></div></td></tr></tbody></table></div><div class="OverviewRepoFiles-module__Box_1__OXeac"><div class="OverviewRepoFiles-module__Box_2__zsLGk"><div itemscope="" itemtype="https://schema.org/abstract" class="OverviewRepoFiles-module__Box_3__bBU1C"><h2 class="prc-src-InternalVisuallyHidden-2YaI6">Repository files navigation</h2><button data-component="ActionMenu.Button" type="button" aria-label="Outline" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk OverviewRepoFiles-module__ActionMenu_Button__OKDYV" data-loading="false" data-size="medium" data-variant="invisible" id="_R_r8ql3al1d_" style="anchor-name: --anchored-overlay-anchor-_R_3r8ql3al1dH1_;"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-list-unordered" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M5.75 2.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-6a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg></button></div><div class="js-snippet-clipboard-copy-unpositioned DirectoryRichtextContent-module__SharedMarkdownContent__hHXUL" data-hpc="true" containertiming="hpc"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h1 tabindex="-1" class="heading-element" dir="auto">gopacket</h1><a id="user-content-gopacket" class="anchor" aria-label="Permalink: gopacket" href="https://github.com/mandiant/gopacket#gopacket"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">By Jacob Paullus (<a href="https://x.com/psycep_" rel="nofollow">@psycep_</a>)</p>
+<p dir="auto">A complete Go implementation of <a href="https://github.com/fortra/impacket">Impacket</a> - 63 tools and 24 library packages for Windows network protocol interaction, Active Directory enumeration, and attack execution. Built as a native Go framework so you can compile once and run anywhere without Python dependencies.</p>
+<blockquote>
+<p dir="auto"><strong>Beta Release - Highly Experimental.</strong> gopacket is under active development. Core tools have been tested against Active Directory lab environments, but edge cases and protocol quirks are expected. If something isn't working, please test the same operation with Impacket side-by-side and include both outputs in your bug report. This helps us quickly identify whether it's a gopacket-specific issue or a shared protocol limitation.</p>
+</blockquote>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Installation</h2><a id="user-content-installation" class="anchor" aria-label="Permalink: Installation" href="https://github.com/mandiant/gopacket#installation"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>git clone https://github.com/mandiant/gopacket
+<span class="pl-c1">cd</span> gopacket
+
+<span class="pl-c"><span class="pl-c">#</span> Default: Linux/macOS build + install to /usr/local/bin</span>
+./install.sh
+
+<span class="pl-c"><span class="pl-c">#</span> Run with no flags and it prompts you through the choices interactively.</span>
+<span class="pl-c"><span class="pl-c">#</span> Or pick a target directly:</span>
+./install.sh --target portable   <span class="pl-c"><span class="pl-c">#</span> static Linux binaries in ./dist/portable/</span>
+./install.sh --target windows    <span class="pl-c"><span class="pl-c">#</span> Windows .exe cross-compiles in ./dist/windows/</span>
+./install.sh --target all        <span class="pl-c"><span class="pl-c">#</span> build every target in one run</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Build without installing (native only)</span>
+./install.sh --build-only
+
+<span class="pl-c"><span class="pl-c">#</span> Or build with make</span>
+make build</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="git clone https://github.com/mandiant/gopacket
+cd gopacket
+
+# Default: Linux/macOS build + install to /usr/local/bin
+./install.sh
+
+# Run with no flags and it prompts you through the choices interactively.
+# Or pick a target directly:
+./install.sh --target portable   # static Linux binaries in ./dist/portable/
+./install.sh --target windows    # Windows .exe cross-compiles in ./dist/windows/
+./install.sh --target all        # build every target in one run
+
+# Build without installing (native only)
+./install.sh --build-only
+
+# Or build with make
+make build" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The default (<code>--target native</code>) build needs Go 1.24.13+, GCC, and libpcap
+development headers (<code>apt install build-essential libpcap-dev</code> on
+Debian/Ubuntu/Kali, <code>yum install gcc libpcap-devel</code> on RHEL/CentOS, or
+<code>brew install libpcap</code> on macOS). The <code>portable</code> and <code>windows</code> targets only
+need the Go toolchain; <code>sniff</code> and <code>split</code> become stubs in those builds
+because they require libpcap. See <a href="https://github.com/mandiant/gopacket#platform-support">Platform Support</a> for
+the full matrix.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Platform Support</h3><a id="user-content-platform-support" class="anchor" aria-label="Permalink: Platform Support" href="https://github.com/mandiant/gopacket#platform-support"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">gopacket builds on Linux, macOS, and Windows. The set of working tools and
+available proxying paths depends on the build flags:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Build</th>
+<th>Tools available</th>
+<th>Proxying</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux / macOS with cgo (default)</td>
+<td>All 63</td>
+<td>proxychains (LD_PRELOAD) and/or <code>-proxy</code> SOCKS5</td>
+</tr>
+<tr>
+<td>Linux with <code>CGO_ENABLED=0</code></td>
+<td>61 (<code>sniff</code>, <code>split</code> become stubs)</td>
+<td><code>-proxy</code> only (proxychains needs the libc hook)</td>
+</tr>
+<tr>
+<td>Windows (<code>GOOS=windows CGO_ENABLED=0</code>)</td>
+<td>60 (<code>sniff</code>, <code>split</code>, <code>sniffer</code> stubs)</td>
+<td><code>-proxy</code> only (no <code>LD_PRELOAD</code> on Windows)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto"><code>sniff</code> and <code>split</code> depend on libpcap via cgo; <code>sniffer</code> depends on Unix raw
+sockets. When a tool can't be built for the target, gopacket substitutes a
+stub that prints a clear message and exits 1, so <code>go build ./...</code> always
+succeeds and the install layout is consistent across platforms.</p>
+<p dir="auto">To uninstall:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>./install.sh --uninstall</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="./install.sh --uninstall" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Proxy Support</h2><a id="user-content-proxy-support" class="anchor" aria-label="Permalink: Proxy Support" href="https://github.com/mandiant/gopacket#proxy-support"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">gopacket supports two independent proxying paths. They can also be chained.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">proxychains (LD_PRELOAD)</h3><a id="user-content-proxychains-ld_preload" class="anchor" aria-label="Permalink: proxychains (LD_PRELOAD)" href="https://github.com/mandiant/gopacket#proxychains-ld_preload"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">All gopacket tools work through proxychains. Go binaries normally bypass proxychains because Go's runtime handles DNS and networking internally, skipping the <code>LD_PRELOAD</code> hooks that proxychains relies on. gopacket works around this by linking against the system C library for network operations, allowing proxychains to intercept connections normally.</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>proxychains gopacket-secretsdump <span class="pl-s"><span class="pl-pds">'</span>domain/user:password@target<span class="pl-pds">'</span></span>
+proxychains gopacket-smbclient -k -no-pass <span class="pl-s"><span class="pl-pds">'</span>domain/user@dc.domain.local<span class="pl-pds">'</span></span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="proxychains gopacket-secretsdump 'domain/user:password@target'
+proxychains gopacket-smbclient -k -no-pass 'domain/user@dc.domain.local'" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Internal SOCKS5 proxy (<code>-proxy</code>)</h3><a id="user-content-internal-socks5-proxy--proxy" class="anchor" aria-label="Permalink: Internal SOCKS5 proxy (-proxy)" href="https://github.com/mandiant/gopacket#internal-socks5-proxy--proxy"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Every tool accepts <code>-proxy</code> to route outbound TCP through a SOCKS5 server without relying on <code>LD_PRELOAD</code>. Accepted schemes: <code>socks5</code> and <code>socks5h</code>. When <code>-proxy</code> is unset, the <code>ALL_PROXY</code> / <code>all_proxy</code> environment variables are consulted as a fallback.</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 <span class="pl-s"><span class="pl-pds">'</span>domain/user:password@target<span class="pl-pds">'</span></span>
+ALL_PROXY=socks5h://127.0.0.1:1080 gopacket-smbclient <span class="pl-s"><span class="pl-pds">'</span>domain/user:password@target<span class="pl-pds">'</span></span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 'domain/user:password@target'
+ALL_PROXY=socks5h://127.0.0.1:1080 gopacket-smbclient 'domain/user:password@target'" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">UDP-dependent features are <strong>disabled</strong> under <code>-proxy</code> rather than silently leaking packets (SOCKS5 UDP ASSOCIATE is rarely supported by proxies, and bypassing the proxy for UDP would reveal the operator's real source IP). Affected features and their workarounds are documented in <a href="https://github.com/mandiant/gopacket/blob/main/KNOWN_ISSUES.md">KNOWN_ISSUES.md</a>.</p>
+<p dir="auto"><strong>Chaining:</strong> <code>-proxy</code> is compatible with proxychains. The TCP connection to the SOCKS5 proxy itself still goes through libc <code>connect()</code>, so <code>proxychains → gopacket → -proxy → target</code> works for nested routing scenarios.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Documentation</h2><a id="user-content-documentation" class="anchor" aria-label="Permalink: Documentation" href="https://github.com/mandiant/gopacket#documentation"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">See the <a href="https://github.com/mandiant/gopacket/wiki">Library Developer Guide</a> for full API documentation, code examples, and architecture overview for building custom tools on top of gopacket's 24 protocol packages.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Tools (63)</h2><a id="user-content-tools-63" class="anchor" aria-label="Permalink: Tools (63)" href="https://github.com/mandiant/gopacket#tools-63"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Remote Execution</h3><a id="user-content-remote-execution" class="anchor" aria-label="Permalink: Remote Execution" href="https://github.com/mandiant/gopacket#remote-execution"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>psexec</strong></td>
+<td>Remote command execution via SMB service creation</td>
+</tr>
+<tr>
+<td><strong>smbexec</strong></td>
+<td>Remote command execution via SMB (stealthier than psexec)</td>
+</tr>
+<tr>
+<td><strong>wmiexec</strong></td>
+<td>Remote command execution via WMI</td>
+</tr>
+<tr>
+<td><strong>dcomexec</strong></td>
+<td>Remote command execution via DCOM</td>
+</tr>
+<tr>
+<td><strong>atexec</strong></td>
+<td>Remote command execution via Task Scheduler</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Credential Dumping &amp; DPAPI</h3><a id="user-content-credential-dumping--dpapi" class="anchor" aria-label="Permalink: Credential Dumping &amp; DPAPI" href="https://github.com/mandiant/gopacket#credential-dumping--dpapi"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>secretsdump</strong></td>
+<td>SAM/LSA/NTDS.dit extraction and DCSync (remote + offline)</td>
+</tr>
+<tr>
+<td><strong>dpapi</strong></td>
+<td>DPAPI backup key extraction</td>
+</tr>
+<tr>
+<td><strong>esentutl</strong></td>
+<td>Offline ESE database parser (NTDS.dit)</td>
+</tr>
+<tr>
+<td><strong>registry-read</strong></td>
+<td>Offline Windows registry hive parser</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Kerberos</h3><a id="user-content-kerberos" class="anchor" aria-label="Permalink: Kerberos" href="https://github.com/mandiant/gopacket#kerberos"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>getTGT</strong></td>
+<td>Request a TGT with password, hash, or AES key</td>
+</tr>
+<tr>
+<td><strong>getST</strong></td>
+<td>Request a service ticket with S4U2Self/S4U2Proxy</td>
+</tr>
+<tr>
+<td><strong>GetUserSPNs</strong></td>
+<td>Kerberoasting - find and request SPNs</td>
+</tr>
+<tr>
+<td><strong>GetNPUsers</strong></td>
+<td>AS-REP roasting - find accounts without pre-auth</td>
+</tr>
+<tr>
+<td><strong>ticketer</strong></td>
+<td>Golden/silver ticket forging</td>
+</tr>
+<tr>
+<td><strong>ticketConverter</strong></td>
+<td>Convert between ccache and kirbi formats</td>
+</tr>
+<tr>
+<td><strong>describeTicket</strong></td>
+<td>Parse and decrypt Kerberos tickets</td>
+</tr>
+<tr>
+<td><strong>getPac</strong></td>
+<td>Request and parse PAC information</td>
+</tr>
+<tr>
+<td><strong>keylistattack</strong></td>
+<td>KERB-KEY-LIST-REQ attack (RODC)</td>
+</tr>
+<tr>
+<td><strong>raiseChild</strong></td>
+<td>Child-to-parent domain escalation via golden ticket</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Active Directory Enumeration</h3><a id="user-content-active-directory-enumeration" class="anchor" aria-label="Permalink: Active Directory Enumeration" href="https://github.com/mandiant/gopacket#active-directory-enumeration"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GetADUsers</strong></td>
+<td>Enumerate domain users via LDAP</td>
+</tr>
+<tr>
+<td><strong>GetADComputers</strong></td>
+<td>Enumerate domain computers via LDAP</td>
+</tr>
+<tr>
+<td><strong>GetLAPSPassword</strong></td>
+<td>Read LAPS passwords via LDAP</td>
+</tr>
+<tr>
+<td><strong>findDelegation</strong></td>
+<td>Find delegation configurations</td>
+</tr>
+<tr>
+<td><strong>lookupsid</strong></td>
+<td>SID brute-forcing via LSARPC</td>
+</tr>
+<tr>
+<td><strong>samrdump</strong></td>
+<td>Enumerate users via SAMR</td>
+</tr>
+<tr>
+<td><strong>rpcdump</strong></td>
+<td>Dump RPC endpoints via epmapper</td>
+</tr>
+<tr>
+<td><strong>rpcmap</strong></td>
+<td>Scan for accessible RPC interfaces</td>
+</tr>
+<tr>
+<td><strong>net</strong></td>
+<td>net user/group/computer enumeration via SAMR/LSARPC</td>
+</tr>
+<tr>
+<td><strong>netview</strong></td>
+<td>Enumerate sessions, shares, and logged-on users</td>
+</tr>
+<tr>
+<td><strong>CheckLDAPStatus</strong></td>
+<td>Check LDAP signing and channel binding requirements</td>
+</tr>
+<tr>
+<td><strong>DumpNTLMInfo</strong></td>
+<td>Dump NTLM authentication info from SMB negotiation</td>
+</tr>
+<tr>
+<td><strong>getArch</strong></td>
+<td>Detect remote OS architecture via RPC</td>
+</tr>
+<tr>
+<td><strong>machine_role</strong></td>
+<td>Detect machine role (DC, server, workstation)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Active Directory Attacks</h3><a id="user-content-active-directory-attacks" class="anchor" aria-label="Permalink: Active Directory Attacks" href="https://github.com/mandiant/gopacket#active-directory-attacks"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>addcomputer</strong></td>
+<td>Create/modify/delete machine accounts (SAMR + LDAP)</td>
+</tr>
+<tr>
+<td><strong>rbcd</strong></td>
+<td>Resource-Based Constrained Delegation manipulation</td>
+</tr>
+<tr>
+<td><strong>dacledit</strong></td>
+<td>Read/write DACLs on AD objects</td>
+</tr>
+<tr>
+<td><strong>owneredit</strong></td>
+<td>Read/modify object ownership</td>
+</tr>
+<tr>
+<td><strong>samedit</strong></td>
+<td>SAM account name spoofing (CVE-2021-42278/42287)</td>
+</tr>
+<tr>
+<td><strong>badsuccessor</strong></td>
+<td>BadSuccessor / backup operator escalation</td>
+</tr>
+<tr>
+<td><strong>changepasswd</strong></td>
+<td>Change/reset passwords via SAMR and LDAP</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">SMB Tools</h3><a id="user-content-smb-tools" class="anchor" aria-label="Permalink: SMB Tools" href="https://github.com/mandiant/gopacket#smb-tools"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>smbclient</strong></td>
+<td>Interactive SMB client (shares, ls, get, put, etc.)</td>
+</tr>
+<tr>
+<td><strong>smbserver</strong></td>
+<td>SMB server for file sharing</td>
+</tr>
+<tr>
+<td><strong>attrib</strong></td>
+<td>Query/modify file attributes via SMB</td>
+</tr>
+<tr>
+<td><strong>filetime</strong></td>
+<td>Query/modify file timestamps via SMB</td>
+</tr>
+<tr>
+<td><strong>services</strong></td>
+<td>Remote service management via SVCCTL</td>
+</tr>
+<tr>
+<td><strong>reg</strong></td>
+<td>Remote registry operations via WINREG</td>
+</tr>
+<tr>
+<td><strong>Get-GPPPassword</strong></td>
+<td>Extract Group Policy Preferences passwords from SYSVOL</td>
+</tr>
+<tr>
+<td><strong>karmaSMB</strong></td>
+<td>Rogue SMB server for hash capture</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">NTLM Relay</h3><a id="user-content-ntlm-relay" class="anchor" aria-label="Permalink: NTLM Relay" href="https://github.com/mandiant/gopacket#ntlm-relay"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ntlmrelayx</strong></td>
+<td>Full NTLM relay framework with multi-protocol support</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">ntlmrelayx supports:</p>
+<ul dir="auto">
+<li><strong>Capture servers:</strong> SMB, HTTP/HTTPS, WCF (ADWS), RAW, RPC, WinRM</li>
+<li><strong>Relay clients:</strong> SMB, LDAP/LDAPS, HTTP/HTTPS, MSSQL, WinRM, RPC</li>
+<li><strong>Attacks:</strong> secretsdump, smbexec, ldapdump, RBCD delegation, ACL abuse, shadow credentials, ADCS ESC8, addcomputer, DNS manipulation, and more</li>
+<li><strong>Infrastructure:</strong> SOCKS5 proxy with protocol-aware plugins, interactive console, REST API, multi-target round-robin, WPAD serving</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">SQL Server</h3><a id="user-content-sql-server" class="anchor" aria-label="Permalink: SQL Server" href="https://github.com/mandiant/gopacket#sql-server"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>mssqlclient</strong></td>
+<td>Interactive MSSQL client with SQL/Windows/Kerberos auth</td>
+</tr>
+<tr>
+<td><strong>mssqlinstance</strong></td>
+<td>MSSQL instance discovery via SQL Browser</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">WMI</h3><a id="user-content-wmi" class="anchor" aria-label="Permalink: WMI" href="https://github.com/mandiant/gopacket#wmi"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>wmiquery</strong></td>
+<td>Interactive WMI query shell</td>
+</tr>
+<tr>
+<td><strong>wmipersist</strong></td>
+<td>WMI event subscription persistence</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Terminal Services</h3><a id="user-content-terminal-services" class="anchor" aria-label="Permalink: Terminal Services" href="https://github.com/mandiant/gopacket#terminal-services"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tstool</strong></td>
+<td>Terminal Services session and process enumeration</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Other Protocols</h3><a id="user-content-other-protocols" class="anchor" aria-label="Permalink: Other Protocols" href="https://github.com/mandiant/gopacket#other-protocols"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>rdp_check</strong></td>
+<td>RDP authentication check</td>
+</tr>
+<tr>
+<td><strong>mqtt_check</strong></td>
+<td>MQTT authentication check</td>
+</tr>
+<tr>
+<td><strong>exchanger</strong></td>
+<td>Exchange Web Services client</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Utilities</h3><a id="user-content-utilities" class="anchor" aria-label="Permalink: Utilities" href="https://github.com/mandiant/gopacket#utilities"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ntfs-read</strong></td>
+<td>Offline NTFS filesystem parser</td>
+</tr>
+<tr>
+<td><strong>ping</strong> / <strong>ping6</strong></td>
+<td>ICMP ping</td>
+</tr>
+<tr>
+<td><strong>sniff</strong> / <strong>sniffer</strong></td>
+<td>Network packet capture</td>
+</tr>
+<tr>
+<td><strong>split</strong></td>
+<td>Split large files</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Authentication</h2><a id="user-content-authentication" class="anchor" aria-label="Permalink: Authentication" href="https://github.com/mandiant/gopacket#authentication"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">All network tools support three authentication methods:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c"><span class="pl-c">#</span> Password</span>
+gopacket-secretsdump <span class="pl-s"><span class="pl-pds">'</span>domain/user:password@target<span class="pl-pds">'</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> NTLM hash (pass-the-hash)</span>
+gopacket-secretsdump -hashes <span class="pl-s"><span class="pl-pds">'</span>:nthash<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>domain/user@target<span class="pl-pds">'</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Kerberos (pass-the-ticket)</span>
+KRB5CCNAME=ticket.ccache gopacket-secretsdump -k -no-pass <span class="pl-s"><span class="pl-pds">'</span>domain/user@target<span class="pl-pds">'</span></span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="# Password
+gopacket-secretsdump 'domain/user:password@target'
+
+# NTLM hash (pass-the-hash)
+gopacket-secretsdump -hashes ':nthash' 'domain/user@target'
+
+# Kerberos (pass-the-ticket)
+KRB5CCNAME=ticket.ccache gopacket-secretsdump -k -no-pass 'domain/user@target'" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Common Flags</h3><a id="user-content-common-flags" class="anchor" aria-label="Permalink: Common Flags" href="https://github.com/mandiant/gopacket#common-flags"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-hashes LMHASH:NTHASH</code></td>
+<td>NTLM hash authentication (LM hash can be empty)</td>
+</tr>
+<tr>
+<td><code>-k</code></td>
+<td>Use Kerberos authentication</td>
+</tr>
+<tr>
+<td><code>-no-pass</code></td>
+<td>Don't prompt for password (use with <code>-k</code> or <code>-hashes</code>)</td>
+</tr>
+<tr>
+<td><code>-dc-ip IP</code></td>
+<td>IP address of the domain controller</td>
+</tr>
+<tr>
+<td><code>-target-ip IP</code></td>
+<td>IP address of the target (when using hostname for Kerberos)</td>
+</tr>
+<tr>
+<td><code>-port PORT</code></td>
+<td>Target port (defaults vary by tool)</td>
+</tr>
+<tr>
+<td><code>-proxy URL</code></td>
+<td>Route outbound TCP through a SOCKS5 proxy (e.g. <code>socks5h://127.0.0.1:1080</code>). UDP features are disabled.</td>
+</tr>
+<tr>
+<td><code>-debug</code></td>
+<td>Enable debug output</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Quick Examples</h3><a id="user-content-quick-examples" class="anchor" aria-label="Permalink: Quick Examples" href="https://github.com/mandiant/gopacket#quick-examples"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c"><span class="pl-c">#</span> Dump domain hashes via DCSync</span>
+gopacket-secretsdump <span class="pl-s"><span class="pl-pds">'</span>corp.local/admin:Password1@dc01.corp.local<span class="pl-pds">'</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Interactive SMB shell</span>
+gopacket-smbclient -hashes <span class="pl-s"><span class="pl-pds">'</span>:aabbccdd...<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>corp.local/admin@fileserver<span class="pl-pds">'</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Kerberoast</span>
+gopacket-getuserspns <span class="pl-s"><span class="pl-pds">'</span>corp.local/user:pass@dc01.corp.local<span class="pl-pds">'</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Golden ticket</span>
+gopacket-ticketer -nthash <span class="pl-k">&lt;</span>krbtgt_hash<span class="pl-k">&gt;</span> -domain-sid S-1-5-21-... -domain corp.local admin
+
+<span class="pl-c"><span class="pl-c">#</span> NTLM relay with SOCKS proxy</span>
+sudo gopacket-ntlmrelayx -t smb://target -socks
+
+<span class="pl-c"><span class="pl-c">#</span> LDAP relay for RBCD</span>
+sudo gopacket-ntlmrelayx -t ldaps://dc01.corp.local --delegate-access
+
+<span class="pl-c"><span class="pl-c">#</span> Route all outbound traffic through a SOCKS5 proxy</span>
+gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 <span class="pl-s"><span class="pl-pds">'</span>corp.local/admin:pass@dc01.corp.local<span class="pl-pds">'</span></span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="# Dump domain hashes via DCSync
+gopacket-secretsdump 'corp.local/admin:Password1@dc01.corp.local'
+
+# Interactive SMB shell
+gopacket-smbclient -hashes ':aabbccdd...' 'corp.local/admin@fileserver'
+
+# Kerberoast
+gopacket-getuserspns 'corp.local/user:pass@dc01.corp.local'
+
+# Golden ticket
+gopacket-ticketer -nthash <krbtgt_hash> -domain-sid S-1-5-21-... -domain corp.local admin
+
+# NTLM relay with SOCKS proxy
+sudo gopacket-ntlmrelayx -t smb://target -socks
+
+# LDAP relay for RBCD
+sudo gopacket-ntlmrelayx -t ldaps://dc01.corp.local --delegate-access
+
+# Route all outbound traffic through a SOCKS5 proxy
+gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 'corp.local/admin:pass@dc01.corp.local'" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Library</h2><a id="user-content-library" class="anchor" aria-label="Permalink: Library" href="https://github.com/mandiant/gopacket#library"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The <code>pkg/</code> directory contains 24 reusable protocol packages that can be imported independently.</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>smb</strong></td>
+<td>SMB2/3 client with NTLM and Kerberos auth</td>
+</tr>
+<tr>
+<td><strong>ldap</strong></td>
+<td>LDAP client with NTLM/Kerberos bind</td>
+</tr>
+<tr>
+<td><strong>dcerpc</strong></td>
+<td>DCE/RPC client + 20 service implementations (DRSUAPI, SAMR, SVCCTL, LSARPC, WINREG, NETLOGON, DCOM, TSCH, EPMAPPER, etc.)</td>
+</tr>
+<tr>
+<td><strong>kerberos</strong></td>
+<td>Kerberos client, ticket forging (golden/silver), S4U2Self/S4U2Proxy</td>
+</tr>
+<tr>
+<td><strong>ntlm</strong></td>
+<td>NTLM authentication protocol</td>
+</tr>
+<tr>
+<td><strong>relay</strong></td>
+<td>NTLM relay framework (servers, clients, attacks, SOCKS)</td>
+</tr>
+<tr>
+<td><strong>tds</strong></td>
+<td>SQL Server TDS protocol</td>
+</tr>
+<tr>
+<td><strong>ese</strong></td>
+<td>Extensible Storage Engine parser</td>
+</tr>
+<tr>
+<td><strong>registry</strong></td>
+<td>Windows registry hive parser</td>
+</tr>
+<tr>
+<td><strong>ntfs</strong></td>
+<td>NTFS filesystem parser</td>
+</tr>
+<tr>
+<td><strong>security</strong></td>
+<td>Security descriptors, ACLs, SIDs</td>
+</tr>
+<tr>
+<td><strong>dpapi</strong></td>
+<td>DPAPI structures</td>
+</tr>
+<tr>
+<td><strong>mqtt</strong></td>
+<td>MQTT protocol client</td>
+</tr>
+<tr>
+<td><strong>session</strong></td>
+<td>Target/credential parsing (<code>domain/user:pass@host</code>)</td>
+</tr>
+<tr>
+<td><strong>flags</strong></td>
+<td>Unified CLI flag framework</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Missing Features (vs Impacket)</h2><a id="user-content-missing-features-vs-impacket" class="anchor" aria-label="Permalink: Missing Features (vs Impacket)" href="https://github.com/mandiant/gopacket#missing-features-vs-impacket"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">gopacket aims for full Impacket parity. The following are not yet implemented:</p>
+<p dir="auto"><strong>Relay protocol clients:</strong></p>
+<ul dir="auto">
+<li>IMAP relay client + attack (requires Exchange/IMAP server)</li>
+<li>SMTP relay client (requires SMTP server)</li>
+</ul>
+<p dir="auto"><strong>Relay attack modules:</strong></p>
+<ul dir="auto">
+<li>SCCM policies/DP attacks (requires SCCM infrastructure)</li>
+</ul>
+<p dir="auto"><strong>Standalone tools:</strong></p>
+<ul dir="auto">
+<li><code>ifmap.py</code> (DCOM interface mapping)</li>
+<li><code>mimikatz.py</code> (limited Mimikatz over RPC)</li>
+<li><code>goldenPac.py</code> (MS14-068 - obsolete on patched systems)</li>
+<li><code>smbrelayx.py</code> (superseded by ntlmrelayx)</li>
+<li><code>kintercept.py</code> (Kerberos interception)</li>
+</ul>
+<p dir="auto">These gaps are low priority - most require niche infrastructure to test or are obsoleted by newer techniques.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Known Limitations</h2><a id="user-content-known-limitations" class="anchor" aria-label="Permalink: Known Limitations" href="https://github.com/mandiant/gopacket#known-limitations"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">These are protocol-level limitations shared with Impacket, not gopacket bugs:</p>
+<ul dir="auto">
+<li><strong>SMB to LDAPS relay</strong> fails on patched DCs due to NTLM MIC validation (post-CVE-2019-1040). Use HTTP coercion instead.</li>
+<li><strong>WinRM relay</strong> blocked by EPA (Extended Protection for Authentication) on patched Server 2019+.</li>
+<li><strong>RPC relay attacks</strong> (tschexec, enum-local-admins) require PKT_INTEGRITY which is unavailable in relay sessions.</li>
+<li><strong>LDAP relay to port 389</strong> fails on DCs requiring LDAP signing. Always relay to LDAPS (port 636).</li>
+</ul>
+<p dir="auto">See <a href="https://github.com/mandiant/gopacket/blob/main/KNOWN_ISSUES.md">KNOWN_ISSUES.md</a> for detailed information on each issue and workarounds.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Reporting Issues &amp; Contributing</h2><a id="user-content-reporting-issues--contributing" class="anchor" aria-label="Permalink: Reporting Issues &amp; Contributing" href="https://github.com/mandiant/gopacket#reporting-issues--contributing"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<blockquote>
+<p dir="auto">This is a beta release. Bugs are expected, and contributions are welcome.</p>
+</blockquote>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Why we ask you to test with Impacket first</h3><a id="user-content-why-we-ask-you-to-test-with-impacket-first" class="anchor" aria-label="Permalink: Why we ask you to test with Impacket first" href="https://github.com/mandiant/gopacket#why-we-ask-you-to-test-with-impacket-first"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Because gopacket implements the same wire protocols as Impacket, a large
+fraction of "bugs" turn out to be <strong>environmental</strong>, not gopacket-specific -
+patched DCs, LDAP signing requirements, EPA, PKT_INTEGRITY, SMB signing,
+NTLM MIC validation post-CVE-2019-1040, missing SPNs, time skew, DNS quirks,
+firewall rules, and so on. Running the same operation with Impacket side by
+side removes the environment from the equation:</p>
+<ul dir="auto">
+<li><strong>If Impacket fails the same way</strong>, the issue is almost always
+environmental and is likely already documented in
+<a href="https://github.com/mandiant/gopacket/blob/main/KNOWN_ISSUES.md">KNOWN_ISSUES.md</a>. No bug report needed.</li>
+<li><strong>If Impacket succeeds where gopacket fails</strong>, that's a real gopacket bug
+and exactly what we want to hear about.</li>
+</ul>
+<p dir="auto">This single triage step saves a lot of round-trips, so please don't skip it.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Filing a bug report</h3><a id="user-content-filing-a-bug-report" class="anchor" aria-label="Permalink: Filing a bug report" href="https://github.com/mandiant/gopacket#filing-a-bug-report"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ol dir="auto">
+<li>Run the same operation with Impacket and note whether it succeeds or fails</li>
+<li>Re-run gopacket with <code>-debug</code> and capture the full output</li>
+<li><strong>Anonymize anything sensitive before posting.</strong> GitHub issues are public.
+Strip or replace real hostnames, IP addresses, usernames, password hashes,
+Kerberos tickets, domain names, SIDs, and any output line that could be
+tied back to a real engagement. Replacing <code>corp.internal</code> → <code>example.local</code>
+and <code>dc01.corp.internal</code> → <code>dc01.example.local</code> is fine - keep the
+structure of the data, just not the identifying values. <strong>If in doubt,
+redact it.</strong></li>
+<li>Open a <a href="https://github.com/mandiant/gopacket/issues/new">GitHub issue</a> and include:
+<ul dir="auto">
+<li>Both outputs (gopacket and Impacket), as text not screenshots, anonymized</li>
+<li>The exact command line you ran (anonymized)</li>
+<li>Target OS, AD functional level, and any relevant hardening
+(signing, EPA, channel binding, patch level)</li>
+<li>gopacket version / commit hash</li>
+</ul>
+</li>
+</ol>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Feature requests</h3><a id="user-content-feature-requests" class="anchor" aria-label="Permalink: Feature requests" href="https://github.com/mandiant/gopacket#feature-requests"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Open a <a href="https://github.com/mandiant/gopacket/issues/new">GitHub issue</a> describing the use case
+and the Impacket equivalent (if any). If the feature is on the
+"Missing Features" list above, mention which one - it helps us prioritize.</p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Pull requests</h3><a id="user-content-pull-requests" class="anchor" aria-label="Permalink: Pull requests" href="https://github.com/mandiant/gopacket#pull-requests"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">PRs are welcome. Before opening one:</p>
+<ul dir="auto">
+<li>Run <code>go build ./...</code>, <code>go vet ./...</code>, <code>gofmt -l .</code>, and <code>go test ./...</code>
+and make sure they all pass cleanly</li>
+<li>Match the existing code style in the package you're touching</li>
+<li>Keep changes focused - separate refactors from feature work</li>
+<li>For non-trivial changes, open an issue first to discuss the approach</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Why This Matters for Defenders</h2><a id="user-content-why-this-matters-for-defenders" class="anchor" aria-label="Permalink: Why This Matters for Defenders" href="https://github.com/mandiant/gopacket#why-this-matters-for-defenders"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Threat actors are moving away from Python. Compiled Go and Rust tooling
+(Sliver, BRC4, Geacon, and bespoke loaders) is increasingly replacing
+Impacket in real-world intrusions. Most defensive tooling and detection
+logic was built around Impacket's Python-based network behavior, and that
+coverage is eroding as the attacker ecosystem shifts to compiled languages.</p>
+<p dir="auto">gopacket exists in part to help the security community get ahead of this
+shift. By providing an open-source, readable Go implementation of the
+same protocols and techniques, defenders and detection engineers can:</p>
+<ul dir="auto">
+<li><strong>Study how Go-based tooling behaves on the wire</strong> rather than waiting
+to encounter it during an incident</li>
+<li><strong>Understand the protocol-level differences</strong> between Go and Python
+implementations that make existing signatures less effective</li>
+<li><strong>Run realistic purple team exercises</strong> using the same compiled,
+single-binary tooling that threat actors are adopting, rather than
+testing exclusively against Python scripts that behave differently
+at the network layer</li>
+</ul>
+<p dir="auto">The gap between attacker tooling and defender visibility is widest when
+new tooling stays private. Open-sourcing gopacket narrows that gap.</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">Notes</h2><a id="user-content-notes" class="anchor" aria-label="Permalink: Notes" href="https://github.com/mandiant/gopacket#notes"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li>Kerberos authentication requires a valid ccache file (TGT or service ticket)</li>
+<li>For Kerberos, use the FQDN hostname - not an IP address</li>
+<li>If <code>KRB5CCNAME</code> is not set, tools will look for <code>&lt;username&gt;.ccache</code> in the current directory</li>
+<li>All tools support both proxychains and an internal <code>-proxy</code> SOCKS5 flag (see Proxy Support)</li>
+<li>This project is for authorized security testing and research purposes only</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">License</h2><a id="user-content-license" class="anchor" aria-label="Permalink: License" href="https://github.com/mandiant/gopacket#license"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Released under the <a href="https://github.com/mandiant/gopacket/blob/main/LICENSE">Apache License 2.0</a>.</p>
+<p dir="auto">gopacket is a clean Go reimplementation of <a href="https://github.com/fortra/impacket">Impacket</a>; see <a href="https://github.com/mandiant/gopacket/blob/main/NOTICE">NOTICE</a> for full third-party acknowledgments.</p>
+</article></div></div></div></div></div></div></div><div class="prc-PageLayout-PaneWrapper-pHPop pr-2" style="--offset-header:0px;--spacing-row:var(--spacing-none);--spacing-column:var(--spacing-none)" data-is-hidden="false" data-position="end"><div class="prc-PageLayout-HorizontalDivider-JLVqp prc-PageLayout-PaneHorizontalDivider-9tbnE" data-component="PageLayout.HorizontalDivider" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing-divider:var(--spacing-none);--spacing:var(--spacing-none)"></div><div class="prc-PageLayout-Pane-AyzHK" data-component="PageLayout.Pane" style="--spacing:var(--spacing-normal);--pane-min-width:256px;--pane-max-width:calc(100vw - var(--pane-max-width-diff));--pane-width-size:var(--pane-width-large);--pane-width:320px"><rails-partial data-partial-name="codeViewRepoRoute.Sidebar" class="RailsPartial-module__d-contents__G5m4w">
+
+<div class="BorderGrid ">
+  <div class="BorderGrid-row">
+    <div class="BorderGrid-cell">
+      <div class="hide-sm hide-md">
+  <h2 class="tmp-mb-3 h4">About</h2>
+
+      <p class="f4 tmp-my-3">
+        Gopacket is a clean Go implementation of Impacket, a library intended for working with network protocols.
+      </p>
+
+
+    <h3 class="sr-only">Resources</h3>
+    <div class="mt-2">
+      <a class="Link--muted" data-analytics-event="{&quot;category&quot;:&quot;Repository Overview&quot;,&quot;action&quot;:&quot;click&quot;,&quot;label&quot;:&quot;location:sidebar;file:readme&quot;}" href="https://github.com/mandiant/gopacket#readme-ov-file">
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-book mr-2 tmp-mr-2">
+    <path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path>
+</svg>
+        Readme
+</a>    </div>
+
+  
+    <h3 class="sr-only">License</h3>
+  <div class="mt-2">
+    <a href="https://github.com/mandiant/gopacket#Apache-2.0-1-ov-file" class="Link--muted" data-analytics-event="{&quot;category&quot;:&quot;Repository Overview&quot;,&quot;action&quot;:&quot;click&quot;,&quot;label&quot;:&quot;location:sidebar;file:license&quot;}">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-law mr-1 mr-sm-1 mr-md-2 mr-lg-2">
+    <path d="M8.75.75V2h.985c.304 0 .603.08.867.231l1.29.736c.038.022.08.033.124.033h2.234a.75.75 0 0 1 0 1.5h-.427l2.111 4.692a.75.75 0 0 1-.154.838l-.53-.53.529.531-.001.002-.002.002-.006.006-.006.005-.01.01-.045.04c-.21.176-.441.327-.686.45C14.556 10.78 13.88 11 13 11a4.498 4.498 0 0 1-2.023-.454 3.544 3.544 0 0 1-.686-.45l-.045-.04-.016-.015-.006-.006-.004-.004v-.001a.75.75 0 0 1-.154-.838L12.178 4.5h-.162c-.305 0-.604-.079-.868-.231l-1.29-.736a.245.245 0 0 0-.124-.033H8.75V13h2.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5h2.5V3.5h-.984a.245.245 0 0 0-.124.033l-1.289.737c-.265.15-.564.23-.869.23h-.162l2.112 4.692a.75.75 0 0 1-.154.838l-.53-.53.529.531-.001.002-.002.002-.006.006-.016.015-.045.04c-.21.176-.441.327-.686.45C4.556 10.78 3.88 11 3 11a4.498 4.498 0 0 1-2.023-.454 3.544 3.544 0 0 1-.686-.45l-.045-.04-.016-.015-.006-.006-.004-.004v-.001a.75.75 0 0 1-.154-.838L2.178 4.5H1.75a.75.75 0 0 1 0-1.5h2.234a.249.249 0 0 0 .125-.033l1.288-.737c.265-.15.564-.23.869-.23h.984V.75a.75.75 0 0 1 1.5 0Zm2.945 8.477c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327Zm-10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327Z"></path>
+</svg>
+     Apache-2.0 license
+    </a>
+  </div>
+
+
+
+
+    <h3 class="sr-only">Contributing</h3>
+    <div class="mt-2">
+      <a href="https://github.com/mandiant/gopacket#contributing-ov-file" class="Link--muted" data-analytics-event="{&quot;category&quot;:&quot;Repository Overview&quot;,&quot;action&quot;:&quot;click&quot;,&quot;label&quot;:&quot;location:sidebar;file:contributing&quot;}">
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-people mr-2 tmp-mr-2">
+    <path d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z"></path>
+</svg>
+        Contributing
+      </a>
+    </div>
+
+
+  <include-fragment src="/mandiant/gopacket/hovercards/citation/sidebar_partial?tree_name=main" data-nonce="v2:0a9818c2-538e-5050-e475-4bb0b504f4b0" data-view-component="true" class="is-error"><slot></slot>
+  
+
+  <div data-show-on-forbidden-error="">
+    <div class="Box">
+  <div class="blankslate-container">
+    <div data-view-component="true" class="blankslate blankslate-spacious color-bg-default rounded-2">
+      
+
+      <h3 data-view-component="true" class="blankslate-heading">        Uh oh!
+</h3>
+      <p data-view-component="true" class="blankslate-description">        </p><p class="color-fg-muted my-2 mb-2 ws-normal">There was an error while loading. <a class="Link--inTextBlock" data-turbo="false" href="https://github.com/mandiant/gopacket" aria-label="Please reload this page">Please reload this page</a>.</p>
+<p></p>
+
+</div>  </div>
+</div>  </div>
+</include-fragment>
+    <div class="mt-2">
+      <a href="https://github.com/mandiant/gopacket/activity" data-view-component="true" class="Link Link--muted"><svg text="gray" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-pulse mr-2 tmp-mr-2">
+    <path d="M6 2c.306 0 .582.187.696.471L10 10.731l1.304-3.26A.751.751 0 0 1 12 7h3.25a.75.75 0 0 1 0 1.5h-2.742l-1.812 4.528a.751.751 0 0 1-1.392 0L6 4.77 4.696 8.03A.75.75 0 0 1 4 8.5H.75a.75.75 0 0 1 0-1.5h2.742l1.812-4.529A.751.751 0 0 1 6 2Z"></path>
+</svg>
+        <span class="color-fg-muted">Activity</span></a>    </div>
+
+    <div class="mt-2">
+      <a href="https://github.com/mandiant/gopacket/custom-properties" data-view-component="true" class="Link Link--muted"><svg text="gray" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-note mr-2 tmp-mr-2">
+    <path d="M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z"></path>
+</svg>
+        <span class="color-fg-muted">Custom properties</span></a>    </div>
+
+    <h3 class="sr-only">Stars</h3>
+    <div class="mt-2">
+        <a href="https://github.com/mandiant/gopacket/stargazers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg>
+          <strong>677</strong>
+          stars</a>    </div>
+
+    <h3 class="sr-only">Watchers</h3>
+    <div class="mt-2">
+        <a href="https://github.com/mandiant/gopacket/watchers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-eye mr-2 tmp-mr-2">
+    <path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
+</svg>
+          <strong>3</strong>
+          watching</a>    </div>
+
+    <h3 class="sr-only">Forks</h3>
+    <div class="mt-2">
+      <a href="https://github.com/mandiant/gopacket/forks" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>
+        <strong>56</strong>
+        forks</a>    </div>
+
+
+    <div class="mt-2">
+      <a class="Link--muted" href="https://github.com/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fmandiant%2Fgopacket&amp;report=mandiant+%28user%29">
+          Report repository
+</a>    </div>
+</div>
+
+    </div>
+  </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3" data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame">
+  <a href="https://github.com/mandiant/gopacket/releases" data-view-component="true" class="Link--primary no-underline Link" data-turbo-frame="repo-content-turbo-frame">Releases</a></h2>
+
+    <div class="text-small color-fg-muted">No releases published</div>
+
+        </div>
+      </div>
+
+  
+  
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          
+<h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/orgs/mandiant/packages?repo_name=gopacket" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Packages
+      <span title="0" data-view-component="true" class="Counter ml-1 tmp-ml-1">0</span></a></h2>
+
+
+
+      <div class="text-small color-fg-muted">
+        No packages published <br>
+      </div>
+
+
+
+        </div>
+      </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <include-fragment src="/mandiant/gopacket/used_by_list" accept="text/fragment+html" data-nonce="v2:0a9818c2-538e-5050-e475-4bb0b504f4b0" data-view-component="true" class="is-error"><slot></slot>
+  
+
+  <div data-show-on-forbidden-error="">
+    <div class="Box">
+  <div class="blankslate-container">
+    <div data-view-component="true" class="blankslate blankslate-spacious color-bg-default rounded-2">
+      
+
+      <h3 data-view-component="true" class="blankslate-heading">        Uh oh!
+</h3>
+      <p data-view-component="true" class="blankslate-description">        </p><p class="color-fg-muted my-2 mb-2 ws-normal">There was an error while loading. <a class="Link--inTextBlock" data-turbo="false" href="https://github.com/mandiant/gopacket" aria-label="Please reload this page">Please reload this page</a>.</p>
+<p></p>
+
+</div>  </div>
+</div>  </div>
+</include-fragment>
+        </div>
+      </div>
+
+  
+    <div class="BorderGrid-row">
+      <div class="BorderGrid-cell">
+        
+  <h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/mandiant/gopacket/graphs/contributors" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Contributors
+      <span title="4" data-view-component="true" class="Counter ml-1 tmp-ml-1">4</span></a></h2>
+
+
+      
+  <ul class="list-style-none ">
+    <li class="mb-2 d-flex">
+      <a href="https://github.com/psycep" class="mr-2" data-hovercard-type="user" data-hovercard-url="/users/psycep/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp">
+        <img src="https://avatars.githubusercontent.com/u/93807253?s=64&amp;v=4" alt="@psycep" size="32" height="32" width="32" data-view-component="true" class="avatar circle">
+      </a>
+      <span data-view-component="true" class="flex-self-center min-width-0 css-truncate css-truncate-overflow width-fit flex-auto">
+        <a href="https://github.com/psycep" class="Link--primary no-underline flex-self-center">
+          <strong>psycep</strong>
+          <span class="color-fg-muted">Jacob Paullus</span>
+        </a>
+</span>    </li>
+    <li class="mb-2 d-flex">
+      <a href="https://github.com/apps/dependabot" class="mr-2">
+        <img src="https://avatars.githubusercontent.com/in/29110?s=64&amp;v=4" alt="@dependabot[bot]" size="32" height="32" width="32" data-view-component="true" class="avatar">
+      </a>
+      <span data-view-component="true" class="flex-self-center min-width-0 css-truncate css-truncate-overflow width-fit flex-auto">
+        <a href="https://github.com/apps/dependabot" class="Link--primary no-underline flex-self-center">
+          <strong>dependabot[bot]</strong>
+          
+        </a>
+</span>    </li>
+    <li class="mb-2 d-flex">
+      <a href="https://github.com/Jah-yee" class="mr-2" data-hovercard-type="user" data-hovercard-url="/users/Jah-yee/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp">
+        <img src="https://avatars.githubusercontent.com/u/166608075?s=64&amp;v=4" alt="@Jah-yee" size="32" height="32" width="32" data-view-component="true" class="avatar circle">
+      </a>
+      <span data-view-component="true" class="flex-self-center min-width-0 css-truncate css-truncate-overflow width-fit flex-auto">
+        <a href="https://github.com/Jah-yee" class="Link--primary no-underline flex-self-center">
+          <strong>Jah-yee</strong>
+          <span class="color-fg-muted">RoomWithOutRoof</span>
+        </a>
+</span>    </li>
+    <li class="mb-2 d-flex">
+      <a href="https://github.com/ahm3dgg" class="mr-2" data-hovercard-type="user" data-hovercard-url="/users/ahm3dgg/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp">
+        <img src="https://avatars.githubusercontent.com/u/210139660?s=64&amp;v=4" alt="@ahm3dgg" size="32" height="32" width="32" data-view-component="true" class="avatar circle">
+      </a>
+      <span data-view-component="true" class="flex-self-center min-width-0 css-truncate css-truncate-overflow width-fit flex-auto">
+        <a href="https://github.com/ahm3dgg" class="Link--primary no-underline flex-self-center">
+          <strong>ahm3dgg</strong>
+          <span class="color-fg-muted">ahmed</span>
+        </a>
+</span>    </li>
+</ul>
+
+
+
+
+
+
+      </div>
+    </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3">Languages</h2>
+<div class="mb-2">
+  <span data-view-component="true" class="Progress">
+    <span style="background-color:#00ADD8 !important;;width: 99.1%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+    <span style="background-color:#ededed !important;;width: 0.9%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+</span></div>
+<ul class="list-style-none">
+    <li class="d-inline">
+        <a class="d-inline-flex flex-items-center flex-nowrap Link--secondary no-underline text-small tmp-mr-3" href="https://github.com/mandiant/gopacket/search?l=go" data-ga-click="Repository, language stats search click, location:repo overview">
+          <svg style="color:#00ADD8;" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+          <span class="color-fg-default text-bold mr-1">Go</span>
+          <span>99.1%</span>
+        </a>
+    </li>
+    <li class="d-inline">
+      <span class="d-inline-flex flex-items-center flex-nowrap text-small tmp-mr-3">
+        <svg style="color:#ededed;" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+        <span class="color-fg-default text-bold mr-1">Other</span>
+        <span>0.9%</span>
+      </span>
+    </li>
+</ul>
+
+        </div>
+      </div>
+
+  
+  </div>
+</rails-partial></div><div class="prc-PageLayout-VerticalDivider-9QRmK prc-PageLayout-PaneVerticalDivider-le57g" data-component="PageLayout.VerticalDivider" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing:var(--spacing-none)"></div></div></div></div></div></div></div></div></div></div></div><div class="ScrollMarksContainer-module__scrollMarksContainer__Eu7uU" id="find-result-marks-container"></div><div class="d-none"></div><div class="d-none"></div></div> <!-- --> <!-- --> </div>
+</react-app>
+
+
+
+
+  </div>
+
+</turbo-frame>
+
+    </main>
+  </div>
+
+  </div>
+
+          
+
+
+
+    <ghcc-consent id="ghcc" class="position-fixed bottom-0 left-0" style="z-index: 999999" data-locale="en" data-initial-cookie-consent-allowed="" data-cookie-consent-required="false" data-catalyst=""></ghcc-consent>
+
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+    <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    You can’t perform that action at this time.
+  </div>
+
+    
+  <details class="details-reset details-overlay details-overlay-dark lh-default color-fg-default hx_rsm" open="">
+    <summary role="button" aria-label="Close dialog"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast hx_rsm-dialog hx_rsm-modal">
+      <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button" aria-label="Close dialog" data-close-dialog="">
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+      </button>
+      <div class="octocat-spinner tmp-my-6 js-details-dialog-spinner"></div>
+    </details-dialog>
+  </details>
+
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;">
+  <div class="Popover-message Popover-message--bottom-left Popover-message--large Box color-shadow-large" style="width:360px;"></div>
+</div>
+
+    
+  <div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn js-clipboard-copy m-2 p-0" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2 tmp-m-2">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2 tmp-m-2">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+  <div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+
+
+
+    </div>
+    <div id="js-global-screen-reader-notice" class="sr-only mt-n1" aria-live="polite" aria-atomic="true"></div>
+    <div id="js-global-screen-reader-notice-assertive" class="sr-only mt-n1" aria-live="assertive" aria-atomic="true"></div>
+  
+
+
+</body></html>

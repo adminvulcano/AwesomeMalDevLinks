@@ -1,0 +1,31 @@
+Title:
+BYOVD: Reverse Engineering a Signed Kernel Driver with 13 Hardware Access Primitives
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up reverse engineers Gigabyte APP Center’s signed Windows kernel driver `gdrv3.sys` and documents 13 IOCTL handlers that expose powerful hardware/kernel primitives.  
+- It shows how BYOVD (Bring Your Own Vulnerable Driver) enables post-exploitation kernel access to bypass user-mode protections like Protected Process Light (PPL) used by EDRs.  
+- The driver provides unauthenticated arbitrary physical memory read/write and physical memory mapping, plus “authenticated” primitives (I/O ports, MSR R/W, kernel memcpy, VA→PA translation) guarded by an AES-128-CBC + checksum scheme.  
+- The crypto gate is effectively broken because the AES key is hardcoded in the binary (`GIGABYTEPASSWORD`), making protected IOCTLs accessible to any attacker who can open the device.  
+- The post details a repeatable methodology for hunting such drivers (import triage, locating IRP_MJ_DEVICE_CONTROL dispatch, enumerating IOCTLs, reversing buffer formats) and demonstrates chaining primitives for kernel takeover (e.g., WRMSR to LSTAR) and stealthy credential access.  
+- Useful for red teamers, pentesters, malware developers, and defenders building driver allowlisting/detections around dangerous IOCTL surfaces.
+
+Technical Focus:
+- BYOVD and PPL bypass via signed vulnerable drivers
+- IOCTL attack surface analysis (IRP_MJ_DEVICE_CONTROL dispatch reversing)
+- Arbitrary physical memory read/write and `\Device\PhysicalMemory` mapping
+- MSR read/write abuse (e.g., LSTAR/SYSENTER redirection)
+- Kernel arbitrary memcpy / write-what-where primitives
+- Weak “authentication” design: AES-128-CBC + checksum with hardcoded key
+
+Use Cases:
+- Identify and reverse engineer signed drivers exposing dangerous IOCTLs
+- Build BYOVD chains to disable/blind EDR components from kernel mode
+- Achieve kernel execution by redirecting syscall entry (LSTAR) via WRMSR
+- Read/modify protected process memory (e.g., LSASS) via physical memory primitives
+- Defensive auditing: detect/block vulnerable drivers and monitor suspicious DeviceIoControl usage
+
+Keywords:
+BYOVD, gdrv3.sys, Gigabyte APP Center, Windows kernel driver, IOCTL, IRP_MJ_DEVICE_CONTROL, DeviceIoControl, Protected Process Light, PPL, EDR bypass, MmMapIoSpace, ZwMapViewOfSection, \Device\PhysicalMemory, MmGetPhysicalAddress, RDMSR, WRMSR, LSTAR, SYSENTER, kernel memcpy, ObRegisterCallbacks

@@ -1,0 +1,30 @@
+Title:
+Small PIC Energy
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explores “small PIC” (position-independent code) design for offensive agents, framed as a challenge: how much beacon/agent functionality can fit into ~4KB PIC without devolving into shellcode-golf.  
+- It introduces updates around the Crystal Palace linker/composition workflow and Tradecraft Garden, including a Simple BOF runner, improved library merge behavior, and a new JSON-over-HTTP “Linker Sidecar” service for language-agnostic integration.  
+- The core technical idea is separating “capability assembly” (building COFF modules, patching config, selecting features) from “tradecraft pairing” (turning COFF into PIC/shellcode and applying transformations like optimize/mutate).  
+- It proposes “BOF inversions”: moving Beacon API implementation responsibility out of the C2 agent and into the BOF itself by merging a BOF API implementation during linking, then executing as a PICO with a minimal runner in the agent.  
+- This enables “BOF cocktails” style pre-processing/evasion to be applied to BOFs independently of the C2, benefiting both research/detection experiments and operators who want self-protecting BOFs.  
+- Useful for red team toolsmiths, C2 engineers, and tradecraft researchers building modular PIC agents, BOF pipelines, and low-friction integration into non-Java stacks.
+
+Technical Focus:
+- Position-independent code (PIC) minimization and modular agent design
+- COFF/BOF to PIC/PICO transformation pipelines via spec-driven linking
+- BOF inversions (embedding Beacon API implementations into BOFs)
+- Tradecraft separation: capability build vs time-of-use transformations (+optimize/+mutate/ised)
+- JSON-over-HTTP localhost sidecar API for linker automation/integration
+
+Use Cases:
+- Build ultra-small Windows PIC stagers/agents with modular features (e.g., WinINet loop + command kernel + BOF runner)
+- Pre-process BOFs into self-contained PICOs that don’t require full Beacon API support in the agent
+- Integrate Crystal Palace linking into custom C2 frameworks (Python/Go/Rust/etc.) via the sidecar service
+- Run controlled experiments comparing “naked BOFs” vs tradecraft-paired BOFs for detection research
+- Reduce agent complexity by delegating BOF API surface into link-time merged code
+
+Keywords:
+PIC, position-independent code, Crystal Palace, Tradecraft Garden, COFF, Beacon Object File, BOF, Beacon API, BOF cocktails, PICO, shellcode, WinINet, spec file, linker pipeline, +optimize, +mutate, ised, JSON-over-HTTP, sidecar service, localhost API

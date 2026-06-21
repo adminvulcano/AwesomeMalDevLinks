@@ -1,0 +1,25 @@
+Title:
+PhantomKiller — Weaponizing Lenovo BootRepair.sys to Terminate Protected Processes (BYOVD)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PhantomKiller is a Windows BYOVD proof-of-concept that abuses a legitimately signed Lenovo kernel driver (BootRepair.sys) to terminate arbitrary processes, including PPL-protected AV/EDR. The driver exposes an unrestricted device object (`\\.\BootRepair`) and an IOCTL (`0x222014`) that accepts a PID and calls `ZwTerminateProcess` without access checks or caller validation. This enables low-privileged users to kill high-privilege/protected security processes if the driver is already loaded, or attackers can load it themselves via `sc.exe` and then disable defenses. The repo includes a compiled driver/PoC and references a full reverse-engineering write-up. It’s primarily useful for red teams and offensive security researchers studying driver abuse and EDR tampering, and for defenders to understand and detect BYOVD-based process termination.
+
+Technical Focus:
+- BYOVD (Bring Your Own Vulnerable Driver) using a signed vendor driver
+- Windows kernel driver IOCTL abuse (`IRP_MJ_DEVICE_CONTROL`)
+- Insecure device object / missing DACL on `\\.\Device` interface
+- Kernel process termination chain: `PsLookupProcessByProcessId` → `ObOpenObjectByPointer` → `ZwTerminateProcess`
+- Killing PPL-protected processes (EDR/AV tampering)
+- Driver loading via Service Control Manager (`sc.exe`, type=kernel)
+
+Use Cases:
+- Terminate EDR/AV processes prior to post-exploitation tooling deployment
+- Validate/benchmark EDR self-protection against kernel-assisted termination
+- Research and reproduce insecure IOCTL / device ACL patterns in third-party drivers
+- Develop detections for suspicious driver loads and IOCTL-based process killing
+
+Keywords:
+BYOVD, BootRepair.sys, Lenovo PC Manager, signed driver abuse, kernel driver, IOCTL 0x222014, \\.\BootRepair, IRP_MJ_DEVICE_CONTROL, IRP_MJ_CREATE, DACL, ZwTerminateProcess, PsLookupProcessByProcessId, ObOpenObjectByPointer, PPL, EDR tampering, AV bypass, sc.exe, Windows x64, process termination, driver exploitation

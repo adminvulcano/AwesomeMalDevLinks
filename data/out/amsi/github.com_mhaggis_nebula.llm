@@ -1,0 +1,26 @@
+Title:
+NEBULA (Nefarious Execution & Behavioral Unit for LOLBAS Attacks)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+NEBULA is an interactive, menu-driven PowerShell TUI framework for atomically testing Windows execution, persistence, WMI, COM-object, and LOLBAS techniques in a controlled environment. It helps security teams quickly exercise common “living off the land” and native Windows tradecraft to validate detections, telemetry coverage, and response playbooks. The tool provides curated technique menus (WMI execution, COM execution, persistence, LOLBAS methods) plus “advanced WMI exploration” capabilities. It tracks each executed test with timestamps, technique metadata, status (SUCCESS/FAILED/ERROR/DRY-RUN), and output for later review/export. It ships with benign example payloads (often calc.exe) derived from Atomic Red Team and mapped to MITRE ATT&CK technique IDs. Useful for red teams and pentesters for repeatable tradecraft validation, and for blue teams for detection engineering and regression testing.
+
+Technical Focus:
+- PowerShell-based atomic testing framework with TUI workflow
+- LOLBAS execution methods (e.g., regsvr32, mshta, rundll32, msbuild, certutil, bitsadmin, installutil)
+- WMI execution and WMI method exploration
+- COM object execution techniques
+- Persistence technique testing and validation
+- Result logging/telemetry capture and export
+
+Use Cases:
+- Validate EDR/SIEM detections against common LOLBAS and native execution chains
+- Reproduce and document Windows tradecraft behaviors for purple-team exercises
+- Baseline host telemetry (process, command line, WMI, COM) for detection engineering
+- Regression-test security controls after policy/agent updates (AppLocker/WDAC/EDR)
+- Train analysts on technique-to-telemetry mapping using safe, benign payloads
+
+Keywords:
+PowerShell, Windows, TUI, atomic testing, LOLBAS, WMI, COM, persistence, MITRE ATT&CK, Atomic Red Team, regsvr32, mshta, rundll32, msbuild, certutil, bitsadmin, installutil, ExecutionPolicy Bypass, Windows Server 2016+

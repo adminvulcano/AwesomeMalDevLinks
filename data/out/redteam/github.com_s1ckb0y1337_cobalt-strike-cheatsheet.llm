@@ -1,0 +1,31 @@
+Title:
+Cobalt Strike CheatSheet
+
+Type:
+Documentation
+
+Short Summary (4–8 sentences max):
+- A curated cheat sheet of operational notes and command references for the Cobalt Strike C2 framework (Beacon).  
+- It helps operators quickly configure infrastructure (listeners, pivot listeners) and execute common post-exploitation workflows without hunting through official docs.  
+- Covers core Beacon commands and modules for execution, in-memory .NET execution, process injection, token manipulation, Kerberos ticket operations, and credential access (e.g., DCSync/Mimikatz integration).  
+- Includes practical guidance for pivoting (SOCKS, CovertVPN), lateral movement (PsExec/WinRM/WMI “jump” and remote-exec), and basic exfil/collection actions (screenshots, keylogging, hashdump).  
+- Emphasizes OPSEC: spawnto/ppid spoofing, avoiding default Malleable C2 behavior, and reducing disk/IOC footprint.  
+- Useful primarily for red teamers and pentesters running Cobalt Strike, and secondarily for blue teams to understand common operator tradecraft and likely telemetry points.
+
+Technical Focus:
+- Cobalt Strike Beacon command set and workflows  
+- Listener types (HTTP/HTTPS, DNS, SMB, TCP) and pivoting  
+- Malleable C2 profiles (traffic shaping/behavior customization)  
+- Process injection & in-memory execution (execute-assembly, dllinject, shinject)  
+- Credential access & AD abuse (DCSync, token theft, pass-the-hash)  
+- OPSEC controls (spawnto, PPID spoofing, artifact reduction)
+
+Use Cases:
+- Quick reference during engagements for Beacon commands and syntax
+- Setting up egress and internal pivot listeners (SMB/TCP/DNS) for segmented networks
+- Performing lateral movement via jump/remote-exec (PsExec/WinRM/WMI) using stolen/forged tokens
+- Tuning stealth via Malleable C2, spawnto, and PPID spoofing before post-exploitation
+- Mapping common CS tradecraft to defensive detections and hunting hypotheses
+
+Keywords:
+Cobalt Strike, Beacon, C2, listener, HTTP, HTTPS, DNS, SMB, TCP, Malleable C2, Aggressor Script, execute-assembly, powerpick, AMSI bypass, process injection, PPID spoofing, spawnto, DCSync, Mimikatz, pass-the-hash, token impersonation, PsExec, WinRM, WMI, SOCKS4a, CovertVPN, keylogger, screenshot, hashdump, timestomp, AppLocker

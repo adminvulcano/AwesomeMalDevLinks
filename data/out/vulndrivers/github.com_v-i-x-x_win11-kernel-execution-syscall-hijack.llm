@@ -1,0 +1,31 @@
+Title:
+Executing Kernel Routines via Syscall Table Hijack (Windows 11 KiServiceTable)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository demonstrates a Windows 11 kernel-mode technique to execute arbitrary existing kernel routines by temporarily hijacking a syscall dispatch entry in `nt!KiServiceTable`.  
+- It assumes an initial kernel read/write primitive (demo uses the BYOVD RTCore64 driver) to flip page permissions at the PDE level, overwrite the `NtSetQuotaInformationFile` service-table entry, trigger the syscall, then restore the original entry and protections.  
+- The write targets the packed 32-bit SSDT entry format (offset<<4 plus `stackArgs` nibble) and uses a generic user-mode `syscall` stub to call redirected routines with varying arity.  
+- Included demos show kernel-assisted process introspection (`PsLookupProcessByProcessId`), token stealing for SYSTEM (`/privesc` via `memcpy`), and toggling PPL by patching `_EPROCESS.Protection` (`/ppl`).  
+- The write-up discusses why this can evade or reduce friction with modern mitigations (KCFG/KCET/W^X/HVCI/VBS) by only calling code already in `ntoskrnl.exe` and performing “data-only” page-table flag changes.  
+- It’s primarily useful for kernel exploitation researchers, red teamers with post-exploitation kernel R/W, and defenders studying SSDT tampering and BYOVD tradecraft.
+
+Technical Focus:
+- SSDT/KiServiceTable syscall dispatch internals and entry encoding (offset<<4, stackArgs)
+- PDE/PTE paging manipulation to bypass read-only mappings (large pages, R/W bit flip)
+- Kernel R/W primitives via BYOVD (RTCore64) and reducing IOCTL telemetry
+- Redirecting syscalls to exported kernel routines (e.g., `PsLookupProcessByProcessId`, `memcpy`)
+- Token manipulation via `_EPROCESS.Token` (EX_FAST_REF) and PPL via `_EPROCESS.Protection`
+- Offset resolution strategies (WinDbg manual offsets vs runtime RVA resolution)
+
+Use Cases:
+- Execute chosen `ntoskrnl` routines from user mode by repointing a syscall slot
+- Privilege escalation by swapping a process token to SYSTEM
+- Modify process protection state (PPL) for tampering or testing protections
+- Build a quieter kernel read/write channel after an initial BYOVD bootstrap
+- Research/detection engineering for SSDT entry changes and page-table permission flips
+
+Keywords:
+Windows 11, kernel exploitation, KiServiceTable, SSDT, syscall hijacking, NtSetQuotaInformationFile, KeServiceDescriptorTableShadow, MiGetPteAddress, PDE, PTE, large page, page table flags, RTCore64, BYOVD, PsLookupProcessByProcessId, EPROCESS, EX_FAST_REF, token stealing, memcpy, PPL, _PS_PROTECTION, WinDbg, IDA Pro, KCFG, KCET, HVCI, VBS, PatchGuard

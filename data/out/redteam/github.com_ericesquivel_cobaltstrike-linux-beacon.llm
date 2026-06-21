@@ -1,0 +1,26 @@
+Title:
+Cobalt Strike Linux Beacon (PoC Custom Implant)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository is a proof-of-concept custom “Beacon”-style implant written in C for Linux that communicates with a Cobalt Strike teamserver over HTTP/HTTPS using the default C2 profile. It demonstrates that third-party implants can interoperate with Cobalt Strike as long as they implement the expected protocol/metadata handling, enabling non-Windows platforms and custom behaviors. The implant includes a small command set (filesystem navigation, shell execution, upload/download, sleep/exit), SOCKS proxying, and in-memory execution of Linux BOFs via TrustedSec’s ELFLoader (supporting both TrustedSec and Outflank BOF formats). An Aggressor Script is included to generate payloads and integrate the custom beacon into Cobalt Strike workflows. This is primarily useful for red teams and implant developers exploring custom C2/implant engineering and extending CS beyond its stock payloads. It’s interesting because it provides a practical reference implementation for CS protocol compatibility and Linux BOF execution tradecraft.
+
+Technical Focus:
+- Cobalt Strike teamserver protocol interoperability (HTTP/HTTPS, default profile)
+- Custom implant development in C for Linux
+- Aggressor Script (CNA) integration and payload generation
+- Linux BOF execution via TrustedSec ELFLoader (and Outflank BOFs)
+- SOCKS proxy / pivoting capabilities
+- Basic tasking/command execution and file transfer
+
+Use Cases:
+- Build and test custom Cobalt Strike-compatible implants for Linux environments
+- Prototype alternative beacon behaviors (custom commands, obfuscation, platform support)
+- Execute Linux BOFs in-memory for post-exploitation without dropping full tooling
+- Establish SOCKS-based pivots through a Linux foothold
+- Research/detect CS-like traffic patterns by studying a reference implementation
+
+Keywords:
+Cobalt Strike, Beacon, custom implant, Linux, C, HTTP, HTTPS, teamserver, default C2 profile, Aggressor Script, CNA, payload generation, BOF, Beacon Object File, ELFLoader, TrustedSec, Outflank, nix_bof_template, SOCKS proxy, post-exploitation, file upload, file download

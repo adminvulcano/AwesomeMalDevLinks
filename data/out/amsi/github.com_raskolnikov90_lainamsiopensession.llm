@@ -1,0 +1,29 @@
+Title:
+LainAmsiOpenSession — Custom AMSI bypass by patching AmsiOpenSession in amsi.dll
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository provides a PowerShell-based AMSI bypass that patches the `AmsiOpenSession` function inside `amsi.dll` in-memory.  
+- The goal is to prevent or disrupt AMSI session initialization so subsequent script/content scanning is impaired, enabling execution of PowerShell payloads that would otherwise be inspected.  
+- It is derived from/related to prior public techniques (Sam Rothlisberger’s AMSI bypass) and takes inspiration from “Nuke-Amsi,” indicating a focus on direct function patching rather than higher-level flag toggles.  
+- The technique centers on runtime modification of a Windows security component (AMSI) via API resolution and memory patching.  
+- It is primarily useful for red team operators and pentesters performing Windows post-exploitation where AMSI blocks offensive PowerShell.  
+- It’s interesting because it targets a less commonly patched AMSI function (`AmsiOpenSession`) and demonstrates a practical in-process patching approach.
+
+Technical Focus:
+- AMSI internals (`amsi.dll`) and session lifecycle (`AmsiOpenSession`)
+- In-memory function patching / byte patching
+- PowerShell-based native API invocation (P/Invoke / reflection patterns)
+- Runtime DLL function resolution (e.g., `GetProcAddress`-style logic)
+- Memory protection changes (e.g., `VirtualProtect`) for patching
+
+Use Cases:
+- Bypassing AMSI scanning during PowerShell-based post-exploitation
+- Running known-signature PowerShell tooling in constrained/monitored environments
+- Red team tradecraft experimentation with alternative AMSI patch points
+- Testing blue-team detections for in-memory tampering of `amsi.dll`
+
+Keywords:
+AMSI, amsi.dll, AmsiOpenSession, PowerShell, in-memory patching, function patch, VirtualProtect, GetProcAddress, runtime hooking, EDR evasion, script scanning, Windows internals, post-exploitation, offensive PowerShell, Nuke-Amsi, Sam Rothlisberger, memory protection, API patching

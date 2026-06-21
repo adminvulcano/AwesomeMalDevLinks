@@ -1,0 +1,32 @@
+Title:
+LDAP BOF Collection
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- A collection of 40+ LDAP-focused Beacon Object Files (BOFs) intended to run inside C2 agents (built for Adaptix C2, but usable anywhere BOFs and argument passing are supported).  
+- It addresses the need to perform Active Directory enumeration and privilege escalation actions without relying on SOCKS/proxying external tooling (e.g., ldapsearch), by executing LDAP operations directly from the compromised host context.  
+- The repo implements both standard LDAP (389) with signing/sealing and LDAPS (636) with permissive certificate validation (accept-all callback).  
+- It provides commands for AD object enumeration, creation, modification, deletion, ACL/DACL manipulation, delegation configuration (including RBCD), and convenience “attack macros” that chain common abuse steps.  
+- Useful primarily for red teams and pentesters operating in AD environments who want low-friction, in-agent LDAP tradecraft and automation.  
+- Interesting because it packages a broad set of bloodyAD-like capabilities into BOFs, including DN/username auto-detection and Adaptix AxScript command registration.
+
+Technical Focus:
+- LDAP/LDAPS binds, signing & sealing, certificate validation bypass (accept-all)
+- Active Directory object enumeration and attribute operations (read/add/set/remove)
+- AD security descriptors: DACL/ACE parsing and WriteDACL-style modifications
+- Delegation abuse: constrained/unconstrained delegation and Resource-Based Constrained Delegation (msDS-AllowedToActOnBehalfOfOtherIdentity)
+- UserAccountControl (UAC) flag manipulation and SPN management
+- BOF development/integration (beacon.h-style APIs, Adaptix AxScript mappings)
+
+Use Cases:
+- Enumerate users/computers/groups, SPNs, delegation settings, and domain info via rootDSE from an implanted host
+- Identify writable/modifiable AD objects and inspect ACLs to plan privilege escalation
+- Add/modify ACEs to grant GenericAll/GenericWrite or DCSync-equivalent rights (where permissions allow)
+- Configure RBCD or delegation settings to enable lateral movement/impersonation paths
+- Create users/computers/groups and adjust attributes (SPNs, UAC flags) for roasting or persistence
+- Perform sensitive operations over LDAPS when LDAP is blocked or when changing passwords/attributes
+
+Keywords:
+LDAP, LDAPS, Active Directory, BOF, Beacon Object File, Adaptix C2, AxScript, rootDSE, Distinguished Name, security descriptor, ntSecurityDescriptor, DACL, ACE, WriteDACL, GenericAll, GenericWrite, DCSync, Resource-Based Constrained Delegation, msDS-AllowedToActOnBehalfOfOtherIdentity, ServicePrincipalName, UserAccountControl, Kerberoasting, AS-REP roasting, machineAccountQuota, MinGW-w64

@@ -1,0 +1,30 @@
+Title:
+EtwTiViewer — Live ETW-TI (Microsoft-Windows-Threat-Intelligence) Event Viewer
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- EtwTiViewer is a Windows research tool to live-consume and visualize events from the secure ETW provider **Microsoft-Windows-Threat-Intelligence (ETW-TI)**, a telemetry source commonly used by commercial EDRs to detect in-memory attacks and process injection.  
+- It solves the problem of exploring ETW-TI coverage and event semantics in real time (keywords, fields, process/image context) with filtering and JSONL logging.  
+- The repo documents ETW-TI’s access restriction (subscriber must be **PS_PROTECTED_ANTIMALWARE_LIGHT**) and demonstrates a lab-only workaround by patching the viewer process’s **EPROCESS->Protection** via kernel debugging so `EnableTraceEx2` succeeds.  
+- Architecture combines a kernel driver (process/image callbacks + named-pipe forwarding + IOCTL control) with a C++17 ImGui/DirectX11 GUI ETW consumer using StartTrace/ProcessTrace and TDH decoding.  
+- Useful for detection engineers, EDR researchers, and red teamers validating what ETW-TI emits for injection primitives; it’s interesting because it operationalizes a normally vendor-only telemetry source for controlled research.
+
+Technical Focus:
+- Secure ETW provider consumption (Microsoft-Windows-Threat-Intelligence / ETW-TI)
+- Protected Process Light (PPL) / PS_PROTECTED_ANTIMALWARE_LIGHT and EPROCESS->Protection
+- Kernel debugging–assisted security boundary patching (WinDbg)
+- ETW real-time sessions (StartTraceW, EnableTraceEx2, ProcessTrace) + TDH decoding
+- WDM driver callbacks (PsSetCreateProcessNotifyRoutineEx, PsSetLoadImageNotifyRoutine)
+- Named-pipe event forwarding + IOCTL control plane
+
+Use Cases:
+- Validate which ETW-TI events fire for specific injection techniques (APC, SetThreadContext, RWX, MapViewOfSection, Read/WriteProcessMemory)
+- Build/verify detection logic and telemetry mappings for EDR-like analytics in a lab
+- Compare ETW-TI keyword/task coverage across Windows builds
+- Generate labeled datasets (JSONL) for threat research and rule testing
+- Troubleshoot ETW subscription/access issues related to PPL requirements
+
+Keywords:
+ETW-TI, Microsoft-Windows-Threat-Intelligence, ETW, Secure ETW provider, EnableTraceEx2, StartTraceW, ProcessTrace, TDH, PEVENT_RECORD, PPL, Protected Process Light, PS_PROTECTED_ANTIMALWARE_LIGHT, EPROCESS, _PS_PROTECTION, WinDbg, kernel debugging, WDM driver, PsSetCreateProcessNotifyRoutineEx, PsSetLoadImageNotifyRoutine, IOCTL, named pipe, process injection, APC injection, SetThreadContext, VirtualProtectEx, MapViewOfSection, ReadProcessMemory, WriteProcessMemory, ImGui, DirectX 11

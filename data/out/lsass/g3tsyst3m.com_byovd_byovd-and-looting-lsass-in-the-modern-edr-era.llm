@@ -1,0 +1,31 @@
+Title:
+BYOVD and Looting LSASS in the Modern EDR Era
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post walks through a modern Windows credential-theft chain that uses BYOVD (Bring Your Own Vulnerable Driver) to gain kernel read/write primitives and disable LSASS Protected Process Light (PPL).  
+- It focuses on selecting a signed-but-not-blocklisted vulnerable driver (PDFWKRNL.sys / PdFwKrnl) and reversing its IOCTL handling to reach an arbitrary memmove-based read/write primitive (IOCTL 0x80002014).  
+- With kernel R/W, the author locates LSASS’s `_EPROCESS` and clears the `Protection` byte to remove PPL, enabling subsequent dumping.  
+- The dumping stage uses process cloning via `NtCreateProcessEx`, in-memory interception of `MiniDumpWriteDump` output via callbacks (writing to a `NUL` handle), and XOR obfuscation before writing the dump to disk to reduce common EDR detections.  
+- It includes code snippets for the exploit harness, the dump tool, and a simple XOR decryptor, plus a defensive note recommending WDAC/CI policies to block the driver hash/publisher.  
+- Useful primarily for red teams/pentesters and malware developers; secondarily for defenders validating BYOVD + LSASS dump detection/mitigation gaps.
+
+Technical Focus:
+- BYOVD driver selection vs Microsoft Vulnerable Driver Blocklist / HVCI considerations  
+- Reversing Windows driver IOCTL dispatch and CTL_CODE structure  
+- Arbitrary kernel memory read/write via unsafe IOCTL (memmove primitive)  
+- PPL bypass by modifying LSASS `_EPROCESS` `Protection` field  
+- LSASS dumping evasion: `NtCreateProcessEx` cloning + `MiniDumpWriteDump` callback interception + `NUL` handle trick  
+- Simple dump obfuscation (XOR) to evade signature-based scanning
+
+Use Cases:
+- Disable LSASS PPL on modern Windows using a vulnerable signed driver (BYOVD)
+- Build a kernel R/W exploit harness around a known-bad IOCTL interface
+- Dump LSASS with reduced file/handle telemetry using cloning + in-memory minidump callbacks
+- Test/validate defensive controls: WDAC driver deny rules, blocklist coverage, EDR detections for cloning/minidump callbacks
+- Create detection engineering scenarios around vulnerable driver loading and LSASS protection tampering
+
+Keywords:
+BYOVD, PDFWKRNL.sys, PdFwKrnl, IOCTL 0x80002014, CTL_CODE, arbitrary kernel read write, memmove primitive, DeviceIoControl, ntoskrnl.exe, PsInitialSystemProcess, _EPROCESS, ActiveProcessLinks, UniqueProcessId, Protection byte, PPL, LSASS, NtCreateProcessEx, process cloning, MiniDumpWriteDump, MINIDUMP_CALLBACK_ROUTINE, NUL device, XOR obfuscation, WDAC, Code Integrity, Microsoft Vulnerable Driver Blocklist, HVCI, KDU, loldrivers.io

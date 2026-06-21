@@ -1,0 +1,415 @@
+# https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags
+
+<!DOCTYPE html><!--KfddUwwUsKehYfiLkDu_I--><html lang="en" class="dark" style="color-scheme: dark;"><body><div><!--$--><!--/$--></div><div class="site-shell"><div class="site-noise"></div><div class="topbar-shell"></div><main class="site-main"><div class="article-shell"><section class="article-hero article-hero--premium"><div class="article-hero__copy"><div class="article-breadcrumbs" aria-label="Breadcrumb"><a href="https://research.nasbench.dev/research">Archive</a><a href="https://research.nasbench.dev/research/categories/field-notes">Field Notes</a></div><p class="eyebrow">Field Notes</p><h1 class="article-hero__title">Why Does MsMpEng Spawn svchost.exe Without Flags?</h1><p class="article-hero__lede">An RE deep dive at why Microsoft Defender can create an svchost.exe process without the usual service-host command-line flags.</p><div class="article-summary__facts"><div class="article-summary__fact"><span>Collection</span><strong>Field Notes</strong></div><div class="article-summary__fact"><span>Read Time</span><strong>4 min</strong></div><div class="article-summary__fact"><span>Created</span><strong>2026-05-06</strong></div><div class="article-summary__fact"><span>Last Updated</span><strong>2026-05-08</strong></div></div><div class="article-tags"><span class="tag-chip is-accent">windows</span><span class="tag-chip">windows-internals</span><span class="tag-chip">defender</span><span class="tag-chip">msmpeng</span><span class="tag-chip">svchost</span><span class="tag-chip">reverse-engineering</span></div></div><div class="research-aura research-aura--hero" data-motif="atlas" style="--category-from-dark:#192137;--category-to-dark:#0b101d;--category-accent-dark:#d7c5a5;--category-glow-dark:#91acff;--category-line-dark:rgba(215, 197, 165, 0.28);--category-orb-dark:rgba(145, 172, 255, 0.2);--category-from-light:#f7f1e8;--category-to-light:#ebe4d9;--category-accent-light:#6f5a3c;--category-glow-light:#5f85d9;--category-line-light:rgba(111, 90, 60, 0.18);--category-orb-light:rgba(123, 154, 224, 0.14)" aria-hidden="true"><span class="research-aura__wash"></span><span class="research-aura__orb"></span><span class="research-aura__ring research-aura__ring--one"></span><span class="research-aura__ring research-aura__ring--two"></span><span class="research-aura__line research-aura__line--one"></span><span class="research-aura__line research-aura__line--two"></span><span class="research-aura__line research-aura__line--three"></span><span class="research-aura__spark research-aura__spark--one"></span><span class="research-aura__spark research-aura__spark--two"></span><span class="research-aura__spark research-aura__spark--three"></span></div></section><section class="article-layout"><article class="article-body"><div class="markdown-body"><p><span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> is one of those processes that always showed up when there was<br>
+trouble. If you have spent enough time looking at Windows telemetry, you have<br>
+probably stared at it more than you wanted to.</p>
+<p>A couple of years back I looked at <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> and explained its command-line<br>
+options in <a href="https://nasbench.medium.com/demystifying-the-svchost-exe-process-and-its-command-line-options-508e9114e747" rel="noopener noreferrer nofollow" target="_blank">Demystifying The SVCHOST.EXE Process And Its Command Line<br>
+Options</a>.<br>
+The tl;dr from that post is that a normal service-hosted process is very recognizable. <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> is usually a child of <span><code data-language="text" data-theme="github-dark github-light"><span><span>services.exe</span></span></code></span>, and it normally has flags telling us and the SCM, which service group or service it is hosting.</p>
+<p>Something like:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>svchost.exe -k netsvcs -p -s Schedule</span></span></code></pre></figure>
+<p>But if you have been around long enough around telemetry, I am pretty sure you have<br>
+seen something like <a href="https://x.com/SecurityAura/status/1882420001099198907" rel="noopener noreferrer nofollow" target="_blank">this</a>: <span><code data-language="text" data-theme="github-dark github-light"><span><span>MsMpEng.exe</span></span></code></span> spawning an <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> instance without those usual service-host flags.</p>
+<figure class="markdown-image-frame"><img src="https://research.nasbench.dev/images/research/other/msmpeng-svchost-without-flags/rude-svchost.png" alt="RudeSvchost"></figure>
+<p>Today we are going to demystify that once and for all.</p>
+<blockquote>
+<p>This writeup only cares about the goal of explaining the specific Defender behavior of <span><code data-language="text" data-theme="github-dark github-light"><span><span>MsMpEng.exe</span></span></code></span> spawning <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span>. So, I will skip over a lot of details and simplify the flow to keep this focused and as a nice coherent story.</p>
+</blockquote>
+<h2 id="layer-i---starting-from-msmpengexe">Layer I - Starting From MsMpEng.exe<a href="https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags#layer-i---starting-from-msmpengexe" aria-label="Link to section: Layer I - Starting From MsMpEng.exe">#</a></h2>
+<p>Obviously, we start from <span><code data-language="text" data-theme="github-dark github-light"><span><span>MsMpEng.exe</span></span></code></span>, because that is the process showing up<br>
+as the parent in the process tree.</p>
+<p>My first theory was to look for <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateProcess</span></span></code></span> like APIs, if none was found, we assume it's a behavior of a loaded DLL.</p>
+<p>After investigation, however, we find that <span><code data-language="text" data-theme="github-dark github-light"><span><span>MsMpEng.exe</span></span></code></span> is "mostly" a loader and bootstrapper.</p>
+<p>The overview that matters to us of the flow looks something like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>main</span></span>
+<span><span>  -&gt; HrExeMain</span></span>
+<span><span>    -&gt; MpCheckPlatformUpdate(&amp;hModule)</span></span>
+<span><span>      -&gt; LoadMpSvcFrom(..., "%ls\\mpsvc.dll", ...)</span></span>
+<span><span>      -&gt; ValidateMpSvc(hModule) // hModule is the loaded mpsvc.dll</span></span>
+<span><span>         -&gt; GetProcAddress(hModule, "ValidateDrop")</span></span>
+<span><span>    -&gt; GetProcAddress(hModule, "ServiceCrtMain") // We call the exported ServiceCrtMain from mpsvc.dll</span></span>
+<span><span>    -&gt; ServiceCrtMain(0, 0)</span></span></code></pre></figure>
+<p><span><code data-language="text" data-theme="github-dark github-light"><span><span>LoadMpSvcFrom</span></span></code></span> builds a path to <span><code data-language="text" data-theme="github-dark github-light"><span><span>mpsvc.dll</span></span></code></span>, opens it, loads it with<br>
+<span><code data-language="text" data-theme="github-dark github-light"><span><span>LoadLibraryExW</span></span></code></span>, and then later on <span><code data-language="text" data-theme="github-dark github-light"><span><span>HrExeMain</span></span></code></span> get the address of <span><code data-language="text" data-theme="github-dark github-light"><span><span>ServiceCrtMain</span></span></code></span> from the same DLL and jumps into it.</p>
+<p>From this, we jump into <span><code data-language="text" data-theme="github-dark github-light"><span><span>mpsvc.dll</span></span></code></span>.</p>
+<h2 id="layer-ii---mpsvcdll">Layer II - MpSvc.dll<a href="https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags#layer-ii---mpsvcdll" aria-label="Link to section: Layer II - MpSvc.dll">#</a></h2>
+<p>This layer of <span><code data-language="text" data-theme="github-dark github-light"><span><span>MpSvc.dll</span></span></code></span> is a bit more complicated, and I will not bore with you unnecessary details to this writeup. But I followed a similar approach as before, looking for <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateProcess</span></span></code></span> like APIs, loaded libraries and strings as an initial heuristic.</p>
+<p>We do find some <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateProcess</span></span></code></span> like APIs but I will skip those for another writeup.</p>
+<p>What you need to know is that the answer is not in <span><code data-language="text" data-theme="github-dark github-light"><span><span>mpsvc.dll</span></span></code></span>, but it is in the other next layer, which is <span><code data-language="text" data-theme="github-dark github-light"><span><span>mpengine.dll</span></span></code></span> the Defender engine module.</p>
+<h2 id="layer-iii---were-finally-at-mpenginedll">Layer III - We're finally at MpEngine.dll<a href="https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags#layer-iii---were-finally-at-mpenginedll" aria-label="Link to section: Layer III - We're finally at MpEngine.dll">#</a></h2>
+<p>Using a similar approach, we find the culprit.</p>
+<figure class="markdown-image-frame"><img src="https://research.nasbench.dev/images/research/other/msmpeng-svchost-without-flags/create-svchost.png" alt="CreateSvchost"></figure>
+<p>Now we are in the right place. Time to explain things properly.</p>
+<p>The full chain to the interesting function looks something like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>mpengine.dll</span></span>
+<span><span>  -&gt; ArScanTask::CompletionCallback</span></span>
+<span><span>    -&gt; ArScanTask::Scan</span></span>
+<span><span>      -&gt; ArScan::ScanHelperWin3264</span></span>
+<span><span>        -&gt; AntiRootkit::PlatformInputWin64Ksl::PlatformInputWin64Ksl(...)</span></span>
+<span><span>          -&gt; AntiRootkit::PlatformInputWin64Ksl::Init</span></span>
+<span><span>            -&gt; AntiRootkit::PlatformInputWin64Ksl::EnumerateDeviceMemoryRanges</span></span>
+<span><span>            -&gt; AntiRootkit::PlatformInputWin64Ksl::CreateCraProcessHelper</span></span></code></pre></figure>
+<p>From the function names, we can already guess that this is part of the anti-rootkit scanner.</p>
+<p><span><code data-language="text" data-theme="github-dark github-light"><span><span>ArScan::ScanHelperWin3264</span></span></code></span> creates a <span><code data-language="text" data-theme="github-dark github-light"><span><span>PlatformInputWin64Ksl</span></span></code></span> object.</p>
+<figure class="markdown-image-frame"><img src="https://research.nasbench.dev/images/research/other/msmpeng-svchost-without-flags/PlatformInputWin64Ksl.png" alt="PlatformInputWin64Ksl"></figure>
+<p>Its constructor calls <span><code data-language="text" data-theme="github-dark github-light"><span><span>Init</span></span></code></span>, and <span><code data-language="text" data-theme="github-dark github-light"><span><span>Init</span></span></code></span> does a few things before the process is created, and it goes something like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>PlatformInputWin64Ksl::Init</span></span>
+<span><span>  -&gt; DeviceIoControl(KSL, 0x222044, op = 0)   // query KSL version</span></span>
+<span><span>  -&gt; DeviceIoControl(KSL, 0x222044, op = 0xB) // query capability, if supported</span></span>
+<span><span>  -&gt; WrapperK32EnumPageFilesW(...)</span></span>
+<span><span>  -&gt; EnumerateDeviceMemoryRanges()</span></span>
+<span><span>  -&gt; CreateCraProcessHelper()</span></span></code></pre></figure>
+<p>Basically it sends some IOCTLs to the KSL driver to query the version and capabilities, and then it calls <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateCraProcessHelper</span></span></code></span>.</p>
+<p><span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateCraProcessHelper</span></span></code></span>, builds the command line by hand, and it looks something like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">GetSystemDirectoryW</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(systemDir);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">cmd </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62"> L"</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\"</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">"</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">cmd </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">+=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> systemDir;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">cmd </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">+=</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62"> L"</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\\</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">svchost.exe</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\"</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">"</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span></code></pre></figure>
+<p>So the final command line will look something like this (might differ slightly on other builds):</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>"C:\Windows\System32\\svchost.exe"</span></span></code></pre></figure>
+<blockquote>
+<p>Note that the <span><code data-language="text" data-theme="github-dark github-light"><span><span>C:\Windows\System32</span></span></code></span> part is obtained dynamically through <span><code data-language="text" data-theme="github-dark github-light"><span><span>GetSystemDirectoryW</span></span></code></span>. So, in rare cases where the system directory is different, it will be reflected as such.</p>
+</blockquote>
+<p>Then it calls <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateProcessW</span></span></code></span> like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">CreateProcessW</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">    L"</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\"</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">&lt;SystemDirectory&gt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\\</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">svchost.exe</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\"</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">"</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    FALSE,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    CREATE_SUSPENDED,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">StartupInfo,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">ProcessInformation</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span></code></pre></figure>
+<p>The most surprising thing here is, the process is created with the <span><code data-language="text" data-theme="github-dark github-light"><span><span>CREATE_SUSPENDED</span></span></code></span> flag. Read the appendix for why that is the case.</p>
+<p>Once this run, is where we see the <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> process in the process tree :D</p>
+<p>For the sake of completeness, if we keep following the code, after the process is created, we see the engine takes the new process id from <span><code data-language="text" data-theme="github-dark github-light"><span><span>PROCESS_INFORMATION</span></span></code></span> and sends it to the KSL driver:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> ProcessInformation.dwProcessId;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">DeviceIoControl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    ksl_handle,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">222044</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    input,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">bytes_returned,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span></code></pre></figure>
+<h2 id="appendix---how-is-that-suspended-svchost-used">Appendix - How Is That Suspended Svchost Used?<a href="https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags#appendix---how-is-that-suspended-svchost-used" aria-label="Link to section: Appendix - How Is That Suspended Svchost Used?">#</a></h2>
+<p>Welcome to the most interesting part of the writeup, dear curious reader.</p>
+<p>In the previous section we left off just when the IOCTL with operation <span><code data-language="text" data-theme="github-dark github-light"><span><span>8</span></span></code></span> is sent to the KSL driver. To get more insight, we need to look at the KSL driver itself <span><code data-language="text" data-theme="github-dark github-light"><span><span>ksld.sys</span></span></code></span>.</p>
+<p>The interesting function to start with for our use case is <span><code data-language="text" data-theme="github-dark github-light"><span><span>CDeviceKsl::DeviceControl</span></span></code></span>.</p>
+<blockquote>
+<p>Note: I am going to present a heavily beautified version of the code, skipping over unnecessary things for ease of reading.</p>
+</blockquote>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="cpp" data-theme="github-dark github-light"><code data-language="cpp" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">void</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CDeviceKsl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">DeviceControl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    WDFQUEUE</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> queue</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    WDFREQUEST</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> request</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> output_buffer_length</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> input_buffer_length</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    ULONG</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> ioctl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    NTSTATUS status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    void</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input_buffer </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    void</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">output_buffer </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> bytes_returned </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> output_buffer_length;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CDeviceBase</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">RetrieveBuffer</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        WdfRequestRetrieveInputBuffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        request,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input_buffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        input_buffer_length);</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        goto</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> complete</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CDeviceBase</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">RetrieveBuffer</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        WdfRequestRetrieveOutputBuffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        request,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">output_buffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        bytes_returned);</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        goto</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> complete</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    WDFDEVICE device </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> WdfIoQueueGetDevice</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(queue);</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    auto</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> context </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> WdfObjectGetTypedContextWorker</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(device, </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">WDF_CONTROL_DEVEXT_TYPE_INFO);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (context </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&amp;&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> context-&gt;device)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    {</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> context-&gt;device-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">OpDeviceControl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            ioctl,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_buffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_buffer_length,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output_buffer,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">bytes_returned);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&gt;=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> &amp;&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> bytes_returned)</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">            WdfRequestSetInformation</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(request, bytes_returned);</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    else</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    {</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        status </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_INVALID_DEVICE_REQUEST;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">complete</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    WdfRequestComplete</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(request, status);</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre></figure>
+<p>We do not necessarily care about what this does, we just move to the next function it calls with the IOCTL, which is <span><code data-language="text" data-theme="github-dark github-light"><span><span>CDeviceKsl::OpDeviceControl</span></span></code></span>.</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="cpp" data-theme="github-dark github-light"><code data-language="cpp" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">NTSTATUS</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CDeviceKsl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">OpDeviceControl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    ULONG</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> ioctl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    DWORD</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">input</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> input_size</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    void</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">output</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">bytes_returned</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> sizeof</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(DWORD) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">||</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> ioctl </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">!=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">222044</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_INVALID_DEVICE_REQUEST;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    DWORD operation </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> input[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">];</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    for</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">size_t</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> i </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">; i </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;command_count; i</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">++</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    {</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        CCommandBase </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">*</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">command </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;commands[i];</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (command </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&amp;&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> command-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">IsSupported</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(operation))</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        {</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> command-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">Handle</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">                operation,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">                input,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">                input_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">                output,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">                bytes_returned);</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        }</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_NOT_SUPPORTED;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre></figure>
+<p>Basically this acts as the IOCTL dispatcher. Once we see the IOCTL code <span><code data-language="text" data-theme="github-dark github-light"><span><span>0x222044</span></span></code></span>, it reads <span><code data-language="text" data-theme="github-dark github-light"><span><span>input[0]</span></span></code></span> (the operation number sent from <span><code data-language="text" data-theme="github-dark github-light"><span><span>CreateCraProcessHelper</span></span></code></span>). If the operation is supported we call the handler which in this case is <span><code data-language="text" data-theme="github-dark github-light"><span><span>CCommand::Handle</span></span></code></span>. Here is an overview of it.</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">NTSTATUS</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CCommand</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">Handle</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">    DWORD</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> operation</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    void</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">input</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209"> input_size</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    void</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">output</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    size_t</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> *</span><span style="--shiki-dark:#FFAB70;--shiki-light:#E36209">bytes_returned</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    switch</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (operation)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    {</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        ...</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        ...</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        ...</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(WORD </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">*</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)output </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">104</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">bytes_returned </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_SUCCESS;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">18</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">        // 0x1400058D0</span></span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">        //   mov rax, [rcx+0x28]</span></span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">        //   retn</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        helper_process </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> vtable_call_</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(device </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">+</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">30</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">);</span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D"> // This should return CDeviceKsl+0x58</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        </span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">kslIoctlGetPhysicalMemory</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            bytes_returned,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            helper_process);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">        device_object </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> device-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">GetDeviceObject</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">();</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">kslIoctlGetCpuRegisters</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            device_object,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            bytes_returned);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 7</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">C</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">kslIoctlGetRoutineAddr</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            bytes_returned);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> device-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">SetConnectionHelper</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(((DWORD </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">*</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)input)[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">]);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">    // 0xB == 11</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">B</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (output_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_INVALID_PARAMETER;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(BYTE </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">*</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)output </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;MmCopyMemory </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">!=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> NULL</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        *</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">bytes_returned </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_SUCCESS;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    case</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">C</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49"> 0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">20</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">            return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">kslIoctlMmCopy</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            input_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            output_size,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">            bytes_returned);</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    default</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre></figure>
+<p>Here is a summary of the supported operations:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="markdown-table-wrap"><table><thead><tr><th>Operation</th><th>Description</th></tr></thead><tbody><tr><td>0x0</td><td>Query KSL interface version.</td></tr><tr><td>0x1</td><td>Read physical memory through kslIoctlGetPhysicalMemory.</td></tr><tr><td>0x2</td><td>Read CPU register state through kslIoctlGetCpuRegisters.</td></tr><tr><td>0x7</td><td>Resolve a kernel routine address with MmGetSystemRoutineAddress.</td></tr><tr><td>0x8</td><td>Register the suspended helper process PID with the driver.</td></tr><tr><td>0xB</td><td>Ask whether the MmCopyMemory based path is available.</td></tr><tr><td>0xC</td><td>Use the MmCopyMemory based copy path.</td></tr></tbody></table></div>
+<p>For our use case, we care about operation <span><code data-language="text" data-theme="github-dark github-light"><span><span>8</span></span></code></span>.</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">case</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">:</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> (input_size </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&lt;</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 8</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">        return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> STATUS_UNSUCCESSFUL;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    return</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> device-&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">SetConnectionHelper</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(((DWORD </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">*</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)input)[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">]);</span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D"> // PID</span></span></code></pre></figure>
+<p><span><code data-language="text" data-theme="github-dark github-light"><span><span>input[1]</span></span></code></span> in this case is the PID of the suspended <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> we mentioned before. We call <span><code data-language="text" data-theme="github-dark github-light"><span><span>SetConnectionHelper</span></span></code></span> next.</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">CDeviceKsl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">SetConnectionHelper</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(...)</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">  ...</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">  ...</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">  ...</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">  ZwOpenProcess</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">process_handle,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">80000000</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">object_attributes,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">ClientId</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">  );</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">  ObReferenceObjectByHandle</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">      process_handle,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">80000000</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">      PsProcessType,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">      KernelMode,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">      &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">process_object,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">      NULL</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">  );</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">  ZwClose</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(process_handle);</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">  this</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">-&gt;connection_helper_process </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> process_object;</span></span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">  // Btw, we store this at CDeviceKsl+0x58.</span></span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">  // Later, when the same object is reached through IDevice (see operation 1 access request)</span></span>
+<span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D">  // subobject at CDeviceKsl+0x30, this field is read as IDevice+0x28.</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre></figure>
+<p>The <span><code data-language="text" data-theme="github-dark github-light"><span><span>CDeviceKsl::SetConnectionHelper</span></span></code></span> basically calls <span><code data-language="text" data-theme="github-dark github-light"><span><span>ZwOpenProcess</span></span></code></span> to open a kernel handle to the PID, then <span><code data-language="text" data-theme="github-dark github-light"><span><span>ObReferenceObjectByHandle</span></span></code></span> to make that handle into a referenced process object, which is stored for later use.</p>
+<p>The "later use" happens when the anti-rootkit scanner reads physical memory. On<br>
+the engine side:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">mpengine.dll</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">  -&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> AntiRootkit</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">PlatformInputWin64Ksl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::ReadPhysicalMemory</span></span></code></pre></figure>
+<p>That function does a couple of things but the important part is that it sends an IOCTL with operation <span><code data-language="text" data-theme="github-dark github-light"><span><span>1</span></span></code></span> to read physical memory.</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D"> // operation 1 == read physical memory</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">2..3</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> physical_address;</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">input[</span><span style="--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">4..5</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> size;</span></span>
+<span> </span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">DeviceIoControl</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    ksl_handle,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">222044</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    input,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    0x</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">18</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    output_buffer,</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">    size,</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">    &amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">bytes_returned,</span></span>
+<span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">    NULL</span></span>
+<span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">)</span></span></code></pre></figure>
+<p>Back in <span><code data-language="text" data-theme="github-dark github-light"><span><span>ksld.sys</span></span></code></span>, we've established that operation <span><code data-language="text" data-theme="github-dark github-light"><span><span>1</span></span></code></span> from <span><code data-language="text" data-theme="github-dark github-light"><span><span>CCommand::Handle</span></span></code></span>:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">CCommand</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">Handle</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">1</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">, ...)</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">  -&gt;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E"> device-&gt;connection_helper_process getter</span></span>
+<span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">  -&gt;</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1"> CCommand</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">::</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">kslIoctlGetPhysicalMemory</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(..., helper_process)</span></span></code></pre></figure>
+<p>And this is where the suspended <span><code data-language="text" data-theme="github-dark github-light"><span><span>svchost.exe</span></span></code></span> process object finally gets used.<br>
+<span><code data-language="text" data-theme="github-dark github-light"><span><span>kslIoctlGetPhysicalMemory</span></span></code></span> receives that process object and does the following:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="c++" data-theme="github-dark github-light"><code data-language="c++" data-theme="github-dark github-light" style="display: grid;"><span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">KeStackAttachProcess</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(helper_process, </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">ApcState);</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">ZwOpenSection</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">"</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\\</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">device</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5">\\</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62">physicalmemory"</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">, ...);</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">ZwMapViewOfSection</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(...)</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">memmove</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(output_buffer, mapped_physical_memory, size);</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">ZwUnmapViewOfSection</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">NtCurrentProcess</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(), mapped_view);</span></span>
+<span><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1">KeUnstackDetachProcess</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">(</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49">&amp;</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E">ApcState);</span></span></code></pre></figure>
+<p>Basically the svchost process is used as a host for mapping the <span><code data-language="text" data-theme="github-dark github-light"><span><span>\device\physicalmemory</span></span></code></span> section. So that it's later analyzed by the engine.</p>
+<p>The TL;DR of the whole flow is something like this:</p>
+<figure data-rehype-pretty-code-figure=""><pre tabindex="0" data-language="text" data-theme="github-dark github-light"><code data-language="text" data-theme="github-dark github-light" style="display: grid;"><span><span>mpengine.dll anti-rootkit scanner</span></span>
+<span><span>  -&gt; initializes KSL</span></span>
+<span><span>  -&gt; creates svchost.exe suspended</span></span>
+<span><span>  -&gt; registers the helper PID with ksld.sys using op 8</span></span>
+<span> </span>
+<span><span>ksld.sys</span></span>
+<span><span>  -&gt; opens the PID</span></span>
+<span><span>  -&gt; stores it as the KSL connection helper</span></span>
+<span> </span>
+<span><span>&lt;later&gt;</span></span>
+<span> </span>
+<span><span>mpengine.dll</span></span>
+<span><span>  -&gt; asks KSL to read physical memory using op 1</span></span>
+<span> </span>
+<span><span>ksld.sys</span></span>
+<span><span>  -&gt; attaches to the helper process</span></span>
+<span><span>  -&gt; maps \device\physicalmemory in that process context</span></span>
+<span><span>  -&gt; copies the requested bytes into the IOCTL output buffer</span></span>
+<span><span>  -&gt; returns the bytes to mpengine.dll</span></span>
+<span> </span>
+<span><span>mpengine.dll</span></span>
+<span><span>  -&gt; analyzes the returned bytes</span></span></code></pre></figure>
+<p>That's pretty much it. Hope you enjoyed this deep dive as much as I did :D</p></div><section class="article-related"><p class="eyebrow">Related Articles</p><h2>Other threads in the archive worth reading next.</h2><div class="related-grid"><a class="related-card" href="https://research.nasbench.dev/research/other/dismhost-com-host"><p class="related-card__eyebrow">Field Notes</p><h3>DismHost - Command-Line, COM Registration, and DLL Loading</h3><p>Notes from reversing DismHost.exe, the out-of-process COM host used by DISM image sessions.</p></a><a class="related-card" href="https://research.nasbench.dev/research/other/suspicious-com-powershell"><p class="related-card__eyebrow">Field Notes</p><h3>PowerShell COM Object Execution - A List of Commonly Abused COM Objects</h3><p>A list of commonly abused COM objects that can be instantiated and manipulated using PowerShell for malicious purposes, along with examples of how they can be used in attack scenarios.</p></a><a class="related-card" href="https://research.nasbench.dev/research/other/calc-execution-choice"><p class="related-card__eyebrow">Field Notes</p><h3>Calc Vs Win32Calc Vs CalculatorApp</h3><p>An exploration of the `calc.exe` binary, its relationship with `Win32Calc.exe` and `CalculatorApp.exe`, and how it serves as a launcher for the modern Calculator app on Windows.</p></a></div></section></article></section></div><!--$--><!--/$--></main></div><next-route-announcer style="position: absolute;"><div aria-live="assertive" id="__next-route-announcer__" role="alert" style="position: absolute; border: 0px; height: 1px; margin: -1px; padding: 0px; width: 1px; clip: rect(0px, 0px, 0px, 0px); overflow: hidden; white-space: nowrap; overflow-wrap: normal;"></div></next-route-announcer></body></html>

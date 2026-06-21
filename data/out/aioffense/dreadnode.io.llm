@@ -1,0 +1,27 @@
+Title:
+Dreadnode 2.0 — Infrastructure Platform for Security Agents
+
+Type:
+Other (Product/Platform + Research Hub)
+
+Short Summary (4–8 sentences max):
+Dreadnode 2.0 is an “AI infrastructure for the security stack” focused on building, evaluating, deploying, and observing security agents across the full lifecycle. It targets the gap in MLOps-style tooling for AI-native security workflows, aiming to move agent prototypes into production with repeatable evaluation and operational controls. The platform highlights pre-built security agents, benchmarking/evaluations, deeper observability beyond session logs, and sandboxed/segmented deployments that are model/framework agnostic. It also includes “Worlds,” a synthetic environment/simulation capability (notably for Active Directory) to generate data/trajectories for training and testing agent behavior. The site positions the platform for AI red teaming, pentesting, vulnerability research, and AI safety/model probing at scale. It’s most relevant to red teams, security researchers, and security engineering teams operationalizing agentic testing, with secondary value to blue teams for evaluation/telemetry and controlled execution.
+
+Technical Focus:
+- Agent lifecycle management (build/evaluate/optimize/deploy/observe)
+- Security-agent evaluations and benchmarking (task-based performance validation)
+- Observability/telemetry for agent behavior (beyond basic logs)
+- Sandboxed, segmented execution environments for safe agent deployment
+- Synthetic environment generation (“Worlds”), including Active Directory simulations
+- AI red teaming / model probing workflows (jailbreaks, safety assessment)
+
+Use Cases:
+- Build and regression-test autonomous security agents against defined security tasks
+- Run agent-driven pentesting workflows in controlled sandbox environments
+- Generate synthetic AD environments and trajectories for training/evaluating agents
+- Benchmark and compare agent/model variants using standardized evaluations
+- Collect behavioral telemetry to debug, tune, and harden agent decision-making
+- Conduct AI red teaming (jailbreak/probing) and track results over time
+
+Keywords:
+security agents, agentic pentesting, AI red teaming, MLOps, evaluations, benchmarking, observability, sandboxing, synthetic data generation, Active Directory, simulation engine, trajectories, model-agnostic deployment, MCP, API, vulnerability research, web app pentesting, network operations, AI safety assessment, jailbreaks

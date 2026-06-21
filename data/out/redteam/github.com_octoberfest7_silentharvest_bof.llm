@@ -1,0 +1,26 @@
+Title:
+SilentHarvest BOF
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+SilentHarvest_BOF is a Cobalt Strike Beacon Object File (BOF) that implements the “SilentHarvest” registry-only credential dumping technique (via SilentNimvest), aiming to extract Windows secrets with reduced noise compared to classic LSASS-centric dumping. It replicates hashdump-style extraction and also retrieves LSA secrets from `HKLM\SECURITY\Policy\Secrets`, relying on offline/registry-based decryption paths. A key operational benefit is that it only requires `SeBackupPrivilege` (often available to local Administrators) rather than full SYSTEM, by leveraging backup-style access to protected registry hives. The project targets newer Windows versions (Win10/Server 2016+) where secrets are protected with AES; legacy RC4 handling is not implemented. It also documents a BOF build approach that avoids standard BOF API declaration headers by post-processing symbols with `objcopy` (and optionally a separate “BOFPatcher” workflow). Useful primarily for red team operators and pentesters who want credential material from the registry under constrained privilege and OPSEC requirements.
+
+Technical Focus:
+- SilentHarvest / registry-only credential dumping
+- `SeBackupPrivilege`-based access to protected registry hives
+- SAM/SECURITY/SYSTEM hive parsing and decryption for hashdump-equivalent output
+- LSA Secrets extraction from `HKLM\SECURITY\Policy\Secrets`
+- Windows AES-protected secret formats (Win10/Server 2016+)
+- BOF development tradecraft: `objcopy` import symbol patching (`DLL$API`)
+
+Use Cases:
+- Dump local account password hashes without LSASS dumping
+- Extract LSA secrets (service account creds, DPAPI-related secrets depending on host state)
+- Recover cached domain credential material for offline cracking (e.g., Hashcat)
+- Run credential collection from an admin context where SYSTEM is not available
+- Integrate low-footprint credential harvesting into Cobalt Strike workflows
+
+Keywords:
+Cobalt Strike, BOF, Beacon Object File, SilentHarvest, SilentNimvest, Windows registry, SAM, SECURITY hive, SYSTEM hive, LSA Secrets, HKLM\\SECURITY\\Policy\\Secrets, hashdump, SeBackupPrivilege, AES, cached domain credentials, Hashcat, objcopy, DLL$API imports, Windows Server 2016, Windows 10

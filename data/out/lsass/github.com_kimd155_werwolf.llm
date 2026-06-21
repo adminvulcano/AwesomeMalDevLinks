@@ -1,0 +1,25 @@
+Title:
+WerWolf — In-memory BOF implementation of Silent Process Exit LSASS dumping
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+WerWolf is a Windows credential-dumping tool that triggers LSASS minidump creation using the Silent Process Exit technique via `RtlReportSilentProcessExit` (popularized at DEF CON 30). Its main contribution is delivery: the technique is executed as an in-memory Beacon Object File (BOF) loaded by a custom Python COFF loader, avoiding a dropped EXE and avoiding PowerShell-based artifacts (script block logging/AMSI). The dump is written by WerFault/WER to `C:\Windows\Temp\` and can be parsed offline (e.g., with pypykatz). The repo includes a COFF parser/loader in Python and a precompiled BOF (`wer_execute.o`) plus source. It’s primarily useful for red teams and pentesters evaluating EDR visibility around WER-based dumping and in-memory tradecraft.
+
+Technical Focus:
+- Silent Process Exit / Windows Error Reporting (WER) LSASS dumping
+- `RtlReportSilentProcessExit` invocation and WerFault dump generation
+- In-memory BOF execution via custom COFF loader (Python ctypes)
+- Registry modifications required for Silent Process Exit behavior
+- Operational considerations around async dump creation and file polling
+
+Use Cases:
+- Dump LSASS via WER/Silent Process Exit without dropping a standalone executable
+- Avoid PowerShell-based implementations to reduce script logging/AMSI exposure
+- Red-team tradecraft testing of EDR detections around WerFault/WER dump activity
+- Offline credential extraction from generated minidumps (e.g., pypykatz)
+- Researching COFF/BOF loading and in-memory execution patterns on Windows
+
+Keywords:
+WerWolf, Silent Process Exit, LSASS dump, RtlReportSilentProcessExit, Windows Error Reporting, WER, WerFault.exe, minidump, BOF, Beacon Object File, COFF loader, ctypes, in-memory execution, registry modification, T1003.001, T1112, T1218, pypykatz, Windows 10, Windows Server 2016+

@@ -1,0 +1,25 @@
+Title:
+DSCourier — Applying DSC via WinGet Configuration COM API using Microsoft-signed binaries
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+DSCourier is a proof-of-concept that leverages the WinGet Configuration COM API to apply PowerShell Desired State Configuration (DSC) on a target through Microsoft-signed components. The goal is to execute configuration-driven actions (via `winget configure`/Microsoft.Management.Configuration) in a way that can reduce scrutiny compared to custom tooling, effectively “living off the land” with trusted binaries/APIs. It focuses on operationalizing DSC configuration application by calling into WinGet via COM from a .NET (C#) wrapper and supporting PowerShell assets. The author positions it as research-grade code intended for operators to modify and extend with custom configuration files. The technique is notable because it reportedly bypassed multiple EDR products (CrowdStrike Falcon, MDE, Elastic) in testing. It’s primarily useful for red teams/pentesters researching signed-binary execution paths and defenders looking to understand and detect WinGet/DSC abuse.
+
+Technical Focus:
+- WinGet Configuration feature (`winget configure`) and feature-flag enablement
+- COM automation via Microsoft.Management.Configuration (WinGet Configuration COM API)
+- PowerShell Desired State Configuration (DSC) execution flow and dependencies (PSDscResources)
+- Living-off-the-land via Microsoft-signed binaries/components
+- .NET 8 / Windows SDK interop for COM-based invocation
+
+Use Cases:
+- Execute/abuse DSC configurations on endpoints using WinGet’s configuration pipeline
+- Prototype EDR evasion research around trusted/signed configuration engines
+- Build custom operator workflows by authoring/modifying DSC configuration files
+- Defensive testing: create detections for WinGet Configuration COM usage and DSC resource execution
+- Validate enterprise hardening controls around WinGet installation and configuration enablement
+
+Keywords:
+DSCourier, WinGet, winget configure, WinGet Configuration, COM API, Microsoft.Management.Configuration, DSC, Desired State Configuration, PowerShell, PSDscResources, LOLBIN, signed binaries, .NET 8, Windows SDK 10.0.22621, EDR bypass, CrowdStrike Falcon, Microsoft Defender for Endpoint, Elastic Security, configuration-as-code, Windows 10, Windows 11, Server 2025

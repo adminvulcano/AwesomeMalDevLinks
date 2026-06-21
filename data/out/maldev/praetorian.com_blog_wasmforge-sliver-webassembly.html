@@ -1,0 +1,559 @@
+# https://www.praetorian.com/blog/wasmforge-sliver-webassembly/
+
+<!DOCTYPE html><html lang="en-US">
+<body class="wp-singular post-template-default single single-post postid-12688 single-format-standard wp-custom-logo wp-embed-responsive wp-theme-hello-elementor wp-child-theme-hello-theme-child-master hello-elementor-default elementor-default elementor-kit-9 elementor-page elementor-page-12688 elementor-page-537">
+
+
+<!-- GTM Container placement set to automatic -->
+<!-- Google Tag Manager (noscript) -->
+				
+<!-- End Google Tag Manager (noscript) -->
+<a class="skip-link screen-reader-text" href="https://www.praetorian.com/blog/wasmforge-sliver-webassembly/#content">Skip to content</a>
+
+		
+				<div data-elementor-type="single-post" data-elementor-id="537" class="elementor elementor-537 elementor-location-single post-12688 post type-post status-publish format-standard has-post-thumbnail hentry category-ai-offensive-security category-labs category-offensive-security tag-ai-offensive-security tag-c2-development tag-claude-code tag-edr tag-edr-evasion tag-malware-automation tag-open-source tag-red-team-tools tag-tools-techniques tag-vulnerability-research post_author-michael-weber" data-elementor-post-type="elementor_library">
+			<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-0420b56 e-flex e-con-boxed e-con e-parent" data-id="0420b56" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-5c9fbee e-con-full e-flex e-con e-child" data-id="5c9fbee" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-a1803d9 elementor-align-center elementor-widget__width-auto elementor-widget elementor-widget-post-info" data-id="a1803d9" data-element_type="widget" data-e-type="widget" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-40d019b elementor-inline-item" itemprop="about">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-terms">
+										<span class="elementor-post-info__terms-list">
+				<a href="https://www.praetorian.com/category/ai-security/ai-offensive-security/" class="elementor-post-info__terms-list-item">AI Offensive Security</a>, <a href="https://www.praetorian.com/category/labs/" class="elementor-post-info__terms-list-item">Labs</a>, <a href="https://www.praetorian.com/category/offensive-security/" class="elementor-post-info__terms-list-item">Offensive Security</a>				</span>
+					</span>
+								</li>
+				</ul>
+						</div>
+				<div class="elementor-element elementor-element-df91114 elementor-widget elementor-widget-theme-post-title elementor-page-title elementor-widget-heading" data-id="df91114" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-title.default">
+					<h1 class="elementor-heading-title elementor-size-default">Enter the WasmForge: Compiling Sliver into WebAssembly</h1>				</div>
+				<div class="elementor-element elementor-element-b3c2fec elementor-align-center elementor-widget elementor-widget-post-info" data-id="b3c2fec" data-element_type="widget" data-e-type="widget" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-d1bfcef elementor-inline-item" itemprop="about">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-terms">
+										<span class="elementor-post-info__terms-list">
+				<a href="https://www.praetorian.com/author/michael-weber/" class="elementor-post-info__terms-list-item">Michael Weber</a>				</span>
+					</span>
+								</li>
+				<li class="elementor-icon-list-item elementor-repeater-item-97dbfaa elementor-inline-item" itemprop="datePublished">
+						<a href="https://www.praetorian.com/blog/2026/06/04/">
+											<span class="elementor-icon-list-icon">
+								<svg aria-hidden="true" class="e-font-icon-svg e-fas-calendar" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm436-44v-36c0-26.5-21.5-48-48-48h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v36c0 6.6 5.4 12 12 12h424c6.6 0 12-5.4 12-12z"></path></svg>							</span>
+									<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-date">
+										<time>June 4, 2026</time>					</span>
+									</a>
+				</li>
+				</ul>
+						</div>
+				</div>
+					</div>
+				</div>
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-7cbcae5 e-flex e-con-boxed e-con e-parent" data-id="7cbcae5" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-a005860 elementor-widget elementor-widget-theme-post-featured-image elementor-widget-image" data-id="a005860" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-featured-image.default">
+															<img width="724" height="396" src="https://www.praetorian.com/wp-content/uploads/2026/06/Part-2-Enter-the-WasmForge-blog-hero-1.webp" class="attachment-full size-full wp-image-12703" alt="">															</div>
+					</div>
+				</div>
+		<section data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-d32095e e-flex e-con-boxed e-con e-parent" data-id="d32095e" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-887d2a1 e-con-full e-flex e-con e-child" data-id="887d2a1" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-7d4cb30 elementor-widget__width-initial elementor-widget elementor-widget-theme-post-content" data-id="7d4cb30" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-content.default">
+							<div data-elementor-type="wp-post" data-elementor-id="12688" class="elementor elementor-12688" data-elementor-post-type="post">
+				<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-1f6f7994 e-flex e-con-boxed e-con e-parent" data-id="1f6f7994" data-element_type="container" data-e-type="container">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-54f03950 elementor-widget elementor-widget-text-editor" data-id="54f03950" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+									
+<p>In <a href="https://www.praetorian.com/blog/llm-edr-signature-reduction/">our last post</a> we used a Claude skill to systematically beat down VirusTotal detection rates on offensive security tools, with a brief mention of a new loader we’d been using to apply those techniques in bulk. This post is about that loader, which we call WasmForge.</p>
+
+
+
+<p>WasmForge is, from the user’s perspective, a build wrapper. You point it at a Go project and you get back a Windows or macOS binary that runs your tool but doesn’t look anything like it. Internally it’s a lot more. It’s a Go-to-WebAssembly compiler, a custom <a href="https://github.com/tetratelabs/wazero">Wazero</a> fork, around eighty host shim functions for MacOS and Windows APIs, and a healthy amount of evasion techniques from our previously discussed skill. The whole pipeline exists to solve one specific problem: take an existing offensive security tool, change <strong><em>zero lines</em></strong> of its source code, and produce a binary you can actually drop on a hardened endpoint.</p>
+
+
+
+<h1 id="h-the-tool-authors-won-then-the-tool-authors-lost" class="wp-block-heading">The Tool Authors Won, Then The Tool Authors Lost</h1>
+
+
+
+<p>Many red team engagements can be completed using the same handful of established tools. <a href="https://github.com/bishopfox/sliver">Sliver</a> for C2 traffic that’s been hardened by years of community work. <a href="https://github.com/jpillora/chisel">Chisel</a> for the umpteenth time someone wants an HTTP-tunneled SOCKS proxy. A <a href="https://github.com/its-a-feature/mythic">Mythic</a> beacon when the engagement scope or detection model rules out Sliver. None of these tools are exotic.&nbsp;</p>
+
+
+
+<p>The trouble, of course, is that every one of these tools has been signatured to hell and back. Every major Endpoint Detection and Response (EDR) vendor has a YARA rule with the project name in its title, sometimes literally. By the time you’re ready to drop your tool on the endpoint, you’ve already already lost the static-analysis battle before you can run the binary.</p>
+
+
+
+<p>This leads to the same set of frustrating options. Fork the source and start renaming things. Piece together some evasion tips scattered across a few disparate blogs. Rewrite the tool from scratch. Wrap the tool in a custom loader you’ve then got to maintain forever (as crazy as it sounds, we prefer this option). The state of the practice is essentially “spend a few days hardening a known-good tool before every engagement.” Security practitioners can do better.</p>
+
+
+
+<p>We wanted a loader that handled this part for us, and we wanted it to be aggressively <strong><em>transparent</em></strong> – you should not have to touch the tool’s source, you should not have to know how the loader works internally, and the resulting binary should be opsec-safe enough to drop into a real engagement without further modification.</p>
+
+
+
+<h2 id="h-why-webassembly-of-all-things" class="wp-block-heading">Why WebAssembly, Of All Things</h2>
+
+
+
+<p>WebAssembly is not the first thing that comes to mind when you’re hiding malware. It’s a language of the modern web with <strong>wasm32</strong> modules running in browser sandboxes, mostly compiled from Rust, Go, or C++ via well-known toolchains. It is <strong><em>NOT</em></strong> normally expected to be running a full implant. That last property is an interesting one from our perspective.</p>
+
+
+
+<p>There are two reasons WASM ended up being the right substrate.</p>
+
+
+
+<p>The first reason is precedent. We’ve had a lot of success in the past hiding malicious behavior inside WebAssembly running in browser extensions (see <a href="https://github.com/praetorian-inc/chromealone">ChromeAlone</a> for the long version of that argument). Defensive tooling for WASM analysis is significantly less developed than for native PE analysis. Most static analyzers know how to chew on a Go <strong>gopclntab</strong> but very few of them know what to do with a 30,000 instruction WASM module that’s been compiled from the same Go source. The instruction set is unfamiliar, the type system is unfamiliar, and the binary format is unfamiliar enough that most heuristic engines just give up and make their decision entirely based on the outer container.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-large"><picture fetchpriority="high" decoding="async" class="wp-image-12699">
+<source type="image/webp" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-3-1024x368.png.webp 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-300x108.png.webp 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-768x276.png.webp 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-1536x552.png.webp 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-scaled.png.webp 2048w" sizes="(max-width: 1024px) 100vw, 1024px">
+<img fetchpriority="high" decoding="async" width="1024" height="368" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201024%20368'%3E%3C/svg%3E" alt="" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-3-1024x368.png 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-300x108.png 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-768x276.png 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-1536x552.png 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image-3-scaled.png 2048w" data-lazy-sizes="(max-width: 1024px) 100vw, 1024px" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2026/06/image-3-1024x368.png">
+</picture>
+
+<figcaption class="wp-element-caption"><strong>I love this image too much not to re-use it</strong></figcaption>
+</figure>
+
+
+
+<p>The second reason is portability. We wanted to write the loader once and target Windows and macOS from it. WebAssembly’s whole pitch is “compile once, run anywhere,” with a relatively well-defined system interface (<a href="https://wasi.dev/">WASI</a>) bridging the gap between the WASM module and the host. WASI Preview 1 isn’t a complete substitute for native syscalls, but it’s a really useful starting point. <strong>fd_read</strong>,<strong>fd_write</strong>,<strong>path_open</strong>,<strong>clock_time_get</strong>, and other functions you’d need for any basic program. The pieces that <strong><em>aren’t</em></strong> covered by WASI (like network sockets that work, raw sockets, Win32 APIs, or macOS frameworks) are exactly what we have to bridge ourselves, and nobody expects WASM to be able to do that.</p>
+
+
+
+<p>The combination of “defenders’ analysis tooling is weaker here” and “we can target both major OSes from one source” was enough to commit. The tradeoffs of binary size, a <strong><em>weird</em></strong> debug experience, and having to implement a runtime were considered acceptable in a world where we can use LLMs to prompt our way to success.&nbsp;</p>
+
+
+
+<h1 id="h-architecture" class="wp-block-heading">Architecture</h1>
+
+
+
+<p>WasmForge has three stages. The first prepares a patched copy of the Go standard library that compiles cleanly for the <strong>wasip1</strong> target. The second runs the Go compiler against that patched <strong>stdlib</strong> to produce a <strong>.wasm</strong> module. The third generates an outer Go binary containing a <a href="https://github.com/wazero/wazero">Wazero</a> runtime, embeds the encrypted WASM module into the binary’s PE sections, and applies “polymorphism” (quotes intentional as it’s largely just a lot of automatic renaming) and signing passes we’ll get to in a minute.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-large"><picture decoding="async" class="wp-image-12698">
+<source type="image/webp" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-2-1024x544.png.webp 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-300x159.png.webp 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-768x408.png.webp 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-1536x816.png.webp 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-scaled.png.webp 2048w" sizes="(max-width: 1024px) 100vw, 1024px">
+<img decoding="async" width="1024" height="544" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201024%20544'%3E%3C/svg%3E" alt="" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-2-1024x544.png 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-300x159.png 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-768x408.png 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-1536x816.png 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image-2-scaled.png 2048w" data-lazy-sizes="(max-width: 1024px) 100vw, 1024px" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2026/06/image-2-1024x544.png">
+</picture>
+
+<figcaption class="wp-element-caption"><strong>The rough flow for building a WasmForge’d binary</strong></figcaption>
+</figure>
+
+
+
+<p>The transparency property comes out of the first two stages. The patched GOROOT handles all the parts of Go’s standard library that don’t natively work under WASI like <strong>net.Dial</strong>, <strong>net.Listen</strong>, <strong>net/http</strong>, <strong>os/exec</strong>, <strong>os.Pipe</strong>, and friends by inserting <strong>//go:wasmimport</strong> shims that delegate the actual work to host functions. From the guest’s perspective, <strong>net.Dial(“tcp”, “10.1.2.3:443”)</strong> looks like it works the same way it does on any other platform. The guest binary doesn’t know it’s running in WebAssembly, which is the entire point.</p>
+
+
+
+<p>The third stage is where most of our opsec engineering lives. This is where we got to spend time using the <a href="https://github.com/praetorian-inc/reduce-golang-detections-skill">skill from our previous blog post</a>. We’ll come back to it after we talk about how the guest side actually executes.</p>
+
+
+
+<h2 id="h-the-guest-side-wasi-wazero-and-a-lot-of-shims" class="wp-block-heading">The Guest Side: WASI, Wazero, and a Lot of Shims</h2>
+
+
+
+<p>WASI Preview 1 doesn’t get you very far on its own. It gets you a couple dozen syscall analogues that look enough like Linux to be useful and stop well short of being useful enough. There are no real sockets. There is no <strong>LoadLibrary</strong>. There is no <strong>mach_vm_write</strong>. The whole point of an offensive security tool is in the part WASI doesn’t ship.</p>
+
+
+
+<p>Wazero is the embeddable Go WASM runtime we use as the engine. It’s pure Go (no CGO), it supports defining your own host module with arbitrary function imports, and it gives us enough control over execution to actually do the things we need. We forked it because we needed to make changes the upstream maintainers reasonably don’t want, like randomizing the WASM opcode table per build, renaming a lot of internal package paths, and swapping out the cache magic bytes. Fundamentally though, at the runtime level it’s an unmodified Wazero from the guest’s perspective.</p>
+
+
+
+<p>The interesting work is in the host module. WasmForge defines an <strong>env</strong> namespace with roughly eighty host functions: socket lifecycle (<strong>sock_open, sock_bind, sock_connect, sock_read</strong>), <strong>os</strong> proxies (<strong>os_hostname</strong>, <strong>os_exec</strong>, <strong>os_pipe</strong>), Win32 wrappers (<strong>win32_load_library</strong>, <strong>win32_get_proc_address</strong>, <strong>win32_syscalln</strong>, <strong>win32_create_process</strong>, the registry quartet, along with several dozen others), and macOS framework calls (<strong>fw_load</strong>, <strong>fw_sym</strong>, <strong>fw_call</strong>). Almost every one of these is a thin wrapper that converts WASM linear-memory pointers into real host addresses, calls into Go’s <strong>syscall</strong> or <strong>x/sys/windows</strong> package, and writes results back into the guest’s memory.</p>
+
+
+
+<p>Walking through a single call <strong>net.Dial(“tcp”, “10.1.2.3:443”)</strong> from the guest, a call looks like this:</p>
+
+
+
+<figure class="wp-block-image aligncenter size-large"><picture decoding="async" class="wp-image-12697">
+<source type="image/webp" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-942x1024.png.webp 942w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-276x300.png.webp 276w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-768x835.png.webp 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1.png.webp 1394w" sizes="(max-width: 942px) 100vw, 942px">
+<img decoding="async" width="942" height="1024" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20942%201024'%3E%3C/svg%3E" alt="" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-942x1024.png 942w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-276x300.png 276w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-768x835.png 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1.png 1394w" data-lazy-sizes="(max-width: 942px) 100vw, 942px" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2026/06/image-1-1-942x1024.png">
+</picture>
+
+<figcaption class="wp-element-caption"><strong>We need to jump through several hoops to let the guest program run without requiring logic changes</strong></figcaption>
+</figure>
+
+
+
+<p>Every other host function, all eighty-odd of them, follow the same shape. Pointer arguments get translated to invoke the host, who does the real work, and then the return values get written back into the guest’s linear memory at known offsets.</p>
+
+
+
+<p>That pointer-translation step sounds innocuous and is in fact the most load-bearing piece of code in the whole project. WASM linear memory is, from the guest’s perspective, a contiguous byte array starting at offset zero. WASM pointers are 32-bit offsets into that array. Pass one of those offsets directly to a Win32 API and you get an access violation in about half a millisecond. <strong>0x2a39b3a</strong> is not a valid kernel-mode address, no matter how good your call looks otherwise. Before every host-side syscall we walk the argument list and apply a simple range heuristic: anything ≥ <strong>0x10000</strong> but less than the WASM module’s allocated memory size is <strong><em>probably</em></strong> a linear-memory pointer, and gets rewritten to its host equivalent (<strong>wasmMemBase + offset</strong>). The <strong>0x10000</strong> floor exists to distinguish real pointers from small scalar values that the guest sometimes passes in pointer-shaped positions, like flag bitmasks, small handles, or nil. After the call returns, we sometimes have to do the reverse: COM interfaces and several Win32 APIs write <strong>host</strong> pointers back into the <strong>guest’s</strong> output parameter, which the guest then expects to dereference. We mirror those host pointers into WASM memory, with a small reverse-lookup table tracking which mirrored copy corresponds to which host original, and patch the output buffer to point at the mirror instead.</p>
+
+
+
+<p>The range heuristic catches most cases but isn’t perfect on its own. Plenty of Win32 APIs take parameters that the function signature types as <strong>PVOID</strong> but at runtime are actually larger handles, session IDs, or kernel objects that <strong>happen</strong> to fall inside the WASM-pointer range by coincidence, and translating those by mistake produces some entertaining crashes. For those, we lean on a per-API pointer-mask table generated at build time from <a href="https://github.com/marlersoft/win32json">win32json</a>, Andy Marler’s JSON serialization of Microsoft’s own <a href="https://github.com/microsoft/win32metadata">win32metadata</a>. This is the same machine-readable Win32 API surface that <a href="https://github.com/microsoft/cswin32">CsWin32</a> and Rust’s <strong>windows-sys</strong> use to know which parameter is which. We have a small <strong>gen-ptrmasks</strong> codegen step that walks every API entry in the metadata and emits a bitmask saying “arg[0] is a real pointer, arg[1] is a handle, arg[2] is a size_t,” and the host shim consults that mask before deciding which arguments to translate. The metadata covers something like 80,000 API entry points across kernel32, advapi32, user32, ntdll, and the rest, which means we get exact pointer semantics essentially for free across the entire Windows API surface the guest can touch. The handful of cases where the metadata is <strong><em>wrong</em></strong>, most notably the cross-process memory APIs where a <strong>PointerTo(Void)</strong> is actually a remote-process address, not a local one, are dealt with via a few hand-curated overrides. While you would expect that the mask table would be sufficient to handle this problem entirely, we’ve found that it’s necessary to use the mask table in conjunction with the heuristic to get the most stable output from WasmForge.&nbsp;</p>
+
+
+
+<p>This is enough to make most APIs work. COM is the API that taught us the most about where the model breaks. <strong>CLRCreateInstance</strong> returns an <strong>ICLRMetaHost</strong> pointer in an output parameter. The guest reads that pointer, jumps through it to get a vtable, reads function pointers out of the vtable, calls them, and expects them to do the right thing. Every one of those pointers like the interface, the vtable, and the methods themselves live in host memory. Mirroring just the top-level pointer doesn’t work, we have to mirror the vtable too, and we have to recognize that vtable entries are <strong><em>function</em></strong> pointers that live in <strong>MEM_IMAGE</strong> regions (i.e., the DLLs themselves), which we <strong>do not</strong> want to copy into linear memory because the guest can’t execute them anyway. The right behavior, which is to mirror data while leaving executable pointers as opaque tokens and recursively follow non-image pointers one level deeper, turned out to be about a week of small bugs and a few “helpful” <strong>0xc0000005s</strong> before it converged. Many tokens were burned running down a “good enough” solution for this issue.&nbsp;</p>
+
+
+
+<p>Note that not all APIs are supported with this approach. In the current version there’s no support for callback thunks, so calls to functions like <strong>EnumWindows</strong> or <strong>SetWindowsHookEx</strong> are unsupported for now. In practice this appears to be less of a limitation that one would expect since there are often alternate APIs we can use to perform the same enumeration without dealing with the host calling a function in the guest memory directly.</p>
+
+
+
+<h2 id="h-hide-and-seek-with-several-hundred-function-names" class="wp-block-heading">Hide and Seek with Several Hundred Function Names</h2>
+
+
+
+<p>By the time we have a working WASM module embedded inside a Go binary that runs Wazero, we’re maybe sixty percent of the way to a usable loader. The remaining forty percent is making sure the <strong>outer</strong> binary, the Go executable that hosts the runtime, doesn’t itself look like a piece of obvious malware.</p>
+
+
+
+<p>We identified three important changes here.</p>
+
+
+
+<p><strong>Randomized WASM virtual machines on every compile.</strong> Wazero, like most WASM runtimes, has an internal table mapping WASM opcodes to runtime behavior. We <a href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">Fisher-Yates</a> that table at build time. Every compiled binary has a different mapping from opcode bytes to instructions, and we rewrite the embedded WASM module to match. The result is that two binaries built five minutes apart from the same source contain the <strong><em>same</em></strong> WASM payload structurally, but with completely different byte representations. No two WasmForge binaries have the same WASM bytecode, which makes signaturing the payload at a static level genuinely hard. Analysts will have to derive the mapping by analyzing the host layer or else none of their tooling to analyze the WASM blob will work at all.</p>
+
+
+
+<p>We do the same thing to the WASM section IDs and to the magic header bytes. There’s no <strong>\0asm</strong> header in a WasmForge-built binary, just a random four-byte sequence specific to that build, and the runtime knows which one to look for because we encoded that into its initialization data at compile time.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-large"><picture loading="lazy" decoding="async" class="wp-image-12689">
+<source type="image/webp" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-1024x489.png.webp 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-300x143.png.webp 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-768x366.png.webp 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1536x733.png.webp 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image.png.webp 2048w" sizes="(max-width: 1024px) 100vw, 1024px">
+<img decoding="async" width="1024" height="489" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201024%20489'%3E%3C/svg%3E" alt="" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2026/06/image-1024x489.png 1024w, https://www.praetorian.com/wp-content/uploads/2026/06/image-300x143.png 300w, https://www.praetorian.com/wp-content/uploads/2026/06/image-768x366.png 768w, https://www.praetorian.com/wp-content/uploads/2026/06/image-1536x733.png 1536w, https://www.praetorian.com/wp-content/uploads/2026/06/image.png 2048w" data-lazy-sizes="(max-width: 1024px) 100vw, 1024px" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2026/06/image-1024x489.png">
+</picture>
+
+<figcaption class="wp-element-caption"><strong>A diagram illustrating the difference between a standard WASM build and WasmForge build</strong></figcaption>
+</figure>
+
+
+
+<p><strong>Ghost profiles</strong>. This is what we walked through in the <a href="https://www.praetorian.com/blog/llm-edr-signature-reduction/">previous post</a>. The short version: a vanilla Go binary’s <strong>gopclntab</strong> is mostly empty space and runtime symbols, which looks suspicious to ML classifiers expecting real software’s symbol density. We harvest symbol tables from real Go projects (consul, caddy, terraform, and others) and splice them into the host binary so the <strong>gopclntab</strong> looks like the <strong>gopclntab</strong> of a real signed enterprise tool. The skill from the previous post is what we used to figure out which profiles actually moved the detection numbers and which ones didn’t.</p>
+
+
+
+<p><strong>Randomized DLL imports, signing identity, and PE metadata.</strong> Since our base host binary only uses kernel32, its base import list looks suspicious. The host binary needs to import enough Windows DLLs to look plausible (a binary that only links kernel32 is its own red flag) but not so many that ML notices a “kitchen sink” pattern. We rotate a small pool of plausible imports like crypt32, iphlpapi, advapi32, and others between builds. We do something similar with the PE VERSIONINFO product and file-version strings which cycle through a curated pool of legitimate-sounding enterprise software names. The Authenticode signing pipeline picks a random certificate identity per build from a pool of plausible signers, with random subject/issuer/description/URL strings. This is the exact fix that killed the AhnLab <strong>Trojan/Win.Sliver</strong> rule cold in the previous post.</p>
+
+
+
+<p>None of these are individually clever. The clever part is the measurement loop. Each of these knobs has a “natural” setting that you’d guess at, and an “empirically correct” setting that using VT as an adversarial oracle eventually narrows you down to. The skill from the previous post is how we got from the first to the second on every one of these.</p>
+
+
+
+<h1 class="wp-block-heading">But Does It Actually Work?</h1>
+
+
+
+<p>As most readers will have guessed, this entire project was built with heavy LLM assistance. A tool with this much surface area ranging across the three-stage build pipeline, ~80 host functions, custom Wazero fork, mirror table, shadow memory, and the whole macOS/Windows split would normally take several months of dedicated engineering effort. Ours took a few weeks of work. Most of the boring bridging code (the eightieth Win32 wrapper, the fourth darwin framework helper, the umpteenth socket-options translator) was written by Claude under fairly close supervision.</p>
+
+
+
+<p>Two validation questions mattered:</p>
+
+
+
+<p>1. <strong>Does it actually compile real Go projects without modification?</strong></p>
+
+
+
+<p>2. <strong>Do those compiled binaries actually work at runtime?</strong></p>
+
+
+
+<p>We have a test suite for the basics. Echo TCP servers, UDP, HTTP clients, DNS resolution, Win32 registry round-trips, and macOS framework loading. These run in our continuous integration and catch most regressions. They’re not, however, representative of the load you put on a runtime when you point it at a real red team tool. Real red team tools do things like spin up 30 goroutines that block on <strong>WaitForSingleObject</strong> while a parent goroutine runs a separate HTTP server while a third goroutine waits on a named pipe. Our synthetic tests didn’t tend to catch these interesting edge cases.</p>
+
+
+
+<p>So the best validation was running real tooling through it. The list, in roughly the order we tried them:</p>
+
+
+
+<p><strong>Sliver </strong>– We tested beacon and session implants for both Windows and macOS. Full beacon to session upgrade, file I/O, process listing, token manipulation, SOCKS5 proxying, <strong>execute-assembly</strong> against Seatbelt and Rubeus, BOF loading via <strong>goffloader</strong>. We tested against <a href="https://github.com/Orange-Cyberdefense/GOAD">Game of Active Directory</a> labs to confirm that things like Kerberos extraction actually worked end to end.</p>
+
+
+
+<p><strong>Tribunus</strong> – A custom internal Mythic implant we’ve written for Windows. We tested standard commands like <strong>shell, ps, netstat, whoami</strong>.</p>
+
+
+
+<p><strong>gogokatz</strong> – An internal (for now) Go port of mimikatz we wrote for exactly this kind of workflow. This lets us try to execute full LSASS memory dumps without special privileges beyond what the real mimikatz needs.</p>
+
+
+
+<p><strong>Chisel</strong> – We used this for testing HTTP-tunneled SOCKS. It was a nice bandwidth/jitter stress test for the socket bridge.</p>
+
+
+
+<p><strong>goffloader</strong> – We used this for explicit COFF/BOF loading. Eight-phase test exercising VirtualAlloc, memory writes, PE parsing, relocations, IAT resolution, execution, output capture, and cleanup.</p>
+
+
+
+<p>The first time we got Sliver fully running through WasmForge on a real Windows endpoint was the moment we decided the project was worth shipping. Watching <strong>execute-assembly Rubeus.exe kerberoast</strong> complete successfully against a domain controller, through a WASM-bridged COM call into the CLR running a loaded Rubeus assembly, was significantly more rewarding and hilarious than it had any right to be.</p>
+
+
+
+<p>The macOS side took separate validation. Sliver on Darwin uses a different code path than Sliver on Windows (no token manipulation, different syscall conventions, completely different framework loading), and our darwin host module is structurally similar to the Windows one but ends up being much smaller because there’s no shadow memory, no mirror table, and no COM. We’ve validated the same beacon-then-session flow on macOS, including SOCKS5 proxying and full TLS networking with automatic CA cert detection.</p>
+
+
+
+<p>The resulting binaries from this process have been used on engagements against hardened clients, on both Windows and macOS targets, without modification of the underlying tool source. Which is the whole reason WasmForge exists.</p>
+
+
+
+<p>You can see a full ASCIInema run through of the compilation process and testing here:</p>
+
+
+ <figure id="attachment_12705" aria-describedby="caption-attachment-12705" style="width: 1192px" class="wp-caption aligncenter"><img decoding="async" class="wp-image-12705 size-full" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201192%20901'%3E%3C/svg%3E" alt="" width="1192" height="901" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2026/06/wasmforge-sliver-demo-1.gif"><figcaption id="caption-attachment-12705" class="wp-caption-text"><strong><span style="display:block;text-align:center;">WasmForge in action. Note that labctl is<br>
+  just a helper function to run binaries in our lab.</span></strong></figcaption></figure>
+
+
+<h1 class="wp-block-heading">What’s Next</h1>
+<!-- /wp:post-content -->
+
+<!-- wp:paragraph -->
+<p>The thing about a WebAssembly-based loader is that “compiles to WebAssembly” is a much bigger tent than “is written in Go.” Anything with a WASM compilation target gets to live inside the same runtime once the host shims exist. We’ve been doing increasingly serious work on the .NET side, specifically using the NativeAOT-LLVM toolchain with WASI SDK, to compile <a href="https://github.com/GhostPack">GhostPack</a>-style C# tooling like Seatbelt, Rubeus, and SharpDPAPI into WASM that our same loader can host.&nbsp;</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>That work is far enough along that the next post is going to be about it specifically. We will simultaneously open-source WasmForge along the final blogpost in this series describing the C#-to-WASM build pipeline. Watch this space, the tool is dropping soon and we’re excited to get it into the hands of the security community.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>&nbsp;</p>
+<!-- /wp:paragraph -->								</div>
+					</div>
+				</div>
+				</div>
+						</div>
+				</div>
+					</div>
+				</section>
+		<section data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-56fa4c1 e-flex e-con-boxed e-con e-parent" data-id="56fa4c1" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-9db27e1 e-con-full e-flex e-con e-child" data-id="9db27e1" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-020bef5 elementor-widget elementor-widget-heading" data-id="020bef5" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
+					<h2 class="elementor-heading-title elementor-size-default">About the Authors</h2>				</div>
+				</div>
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-770ad1e e-con-full e-flex e-con e-child" data-id="770ad1e" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-b1e118c elementor-widget elementor-widget-shortcode" data-id="b1e118c" data-element_type="widget" data-e-type="widget" data-widget_type="shortcode.default">
+							<div class="elementor-shortcode">		<div class="author-bios">
+
+				<div class="author-bio"><div class="author-photo"><picture>
+<source type="image/webp" data-lazy-srcset="https://www.praetorian.com/wp-content/uploads/2024/07/michael-weber-150x150.png.webp">
+<img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E" alt="Michael Weber" data-lazy-src="https://www.praetorian.com/wp-content/uploads/2024/07/michael-weber-150x150.png" width="300" height="150">
+</picture>
+</div><div class="author-info"><h3><a href="https://www.praetorian.com/author/michael-weber/">Michael Weber</a></h3><p>Michael has worked in security as a malware reverse engineer, penetration tester, and offensive security developer for over a decade.</p><div class="author-icon-wrap"></div></div></div>
+		</div>
+		</div>
+						</div>
+				</div>
+					</div>
+				</section>
+		<div data-wpr-lazyrender="1" data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-5c7ba22 e-con-full e-flex e-con e-parent" data-id="5c7ba22" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-0b16b7c elementor-widget elementor-widget-shortcode" data-id="0b16b7c" data-element_type="widget" data-e-type="widget" data-widget_type="shortcode.default">
+							<div class="elementor-shortcode">		<div data-elementor-type="container" data-elementor-id="2557" class="elementor elementor-2557" data-elementor-post-type="elementor_library">
+				<section data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-2462f2d8 e-flex e-con-boxed e-con e-parent" data-id="2462f2d8" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-8f5c8bf e-flex e-con-boxed e-con e-child" data-id="8f5c8bf" data-element_type="container" data-e-type="container">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-85ded54 elementor-widget__width-initial elementor-widget elementor-widget-heading" data-id="85ded54" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
+					<h2 class="elementor-heading-title elementor-size-default">Catch the Latest</h2>				</div>
+				<div class="elementor-element elementor-element-9804a0b elementor-widget__width-initial elementor-widget elementor-widget-text-editor" data-id="9804a0b" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+									<p>Catch our latest exploits, news, articles, and events.</p>								</div>
+				<div class="elementor-element elementor-element-bea62ac elementor-widget__width-inherit elementor-grid-3 elementor-grid-tablet-2 elementor-grid-mobile-1 elementor-widget elementor-widget-loop-grid" data-id="bea62ac" data-element_type="widget" data-e-type="widget" data-settings="{&quot;template_id&quot;:&quot;1992&quot;,&quot;_skin&quot;:&quot;post&quot;,&quot;columns&quot;:&quot;3&quot;,&quot;columns_tablet&quot;:&quot;2&quot;,&quot;columns_mobile&quot;:&quot;1&quot;,&quot;edit_handle_selector&quot;:&quot;[data-elementor-type=\&quot;loop-item\&quot;]&quot;,&quot;row_gap&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]}}" data-widget_type="loop-grid.post">
+				<div class="elementor-widget-container">
+							<div class="elementor-loop-container elementor-grid" role="list">
+				<div data-elementor-type="loop-item" data-elementor-id="1992" class="elementor elementor-1992 e-loop-item e-loop-item-12861 post-12861 post type-post status-publish format-standard has-post-thumbnail hentry category-offensive-security category-vulnerability-research tag-c tag-edr-evasion tag-ghostpack tag-nativeaot tag-offensive-security tag-red-teaming tag-rubeus tag-seatbelt tag-tools-techniques tag-vulnerability-research tag-wasmforge tag-webassembly post_author-michael-weber" data-elementor-post-type="elementor_library" data-custom-edit-handle="1">
+			<a class="eael-wrapper-link-03ccb64 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/wasmforge-csharp-ghostpack-edr-evasion/"></a><div data-eael-wrapper-link="eael-wrapper-link-03ccb64" data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-03ccb64 e-flex e-con-boxed e-con e-parent" data-id="03ccb64" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-03832b4 elementor-absolute elementor-widget elementor-widget-post-info" data-id="03832b4" data-element_type="widget" data-e-type="widget" data-settings="{&quot;_position&quot;:&quot;absolute&quot;}" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-e044213 elementor-inline-item" itemprop="about">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-terms">
+										<span class="elementor-post-info__terms-list">
+				<a href="https://www.praetorian.com/category/offensive-security/" class="elementor-post-info__terms-list-item">Offensive Security</a>, <a href="https://www.praetorian.com/category/vulnerability-research/" class="elementor-post-info__terms-list-item">Vulnerability Research</a>				</span>
+					</span>
+								</li>
+				</ul>
+						</div>
+				<div class="elementor-element elementor-element-4ba8c0d elementor-widget elementor-widget-post-info" data-id="4ba8c0d" data-element_type="widget" data-e-type="widget" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-205ab6e elementor-inline-item" itemprop="datePublished">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-date">
+										<time>June 19, 2026</time>					</span>
+								</li>
+				</ul>
+						</div>
+		<a class="eael-wrapper-link-25de712 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/wasmforge-csharp-ghostpack-edr-evasion/"></a>		<div data-eael-wrapper-link="eael-wrapper-link-25de712" class="elementor-element elementor-element-25de712 elementor-widget elementor-widget-theme-post-title elementor-page-title elementor-widget-heading" data-id="25de712" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-title.default">
+					<h2 class="elementor-heading-title elementor-size-default"><a href="https://www.praetorian.com/blog/wasmforge-csharp-ghostpack-edr-evasion/">GhostPack Necromancy: Reforging C# Tools with WasmForge</a></h2>				</div>
+				<div class="elementor-element elementor-element-d8430d4 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile elementor-widget elementor-widget-button" data-id="d8430d4" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
+										<a class="elementor-button elementor-button-link elementor-size-sm" href="https://www.praetorian.com/blog/wasmforge-csharp-ghostpack-edr-evasion/">
+						<span class="elementor-button-content-wrapper">
+						<span class="elementor-button-icon">
+				<svg aria-hidden="true" class="e-font-icon-svg e-fas-chevron-right" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>			</span>
+									<span class="elementor-button-text">Read More</span>
+					</span>
+					</a>
+								</div>
+					</div>
+				</div>
+				</div>
+				<div data-elementor-type="loop-item" data-elementor-id="1992" class="elementor elementor-1992 e-loop-item e-loop-item-12848 post-12848 post type-post status-publish format-standard has-post-thumbnail hentry category-offensive-security category-vulnerability-research tag-ai-security tag-claude-code tag-codeql tag-cve-2026-3038 tag-exploit-development tag-freebsd tag-kasan tag-kernel-security tag-tools-techniques tag-vulnerability-research tag-zero-day post_author-adam-crosser" data-elementor-post-type="elementor_library" data-custom-edit-handle="1">
+			<a class="eael-wrapper-link-03ccb64 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/ai-vulnerability-research-freebsd-kernel/"></a><div data-eael-wrapper-link="eael-wrapper-link-03ccb64" data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-03ccb64 e-flex e-con-boxed e-con e-parent" data-id="03ccb64" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-03832b4 elementor-absolute elementor-widget elementor-widget-post-info" data-id="03832b4" data-element_type="widget" data-e-type="widget" data-settings="{&quot;_position&quot;:&quot;absolute&quot;}" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-e044213 elementor-inline-item" itemprop="about">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-terms">
+										<span class="elementor-post-info__terms-list">
+				<a href="https://www.praetorian.com/category/offensive-security/" class="elementor-post-info__terms-list-item">Offensive Security</a>, <a href="https://www.praetorian.com/category/vulnerability-research/" class="elementor-post-info__terms-list-item">Vulnerability Research</a>				</span>
+					</span>
+								</li>
+				</ul>
+						</div>
+				<div class="elementor-element elementor-element-4ba8c0d elementor-widget elementor-widget-post-info" data-id="4ba8c0d" data-element_type="widget" data-e-type="widget" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-205ab6e elementor-inline-item" itemprop="datePublished">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-date">
+										<time>June 17, 2026</time>					</span>
+								</li>
+				</ul>
+						</div>
+		<a class="eael-wrapper-link-25de712 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/ai-vulnerability-research-freebsd-kernel/"></a>		<div data-eael-wrapper-link="eael-wrapper-link-25de712" class="elementor-element elementor-element-25de712 elementor-widget elementor-widget-theme-post-title elementor-page-title elementor-widget-heading" data-id="25de712" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-title.default">
+					<h2 class="elementor-heading-title elementor-size-default"><a href="https://www.praetorian.com/blog/ai-vulnerability-research-freebsd-kernel/">FreeBSoD: Leveraging Language Models to Find and Exploit Kernel Bugs (Part 1 of 2)</a></h2>				</div>
+				<div class="elementor-element elementor-element-d8430d4 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile elementor-widget elementor-widget-button" data-id="d8430d4" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
+										<a class="elementor-button elementor-button-link elementor-size-sm" href="https://www.praetorian.com/blog/ai-vulnerability-research-freebsd-kernel/">
+						<span class="elementor-button-content-wrapper">
+						<span class="elementor-button-icon">
+				<svg aria-hidden="true" class="e-font-icon-svg e-fas-chevron-right" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>			</span>
+									<span class="elementor-button-text">Read More</span>
+					</span>
+					</a>
+								</div>
+					</div>
+				</div>
+				</div>
+				<div data-elementor-type="loop-item" data-elementor-id="1992" class="elementor elementor-1992 e-loop-item e-loop-item-12767 post-12767 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized post_author-ryan-grunsten" data-elementor-post-type="elementor_library" data-custom-edit-handle="1">
+			<a class="eael-wrapper-link-03ccb64 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/sharing-is-caring-smb-secret-scanning-with-sulla/"></a><div data-eael-wrapper-link="eael-wrapper-link-03ccb64" data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-03ccb64 e-flex e-con-boxed e-con e-parent" data-id="03ccb64" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-03832b4 elementor-absolute elementor-widget elementor-widget-post-info" data-id="03832b4" data-element_type="widget" data-e-type="widget" data-settings="{&quot;_position&quot;:&quot;absolute&quot;}" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-e044213 elementor-inline-item" itemprop="about">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-terms">
+										<span class="elementor-post-info__terms-list">
+				<a href="https://www.praetorian.com/category/uncategorized/" class="elementor-post-info__terms-list-item">Uncategorized</a>				</span>
+					</span>
+								</li>
+				</ul>
+						</div>
+				<div class="elementor-element elementor-element-4ba8c0d elementor-widget elementor-widget-post-info" data-id="4ba8c0d" data-element_type="widget" data-e-type="widget" data-widget_type="post-info.default">
+							<ul class="elementor-inline-items elementor-icon-list-items elementor-post-info">
+								<li class="elementor-icon-list-item elementor-repeater-item-205ab6e elementor-inline-item" itemprop="datePublished">
+													<span class="elementor-icon-list-text elementor-post-info__item elementor-post-info__item--type-date">
+										<time>June 16, 2026</time>					</span>
+								</li>
+				</ul>
+						</div>
+		<a class="eael-wrapper-link-25de712 --eael-wrapper-link-tag" href="https://www.praetorian.com/blog/sharing-is-caring-smb-secret-scanning-with-sulla/"></a>		<div data-eael-wrapper-link="eael-wrapper-link-25de712" class="elementor-element elementor-element-25de712 elementor-widget elementor-widget-theme-post-title elementor-page-title elementor-widget-heading" data-id="25de712" data-element_type="widget" data-e-type="widget" data-widget_type="theme-post-title.default">
+					<h2 class="elementor-heading-title elementor-size-default"><a href="https://www.praetorian.com/blog/sharing-is-caring-smb-secret-scanning-with-sulla/">Sharing is Caring: SMB Secret Scanning with Sulla</a></h2>				</div>
+				<div class="elementor-element elementor-element-d8430d4 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile elementor-widget elementor-widget-button" data-id="d8430d4" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
+										<a class="elementor-button elementor-button-link elementor-size-sm" href="https://www.praetorian.com/blog/sharing-is-caring-smb-secret-scanning-with-sulla/">
+						<span class="elementor-button-content-wrapper">
+						<span class="elementor-button-icon">
+				<svg aria-hidden="true" class="e-font-icon-svg e-fas-chevron-right" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>			</span>
+									<span class="elementor-button-text">Read More</span>
+					</span>
+					</a>
+								</div>
+					</div>
+				</div>
+				</div>
+				</div>
+		
+						</div>
+				</div>
+					</div>
+				</div>
+					</div>
+				</section>
+				</div>
+		</div>
+						</div>
+				</div>
+		<div data-wpr-lazyrender="1" data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-e1a3d0d e-con-full e-flex e-con e-parent" data-id="e1a3d0d" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-bd61db3 elementor-widget__width-initial elementor-widget elementor-widget-shortcode" data-id="bd61db3" data-element_type="widget" data-e-type="widget" data-widget_type="shortcode.default">
+							<div class="elementor-shortcode">		<div data-elementor-type="container" data-elementor-id="2389" class="elementor elementor-2389" data-elementor-post-type="elementor_library">
+				<section data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-71d8ea90 e-flex e-con-boxed e-con e-parent" data-id="71d8ea90" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-7119177d elementor-view-default elementor-widget elementor-widget-icon" data-id="7119177d" data-element_type="widget" data-e-type="widget" data-widget_type="icon.default">
+							<div class="elementor-icon-wrapper">
+			<div class="elementor-icon">
+			<svg aria-hidden="true" class="e-font-icon-svg e-fas-comment-dots" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zM128 272c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"></path></svg>			</div>
+		</div>
+						</div>
+				<div class="elementor-element elementor-element-495611d0 elementor-widget elementor-widget-heading" data-id="495611d0" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
+					<h2 class="elementor-heading-title elementor-size-default">Ready to Discuss Your Next Continuous Threat Exposure Management Initiative?</h2>				</div>
+				<div class="elementor-element elementor-element-5250030e elementor-widget__width-initial elementor-widget elementor-widget-text-editor" data-id="5250030e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+									<p>Praetorian’s Offense Security Experts are Ready to Answer Your Questions</p>								</div>
+		<div data-particle_enable="false" data-particle-mobile-disabled="false" class="elementor-element elementor-element-59bf559f e-flex e-con-boxed e-con e-child" data-id="59bf559f" data-element_type="container" data-e-type="container">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-7011d6da elementor-align-right elementor-widget elementor-widget-button" data-id="7011d6da" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
+										<a class="elementor-button elementor-button-link elementor-size-sm" href="https://www.praetorian.com/contact-us/">
+						<span class="elementor-button-content-wrapper">
+						<span class="elementor-button-icon">
+				<svg aria-hidden="true" class="e-font-icon-svg e-fas-chevron-right" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>			</span>
+									<span class="elementor-button-text">Get Started</span>
+					</span>
+					</a>
+								</div>
+					</div>
+				</div>
+					</div>
+				</section>
+				</div>
+		</div>
+						</div>
+				</div>
+				</div>
+				
+		
+
+			
+			<link rel="stylesheet" id="elementor-post-2557-css" href="https://www.praetorian.com/wp-content/uploads/elementor/css/post-2557.css?ver=1781846187" media="all">
+<link rel="stylesheet" id="widget-loop-common-css" href="https://www.praetorian.com/wp-content/plugins/elementor-pro/assets/css/widget-loop-common.min.css?ver=4.1.1" media="all">
+<link rel="stylesheet" id="widget-loop-grid-css" href="https://www.praetorian.com/wp-content/uploads/elementor/css/custom-pro-widget-loop-grid.min.css?ver=1781846185" media="all">
+<link data-minify="1" rel="stylesheet" id="eael-1992-css" href="https://www.praetorian.com/wp-content/cache/min/1/wp-content/uploads/essential-addons-elementor/eael-1992.css?ver=1781846188" media="all">
+<link rel="stylesheet" id="elementor-post-2389-css" href="https://www.praetorian.com/wp-content/uploads/elementor/css/post-2389.css?ver=1781846289" media="all">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span id="elementor-device-mode-wpr" class="elementor-screen-only"></span></body></html><!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me -->

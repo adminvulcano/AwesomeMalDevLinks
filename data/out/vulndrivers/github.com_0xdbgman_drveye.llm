@@ -1,0 +1,26 @@
+Title:
+DrvEye (drivertool) — Static analysis & exploitation-triage toolkit for Windows kernel drivers
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+DrvEye is a Python-based static analysis toolkit that rapidly assesses Windows kernel driver (.sys) binaries for both loadability and exploitability. It models real Windows enforcement scenarios (Authenticode validation, WDAC policy, Secure Boot/DSE, HVCI/Memory Integrity, S Mode) to produce a per-configuration “will it load” verdict. On the exploitation side, it discovers IOCTL surfaces via multiple recovery methods, performs taint/slicing-based analysis to classify exploit primitives and bug classes, and recovers device names/symlinks (including via optional Unicorn emulation of DriverEntry). The tool can generate artifacts such as compilable DeviceIoControl PoCs, fuzzing harnesses, runtime IOCTL tracers, PowerShell load/check scripts, IDAPython annotation scripts, and JSON reports. It’s primarily useful for BYOVD hunters, kernel reverse engineers, and security researchers triaging large driver sets quickly, and for defenders validating whether a driver is practically usable in modern Windows configurations.
+
+Technical Focus:
+- Authenticode/PKCS#7 verification and Windows kernel trust chain modeling
+- WDAC and vulnerable-driver blocklist ingestion (authroot/disallowedcert/SiPolicy)
+- IOCTL discovery (dispatch table, WDF emulation, brute-force scanning) and hash-dispatch reversal
+- Static taint analysis, backward slicing, constant propagation, and gate detection
+- Exploit primitive and bug-class classification for driver IOCTL handlers
+- Device object / symbolic link name recovery (static heuristics + Unicorn emulation)
+
+Use Cases:
+- Triage suspected BYOVD drivers to see if they load under HVCI/WDAC/Secure Boot
+- Enumerate and prioritize risky IOCTL handlers and reachable privileged operations
+- Generate quick PoCs/fuzzers to validate suspected arbitrary R/W, token theft, callback tampering, etc.
+- Produce IDA Pro annotations to accelerate kernel driver reverse engineering
+- Build structured JSON reports for pipeline/batch analysis of driver corpora
+
+Keywords:
+Windows kernel driver, BYOVD, Authenticode, PKCS#7, WDAC, HVCI, Memory Integrity, Secure Boot, DSE, S Mode, IOCTL, IRP_MJ_DEVICE_CONTROL, DeviceIoControl, taint analysis, backward slicing, WDF, Unicorn emulation, IDAPython, LOLDrivers, SiPolicy_Enforced.p7b

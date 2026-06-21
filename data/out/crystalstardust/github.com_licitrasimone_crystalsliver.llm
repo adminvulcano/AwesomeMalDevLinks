@@ -1,0 +1,31 @@
+Title:
+CrystalSliver (crystal-kit-sliver) — Crystal Palace evasion kit ported to Sliver C2
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- CrystalSliver is a Sliver C2 port of rasta-mouse’s Crystal-Kit, replacing Sliver’s default reflective loader and post-execution DLL loading with the Crystal Palace PICO (position-independent code) execution model.  
+- It aims to reduce static and behavioral detections by avoiding common loader indicators (plain LoadLibrary/GetProcAddress usage, RWX mappings, obvious strings) and by adding obfuscation/sleep-masking and call stack spoofing.  
+- The repo provides two main workflows: (A) wrapping a Sliver implant DLL into a Crystal Palace PICO, encrypting it (AES-256-CBC), and executing it via a small custom stager that decrypts and runs in-memory; (B) running post-ex DLLs through a Sliver Extension (“crystal-loader”) that loads a PICO blob and executes it with RW→RX transitions.  
+- It also includes a “crystal-exec” extension command to run arbitrary shell commands through Crystal Palace without uploading a separate PICO file (embedded PICO inside the extension DLL).  
+- Useful primarily for red teams/pentesters operating Sliver in Windows environments who want a Crystal-Kit-like evasion path outside of Cobalt Strike/Mythic.  
+- Interesting because it documents a full cross-C2 port with build glue, operator runbooks, and specific evasion-driven implementation changes (export renaming, string stripping, RW→RX, encryption, and packaging).
+
+Technical Focus:
+- Crystal Palace PICO generation/linking and in-memory execution
+- Reflective loading replacement for Sliver implants and post-ex DLLs
+- API hashing (ror13) and avoidance of LoadLibrary/GetProcAddress patterns
+- Memory permission staging (VirtualAlloc RW → VirtualProtect RX; no RWX)
+- Evasion features: IAT hooks, call stack spoofing (Draugr), sleep mask, runtime obfuscation (libtcg)
+- Sliver Extensions (in-memory extension DLL loading, command plumbing, argument passing)
+
+Use Cases:
+- Wrap and deliver Sliver implant DLLs as encrypted PICO payloads executed fully in-memory via a custom stager
+- Execute sensitive post-ex tooling (e.g., credential dumping/recon DLLs) through a Sliver extension loader with reduced loader artifacts
+- Run one-off shell commands via “crystal-exec” without uploading additional payload files
+- Research/compare detection surfaces between default Sliver loaders and Crystal Palace-based execution chains
+- Build a repeatable Kali→Windows toolchain for PICO-based payload packaging and deployment
+
+Keywords:
+Sliver C2, Crystal-Kit, Crystal Palace, PICO, reflective loader, post-execution, Windows x64, ror13 API hashing, IAT hooking, VirtualAlloc, VirtualProtect, RW-to-RX, sleep mask, Draugr call stack spoofing, libtcg obfuscation, AES-256-CBC, BCryptDecrypt, in-memory execution, Sliver Extension, MinGW-w64, NASM

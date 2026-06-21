@@ -1,0 +1,24 @@
+Title:
+GodPotatoBOF
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+GodPotatoBOF is a Cobalt Strike Beacon Object File (BOF) port of the GodPotato privilege escalation technique. It targets Windows contexts where the current process has the SeImpersonate privilege, triggering the GodPotato flow to obtain a SYSTEM token. The BOF supports either spawning a new process to run an arbitrary command as SYSTEM or applying the stolen SYSTEM token to the current Beacon via `BeaconUseToken()`. It includes a CNA script (`godpotato.cna`) to expose a simple `godpotato` alias with options for command execution and custom named pipe selection. This is primarily useful for red teams and pentesters needing in-memory local privilege escalation within Cobalt Strike tradecraft.
+
+Technical Focus:
+- SeImpersonate-based local privilege escalation
+- Token theft/impersonation and SYSTEM token acquisition
+- Cobalt Strike BOF development and in-memory execution
+- Named pipe usage/customization in exploitation flow
+- CNA (Cobalt Strike scripting) integration and operator UX
+
+Use Cases:
+- Elevate a Beacon session to NT AUTHORITY\SYSTEM on hosts where SeImpersonate is available
+- Run post-exploitation commands as SYSTEM without dropping an EXE
+- Apply a SYSTEM token to the existing Beacon for follow-on actions (e.g., service/LSASS access)
+- Operator-friendly execution via CNA alias with optional custom pipe naming
+
+Keywords:
+GodPotato, GodPotatoBOF, Cobalt Strike, BOF, Beacon Object File, CNA, SeImpersonatePrivilege, privilege escalation, local privesc, token impersonation, SYSTEM token, BeaconUseToken, named pipe, Windows security, in-memory execution, post-exploitation, cmd execution, red team tooling

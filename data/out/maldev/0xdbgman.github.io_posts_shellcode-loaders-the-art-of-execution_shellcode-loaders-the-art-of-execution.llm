@@ -1,0 +1,31 @@
+Title:
+Shellcode Loaders: Advanced Execution & Evasion Tradecraft
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A deep technical guide to modern in-memory execution via shellcode/DLL/.NET loaders, focusing on how loaders bridge payload capability to reliable execution under EDR/AV scrutiny.  
+- It surveys classic shellcode loaders, Stephen Fewer-style reflective DLL loading, CLR-hosted .NET assembly loading, and staged vs. stageless delivery tradeoffs.  
+- The core of the post is a detailed walkthrough of Raphael Mudge’s Crystal Palace/Tradecraft Garden ecosystem for building modular position-independent loaders (PIC/PICO) via spec-driven linking and binary transformations.  
+- It covers advanced evasion tradecraft including IAT-hook-based sleep masking, module overloading with SEC_IMAGE sections, NtContinue-based entry transfer to avoid suspicious return addresses, and call stack spoofing (Draugr).  
+- Real-world implementations (Eden, KaplaStrike, StealthPalace) are used to show how these techniques combine in production-grade loaders and how they integrate with Cobalt Strike UDRL and other C2s.  
+- Useful primarily for red team operators, implant/loader developers, and defenders wanting to understand loader telemetry and detection points (memory, call stacks, ETW/behavioral signals, and static YARA).
+
+Technical Focus:
+- Reflective DLL loading vs. PIC/prepended loaders (PICO architecture, spec-driven linking)
+- PE manual mapping (relocations, imports, TLS, IAT processing) and API resolution (hashing/DFR)
+- Module overloading using NtCreateSection/NtMapViewOfSection (SEC_IMAGE) and .pdata unwind registration (RtlAddFunctionTable)
+- Execution transfer and stack hygiene (NtContinue, synthetic stacks, BaseThreadInitThunk/RtlUserThreadStart frames)
+- Sleep masking/obfuscation (Ekko-style timer queue + NtContinue, RC4 via SystemFunction032) and IAT-hook triggers
+- Static signature reduction (Crystal Palace +mutate/+disco/+optimize, YARA considerations)
+
+Use Cases:
+- Build custom reflective/PIC loaders for in-memory execution of beacon DLLs or COFF capabilities
+- Replace default Cobalt Strike reflective loader via UDRL for improved OPSEC
+- Implement sleep masking and call stack spoofing to reduce memory-scan and stack-walk detections
+- Use module overloading to shift from private-commit executable memory to image-backed regions
+- Develop/assess detections for loader behaviors (SEC_IMAGE sections, NtContinue timers, RtlAddFunctionTable, RX↔RW flips)
+
+Keywords:
+shellcode loader, reflective DLL injection, Stephen Fewer, Crystal Palace, Tradecraft Garden, PICO, COFF, BOF, UDRL, Cobalt Strike, PE manual mapping, IAT hooking, GetProcAddress hook, NtCreateSection, NtMapViewOfSection, SEC_IMAGE, module overloading, NtContinue, RtlAddFunctionTable, .pdata, unwind info, call stack spoofing, Draugr, Ekko sleep masking, SystemFunction032, RC4, YARA, ETW, AMSI

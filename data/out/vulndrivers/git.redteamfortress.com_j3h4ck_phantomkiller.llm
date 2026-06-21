@@ -1,0 +1,24 @@
+Title:
+PhantomKiller
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+PhantomKiller is a Windows “BYOVD” (Bring Your Own Vulnerable Driver) style process-killer tool packaged with a signed kernel driver (`PhantomKiller.sys`) and a C++ user-mode controller (`PhantomKiller.cpp`). Its goal is to terminate protected/security processes (e.g., EDR/AV agents) by leveraging kernel-mode capabilities rather than user-mode termination APIs that are commonly blocked. The repository appears to focus on reliably killing processes across multiple EDR products by using a driver interface to perform privileged operations. This is primarily useful for red teams and malware developers testing defensive resilience and driver-based tamper techniques, and for blue teams to understand/prepare detections around malicious driver loading and kernel-assisted process tampering. The interesting aspect is the operational packaging (signed driver + userland loader/controller) and the emphasis on EDR-agnostic process termination via kernel primitives.
+
+Technical Focus:
+- BYOVD tradecraft (abusing/bringing a driver to gain kernel capabilities)
+- Kernel-mode process termination / process object manipulation
+- Signed driver loading and driver-service installation workflow
+- User-mode to kernel-mode IOCTL communication
+- EDR self-protection/tamper resistance bypass patterns
+
+Use Cases:
+- Disabling EDR/AV agents during an engagement to validate defensive controls
+- Testing detections for malicious driver load + process-kill behavior
+- Lab research on kernel-assisted tampering and endpoint hardening
+- Building/validating incident response playbooks for BYOVD scenarios
+
+Keywords:
+BYOVD, vulnerable driver, signed driver, Windows kernel, kernel-mode, IOCTL, device driver, process termination, EDR bypass, tamper protection, PsLookupProcessByProcessId, EPROCESS, driver service, SCM, NtLoadDriver, Windows internals, anti-malware, endpoint security, red team tooling

@@ -1,0 +1,32 @@
+Title:
+Initial Access: Modern Intrusion Techniques (The Art of Getting In)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- A red-team–oriented guide to achieving initial access (MITRE ATT&CK TA0001) with a phased approach covering payload delivery, phishing, MFA bypass, credential attacks, exploitation, vishing, physical access, and supply-chain/trusted-relationship compromise.  
+- It focuses on practical tradecraft for getting code execution or valid credentials while evading common controls like email gateways, SmartScreen/MOTW, AMSI, and EDR.  
+- Techniques discussed include container-based MOTW bypass (VHD/VHDX/IMG), HTML smuggling, code-signing/reputation considerations, DLL sideloading discovery with Procmon, LNK-based execution, and modern shellcode loader patterns (RW→RX, section mapping, direct/indirect syscalls).  
+- It also covers identity-centric access paths such as Evilginx-style adversary-in-the-middle token theft, OAuth device-code phishing, password spraying/stuffing with IP rotation, and Teams/QR (“quishing”) delivery.  
+- Real-world case studies (APT29, Scattered Spider, Lazarus, Cl0p/MOVEit, SolarWinds) are used to anchor the techniques and OPSEC guidance.  
+- Most useful for red teamers and pentesters designing initial access playbooks; also valuable to blue teams for understanding attacker chains and detection points.
+
+Technical Focus:
+- Mark-of-the-Web (Zone.Identifier ADS) bypass via containers (VHD/VHDX/IMG/ISO)
+- HTML smuggling (client-side payload assembly in browser)
+- SmartScreen reputation and code-signing/metadata cloning
+- DLL sideloading (Windows DLL search order, Procmon “NAME NOT FOUND” hunting)
+- EDR-evasive loaders (RW→RX, NtCreateSection/NtMapViewOfSection, direct syscalls/ETW/AMSI evasion)
+- MFA bypass/token theft (Evilginx AitM, OAuth device code phishing)
+
+Use Cases:
+- Build a phishing delivery chain that reduces gateway/sandbox/SmartScreen friction
+- Execute payloads via signed-binary + DLL sideloading to blend with trusted processes
+- Run token-theft campaigns against M365 with AitM or device-code OAuth flows
+- Perform controlled password spraying/stuffing with enumeration and IP rotation
+- Prioritize initial access vectors using a decision matrix (exposed apps vs. identity vs. physical)
+- Map initial access TTPs to MITRE ATT&CK for reporting and defensive validation
+
+Keywords:
+Initial Access, MITRE ATT&CK TA0001, T1566, phishing, spearphishing, HTML smuggling, Mark-of-the-Web, Zone.Identifier, SmartScreen, VHD, VHDX, ISO, DLL sideloading, Procmon, LNK, AMSI, ETW, direct syscalls, NtCreateSection, NtMapViewOfSection, Evilginx, adversary-in-the-middle, OAuth device code phishing, Microsoft 365, password spraying, o365spray, CredMaster, fireprox, Teams phishing, quishing, CVE-2023-34362, MOVEit, supply chain compromise

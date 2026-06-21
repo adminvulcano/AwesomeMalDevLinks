@@ -1,0 +1,24 @@
+Title:
+Ferrum (Windows-first vulnerability research & security auditing framework)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Ferrum is a single-binary Windows-focused security auditing and vulnerability research framework written in Go (`ferrum.exe`). It provides a modular architecture where research modules are registered via a small core interface and executed through a CLI. The project targets Windows attack-surface enumeration and triage for local privilege escalation (LPE), persistence opportunities, and COM hijacking scenarios. A highlighted capability is a `--CLSID` module that models a ProcMon-style filter workflow to identify COM registration lookups that fall back to user-writable HKCU class registrations (useful for hijack/LPE hunting). It supports running individual modules or all modules and writing reports to files/folders for later analysis. It’s primarily useful for red teamers, pentesters, and Windows security researchers doing host-based enumeration and exploit/persistence research.
+
+Technical Focus:
+- Modular Go framework design (module registration via `core.Module` / `core.Register`)
+- Windows API interaction via build-tagged wrappers (`windows/`)
+- COM/CLSID enumeration and hijack triage (InprocServer32/LocalServer32)
+- LPE and persistence attack-surface auditing on Windows
+- Report generation and batch module execution (`--ALL`, `--OUTPUT`)
+
+Use Cases:
+- Enumerate COM/CLSID registration behaviors to spot HKCU-based hijack candidates
+- Baseline and audit Windows endpoints for common LPE/persistence misconfigurations
+- Automate host triage by running a suite of research modules and exporting reports
+- Build and extend custom Windows research modules in Go within a unified CLI tool
+
+Keywords:
+Ferrum, Windows, Go, vulnerability research, security auditing, LPE, local privilege escalation, persistence, COM hijacking, CLSID, HKCU\Software\Classes, InprocServer32, LocalServer32, ProcMon, enumeration, UAC bypass, Windows API, modular framework, single binary, reporting

@@ -1,0 +1,26 @@
+Title:
+Addressing Initial Access
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This Huntress post describes practical hardening steps to reduce common Windows initial access paths used in phishing campaigns after Microsoft began blocking Internet-downloaded Office macros by default. It focuses on adversary shifts to disk image delivery (ISO/IMG/VHD/VHDX) and malicious OneNote notebooks used to launch embedded payloads (e.g., Qakbot-era tradecraft). The authors provide copy/paste PowerShell one-liners that directly set Windows Registry values (instead of importing ADMX templates) to: restrict OneNote embedded file execution, block specific embedded file extensions, prevent double-click auto-mounting of disk images, and enforce “block content execution from the Internet” for Office apps. The approach loops through all user hives under HKU to apply settings broadly without hardcoding Office versions. It’s primarily useful for Blue Teams/IT admins implementing attack surface reduction, but also valuable for red teams to understand which default behaviors defenders can easily remove. The key value is showing low-effort, high-impact configuration changes that break prevalent phishing-to-execution chains.
+
+Technical Focus:
+- Windows Registry-based security hardening (HKLM/HKU, per-user hive iteration)
+- OneNote malware mitigation (disable embedded files, blocked extensions)
+- Mark-of-the-Web (MOTW) / “blockcontentexecutionfrominternet” for Office
+- Preventing Explorer auto-mount behavior for ISO/VHD via ProgrammaticAccessOnly
+- PowerShell automation for enterprise-wide configuration (wildcards, loops)
+- Initial Access tradecraft shifts (macros → disk images/OneNote)
+
+Use Cases:
+- Deploy registry-based controls to reduce phishing-driven initial access
+- Harden endpoints against OneNote-delivered payload execution
+- Disable user-initiated auto-mounting of ISO/VHD to disrupt disk-image lures
+- Enforce Office Internet-origin macro/content execution blocking across users
+- Validate red-team delivery assumptions against common hardening baselines
+
+Keywords:
+Huntress, initial access, TA0001, phishing, OneNote malware, Qakbot, ISO, IMG, VHD, VHDX, auto-mount, ProgrammaticAccessOnly, Windows Registry, HKLM, HKEY_USERS, HKU, Group Policy, ADMX templates, PowerShell one-liner, Mark-of-the-Web, MOTW, blockcontentexecutionfrominternet, Office macros, attack surface reduction

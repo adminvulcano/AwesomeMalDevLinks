@@ -1,0 +1,32 @@
+Title:
+EVTX/ETW Resources (EVTX-ETW-Resources)
+
+Type:
+GitHub Tool (Resource Repository / Dataset)
+
+Short Summary (4–8 sentences max):
+- This repository aggregates Windows Event Tracing for Windows (ETW) and EVTX learning material plus large, versioned datasets of ETW provider manifests and event metadata.  
+- It solves the practical problem of “what events exist and what do they mean” by providing raw provider XML manifests and pre-parsed CSVs mapping providers to event IDs, messages, and fields across multiple Windows versions.  
+- The repo also includes combined per-OS “all events” CSVs and separates Windows-native providers from third-party providers (e.g., Sysmon, AV, Office, remote admin tools).  
+- It links to key ETW architecture references, research on ETW-based detection and tampering, and talks/books for deeper study.  
+- Example scripts are provided for collecting ETW telemetry using common libraries/tools (e.g., pywintrace, SilkETW, KrabsETW, TraceEvent, logman).  
+- Useful for Blue Teams and DFIR building detections, and for Red Teams/security researchers who need to understand ETW visibility, provider coverage, and potential sensor gaps.
+
+Technical Focus:
+- ETW provider manifests (instrumentation XML) and event schema extraction  
+- EVTX/ETW event ID/message cataloging across Windows versions  
+- Provider enumeration and metadata normalization to CSV  
+- ETW collection tooling (logman, TraceEvent, KrabsETW, SilkETW, pywintrace)  
+- Detection/forensics use of ETW telemetry and provider selection  
+- Research references on ETW tampering and ETW-based sensors
+
+Use Cases:
+- Build/validate detection logic by mapping suspicious behaviors to specific ETW providers and event IDs  
+- Rapidly enumerate available ETW providers/events on a given Windows version for telemetry planning  
+- Create parsers, data dictionaries, or SIEM onboarding content from provider manifests/CSVs  
+- Compare ETW provider/event differences between Windows releases (e.g., Windows 10 vs 11)  
+- Support DFIR timelines by understanding event messages/fields emitted by specific providers  
+- Research EDR/telemetry blind spots and ETW sensor coverage
+
+Keywords:
+ETW, EVTX, Event Tracing for Windows, Windows Event Log, provider manifest, instrumentation manifest, XML, event IDs, event schema, TraceLogging, WPP, logman, Microsoft.Diagnostics.Tracing.TraceEvent, KrabsETW, SilkETW, pywintrace, PerfView, WEPExplorer, Sysmon, Windows 10, Windows 11, DFIR, detection engineering

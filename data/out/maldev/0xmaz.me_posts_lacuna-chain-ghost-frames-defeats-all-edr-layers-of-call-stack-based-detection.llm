@@ -1,0 +1,31 @@
+Title:
+LACUNA Chain: Ghost Frames — defeats all EDR layers of call-stack-based detection
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post presents “LACUNA Chain,” a set of Windows x64 call-stack evasion techniques designed to defeat modern EDRs that collect stacks at the kernel boundary (e.g., ETW-Ti STACKWALK, Sysmon stack walking) rather than relying on userland NTDLL hooks.  
+- It focuses on making kernel-collected call stacks “lie” by abusing gaps in `.pdata` unwind metadata: addresses not covered by `RUNTIME_FUNCTION` entries are treated as leaf functions by `RtlVirtualUnwind`, advancing RSP by 8 without errors.  
+- The author introduces BYOUD-Gap (no `.pdata` modification), an ETW-Ti USER_APC timing window to control when stack snapshots occur, and “ghost functions/gadgets” (executable code in signed DLL regions lacking unwind metadata) to build semantically plausible frames near high-value APIs (e.g., kernelbase!VirtualProtect).  
+- Additional contributions include BYOUD-RT (runtime stack-distance calculation via TEB), BYOUD-MF (RSP “teleport” using `UWOP_PUSH_MACHFRAME` in KiUser* dispatchers), and syscall parameter encryption/decryption via HW-breakpoint + VEH at the `syscall` instruction.  
+- It’s primarily useful for red teams/malware developers researching EDR evasion and for defenders building next-gen detections (e.g., flagging stack frames that land in `.pdata` gaps, monitoring ETW-Ti APC queue depth).  
+- The key takeaway is that stack-based detections can be systematically bypassed without modifying unwind metadata; remaining reliable signals shift toward kernel callback correlation and behavior-based analytics.
+
+Technical Focus:
+- Windows x64 stack unwinding (`RtlVirtualUnwind`, `.pdata`, `RUNTIME_FUNCTION`, `UNWIND_CODE`)
+- Call-stack spoofing via `.pdata` gaps / “ghost frames” (BYOUD-Gap)
+- ETW Threat Intelligence (ETW-Ti) stack collection via USER_APC timing window
+- CET shadow stack implications and CET-compatible spoofing approaches
+- KiUser* dispatcher unwind behavior (`UWOP_PUSH_MACHFRAME`) and RSP manipulation (BYOUD-MF)
+- Syscall argument obfuscation using HW breakpoints + VEH (parameter encryption)
+
+Use Cases:
+- Building CET-compatible call-stack spoofing for syscall-based injection chains
+- Evading ETW-Ti STACKWALK and Sysmon-style user-mode stack capture during sensitive syscalls
+- Constructing “semantically plausible” stacks using frames adjacent to common Win32 APIs (VirtualProtect/VirtualAlloc/WriteProcessMemory)
+- Defensive research: implementing detection for call-trace addresses that fall into `.pdata` uncovered ranges
+- Evaluating EDR reliance on stack-based rules vs kernel callback/behavior correlation
+
+Keywords:
+Windows x64, EDR evasion, call stack spoofing, ETW-Ti, Microsoft-Windows-Threat-Intelligence, STACKWALK, USER_APC, RtlVirtualUnwind, RtlLookupFunctionEntry, .pdata, RUNTIME_FUNCTION, UNWIND_INFO, BYOUD, BYOUD-Gap, BYOUD-RT, BYOUD-MF, UWOP_PUSH_MACHFRAME, KiUserExceptionDispatcher, CET shadow stack, win32u.dll, ntdll.dll, kernelbase.dll, wow64.dll, syscall, VEH, hardware breakpoints, VirtualProtect, NtProtectVirtualMemory

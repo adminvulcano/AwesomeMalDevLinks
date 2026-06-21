@@ -1,0 +1,31 @@
+Title:
+PositiveIntent
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- PositiveIntent is an evasive loader/builder for .NET Framework assemblies (e.g., Rubeus) that produces an obfuscated loader EXE embedding an encrypted target assembly as resources.  
+- It aims to reduce EDR/AV visibility by avoiding common patching patterns and signatured console/CLI artifacts while still executing managed tooling.  
+- The loader implements “patchless” AMSI and ETW bypass using hardware breakpoints with VEH² (Vectored Exception Handling) rather than SetThreadContext or in-memory patching.  
+- It uses a Mono.Cecil-based obfuscation pipeline on both the payload assembly and the loader, RC4 encrypts the payload, reconstructs it at runtime, and stomps PE headers after CLR load to hinder memory scanners.  
+- It supports optional encrypted output-to-file and hardcoded arguments to avoid signatured strings on the command line/console, plus hostname keying and entropy shaping via benign embedded resources.  
+- Primarily useful for red teams and pentesters running .NET post-exploitation tooling in monitored Windows environments; also relevant to blue teams for understanding modern loader tradecraft and detection gaps.
+
+Technical Focus:
+- Patchless AMSI bypass via hardware breakpoints + VEH²
+- ETW bypass without memory patching
+- .NET assembly obfuscation with Mono.Cecil
+- Encrypted resource-embedded payload delivery (RC4, chunked resources)
+- In-memory execution and PE header stomping
+- D/Invoke usage (no P/Invoke), entropy management
+
+Use Cases:
+- Build an evasive wrapper/loader for known .NET offensive tools (e.g., Kerberos/AD tooling)
+- Reduce detection from AMSI/ETW telemetry during managed code execution
+- Avoid signatured console output by redirecting to encrypted logs for later offline decryption
+- Execute .NET tooling with hardcoded arguments to minimize suspicious CLI artifacts
+- Research/detection engineering around VEH-based bypasses, resource-staged payloads, and PE header stomping
+
+Keywords:
+AMSI, ETW, VEH, VEH², hardware breakpoints, patchless bypass, .NET Framework 4.5.1, CLR, Mono.Cecil, obfuscation, D/Invoke, P/Invoke avoidance, RC4, resource embedding, in-memory execution, PE header stomping, entropy shaping, hostname keying, reflective loading, Rubeus

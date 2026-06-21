@@ -495,6 +495,48 @@ https://iliascyber.com/2026/05/04/reflective-dll-loader.html
 https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
 https://robinx0.github.io/blogs/edr-bypass/sleep-obfuscation-techniques/
 https://robinx0.github.io/blogs/edr-bypass/stack-spoofing-techniques/
+https://bigbingus.com/posts/stop-being-weird/
+https://github.com/Sizeable-Bingus/MassDriver
+https://0xdbgman.github.io/posts/shellcode-loaders-the-art-of-execution/
+https://maldev.lol/posts/sleepy-beacons-retrospective/
+https://f00crew.org/0x33
+https://github.com/Zypherion-Technologies/HallWatch
+https://github.com/0xRoam/LoadReload
+https://0xmaz.me/posts/LACUNA-Chain-Ghost-Frames-defeats-All-EDR-layers-of-call-stack-based-detection/
+https://saza.re/posts/rover/
+https://github.com/andreisss/Remote-DLL-Injection-with-Timer-based-Shellcode-Execution
+https://github.com/5a32a7a0-2e2d-4162-a835-5c2c57db99a9
+https://github.com/PaloAltoNetworks/Unit42-Threat-Intelligence-Article-Information/blob/main/Mega-Malware-Analysis-Tutorial-Featuring-Donut.pdf
+https://imphash.medium.com/windows-process-internals-a-few-concepts-to-know-before-jumping-on-memory-forensics-part-4-16c47b89e826
+https://core-jmp.org/2026/04/signed-to-kill-reverse-engineering-a-0-day-used-to-disable-crowdstrike-edr/
+https://blog.fox-it.com/2024/09/25/red-teaming-in-the-age-of-edr-evasion-of-endpoint-detection-through-malware-virtualisation/
+https://secret.club/2023/12/24/riscy-business.html
+https://github.com/vari-sh/RedTeamGrimoire/tree/main/Charon
+https://core-jmp.org/2026/04/poisonx-terminating-protected-windows-processes-via-byovd/
+https://github.com/Hue-Jhan/Apc-Process-Injection-and-DLL-injection
+https://core-jmp.org/2026/04/comouflage-stealthy-dll-surrogate-injection-for-process-tree-evasion/
+https://maorsabag.github.io/posts/adaptix-stealthpalace/sleeping-beauty-ii/
+https://github.com/RWXstoned/LdrShuffle
+https://p0lar.io/posts/on-target-llm-malware-1/
+https://at0mxploit.xyz/post/queue-early-bird-injection
+https://lospino.so/blog/gargoyle-a-decade-later/
+https://0xdbgman.github.io/posts/shellcode-loaders-the-art-of-execution/#shellcode-loaders-the-art-of-execution
+https://github.com/mochabyte0x/vmkit
+https://whiteknightlabs.com/2024/02/09/a-technical-deep-dive-comparing-anti-cheat-bypass-and-edr-bypass/
+https://github.com/0xMohammedHassan/morphkatz
+https://www.infinitycurve.org/blog/k-noir
+https://medium.com/@toneillcodes/advanced-evasion-tradecraft-precision-module-stomping-b51feb0978fe
+https://rastamouse.me/bof-cocktails-in-cobalt-strike/
+https://www.praetorian.com/blog/wasmforge-sliver-webassembly/
+https://medium.com/@s12deff/bring-your-own-rwx-region-dll-byorwxdll-0283951d34e9
+https://github.com/Vith0r/StackSentry
+https://bigbingus.com/posts/stop-being-weird/
+https://github.com/0xjbb/cet-spoofing-detection
+https://0xdbgman.github.io/posts/edr-internals-research-and-bypass/
+https://github.com/iamsopotatoe-coder/TinyLoad
+https://github.com/0xflux/Wyrm
+https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
+https://core-jmp.org/2026/04/comouflage-stealthy-dll-surrogate-injection-for-process-tree-evasion/
 ```
 
 
@@ -526,6 +568,12 @@ https://tradecraftgarden.org/pagestream.html
 https://tradecraftgarden.org/stackcutting.html
 https://github.com/kapla0011/KaplaStrike
 https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way
+https://github.com/k1ng0fn0th1ng/reflectra
+https://aff-wg.org/2026/04/13/small-pic-energy/
+https://github.com/k1ng0fn0th1ng/CrystalForge
+https://github.com/licitrasimone/CrystalSliver
+https://aff-wg.org/2026/05/21/modules-and-monoliths/
+https://memn0ps.github.io/doublepulsar-a-user-defined-reflective-loader-in-the-crystal-palace-and-tradecraft-garden-era/
 ```
 
 
@@ -657,6 +705,14 @@ https://meetcyber.net/edr-xdr-bypass-and-detection-evasion-techniques-an-investi
 https://arth.imbeddex.com/Kernel_stuff/Windows/Kernel-Callback-Integrity-Bypass/
 https://github.com/Kudaes/Puzzle
 https://trustedsec.com/blog/the-defensive-stack-is-exposed
+https://github.com/adanto/EtwTiViewer
+https://github.com/idov31/EtwSuite
+https://jonny-johnson.medium.com/no-agent-no-problem-discovering-remote-edr-8ca60596559f
+https://titansoftwork.com/insight/doing_what_edrs_wont/
+https://github.com/TwoSevenOneT/EDRChoker
+https://github.com/sbousseaden/EDRUnChoker
+https://research.nasbench.dev/research/other/msmpeng-svchost-without-flags
+https://github.com/winterknife/EVENSTAR/tree/master/KernelToUserInjector
 ```
 
 
@@ -738,6 +794,11 @@ https://lorenzomeacci.com/bypassing-static-analysis-deep-dive
 https://github.com/DosX-dev/obfus.h
 https://github.com/DosX-dev/Astral-PE
 https://github.com/haunted-zeroday/PE-XRay-EDR
+https://secret.club/2026/05/21/striga.html
+https://github.com/eversinc33/MogVMP
+https://f00crew.org/0x48
+https://blog.quarkslab.com/obfuscation-vs-the-optimizer-an-llvm-middle-end-arms-race.html
+https://github.com/raskolnikov90/Beatrice.py
 ```
 
 
@@ -808,6 +869,17 @@ https://winslow1984.com/books/red-team/page/bypass-amsi-on-windows-11
 https://winslow1984.com/books/malware/page/mutationgate
 https://blog.washi.dev/posts/misconceptions-about-dotnet/
 https://blog.washi.dev/posts/awaitfuscator/
+https://eclipsesec.com/posts/DSCourier/
+https://github.com/DylanDavis1/DSCourier
+https://github.com/andreisss/Ghosting-AMSI
+https://github.com/raskolnikov90/LainAmsiOpenSession
+https://github.com/raskolnikov90/Invoke-NetLoader
+https://github.com/tihanyin/PSSW100AVB
+https://github.com/Mister-Joe/PositiveIntent
+https://trexnegro.github.io/posts/patchless-amsi-bypass-hwbp/
+https://medium.com/@andreabocchetti88/ghosting-amsi-cutting-rpc-to-disarm-av-04c26d67bb80
+https://github.com/andreisss/Ghosting-AMSI
+https://github.com/MHaggis/NEBULA
 ```
 
 
@@ -918,6 +990,28 @@ https://github.com/mertdas/PrivKit
 https://medium.com/@s12deff/comouflage-surrogate-injection-cfb93e15afcd
 https://xbz0n.sh/blog/mythic-c2-early-bird-defender-evasion
 https://www.zerotracelab.com/blog/dll-sideloading
+https://github.com/Whispergate/Hecate
+https://github.com/EricEsquivel/CobaltStrike-Linux-Beacon
+https://github.com/rvrsh3ll/sharpcom
+https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet
+https://github.com/0xHossam/UnCanny
+https://core-jmp.org/2026/04/edr-xdr-bypass-and-detection-evasion-techniques-an-investigation-of-advanced-evasion-strategies-from-a-red-team-perspective/
+https://www.huntress.com/blog/addressing-initial-access
+https://0xdbgman.github.io/posts/initial-access-the-art-of-getting-in/
+https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/
+https://0xv1n.github.io/LOLGlobs/
+https://github.com/loland/inlineExecute
+https://github.com/frkngksl/SilentNimvest
+https://github.com/atomiczsec/Adrenaline
+https://github.com/mandiant/gopacket
+https://github.com/Octoberfest7/SilentHarvest_BOF
+https://github.com/incursi0n/GodPotatoBOF
+https://github.com/P0142/LDAP-Bof-Collection
+https://lolol.farm/
+https://research.nasbench.dev/research/windows-processes/dllhost
+https://github.com/xFreed0m/BLACKBEARD
+https://labs.jumpsec.com/bring-your-own-trusted-binary-byotb-bsides-edition/
+https://github.com/gmh5225/SoaPy
 ```
 
 
@@ -975,6 +1069,14 @@ https://blog.talosintelligence.com/qilin-edr-killer/
 https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
 https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/
 https://adhdmurky.github.io/posts/post3/
+https://medium.com/@sushant.m.mane/byovd-process-termination-understanding-the-pattern-by-reversing-tcvinprocterm-driver-5c431d9d578b
+https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack
+https://git.redteamfortress.com/j3h4ck/PPLShade
+https://git.redteamfortress.com/j3h4ck/PhantomKiller
+https://github.com/aaron-kidwell/goLoL
+https://github.com/redteamfortress/PhantomKiller
+https://github.com/0xDbgMan/DrvEye
+https://zonifer.dev/posts/byovd-kernel-driver-hardware-primitives.html
 ```
 
 ## LSASS
@@ -1002,7 +1104,14 @@ https://ipurple.team/2026/03/17/credential-guard/
 https://github.com/k3nundrum/KslKatz
 https://github.com/andreisss/KslDump
 https://www.hackingarticles.in/credential-dumping-local-security-authority-lsalsass-exe/
-
+https://github.com/kimd155/WerWolf
+https://github.com/ricardojoserf/NativeDump
+https://medium.com/@tanrikuluatahan/fixing-mimikatz-sekurlsa-logonpasswords-on-windows-11-24h2-25h2-253e82866197
+https://g3tsyst3m.com/byovd/BYOVD-and-Looting-LSASS-in-the-Modern-EDR-Era/
+https://github.com/vari-sh/RedTeamGrimoire/
+https://github.com/BlackSnufkin/CredsHunter
+https://specterops.io/blog/2025/10/23/catching-credential-guard-off-guard/
+https://github.com/AabyssZG/HashDump-BypassEDR
 ```
 
 ## COM n stuff
@@ -1030,6 +1139,8 @@ https://www.linkedin.com/pulse/unseen-magic-com-steven-dejean-o7ipf
 https://www.r-tec.net/r-tec-blog-revisiting-cross-session-activation-attacks.html
 https://www.r-tec.net/r-tec-blog-windows-is-and-always-will-be-a-potatoland.html
 https://www.synacktiv.com/en/publications/dissecting-dcom-part-1
+https://jonny-johnson.medium.com/wsl-com-hooking-rtti-3abbf873d61f
+https://github.com/DylanDavis1/DSCourier
 ```
 
 ## MS Defender

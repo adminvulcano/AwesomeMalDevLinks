@@ -1,0 +1,30 @@
+Title:
+Why Does MsMpEng Spawn svchost.exe Without Flags?
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up reverse engineers why Microsoft Defender’s MsMpEng.exe sometimes spawns `svchost.exe` with no typical service-host flags (i.e., not a normal SCM-launched service host).  
+- It traces execution from `MsMpEng.exe` (largely a bootstrapper) into `mpsvc.dll`, and ultimately into `mpengine.dll`, where the anti-rootkit scanning path creates a suspended `svchost.exe` via `CreateProcessW` with a minimal command line (`"<SystemDirectory>\svchost.exe"`).  
+- The spawned `svchost.exe` is registered with Defender’s KSL driver (`ksld.sys`) using an IOCTL dispatcher (`0x222044`, operation `8`) that stores a referenced process object for later use.  
+- When the engine requests physical memory reads (operation `1`), `ksld.sys` attaches to the helper process context and maps `\Device\PhysicalMemory` to copy bytes back to the engine for analysis.  
+- The key point is that this “weird” `svchost.exe` is a helper container for kernel-assisted physical memory mapping, not a service host instance.  
+- Useful for DFIR/Blue Teams interpreting telemetry, and for red teamers/malware analysts who need to avoid misattributing this behavior to process injection or service abuse.
+
+Technical Focus:
+- Microsoft Defender architecture (MsMpEng.exe, mpsvc.dll, mpengine.dll)
+- Anti-rootkit scanning workflow and helper process creation
+- KSL driver (`ksld.sys`) IOCTL interface (`0x222044`) and operation dispatch
+- Suspended process creation (`CreateProcessW` + `CREATE_SUSPENDED`)
+- Kernel process attachment and physical memory mapping (`KeStackAttachProcess`, `\Device\PhysicalMemory`)
+- WDF driver request handling and process object referencing (`ZwOpenProcess`, `ObReferenceObjectByHandle`)
+
+Use Cases:
+- Triage/explain “svchost without flags” telemetry where parent is `MsMpEng.exe`
+- Build detections that distinguish Defender anti-rootkit helper behavior from suspicious svchost spawning
+- Validate EDR process-tree heuristics against legitimate Defender internals
+- Reverse engineer Defender/KSL interactions for research and threat emulation baselining
+
+Keywords:
+Microsoft Defender, MsMpEng.exe, svchost.exe, mpsvc.dll, mpengine.dll, anti-rootkit, KSL, ksld.sys, DeviceIoControl, IOCTL 0x222044, CREATE_SUSPENDED, GetSystemDirectoryW, ZwOpenProcess, ObReferenceObjectByHandle, KeStackAttachProcess, \Device\PhysicalMemory, ZwMapViewOfSection, WDF, Windows internals, reverse engineering

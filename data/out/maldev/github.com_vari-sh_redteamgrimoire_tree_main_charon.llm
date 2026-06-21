@@ -1,0 +1,25 @@
+Title:
+Charon (RedTeamGrimoire) — Standalone Artifact Builder / Shellcode Loader with Evasion
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Charon is a Windows-focused, self-compiling artifact builder that generates an executable “vessel” to load and execute operator-supplied raw shellcode with multiple evasion layers. It targets common EDR detections by avoiding typical RWX/Private memory allocation patterns via module stomping into a signed Microsoft DLL’s `.text` section, and by using indirect syscalls with dynamic SSN resolution to bypass userland hooks. It implements adaptive stack spoofing by parsing runtime unwind metadata (`.pdata`) to synthesize realistic call stacks, then wipes stack artifacts before transferring execution. The project includes a legacy monolithic variant (payload embedded/encrypted in resources) and a newer external-payload variant that loads a UUID-encoded encrypted payload file to reduce binary entropy and static signatures. It’s primarily useful for red teams/pentesters building custom loaders and for defenders studying modern loader tradecraft and detection opportunities. The interesting aspects are the combination of module-stomp execution, polymorphic syscall stubs, runtime key reconstruction, and stack forensics countermeasures in a single builder workflow.
+
+Technical Focus:
+- Module stomping into file-backed `.text` sections (LoadLibraryExA + Chakra.dll)
+- Indirect syscalls and dynamic SSN discovery (Tartarus Gate-style)
+- Stack spoofing via unwind info parsing (`.pdata`) and synthetic call chain construction
+- Polymorphic syscall stub generation with junk instruction padding
+- Payload encryption/decryption (RC4) with runtime key reconstruction (“KeyGuard”)
+- External payload staging via UUID-encoded encrypted file
+
+Use Cases:
+- Generate custom Windows shellcode loaders intended to evade userland EDR hooks and memory scanners
+- Stage payloads externally to reduce static entropy/signature hits on the main executable
+- Research/demonstrate module-stomping + indirect-syscall tradecraft in controlled assessments
+- Blue-team reverse engineering and building detections for stack spoofing, syscall patterns, and module integrity anomalies
+
+Keywords:
+Windows shellcode loader, artifact builder, module stomping, Chakra.dll, LoadLibraryExA, `.text` section injection, indirect syscalls, SSN resolution, Tartarus Gate, HellHall, EDR hook bypass, stack spoofing, unwind info, `.pdata`, RtlUserThreadStart, BaseThreadInitThunk, VirtualProtectEx, RC4, UUID encoding, polymorphic stubs

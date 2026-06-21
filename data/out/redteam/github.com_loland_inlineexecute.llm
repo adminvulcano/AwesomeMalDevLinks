@@ -1,0 +1,31 @@
+Title:
+inlineExecute (Cobalt Strike BOF for in-process .NET execution with ETW/AMSI patching)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository provides a Cobalt Strike Beacon Object File (BOF) that loads and executes a .NET assembly inside the current Beacon process instead of using `execute-assembly` with a sacrificial process.  
+- It focuses on reducing telemetry by implementing ETW bypasses in `clr.dll` via Provider Handle Patching and Subscriber Bit Patching, based on the author’s “A Stealthier Reflective Loading” write-up.  
+- The ETW approach aims to avoid common suspicious primitives (e.g., `VirtualProtect`, `WriteProcessMemory`) by not changing memory protections.  
+- It also includes an AMSI bypass targeting `clr.dll` by modifying `g_amsiContext` and `AmsiScanBuffer`-related globals located in read/write memory, again avoiding memory-protection flips.  
+- A `-scan` mode identifies patchable values/addresses using x64 instruction signatures to help validate offsets per `clr.dll` build.  
+- Useful for red team operators/pentesters experimenting with stealthier in-process .NET tradecraft and researchers evaluating detection opportunities around CLR/ETW/AMSI manipulation.
+
+Technical Focus:
+- Cobalt Strike BOF in-process .NET assembly execution
+- CLR hosting (`clr.dll`, `ICorRuntimeHost`) and AppDomain execution
+- ETW bypass: Provider Handle Patching
+- ETW bypass: Subscriber Bit Patching
+- AMSI bypass via `g_amsiContext` / `AmsiScanBuffer` global manipulation
+- Signature-based offset discovery for patching across `clr.dll` versions
+
+Use Cases:
+- Execute tools like Rubeus/SharpHound-style .NET assemblies without spawning a child process
+- Reduce/alter ETW telemetry emitted by CLR during managed code execution
+- Bypass AMSI scanning for managed execution paths in-process
+- Research and prototype alternative patching methods that avoid `VirtualProtect`/WPM patterns
+- Validate detection engineering ideas by observing CLR global/ETW structure tampering
+
+Keywords:
+Cobalt Strike, BOF, Beacon, inline execution, .NET assembly, CLR hosting, clr.dll, ICorRuntimeHost, AppDomain, ETW, Event Tracing for Windows, Provider Handle Patching, Subscriber Bit Patching, AMSI, AmsiScanBuffer, g_amsiContext, userland telemetry, signature scanning, x64 assembly, in-process execution

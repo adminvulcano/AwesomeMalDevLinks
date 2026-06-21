@@ -1,0 +1,31 @@
+Title:
+HallWatch — Usermode detector for indirect syscalls (Hell’s Hall / Tartarus’ Gate / RecycledGate / VEH syscalls)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- HallWatch is a Windows user-mode DLL/POC that detects and disrupts indirect-syscall techniques used to bypass user-mode API hooks (e.g., jumping directly to `ntdll`’s `syscall` instruction).  
+- It patches the `syscall` instruction itself inside selected `ntdll!Nt*` stubs by overwriting the first byte (`0F 05` → `CC 05`), forcing an `INT3` breakpoint regardless of how execution reaches the syscall site.  
+- A VEH handler catches the breakpoint, identifies the targeted stub, runs checks (return address trust, SSN mismatch detection, and stack unwind validation), then redirects execution to a private trampoline that performs the intended syscall safely/loggably.  
+- To address Hell’s Gate and “shadow ntdll” cases (syscalls from attacker-owned executable memory or remapped modules), it periodically scans executable memory regions and module `.text` for syscall-stub patterns (`0F 05` followed near by `C3`).  
+- It also includes self-healing (re-patching bytes if restored) and periodic VEH re-registration to resist handler removal.  
+- Useful primarily for Blue Team/EDR research, sandboxing, and defenders studying syscall-evasion tradeoffs; also valuable to Red Teamers as a reference for what can be detected in user mode.
+
+Technical Focus:
+- Indirect syscalls and syscall-stub evasion families (Hell’s Hall, Tartarus’ Gate, RecycledGate, VEH syscalls, Hell’s Gate)
+- `ntdll` export enumeration and syscall number (SSN) extraction from stub prologues
+- Byte-level patching of `ntdll` syscall instruction (`0F 05` → `INT3`) and VEH-based interception
+- Context manipulation (`CONTEXT->Rip`) and trampoline-based syscall execution
+- Stack validation via `RtlVirtualUnwind` and return-address/module trust heuristics
+- Executable-memory scanning with `VirtualQuery` + pattern matching for syscall stubs / shadow mappings
+
+Use Cases:
+- Embed in sandboxes to flag/neutralize indirect-syscall loaders at runtime
+- Research/POC for user-mode detection strategies against syscall-hook bypasses
+- Telemetry generation: log suspicious syscall origins, SSN swaps, and unwind anomalies
+- Defensive hardening experiments (self-repairing hooks, VEH persistence)
+- Adversary emulation validation: test whether a syscall technique is detectable under these heuristics
+
+Keywords:
+Windows, ntdll, Nt* syscalls, indirect syscall, Hell’s Hall, Hell’s Gate, Tartarus’ Gate, RecycledGate, VEH syscall, Vectored Exception Handler, INT3, breakpoint exception, syscall stub, SSN, RtlVirtualUnwind, VirtualQuery, RWX memory, shadow ntdll, trampoline, user-mode detection

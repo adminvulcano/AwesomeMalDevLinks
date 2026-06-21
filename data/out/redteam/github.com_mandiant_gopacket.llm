@@ -1,0 +1,32 @@
+Title:
+mandiant/gopacket — Go reimplementation of Impacket (63 tools + 24 protocol packages)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository is a native Go framework that reimplements Impacket’s Windows/AD network protocol tooling, providing 63 operator-facing tools and 24 reusable protocol libraries.  
+- It targets the common problem of Python/Impacket operational friction (dependencies, portability) by enabling “compile once, run anywhere” binaries for Linux/macOS/Windows.  
+- It covers core offensive protocol interactions and tradecraft: SMB/DCERPC/WMI/DCOM remote exec, secrets dumping (SAM/LSA/NTDS/DCSync), Kerberos (roasting, S4U, ticket forging), LDAP enumeration/abuse, and a full NTLM relay framework (ntlmrelayx) with multi-protocol support.  
+- A notable focus is proxy safety/OPSEC: built-in SOCKS5 (`-proxy`) and proxychains compatibility, with explicit prevention of UDP leaks (disables UDP-dependent features under proxy).  
+- Useful for red teams/pentesters wanting compiled equivalents of Impacket, and for defenders/purple teams studying how Go-based post-exploitation tooling differs on the wire from Python implementations.  
+- Interesting because it anticipates the shift toward compiled attacker tooling and provides a readable reference implementation for protocol behavior, relay workflows, and AD attack primitives.
+
+Technical Focus:
+- SMB2/3 client/server, NTLM authentication, pass-the-hash
+- Kerberos (TGT/TGS, S4U2Self/S4U2Proxy, ticket forging, PAC parsing)
+- DCE/RPC services (SAMR, LSARPC, SVCCTL, WINREG, DRSUAPI, TSCH, EPMAPPER) and remote execution (WMI/DCOM/SMB)
+- NTLM relay framework (multi-protocol capture/relay, SOCKS pivoting, attack modules)
+- LDAP/LDAPS enumeration and AD object security manipulation (DACL/owner/RBCD/shadow creds)
+- Proxying/transport controls (SOCKS5/socks5h, proxychains via libc linking, UDP leak avoidance)
+
+Use Cases:
+- Compile and deploy single-binary equivalents of Impacket tools in restricted environments
+- AD enumeration and attack execution (Kerberoast/AS-REP roast, RBCD, DACL/owner edits, LAPS/GPP password retrieval)
+- Remote command execution over SMB/WMI/DCOM/Task Scheduler
+- Credential dumping and replication attacks (DCSync, NTDS.dit/SAM/LSA offline/remote extraction)
+- NTLM relay operations across SMB/LDAP(S)/HTTP/MSSQL/WinRM with SOCKS pivoting
+- Defensive testing: validate detections against Go-based protocol stacks and relay behavior
+
+Keywords:
+Go, Impacket, Active Directory, SMB2, SMB3, NTLM, Kerberos, LDAP, LDAPS, DCE/RPC, DRSUAPI, SAMR, LSARPC, SVCCTL, WINREG, WMI, DCOM, psexec, secretsdump, DCSync, ntlmrelayx, RBCD, S4U2Proxy, Kerberoasting, AS-REP roasting, SOCKS5, proxychains, PAC, DPAPI, NTDS.dit, CVE-2021-42278, CVE-2021-42287, ADCS ESC8

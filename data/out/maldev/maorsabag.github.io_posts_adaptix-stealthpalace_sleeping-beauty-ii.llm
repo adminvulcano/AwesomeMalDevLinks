@@ -1,0 +1,32 @@
+Title:
+Sleeping Beauty II: CFG, CET, and Stack Spoofing
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post details updates to the StealthPalace/Adaptix RDLL loader and sleep-obfuscation pipeline to survive modern Windows exploit mitigations.  
+- It explains why ROP-based sleep chains (Ekko/Kraken Mask style) crash in CFG-enabled processes due to indirect-call target validation, and fixes it by registering gadgets and call targets at runtime.  
+- The author uses `NtSetInformationVirtualMemory` with `VmCfgCallTargetInformation` to mark mid-function gadgets, PIC regions, and executable sections as valid CFG call targets.  
+- It then addresses stack spoofing detection during sleep (EDR stack walking) and why full `CONTEXT` swapping breaks on CET Shadow Stacks, which validate `RIP` consistency.  
+- The CET-compatible approach swaps TIB/TEB stack bounds (StackBase/StackLimit) and spoofs `RSP` while preserving the real `RIP`, keeping CET satisfied while misleading stack walkers.  
+- Finally, it compares Ekko v2 (timer-queue `NtContinue` dispatch) vs Kraken Mask (APC-queued chain on a helper thread), highlighting tradeoffs in state storage, restore safety, and gadget selection.  
+- Useful primarily for red teams/implant developers working on Windows user-mode evasion against CFG/CET and call-stack-based detections.
+
+Technical Focus:
+- Control Flow Guard (CFG) bitmap enforcement and runtime call-target registration
+- `NtSetInformationVirtualMemory(VmCfgCallTargetInformation)` and `CFG_CALL_TARGET_INFO`
+- CET / Shadow Stack constraints on `SetThreadContext` and `RIP` manipulation
+- TIB/TEB stack-bound spoofing (StackBase/StackLimit) to defeat stack walking
+- ROP-based sleep obfuscation (Ekko timer callbacks vs APC-based Kraken Mask)
+- Windows thread context operations (`GetThreadContext`, `SetThreadContext`, `NtContinue`, APCs)
+
+Use Cases:
+- Making ROP-driven sleep masks work inside CFG-enabled processes (e.g., explorer.exe, svchost.exe, Edge)
+- Hardening implant sleep/idle behavior against EDR call-stack inspection
+- Building CET-compatible stack spoofing without breaking shadow stack validation
+- Comparing/choosing timer-queue vs APC dispatch for staged ROP execution
+- Researching detection opportunities around CFG target marking and TEB/TIB tampering
+
+Keywords:
+Control Flow Guard, CFG bitmap, /guard:cf, NtSetInformationVirtualMemory, VmCfgCallTargetInformation, CFG_CALL_TARGET_INFO, RtlFailFast2, STATUS_STACK_BUFFER_OVERRUN, CET, Shadow Stack, Hardware-enforced Stack Protection, SetThreadContext, GetThreadContext, NtContinue, TEB, TIB, StackBase, StackLimit, stack spoofing, Ekko, CreateTimerQueueTimer, APC, NtQueueApcThread, NtTestAlert, NtSignalAndWaitForSingleObject, SystemFunction032, RC4, VirtualProtect, ntdll, kernel32, advapi32

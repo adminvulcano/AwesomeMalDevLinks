@@ -1,0 +1,26 @@
+Title:
+ROFMAD (Rust Orchestrator For Modular Automated Discovery)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+ROFMAD is a Rust-based orchestration framework for automated internal network reconnaissance and enumeration, built to run primarily inside Exegol containers on Linux. It automates a multi-stage pipeline (host discovery → full TCP port scan → targeted service/version scan → HTTP probing → tagging → screenshots) and persists state in SQLite so projects can be resumed. The core extensibility is a YAML workflow engine that triggers operator-defined actions based on conditions (ports/services/tags/HTTP presence) and applies tags via regex matches on tool output, without embedding “AI” decision-making. It integrates common tooling (nmap, masscan, arp-scan, tcpdump, nuclei, headless Chromium) and provides a real-time web UI for queue monitoring, concurrency controls, and per-host drilldowns. Safety features include interface/localhost protection and configurable IP/CIDR blacklisting enforced across scanners. It’s useful for red teams and pentesters who want repeatable, scalable enumeration workflows with visibility and task control.
+
+Technical Focus:
+- Event/hook-driven scan orchestration with deduplication and polling loop
+- YAML-defined conditional workflows and placeholder substitution (e.g., `{{IP}}`, `{{HTTP_URL}}`)
+- Multi-phase subnet scanning strategy (masscan funnel + staged nmap coverage)
+- HTTP service fingerprinting and automated screenshotting (headless Chrome)
+- Nuclei integration (per-service and bulk) with severity dashboards
+- SQLite-backed project state, tagging system, and resumable runs
+
+Use Cases:
+- Automate internal network discovery and enumeration during authorized pentests
+- Build repeatable recon playbooks (SMB/MSSQL/HTTP) via YAML actions without code changes
+- Run bulk Nuclei scans scoped by tags/IP ranges and triage findings in a UI
+- Coordinate multi-operator (“player”) recon with shared project state and role separation
+- Export tagged target sets (TXT/CSV/JSON) for follow-on exploitation or reporting
+
+Keywords:
+Rust, Tokio, Axum, Askama, SQLite, sqlx, Exegol, nmap, masscan, arp-scan, tcpdump, nuclei, headless Chromium, HTTP probing, service enumeration, YAML workflow, regex tagging, concurrency semaphores, blacklisting, internal network reconnaissance

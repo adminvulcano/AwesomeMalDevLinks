@@ -1,0 +1,16 @@
+https://github.com/nuryslyrt/ORPHEUS
+https://github.com/evilsocket/audit
+https://github.com/kernelstub/Ferrum
+https://github.com/P-Aimon-Pen/ROFMAD
+https://luke.yt/pi-checker/
+https://github.com/trailofbits/skills/
+https://labs.secengai.com/p/ai-assisted-web-pentesting-using-claude-code-burp-mcp
+https://battlebench.ai/
+https://dreadnode.io/
+https://github.com/galoryber/daedalus
+https://github.com/dazzyddos/OSINT_AI_Agent
+https://github.com/github/spec-kit
+https://zeltser.com/ai-malware-analysis-remnux
+https://github.com/sbousseaden/EDRUnChoker/
+https://github.com/q3alique/codeflow
+https://github.com/nuryslyrt/ORPHEUS

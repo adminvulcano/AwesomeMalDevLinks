@@ -1,0 +1,29 @@
+Title:
+HashDump-BypassEDR
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository documents a Windows hash-dumping workflow designed to bypass common EDR interception points by leveraging the signed/“living off the land” utility `reg.exe` to export sensitive registry hives.  
+- The approach avoids typical LSASS dumping telemetry by exfiltrating `SAM`, `SYSTEM`, and `SECURITY` data as `.reg` exports, then reconstructing the binary hive files offline using a provided PowerShell script (`RegReduction.ps1`).  
+- It includes a small C tool (`BootKey.c` → `BootKey.exe`) to extract the system BootKey, which is then used with Impacket `secretsdump.py` to recover local account hashes.  
+- The README highlights privilege nuances across Windows versions (e.g., `reg.exe export` requiring SYSTEM on Win10/11 and Server 2025, but often only admin on Server 2022 and below) and notes BootKey extraction may not require admin.  
+- Useful primarily for red teams/pentesters performing credential access in environments where direct LSASS dumping is heavily monitored, and for defenders to understand an alternate credential theft path.
+
+Technical Focus:
+- Registry hive export via `reg.exe` (SAM/SYSTEM/SECURITY)
+- Offline reconstruction of hive binaries from `.reg` exports (PowerShell)
+- BootKey (SysKey) extraction logic from SYSTEM hive/registry
+- Offline secrets extraction with Impacket `secretsdump`
+- EDR bypass via LOLBin/task decorrelation (avoiding LSASS dump hooks)
+
+Use Cases:
+- Dump local Windows password hashes without creating LSASS dump artifacts
+- Perform offline credential extraction from exported registry data
+- Validate EDR detection gaps around `reg.exe export` and hive access
+- Red team tradecraft for constrained/monitored endpoints
+- Blue team threat modeling and detection engineering for hive export + exfil chains
+
+Keywords:
+Windows, EDR bypass, hashdump, reg.exe, LOLBin, SAM, SYSTEM hive, SECURITY hive, BootKey, SysKey, registry export, offline dumping, Impacket, secretsdump.py, credential access, LSASS avoidance, PowerShell, C, task decorrelation, Windows Server 2022/2025, Windows 10, Windows 11

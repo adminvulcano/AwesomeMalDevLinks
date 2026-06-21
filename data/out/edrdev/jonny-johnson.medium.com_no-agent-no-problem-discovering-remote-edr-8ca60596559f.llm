@@ -1,0 +1,32 @@
+Title:
+No Agent, No Problem: Discovering Remote EDR
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post shows how to build “agentless” endpoint monitoring by remotely enumerating and creating ETW trace sessions using Windows Performance Logs and Alerts (PLA) DCOM/COM interfaces (pla.dll), rather than deploying an EDR agent or using WMI.  
+- It explains PLA concepts (data collectors, data collector sets, namespaces) and how tools like `logman` use `IDataCollectorSetCollection::GetDataCollectorSets` and related interfaces to query across namespaces, including less-visible ones (e.g., Service namespace vs Session).  
+- The author demonstrates remote creation/modification of collectors via `IDataCollectorSet` + `Commit()` (with server parameter for remote targets) and highlights XML-templated collector creation (`CreateDataCollectorFromXml`) as a practical approach for trace collectors.  
+- A PoC tool, JonMon-Lite, is presented to create remote trace sessions from XML/JSON config, write ETL output to a chosen location (including “remote host collects, local host stores”), and parse/forward events into local Event Viewer for analysis.  
+- Defensive examples include detecting .NET assembly loads, Permanent WMI Event Subscriptions, and DCSync activity via relevant ETW providers (e.g., DotNETRuntime, WMI-Activity, RPC).  
+- Offensive implications include stealthy remote recon/telemetry collection, hiding sessions in non-default namespaces, and remotely stopping/modifying security trace sessions (e.g., changing providers or security descriptors).  
+- Useful for detection engineers and defenders seeking visibility without endpoint agents, and for red teams researching stealthy monitoring and ETW/PLA abuse paths.
+
+Technical Focus:
+- ETW remote collection via PLA (pla.dll) DCOM interfaces  
+- IDataCollectorSet / IDataCollectorSetCollection / IDataCollector COM API usage  
+- Data collector namespaces (Session, Service, AutoLogger, etc.) and enumeration gaps  
+- Remote creation/modification of trace sessions using `Commit()` and `CommitMode`  
+- XML-templated trace collector provisioning (`CreateDataCollectorFromXml`)  
+- Authentication/credentialing for remote collection and remote/local ETL storage
+
+Use Cases:
+- Agentless remote telemetry collection on servers/endpoints where EDR agents are undesirable
+- Distributed ETW-based detection pipeline (ETL collection + near-real-time parsing/forwarding)
+- Remote hunting for suspicious activity using targeted ETW providers (RPC, WMI-Activity, .NET runtime)
+- Red-team stealth monitoring/recon without dropping binaries to disk
+- Auditing and hardening: detect/alert on unexpected PLA collector creation or trace session tampering
+
+Keywords:
+ETW, Performance Logs and Alerts, PLA, pla.dll, DCOM, COM, IDataCollectorSet, IDataCollectorSetCollection, IDataCollector, ITraceDataCollector, IConfigurationDataCollector, logman, PerfMon, Data Collector Set, namespace, AutoLogger, ETL, CommitMode, CreateDataCollectorFromXml, Microsoft-Windows-DotNETRuntime, Microsoft-Windows-WMI-Activity, Microsoft-Windows-RPC, DCSync, Mimikatz, Rubeus

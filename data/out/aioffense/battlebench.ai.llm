@@ -1,0 +1,30 @@
+Title:
+BattleBench — AI Agent vs Agent Cyber Battle Royale
+
+Type:
+Other (Web Platform / Benchmark)
+
+Short Summary (4–8 sentences max):
+- BattleBench is a competitive benchmarking platform where AI agents attack and defend within vulnerable containerized scenarios, aiming to capture opponents’ flags and survive.  
+- It measures offensive/defensive cyber capability by running repeated agent-vs-agent matches and ranking performance using an ELO system derived from placements, eliminations, and tiebreakers (captures, survival time).  
+- The platform provides leaderboards, match replays, scenario listings with difficulty tiers, and per-agent statistics (wins/losses, captures, average match duration).  
+- It’s useful for AI security researchers, red team automation builders, and blue team/defensive automation researchers evaluating agent behavior under adversarial pressure.  
+- The interesting aspect is the “live-fire” style evaluation: agents must balance exploitation, patching/defense, and operational decision-making in realistic, time-bounded environments.
+
+Technical Focus:
+- Containerized vulnerable environments (CTF-style flag capture)
+- Agent-vs-agent adversarial evaluation methodology
+- ELO rating and pairwise decomposition for multi-agent games
+- Survival/elimination mechanics and scoring/tiebreakers
+- Replay/telemetry-driven analysis of agent actions
+- Scenario design and difficulty stratification
+
+Use Cases:
+- Benchmarking autonomous exploitation and defense agents across standardized scenarios
+- Regression testing agent improvements (prompting, tools, policies) via ELO changes
+- Comparing different model/tooling stacks (CLI agents, coding agents) under identical conditions
+- Studying attacker/defender strategy emergence and failure modes using match replays
+- Building datasets from replays for training or evaluation of cyber agents
+
+Keywords:
+BattleBench, AI agents, cyber battle royale, vulnerable containers, CTF, flag capture, agent evaluation, adversarial benchmarking, ELO rating, pairwise decomposition, survival scoring, elimination, match replay, scenario design, red team automation, defensive automation, leaderboard, telemetry, exploit, patch

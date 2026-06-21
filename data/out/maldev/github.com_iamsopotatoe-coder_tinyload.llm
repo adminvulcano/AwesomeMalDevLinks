@@ -1,0 +1,25 @@
+Title:
+TinyLoad v7.1
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+TinyLoad is a Windows x64 PE packer/crypter that wraps an input executable into a self-extracting stub and runs the decrypted payload directly in memory (no original payload written back to disk). It aims to hinder reverse engineering and static analysis by layering optional protections: custom LZ77 compression, a custom virtual-machine (VM) based encryption scheme, and on-demand page decryption via vectored exception handling (VEH). Each build mutates by randomizing VM opcode placement into multiple independently keyed subtables, making packed outputs non-identical across runs. It also includes anti-dump measures by redirecting key WinAPI calls through stub wrappers and zeroing the payload’s import directory after load to complicate import reconstruction from memory dumps. The project is a single C++ file with no external dependencies and is built with MinGW. It’s primarily useful for red team tooling developers, malware analysts/researchers (for understanding packer tradecraft), and defenders building unpacking/detection logic.
+
+Technical Focus:
+- PE packing/crypter stub design (append payload, in-memory execution)
+- Custom LZ77 compression (hash-chain matching, 64KB window)
+- VM-based obfuscation/encryption (opcode virtualization, subtable randomization)
+- Vectored Exception Handler (VEH) page-fault driven on-demand decryption (PAGE_NOACCESS)
+- Anti-dump techniques (IAT/import directory destruction, API wrapper indirection)
+- Windows memory protections and page-level re-encryption watchdog logic
+
+Use Cases:
+- Packing internal red-team payloads/tools to test detection and unpacking pipelines
+- Studying VM-based packer design and mutation strategies for RE practice
+- Developing defensive heuristics/signatures for packers using VEH page-fault decryption
+- Evaluating memory-dump resistance techniques (import wiping, partial in-memory plaintext)
+
+Keywords:
+TinyLoad, PE packer, crypter, Windows x64, in-memory execution, stub loader, LZ77, hash chain, virtual machine obfuscation, VM interpreter, opcode randomization, stream cipher, ROTL, ROTR, VEH, VectoredExceptionHandler, PAGE_NOACCESS, page-fault decryption, VirtualAlloc, GetProcAddress, import directory wiping, anti-dump, memory dumping, PE sections

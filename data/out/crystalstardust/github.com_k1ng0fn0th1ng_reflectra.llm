@@ -1,0 +1,26 @@
+Title:
+Reflectra — Modular User-Defined Reflective Loader (UDRL) on Crystal Palace
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Reflectra is a Windows x64 user-defined reflective loader that manually maps DLL payloads (PE sections, relocations, imports) and executes a chosen exported function without relying on the native Windows loader. It targets controlled in-memory execution for DLL-based C2 payloads, aiming to be reusable across frameworks (explicit examples include AdaptixC2) while keeping execution flow and memory layout under operator control. The project layers multiple evasion primitives into the loading pipeline, including indirect syscalls (LibGate), stack call spoofing (Draugr), ETW user-mode patching, and XOR masking of the DLL. It integrates with the Crystal Palace ecosystem and includes a build pipeline that outputs a transformed payload blob, a stub executable, and auto-generated YARA rules while addressing “islands of invariance.” Useful primarily for red teams, implant developers, and security researchers experimenting with custom loaders and EDR/YARA evasion tradeoffs. Notable limitations include incompatibility with some Go-based DLL payloads and that only IAT-resolved APIs are affected by its hooking approach.
+
+Technical Focus:
+- Manual PE/DLL mapping (imports, relocations, section permissions)
+- User-defined reflective loader architecture (UDRL) and custom entrypoint targeting
+- Indirect syscalls (LibGate) and syscall-based evasion
+- Stack call spoofing (Draugr)
+- ETW user-mode patching / byte patching
+- YARA rule generation and mutation handling (“islands of invariance”)
+
+Use Cases:
+- Execute DLL-based beacons/implants from memory with custom control over mapping and execution
+- Integrate a reusable reflective loader into multiple C2 frameworks that deliver DLL payloads
+- Research and test ETW patching, syscall indirection, and call-stack spoofing in a loader context
+- Generate and validate YARA signatures for transformed payload artifacts during development
+- Build standalone “stub.exe” runners for lab testing of in-memory DLL execution
+
+Keywords:
+UDRL, reflective loader, manual mapping, PE loader, Windows x64, DLL beacon, Crystal Palace, Tradecraft Garden, LibGate, indirect syscalls, Draugr, stack spoofing, ETW patching, OutputDebugStringA, IAT hooking, XOR masking, YARA generation, islands of invariance, MinGW, in-memory execution

@@ -1,0 +1,26 @@
+Title:
+PI Checker (Prompt Injection Checker)
+
+Type:
+Documentation / Web Test Suite
+
+Short Summary (4–8 sentences max):
+PI Checker is a curated set of prompt-injection test pages designed to evaluate how LLM tools and agents behave when summarizing, retrieving, translating, or acting on untrusted content. It targets common failure modes where hidden or obfuscated instructions in web pages/documents override the user’s intent or system policies. The site provides eight categories (e.g., summarization poisoning, RAG/document poisoning, agentic/CLI, chained injections, narrative/markup tricks, translation-based attacks, jailbreaks, and a financial-sector manipulation demo) with multiple difficulty levels and “vulnerable if” criteria for scoring. It’s useful for red teams and AI security testers validating guardrails, and for blue teams/LLM product engineers building mitigations and regression tests. The financial demo highlights real-world business impact: manipulating analyst-style outputs by suppressing risk disclosures or fabricating events. It also links a report comparing prompt-injection resistance across local vs frontier models.
+
+Technical Focus:
+- Prompt injection evaluation methodology and scoring (“vulnerable if” criteria)
+- Summarization poisoning via hidden/obfuscated instructions in web content
+- RAG / knowledge-base document poisoning
+- Agentic tool misuse (coding assistants, filesystem/CLI-capable agents)
+- Multi-step/chained injection across linked pages and session context
+- Jailbreak techniques (persona attacks, RTL Unicode obfuscation, Base64)
+
+Use Cases:
+- Regression testing LLM summarizers against malicious web pages
+- Validating RAG pipelines for instruction/data separation and retrieval hygiene
+- Testing agent frameworks for tool-use constraints and prompt boundary enforcement
+- Measuring cross-lingual/translation pipelines for injection persistence
+- Demonstrating business-risk scenarios (e.g., finance/investment recommendation manipulation)
+
+Keywords:
+prompt injection, summarization poisoning, RAG poisoning, document poisoning, agentic AI, tool use, CLI agent, filesystem access, chained injection, multi-step attacks, narrative injection, HTML/markup obfuscation, translation attacks, jailbreak, persona establishment, RTL Unicode, Base64 encoding, financial sector demo, instruction hierarchy, LLM evaluation

@@ -1,0 +1,30 @@
+Title:
+Stop Being Weird: CET, Call Stack Spoofing Detections, and “Normal” Execution Flows (MassDriver)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- The post analyzes modern Windows call stack spoofing (gadget-based synthetic frames) and why it increasingly fails against Elastic’s behavioral detections and Intel CET shadow stack enforcement.  
+- It explains Elastic rules that flag “image_rop” behavior (returns not preceded by a `call`) and signatureable call stack summaries caused by rare “call-preceded” ROP gadgets.  
+- With CET, classic spoofing breaks because modifying return addresses desynchronizes the normal stack from the shadow stack, causing faults.  
+- The proposed workaround is to stop spoofing and instead proxy sensitive/monitored API calls from shellcode to a “normal” on-disk artifact thread via `PostThreadMessage`, yielding clean, legitimate call stacks.  
+- For sleep masking, it uses a CET-friendly fiber-based sleep routine (switching to a fiber that calls `Sleep` and returns), avoiding the “sleeping beacon” wait-stack pattern.  
+- Useful for red teams/pentesters and implant developers adapting to CET + call-stack-based EDR detections; also useful for defenders to understand emerging evasion patterns and where to add telemetry.
+
+Technical Focus:
+- Elastic call stack spoofing detections (“image_rop”, gadget patterns, call stack summary signatures)
+- Intel CET / shadow stack implications for ROP and stack tampering
+- API-call proxying from shellcode to a benign thread (message-based RPC)
+- Windows fibers for CET-compatible stack switching and sleep obfuscation
+- Gadget hunting constraints (call-preceded gadgets) and signatureability
+
+Use Cases:
+- Implement CET-compatible alternatives to gadget-based call stack spoofing
+- Reduce EDR call-stack anomalies by moving monitored API calls into “normal” module execution
+- Build loaders/implants that proxy high-risk APIs (e.g., `LoadLibraryA`, memory APIs) through a broker thread
+- Sleep masking using fiber switching to avoid suspicious wait/sleep call stacks
+- Defensive research: create detections for message-based API brokers and fiber-based sleep patterns
+
+Keywords:
+CET, shadow stack, Control-flow Enforcement Technology, call stack spoofing, stack spoofing detection, Elastic EDR, image_rop, ROP gadget, jmp reg gadget, synthetic frames, RtlUserThreadStart, BaseThreadInitThunk, PostThreadMessageA, WM_USER, worker thread, fibers, ConvertThreadToFiber, CreateFiber, SwitchToFiber, LoadLibraryA, Sleep, Beacon, BOF, GadgetHunter

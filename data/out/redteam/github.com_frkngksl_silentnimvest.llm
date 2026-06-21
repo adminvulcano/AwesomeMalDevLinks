@@ -1,0 +1,26 @@
+Title:
+SilentNimvest
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+SilentNimvest is a Nim-based parser/dumper for Windows SAM and SECURITY registry hives to extract local credential material and secrets. It implements the “Silent Harvest” technique to read sensitive registry keys without requiring SYSTEM, leveraging an Administrator token with `SeBackupPrivilege` and specific `NtOpenKeyEx` access/flags. The tool focuses on using a less commonly alerted registry API (`RegQueryMultipleValuesW`) to reduce EDR noise compared to typical hive dumping approaches. It can recover local user NTLM hashes, cached domain logon data, DPAPI-related keys, NL$KM, and LSA Secrets (including service account plaintext where present). It is primarily useful for red teams and pentesters performing post-exploitation credential access on Windows endpoints, and for defenders researching telemetry around stealthier registry access patterns. It is interesting because it operationalizes a lower-friction, lower-privilege path to hive-based secret extraction based on published research.
+
+Technical Focus:
+- Silent Harvest registry access technique (SAM/SECURITY without SYSTEM)
+- `SeBackupPrivilege` abuse for registry key access
+- Native/Win32 registry APIs: `NtOpenKeyEx`, `RegQueryMultipleValuesW`
+- SAM parsing and NTLM hash extraction
+- SECURITY hive parsing: cached logons, LSA Secrets, NL$KM, DPAPI keys
+- Nim implementation details (winim, nimcrypto, checksums/des)
+
+Use Cases:
+- Dump local account NTLM hashes from SAM during post-exploitation
+- Extract cached domain credentials (DCC) and machine account-related secrets from SECURITY
+- Recover LSA Secrets (e.g., service credentials) for lateral movement
+- Red-team tradecraft testing for EDR detection gaps around registry read APIs
+- Blue-team validation of detections for `SeBackupPrivilege` + unusual registry query patterns
+
+Keywords:
+Silent Harvest, SilentNimvest, Nim, Windows, SAM, SECURITY hive, registry, credential dumping, SeBackupPrivilege, NtOpenKeyEx, RegQueryMultipleValuesW, LSA Secrets, cached domain logons, NL$KM, DPAPI machinekey, DPAPI userkey, NTLM, post-exploitation, EDR evasion, winim

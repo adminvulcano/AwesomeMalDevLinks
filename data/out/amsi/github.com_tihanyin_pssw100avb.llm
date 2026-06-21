@@ -1,0 +1,31 @@
+Title:
+PSSW100AVB (PowerShell Scripts With 100% AV Bypass)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository collects PowerShell offensive scripts (notably multiple reverse shells, AMSI bypass scripts, and an LSASS dumping script) that the author claims were “0 AV detections” at the time of publication.  
+- It targets practical detection evasion for Windows endpoints, emphasizing how quickly AV/EDR vendors begin flagging public PoCs after release (often days to weeks).  
+- Recent entries (2025–2026) highlight “AI/behavior analysis bypass” claims via prompt-injection style comments intended to influence automated sandbox/LLM-based triage systems.  
+- The reverse shells use .NET networking primitives (TcpClient/Socket/NetworkStream) and execute received commands via `Invoke-Expression` or indirectly via environment-variable indirection (e.g., building `IEX`).  
+- Useful primarily for red teams/pentesters and security researchers studying PowerShell tradecraft, AV/EDR detection latency, and sandbox automation weaknesses; also relevant to blue teams for building detections around these patterns.  
+- Interesting because it explicitly documents an emerging attack surface: manipulating AI-assisted malware analysis pipelines with embedded instructions.
+
+Technical Focus:
+- PowerShell reverse shells over TCP using .NET sockets/streams  
+- AMSI bypass techniques (PowerShell-focused)  
+- LSASS dumping via PowerShell (credential access)  
+- String/alias/environment-variable obfuscation (e.g., reconstructing `IEX`)  
+- “Prompt injection” against AI/sandbox behavioral analysis workflows  
+- AV evasion lifecycle / detection window measurement
+
+Use Cases:
+- Adversary simulation of PowerShell-based C2/reverse shell behavior in Windows environments
+- Testing and tuning EDR detections for PowerShell + .NET socket activity and command execution
+- Researching AMSI bypass and post-exploitation scripting tradecraft
+- Evaluating robustness of sandbox/AI-assisted malware triage against embedded prompt-injection text
+- Building YARA/Sigma/behavioral rules for common reverse-shell and `IEX`-style execution patterns
+
+Keywords:
+PowerShell, reverse shell, AV evasion, EDR bypass, AMSI, AMSI bypass, LSASS dump, credential dumping, Invoke-Expression, IEX, environment variables, string obfuscation, Set-Alias, System.Net.Sockets.TcpClient, System.Net.Sockets.Socket, NetworkStream, behavioral analysis evasion, sandbox evasion, prompt injection, Windows 11

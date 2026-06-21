@@ -1,0 +1,31 @@
+Title:
+WSL, COM Hooking, & RTTI
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- The post explains how to obtain reliable telemetry for WSL process creation by hooking the WSL COM server (wslservice.exe), specifically the `ILxssUserSession::CreateLxProcess` method.  
+- It addresses the problem that wslservice.exe ships without symbols and that ETW/TraceLogging providers don’t reliably expose WSL2 activity, making traditional monitoring difficult.  
+- The author uses MSVC Run-Time Type Information (RTTI) metadata embedded in the binary to locate the COM interface vtable at runtime (TypeDescriptor → Complete Object Locator → vtable), then patches the target vtable slot.  
+- It highlights that hooking `CreateLxProcess` captures both WSL1 and WSL2 flows because the COM interface is shared, even though the backend differs (Pico provider vs Hyper-V).  
+- A POC DLL (`WslHook.dll`) logs client PID/process/SID, command line args, distro/instance IDs, and handles, demonstrating visibility into WSL execution without relying on `wsl.exe` telemetry.  
+- Useful for red teams and defenders/researchers needing WSL execution visibility, and for reverse engineers dealing with symbol-less COM servers.
+
+Technical Focus:
+- WSL COM architecture (client → wslservice.exe → backend dispatch)
+- COM interface vtable hooking (`ILxssUserSession::CreateLxProcess`)
+- MSVC RTTI structures (`_RTTITypeDescriptor`, `_RTTICompleteObjectLocator`)
+- Binary scanning using RVAs to resolve vtables without symbols
+- Vtable slot/offset validation across IDL versions and builds
+- Telemetry/logging via `OutputDebugStringW` (with ETW suggested for production)
+
+Use Cases:
+- Detect/monitor WSL command execution that bypasses launching `wsl.exe`
+- Build EDR-style user-mode sensors for WSL activity in wslservice.exe
+- Reverse engineer and hook COM methods in symbol-less Windows binaries
+- Validate/triage offensive tradecraft leveraging `CreateLxProcess` for stealthy WSL execution
+- Research WSL1 vs WSL2 execution paths and parameter marshaling
+
+Keywords:
+WSL, WSL2, WSL1, wslservice.exe, wsl.exe, COM, ILxssUserSession, CreateLxProcess, vtable hooking, RTTI, MSVC, _RTTITypeDescriptor, _RTTICompleteObjectLocator, RVA, IDA Pro, reverse engineering, HvSocket, Hyper-V, TraceLogging, ETW, OutputDebugStringW, Detours

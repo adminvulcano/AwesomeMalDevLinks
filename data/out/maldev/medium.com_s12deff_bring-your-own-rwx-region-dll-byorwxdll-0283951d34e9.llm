@@ -1,0 +1,25 @@
+Title:
+Bring Your Own RWX Region DLL (BYORWXDLL)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post describes BYORWXDLL, a Windows process-injection approach inspired by BYOVD that abuses legitimate signed DLLs containing PE sections mapped as RWX (or effectively RWX) at load time. The goal is to execute shellcode in a remote process while avoiding high-signal APIs commonly monitored by EDRs, specifically `VirtualAllocEx` and `VirtualProtectEx`. The methodology covers (1) static discovery of DLLs on disk with RWX section flags using Python `pefile`, (2) dynamic validation by loading the DLL and enumerating memory protections via `VirtualQuery`, (3) identifying target processes that already have the DLL loaded, and (4) writing shellcode into the pre-existing RWX region with `WriteProcessMemory` and executing it via `CreateRemoteThread`. It highlights `PAGE_EXECUTE_READWRITE` and `PAGE_EXECUTE_WRITECOPY` as viable target protections. This is primarily useful for red team/offensive tooling developers and malware researchers looking to reduce injection telemetry by reusing existing executable+writable mappings.
+
+Technical Focus:
+- PE section characteristics and RWX mapping behavior
+- Static DLL scanning with Python `pefile`
+- Runtime memory enumeration with `VirtualQuery` / `MEMORY_BASIC_INFORMATION`
+- Remote process memory write and thread creation (`WriteProcessMemory`, `CreateRemoteThread`)
+- EDR evasion via avoiding `VirtualAllocEx` / `VirtualProtectEx`
+- `PAGE_EXECUTE_READWRITE` vs `PAGE_EXECUTE_WRITECOPY` (copy-on-write executable pages)
+
+Use Cases:
+- Quieter shellcode injection by reusing existing RWX pages in a target process
+- Host-based discovery of “RWX-capable” signed DLLs for tradecraft planning
+- Building PoCs to evaluate EDR telemetry around memory allocation/protection changes
+- Defensive hunting: inventorying DLLs with RWX sections and processes that map them
+
+Keywords:
+BYORWXDLL, BYOVD, RWX, PE sections, IMAGE_SCN_MEM_EXECUTE, IMAGE_SCN_MEM_READ, IMAGE_SCN_MEM_WRITE, pefile, LoadLibrary, VirtualQuery, PAGE_EXECUTE_READWRITE, PAGE_EXECUTE_WRITECOPY, WriteProcessMemory, CreateRemoteThread, VirtualAllocEx, VirtualProtectEx, process injection, Windows internals, EDR telemetry

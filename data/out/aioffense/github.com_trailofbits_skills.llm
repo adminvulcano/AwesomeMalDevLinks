@@ -1,0 +1,31 @@
+Title:
+Trail of Bits Skills Marketplace (trailofbits/skills)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository is a marketplace of Claude Code plugins (“skills”) published by Trail of Bits to improve AI-assisted security analysis, auditing, testing, and development workflows.  
+- It solves the problem of repeatable, higher-signal agent behavior by packaging structured prompts, workflows, and enforcement hooks that guide/limit tool usage (e.g., safer GitHub access patterns) and standardize review/audit processes.  
+- The repo covers a broad set of security domains: code auditing (Semgrep/CodeQL/SARIF workflows, differential review, variant analysis), smart contract security, malware detection (YARA authoring), verification (constant-time analysis, mutation/property-based testing), and operational tooling (git cleanup, devcontainer setup).  
+- It’s useful for security engineers, auditors, red teams/pentesters doing code review, and blue teams building detection and secure SDLC automation—especially those integrating LLM agents into pipelines.  
+- Interesting aspects include “hook”-based guardrails (e.g., intercepting risky `gh api .../contents` patterns via a CLI shim), parallelized/clustered review workflows (e.g., C/C++ review with SARIF output), and a curated, extensible plugin catalog designed for reproducible agent behavior.
+
+Technical Focus:
+- Claude Code plugin/skill architecture and workflow design
+- Tool-use guardrails via hooks (PreToolUse/SessionStart/Stop) and CLI shims
+- Static analysis orchestration (Semgrep, CodeQL) and SARIF generation/consumption
+- Security code review workflows (differential review, false-positive triage, variant analysis)
+- Smart contract auditing workflows (multi-chain scanners, entry-point analysis)
+- Detection engineering content (YARA authoring, rule quality/linting)
+
+Use Cases:
+- Build repeatable LLM-assisted secure code review and audit playbooks
+- Generate/iterate Semgrep rules and run static analysis with standardized outputs (SARIF)
+- Perform C/C++ security reviews with clustered workers and structured findings
+- Enforce safer agent interactions with GitHub (prefer cloning/`gh` CLI; block API content fallbacks)
+- Author and validate YARA rules for malware detection pipelines
+- Run verification-focused reviews (constant-time checks, mutation/property-based testing guidance)
+
+Keywords:
+Claude Code, plugin marketplace, agent skills, security code review, static analysis, Semgrep, CodeQL, SARIF, differential review, variant analysis, false positive triage, GitHub CLI, gh api contents, tool-use hooks, prompt engineering, smart contract auditing, constant-time analysis, mutation testing, property-based testing, YARA

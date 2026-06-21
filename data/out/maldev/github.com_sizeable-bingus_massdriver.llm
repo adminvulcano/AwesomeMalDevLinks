@@ -1,0 +1,24 @@
+Title:
+MassDriver — CET-Compatible API Proxying for Clean Call Stacks
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+MassDriver is a proof-of-concept framework that proxies “sensitive” Windows API calls from shellcode into an external artifact to maintain CET (Control-flow Enforcement Technology) compatibility and preserve clean/legitimate-looking call stacks. It targets the post–call stack spoofing landscape where CET/Shadow Stack makes traditional stack manipulation and spoofing brittle or detectable. The repo provides a loader/artifact + payload model (default payload calls `LoadLibraryA` and `Sleep`) to demonstrate how to offload API execution while keeping the originating shellcode’s stack behavior benign. It’s positioned as a companion to the author’s blog post on operating “after call stack spoofing under CET.” It includes build guidance requiring llvm-mingw to set CET compatibility flags and optional integration for Cobalt Strike via an aggressor script. Useful primarily for red teamers and malware developers researching modern usermode tradecraft under CET constraints, and for defenders studying emerging evasion patterns.
+
+Technical Focus:
+- Intel CET / Shadow Stack constraints on usermode tradecraft
+- Proxying/forwarding Windows API calls from shellcode to a helper module (“artifact”)
+- Call stack cleanliness / stack-based detection evasion considerations
+- Payload/loader architecture for staged execution
+- Toolchain/build specifics for CET-compatible binaries (llvm-mingw)
+
+Use Cases:
+- Building CET-compatible shellcode execution flows without classic call stack spoofing
+- Researching alternative evasive execution patterns that reduce suspicious stack artifacts
+- Generating PoC payloads for call stack inspection and EDR telemetry comparison
+- Integrating a CET-aware payload workflow into Cobalt Strike for testing
+
+Keywords:
+CET, Shadow Stack, call stack spoofing, stack walking, Windows API, shellcode, loader, artifact, proxy calls, usermode evasion, EDR telemetry, llvm-mingw, MinGW, LoadLibraryA, Sleep, Cobalt Strike, Aggressor Script, PoC, Windows internals, clean call stack

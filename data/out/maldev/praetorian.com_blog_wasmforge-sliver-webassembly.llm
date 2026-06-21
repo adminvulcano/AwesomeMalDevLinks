@@ -1,0 +1,32 @@
+Title:
+Enter the WasmForge: Compiling Sliver into WebAssembly
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post introduces “WasmForge,” a build-wrapper/loader pipeline that compiles unmodified Go offensive tools (e.g., Sliver, Chisel) into WebAssembly and then runs them inside a custom Wazero-based host binary for Windows and macOS.  
+- It targets the problem of heavy static signature coverage on well-known red team tools by changing the binary’s observable structure without requiring source-code forks or rewrites.  
+- The approach patches Go’s stdlib for the `wasip1` target and inserts `//go:wasmimport` shims so common APIs (net/http, os/exec, pipes, etc.) transparently delegate to host-implemented functions.  
+- The host runtime provides ~80 shimmed functions spanning sockets, OS helpers, Win32 API access (LoadLibrary/GetProcAddress/SyscallN/registry/process creation), and macOS framework loading/calling.  
+- It details a key engineering challenge: translating WASM linear-memory “pointers” into valid host pointers, using heuristics plus Win32 metadata-derived per-API pointer masks, plus special handling for COM/vtables and mirrored pointers.  
+- For evasion, it describes per-build runtime/payload polymorphism (randomized opcode tables, section IDs, and magic bytes), “ghost” gopclntab symbol-table splicing, and randomized imports/PE metadata/signing identity to reduce static/ML detections.  
+- Useful primarily for red teams/offensive tool developers who need repeatable, cross-platform repackaging of commodity tooling for hardened endpoints, and for defenders as a case study in emerging WASM-based loader tradecraft.
+
+Technical Focus:
+- Go → WASI (`wasip1`) compilation with patched stdlib and `//go:wasmimport` shims  
+- Embedded WASM execution via a forked Wazero runtime (opcode/format randomization)  
+- Host-function bridging for sockets, Win32 APIs, and macOS frameworks  
+- WASM linear-memory pointer translation, shadow/mirror memory, COM/vtable handling  
+- Win32 API pointer semantics via win32metadata/win32json-generated argument masks  
+- Static-evasion knobs: gopclntab “ghost profiles,” PE import/metadata randomization, Authenticode signing variation
+
+Use Cases:
+- Repackaging Sliver/Chisel/Mythic-style implants into less-signatured Windows/macOS droppers without modifying tool source
+- Running Go tooling through a WASM-hosted loader to evade static YARA/ML rules tied to Go PE artifacts (e.g., gopclntab patterns)
+- Cross-platform loader development where the payload is portable WASM and only shims differ per OS
+- Researching/detecting WASM-in-native-container tradecraft (nonstandard WASM headers, runtime opcode-table randomization)
+- Building a measurement-driven evasion pipeline using VT/EDR feedback to tune binary “appearance” (imports, symbols, metadata)
+
+Keywords:
+WasmForge, WebAssembly, WASI Preview 1, wasip1, Go compiler, patched GOROOT, gopclntab, Wazero, host functions, wasmimport, linear memory, pointer translation, Win32 API, syscalln, LoadLibrary, GetProcAddress, COM vtable, win32metadata, win32json, PE sections, Authenticode signing, opcode table randomization, Sliver, Chisel, execute-assembly, BOF, goffloader, EDR evasion, YARA signatures

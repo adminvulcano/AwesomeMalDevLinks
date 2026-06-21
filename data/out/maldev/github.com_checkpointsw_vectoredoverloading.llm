@@ -1,0 +1,30 @@
+Title:
+VectoredOverloading (Vectored Overloading PE Injection Technique)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository provides a C++ proof-of-concept for “Vectored Overloading,” a local PE injection technique observed in the KidKadi malware.  
+- It abuses the Windows loader by intercepting key native loader syscalls with Hardware Breakpoints (HWBP) and Vectored Exception Handling (VEH), then emulating those syscalls while swapping output parameters.  
+- The technique creates a `SEC_IMAGE` section from a legitimate DLL, overlays a malicious PE onto that image, and manipulates PE headers (e.g., entrypoint set to 0 and forcing the DLL characteristic) to fit the loader’s expectations.  
+- By hooking `NtOpenSection` and `NtMapViewOfSection` via HWBP-triggered VEH, it replaces the section/mapping objects so the loader ends up mapping and fixing up the malicious image.  
+- The Windows loader then performs import resolution and image processing “legitimately,” culminating in execution of the payload entrypoint.  
+- Useful for red teams, malware developers, and defenders researching loader abuse, syscall emulation, and stealthy in-process PE loading patterns.
+
+Technical Focus:
+- Vectored Exception Handling (VEH) for control-flow interception
+- Hardware breakpoints (debug registers) as a trigger mechanism
+- Native API/NT syscalls: `NtOpenSection`, `NtMapViewOfSection`
+- `SEC_IMAGE` section mapping and section object swapping
+- PE header manipulation (Characteristics/DLL flag, entrypoint changes)
+- Windows loader behavior (mapping, imports, image initialization)
+
+Use Cases:
+- Implementing/understanding loader-assisted in-process PE injection
+- Researching malware tradecraft that avoids classic remote injection primitives
+- Building detections around anomalous VEH/HWBP usage and syscall emulation
+- Reproducing KidKadi-like execution flow for threat emulation and analysis
+
+Keywords:
+Vectored Overloading, KidKadi, PE injection, local injection, Windows loader, VEH, Vectored Exception Handler, HWBP, hardware breakpoints, debug registers, NtOpenSection, NtMapViewOfSection, syscall emulation, SEC_IMAGE, section object, MapViewOfSection, DLL characteristics, entrypoint, native API, C++ PoC

@@ -1,0 +1,31 @@
+Title:
+Modules and Monoliths
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post responds to memN0ps’ write-up on building a monolithic user-defined reflective loader (UDRL) in Rust and the implied tradeoffs versus modular loader frameworks like Crystal Palace and Crystal Kit.  
+- The author argues for “componentization” of post-exploitation tradecraft: separating loader/evasion primitives into swappable modules rather than bundling everything into a bespoke monolith.  
+- It frames Tradecraft Garden’s goal as defining clean dividing lines between capabilities and tradecraft components so researchers can study, replace, and publish improvements to individual primitives (e.g., module resolution, API invocation, callstack/telemetry evasion).  
+- The post highlights ecosystem synergy where independent research (e.g., LibTP threadpool-based NTAPI proxying, call-gadget approaches to evade callstack signatures) can be dropped into shared libraries/modules without requiring a full C2 “weaponization” context.  
+- It emphasizes research value over turnkey “beat EDR X” outcomes, advocating de-escalated releases and demonstrations grounded in system properties/events rather than product-specific bypasses.  
+- Useful for red team tradecraft developers and defenders who want clearer, testable primitives and more reproducible research artifacts.
+
+Technical Focus:
+- Modular vs monolithic loader architecture (UDRL design tradeoffs)
+- Componentized post-exploitation tradecraft (swap-in primitives/shared libraries)
+- PEB walking and alternative module lookup/resolution techniques
+- NTAPI call proxying via Windows Threadpool (LibTP pattern)
+- Callstack signature evasion via call gadgets / stack manipulation
+- Research release strategy: de-escalated release, non-weaponized demonstrations
+
+Use Cases:
+- Building/maintaining modular Windows loaders where evasion primitives can be swapped independently
+- Rapidly testing new module resolution, syscall/NTAPI invocation, or telemetry-evasion techniques in isolation
+- Creating reproducible research artifacts that can be evaluated without coupling to a specific C2
+- Developing defensive detections by analyzing discrete primitives (threadpool abuse, callstack anomalies, PEB-walk patterns)
+- Teaching/learning loader tradecraft via a modular foundation (e.g., Crystal Kit as a lab base)
+
+Keywords:
+Tradecraft Garden, Crystal Palace, Crystal Kit, LibTCG, UDRL, reflective loader, modular architecture, monolithic loader, Rust nightly, PEB walk, module resolution, NTAPI, Windows Threadpool, LibTP, ETW/ETWTI, callstack signatures, call gadgets, post-exploitation tradecraft, Cobalt Strike, Mythic Xenon

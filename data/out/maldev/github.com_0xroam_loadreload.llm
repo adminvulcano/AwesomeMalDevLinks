@@ -1,0 +1,26 @@
+Title:
+LoadReload
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+LoadReload is a Windows shellcode loader created for a master’s thesis, intended to run Sliver-generated shellcode (notably large payloads). It focuses on evasion and operational stability by decrypting an embedded/loaded payload (multibyte XOR) and resolving APIs dynamically via hashing to reduce static indicators. The project includes anti-emulation timing tricks (BusySleep using KUSER_SHARED_DATA) and a RW→RX memory permission loop aimed at “deconditioning” EDR/memory scanners by wasting scanning resources. It also preloads network-related DLLs to avoid behavioral detections tied to late/odd module loads and supports “module overloading” using an operator-chosen decoy DLL (e.g., edgehtml.dll). Shellcode execution is performed via LdrCallEnclave, an uncommon execution path compared to typical CreateThread/QueueUserAPC patterns. Useful primarily for red teamers, malware researchers, and defenders studying modern loader tradecraft and detection opportunities around memory protection churn, module load patterns, and unusual execution APIs.
+
+Technical Focus:
+- Shellcode loading/execution on Windows (LdrCallEnclave)
+- API hashing and dynamic API resolution (IAT obfuscation)
+- Payload encryption/decryption (multibyte XOR)
+- Anti-emulation / timing checks (KUSER_SHARED_DATA-based sleep)
+- Memory protection manipulation (RW→RX loops)
+- DLL/module load strategy (preloading, decoy module overloading)
+
+Use Cases:
+- Researching and benchmarking EDR behavioral detections against custom loaders
+- Building/understanding Sliver shellcode execution chains in Windows userland
+- Developing detections for suspicious memory-protection churn and atypical execution APIs
+- Studying anti-emulation timing techniques leveraging shared user/kernel data
+- Testing module-load heuristics (network DLL preloading, decoy/stomp/overload patterns)
+
+Keywords:
+LoadReload, shellcode loader, Sliver, Windows, C++, multibyte XOR, API hashing, dynamic API resolution, IAT obfuscation, KUSER_SHARED_DATA, anti-emulation, BusySleep, RW-RX loop, VirtualProtect, memory scanners, EDR evasion, DLL preloading, edgehtml.dll, module overloading, LdrCallEnclave

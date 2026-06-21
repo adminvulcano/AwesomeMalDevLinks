@@ -1,0 +1,30 @@
+Title:
+lolol.farm — “Living Off the Land” ecosystem index/search
+
+Type:
+Other (Directory / Link hub)
+
+Short Summary (4–8 sentences max):
+- lolol.farm is a searchable directory that aggregates “Living Off the Land” style projects and adjacent references across Windows, Linux, macOS, cloud, AD, CI/CD, and hardware.  
+- It solves the discovery problem by centralizing many specialized catalogs (e.g., LOLBAS, GTFOBins, LOLDrivers, HijackLibs, LOLC2, LOLEXFIL) into one place with tags and platform filters.  
+- The linked resources cover abuse of legitimate binaries, drivers, APIs, SaaS, webhooks, tunnels, and trusted infrastructure for execution, persistence, C2, phishing, and exfiltration, often mapped to MITRE ATT&CK.  
+- It’s useful for red teams/pentesters to quickly find native/legitimate tradecraft options, and for blue teams/detection engineers to identify common abuse patterns and build detections/allowlisting strategies.  
+- It’s interesting because it highlights how modern intrusions increasingly rely on “legitimate” components (signed drivers, built-in tools, popular domains/services) that are harder to block outright.
+
+Technical Focus:
+- Living-off-the-land binaries/scripts (LOLBins/GTFOBins/LOOBins/LOLESXi)
+- Signed driver abuse / BYOVD (LOLDrivers)
+- DLL search order abuse and DLL hijacking candidates (HijackLibs)
+- Legitimate-service C2 and exfiltration channels (LOLC2, LOT Webhooks, LOT Tunnels, LOLEXFIL, LOLFSaaS)
+- Active Directory native tradecraft (LOLAD, WADComs)
+- Detection engineering and false positives (LoFP), ATT&CK mapping
+
+Use Cases:
+- Rapidly enumerate LOL techniques for a given OS/platform during an engagement
+- Build detection content around common LOLBin/driver/API abuse patterns
+- Identify plausible C2/exfil channels using legitimate SaaS, webhooks, or tunnels
+- Research DLL hijack opportunities and defensive hardening targets
+- Threat intel enrichment: map observed tooling/behavior to known catalogs
+
+Keywords:
+LOLBAS, GTFOBins, LOLDrivers, HijackLibs, LOLC2, LOLEXFIL, LOLAD, LOOBins, LOLESXi, BYOVD, DLL hijacking, Windows APIs, persistence, C2, exfiltration, webhooks, tunnels, RMM abuse, CI/CD workflow injection, MITRE ATT&CK

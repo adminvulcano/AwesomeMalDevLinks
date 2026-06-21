@@ -1,0 +1,27 @@
+Title:
+StackSentry
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+StackSentry is a Windows x64 user-mode memory triage and loader-analysis tool focused on attributing “sensitive” DLL loads and network API usage to their real in-memory origin, even when call stacks are spoofed or laundered. It launches a target process, injects a lightweight monitor DLL, hooks loader/network-relevant paths, and correlates events with stack state, memory mappings, and integrity signals to answer who actually triggered a DLL load or network call. The project targets modern evasion patterns such as callback/proxy/gadget-based LoadLibrary flows, threadpool chains, APC/VEH dispatch, execution from unbacked private memory, and modified image-backed code caves. It also includes research modes for unwind-metadata tampering (BYOUD) and optional CET shadow-stack comparison, plus an opt-in Moneta/PE-sieve-inspired memory audit and optional ETW timeline capture. Output is geared for lab analysis: JSONL event streams, summaries, memory/module dumps, modified-byte maps, and origin-region captures. Useful for malware analysts, threat hunters, and red teamers validating loader tradecraft and defensive hypotheses without requiring a kernel driver.
+
+Technical Focus:
+- User-mode instrumentation via injected monitor DLL and API hooking
+- Call stack analysis, callsite validation, and stack spoofing detection
+- Memory classification (MEM_PRIVATE/MEM_MAPPED/MEM_IMAGE) and “unbacked” execution detection
+- Modified image detection (BackedModified), module integrity and LDR entrypoint hijack checks
+- Unwind metadata integrity/BYOUD detection (.pdata/.xdata/RUNTIME_FUNCTION, dynamic unwind)
+- Network API use attribution (Winsock/WinINet/WinHTTP/DNS) and correlation to origin
+
+Use Cases:
+- Triage suspicious loaders/fileless implants by attributing network-module loads to hidden origins
+- Validate and reproduce call stack spoofing techniques (e.g., SilentMoonwalk, gadget/proxy chains)
+- Detect module stomping/code caves and preserve modified-byte diff maps for reverse engineering
+- Hunt for unwind-metadata spoofing (BYOUD) and correlate temporal divergence to sensitive loads
+- Attribute real network activity (connect/send/WinHTTP/WinINet/DNS) to private/modified code regions
+- Follow lab samples that pivot into child/remote processes and collect per-PID artifacts
+
+Keywords:
+Windows x64, user-mode hooking, DLL injection, LoadLibrary, LdrLoadDll, call stack spoofing, callsite validation, MEM_PRIVATE, MEM_IMAGE, module stomping, code cave, PE integrity, PEB LDR_DATA_TABLE_ENTRY, entrypoint hijacking, unwind metadata, RUNTIME_FUNCTION, BYOUD, CET shadow stack, ETW krabsetw, Winsock ws2_32, WinINet, WinHTTP, dnsapi, APC, VEH, threadpool callbacks, memory forensics, Moneta, PE-sieve

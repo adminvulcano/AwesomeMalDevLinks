@@ -1,0 +1,26 @@
+Title:
+Daedalus — Autonomous Claude Code Agent Framework (cron + persistent state)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+Daedalus is a framework that runs Anthropic’s Claude Code non-interactively on a schedule (cron) to act as a long-running autonomous coding/ops agent. It solves the “stateless session” problem by persisting context and progress in a set of markdown state files (checkpoint, tasks, worklog, questions, lessons-learned) that are resumed each run. The core technique is checkpoint-based session handoff (“save game”) combined with file-based task management and a fixed multi-step autonomous workflow prompt. It includes PID management and stale-session detection to prevent overlapping/zombie runs, plus optional Pushover notifications for human-in-the-loop Q&A. Useful for engineers, red team toolsmiths, and security researchers who want an autonomous agent to continuously iterate on a repo, run tests, and manage a backlog with minimal supervision. Interesting because it operationalizes LLM autonomy with simple, auditable primitives (files + git) rather than a database or complex orchestration stack.
+
+Technical Focus:
+- Cron-driven autonomous agent execution (Claude Code `-p` non-interactive mode)
+- Checkpointing / session handoff via persistent markdown state
+- File-based task lifecycle management (proposed → backlog → in progress → done → archive)
+- Human-in-the-loop workflow using questions.md + push notifications (Pushover)
+- PID locking, stale process detection, and log rotation
+- Git-friendly, auditable state and workflow prompts (CLAUDE.md, prompts/*.md)
+
+Use Cases:
+- Run an autonomous “daily” coding agent to implement tasks, refactor, and run tests on a repo
+- Maintain a persistent research/worklog and lessons-learned knowledge base across sessions
+- Continuous code review or maintenance runs using custom prompt files (e.g., review.md)
+- Human escalation workflow for decisions/blocked steps via push notifications
+- Safe unattended operation with stale-session killing and log retention controls
+
+Keywords:
+Claude Code, autonomous agent, cron, checkpointing, session handoff, persistent memory, markdown state, tasks.md, worklog.md, questions.md, lessons-learned.md, PID management, stale process detection, Pushover, non-interactive LLM, prompts, run-daily.sh, git workflow, log rotation, human-in-the-loop

@@ -1,0 +1,24 @@
+Title:
+Queue Early Bird Injection
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains Windows user-mode Asynchronous Procedure Calls (APCs) and how they can be abused for “Early Bird” process injection. It contrasts regular APC injection (unreliable because the target thread must enter an alertable wait) with Early Bird, which creates a process suspended and queues an APC to its main thread before any user code executes. The technique uses `CreateProcess(CREATE_SUSPENDED)`, `VirtualAllocEx`, `WriteProcessMemory`, `QueueUserAPC`, and `ResumeThread` so the queued APC is delivered immediately on resume (via `NtTestAlert`/`KiUserApcDispatcher`) before the process entry point runs. The author discusses basic OPSEC improvements like RW→RX protection flips and XOR-encrypted shellcode to reduce static/heuristic detections. It includes WinDbg walkthroughs showing the thread at `RtlUserThreadStart`, breaking on `ntdll!KiUserApcDispatcher`, and interpreting the call stack through `LdrInitializeThunk`. Useful primarily for red teamers, pentesters, and malware developers learning Windows injection internals; also relevant to defenders for understanding behavioral detection points.
+
+Technical Focus:
+- User-mode APC mechanics and delivery (`KTHREAD`, `KAPC`, APC queues)
+- Early Bird APC injection workflow (suspended process + queued APC)
+- Windows injection primitives (`VirtualAllocEx`, `WriteProcessMemory`, `VirtualProtectEx`)
+- Loader/initialization path (`LdrInitializeThunk`, `NtTestAlert`, `KiUserApcDispatcher`)
+- Basic evasion tradeoffs (RWX vs RW→RX, shellcode XOR)
+
+Use Cases:
+- Execute shellcode inside a newly spawned “legitimate” process before its entry point runs
+- Build and test process-injection PoCs for training/lab environments
+- Debug and validate APC delivery timing with WinDbg breakpoints
+- Develop detections around suspicious API sequences and memory-protection transitions
+
+Keywords:
+APC injection, Early Bird, QueueUserAPC, CreateProcessA, CREATE_SUSPENDED, ResumeThread, VirtualAllocEx, WriteProcessMemory, VirtualProtectEx, PAGE_EXECUTE_READWRITE, RWX, RW-to-RX, KTHREAD, KAPC, ApcListHead, NtTestAlert, KiUserApcDispatcher, LdrInitializeThunk, RtlUserThreadStart, WinDbg, process injection, shellcode, XOR encryption, Windows internals, EDR evasion, Defender detection

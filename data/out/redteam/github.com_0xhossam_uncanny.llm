@@ -1,0 +1,30 @@
+Title:
+UnCanny Coerce (UNCanny) — Windows Store InstallService plugin resolution NTLM coercion + LPE experiment
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repo documents a coercion primitive in the Windows Store Install Service (`InstallService.exe` / `InstallService.dll`) where a low-priv user can influence plugin resolution so the SYSTEM service attempts `LoadLibraryW` from a UNC path.  
+- By registering an AppX package “in place” from a UNC share (loose-file registration), the package’s `InstalledLocation.Path` becomes the UNC, and `FulfillmentPluginId` can be set to that package family name to trigger outbound SMB authentication as the machine account (NTLM coercion).  
+- The same path can become an LPE vector if `InstallServicePlugin.dll` is actually present and loadable from the UNC share, resulting in DLL load/execution in a SYSTEM process (with practical caveats).  
+- The write-up focuses on reversing the InstallService work creation flow (`CreateInstallServiceWork`) and the plugin activation logic (`PluginHelpers::ActivatePlugin`) rather than generic coercion.  
+- It’s mainly useful for red teamers/pentesters researching new coercion surfaces and defenders building detections around unusual AppX registration + InstallService activity.  
+- A key limitation is that Developer Mode must be enabled to allow UNC loose-file AppX registration, making it less reliable for real-world ops.
+
+Technical Focus:
+- Windows Store InstallService internals (`InstallService.dll`, `InstallService.exe`)
+- WinRT/COM activation path and plugin resolution (`FulfillmentPluginId`, `FindPackagesForUser`)
+- UNC path influence leading to `LoadLibraryW` and outbound SMB/NTLM authentication
+- AppX loose-file registration (`Add-AppxPackage -Register`) and Developer Mode gating
+- Machine-account NTLM coercion over SMB
+- Practical PoC tooling (PowerShell + Impacket/Samba behavior differences)
+
+Use Cases:
+- Coerce machine-account NTLM authentication to an attacker-controlled SMB server for relay/capture scenarios
+- Explore/validate a potential SYSTEM DLL-load path via InstallService plugin loading (LPE research)
+- Build detections for suspicious AppX loose registration from UNC paths and subsequent InstallService work creation
+- Reproduce and study InstallService plugin activation behavior for further attack surface research
+
+Keywords:
+Windows Store, InstallService.exe, InstallService.dll, Windows.Internal.InstallService.Control.InstallServiceControl, CreateInstallServiceWork, PluginHelpers::ActivatePlugin, FulfillmentPluginId, FindPackagesForUser, InstalledLocation, LoadLibraryW, UNC path, SMB, NTLM coercion, machine account, AppX, Add-AppxPackage -Register, Developer Mode, Impacket smbserver, Samba, LPE

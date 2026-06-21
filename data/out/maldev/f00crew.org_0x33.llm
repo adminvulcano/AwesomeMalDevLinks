@@ -1,0 +1,27 @@
+Title:
+0x33 – Full Windows Offense Pipeline: PEB Walking to Kernel Rootkit (DKOM + Callback Abuse)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is a code-heavy walkthrough that starts from a simple WinAPI call (MessageBoxA) and builds up a full offensive chain through user-mode evasion and injection techniques into kernel-mode rootkit capabilities. It covers dynamic API resolution (including manual PEB walking and PE export parsing) to avoid static imports and reduce visibility to analysis/hooking. It then demonstrates multiple injection primitives: IAT hooking, process hollowing, classic remote-thread DLL/shellcode injection, ntdll/NTAPI-based injection, and Early Bird APC injection with encrypted payloads (XOR/AES via CryptoAPI). The latter sections move into driver development basics (DriverEntry, IRPs, device objects/symlinks) and rootkit techniques including kernel image-load callbacks for injection, DKOM process/driver hiding, and token stealing for privilege escalation. It also discusses practical constraints like version-dependent EPROCESS offsets and PatchGuard/KPP detection risk. Useful primarily for red teamers, malware developers, and defenders wanting concrete examples of how these primitives chain together.
+
+Technical Focus:
+- Manual API resolution via PEB walking and PE export table parsing
+- Import Address Table (IAT) hooking
+- Process hollowing (CREATE_SUSPENDED, WriteProcessMemory, SetThreadContext/ResumeThread)
+- Remote injection variants (CreateRemoteThread, NtCreateThreadEx, QueueUserAPC / Early Bird)
+- Payload/string obfuscation and runtime decryption (XOR, AES-256 via CryptoAPI)
+- Kernel driver/rootkit primitives (PsSetLoadImageNotifyRoutine, DKOM, ObRegisterCallbacks, token stealing)
+
+Use Cases:
+- Build loaders that avoid static imports and common user-mode hooks
+- Implement and compare process injection techniques (thread creation vs APC-based)
+- Prototype process hollowing for masquerading under legitimate binaries
+- Develop a basic Windows kernel driver with user-mode control via IOCTL
+- Experiment with kernel-mode persistence/stealth (DKOM unlinking, module hiding)
+- Create detections/hunts for PEB-walking, APC injection, image-load callbacks, and DKOM artifacts
+
+Keywords:
+Windows internals, PEB, TEB, __readfsdword, GS:[0x60], PE export parsing, GetProcAddress evasion, dynamic API resolution, IAT hooking, IMAGE_IMPORT_DESCRIPTOR, process hollowing, CREATE_SUSPENDED, SetThreadContext, WriteProcessMemory, VirtualAllocEx, CreateRemoteThread, NtAllocateVirtualMemory, NtWriteVirtualMemory, NtCreateThreadEx, QueueUserAPC, Early Bird injection, CryptoAPI, CryptAcquireContextW, CryptDeriveKey, AES-256, kernel driver, DriverEntry, IRP, IoCreateDevice, DeviceIoControl, PsSetLoadImageNotifyRoutine, KeInitializeApc, DKOM, EPROCESS, ActiveProcessLinks, PatchGuard, ObRegisterCallbacks, token stealing, PsInitialSystemProcess

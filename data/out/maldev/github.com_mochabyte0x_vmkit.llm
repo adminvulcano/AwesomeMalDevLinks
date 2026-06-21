@@ -1,0 +1,31 @@
+Title:
+vmkit — Header-only C++20 IR-bytecode VM loader template
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- vmkit is a freestanding-friendly, header-only C++20 template for building small IR/bytecode virtual machines used as shellcode loaders.  
+- It solves the repetitive work of implementing dispatch/decode/decrypt plumbing by providing a compile-time generated 256-entry dispatch table and a `Handler<>` specialization model per opcode.  
+- The design emphasizes loader practicality (allocate/write/decrypt/protect/execute) over ISA fidelity, with optional obfuscation hooks: opcode randomization, bytecode XOR encryption-at-rest, and per-operation context encryption.  
+- An included example demonstrates a real Windows loader pipeline that embeds encrypted bytecode + payload, decrypts in place, changes memory protections, and transfers execution.  
+- It’s useful for red team operators, implant/loader developers, and malware researchers who want a reusable VM-based execution layer that can be hardened without changing the VM core.  
+- Interesting aspects include compile-time validation (concepts/static_assert) to prevent missing opcode handlers, and `if constexpr` feature gating to avoid leaving unused crypto/obfuscation code in the binary.
+
+Technical Focus:
+- Compile-time dispatch table generation (`constexpr std::array`, fold expressions)
+- Template specialization-based opcode handlers + concepts/static_assert validation
+- Opcode randomization via forward/reverse permutation maps
+- Bytecode decryption-at-rest (in-place) and per-op context encryption hooks
+- Freestanding C++20 loader constraints (no RTTI/exceptions/CRT)
+- Fixed-size IR op layout, alignment, and side-table operand referencing
+
+Use Cases:
+- Build custom VM-based Windows shellcode loaders with minimal boilerplate
+- Add per-build opcode shuffling to break static opcode-sequence signatures
+- Embed and decrypt encrypted bytecode/payload blobs at runtime
+- Implement anti-analysis or syscall/API-resolution logic inside opcode handlers
+- Rapidly prototype new loader pipelines by adding opcodes/handlers
+
+Keywords:
+C++20, freestanding, header-only, VM loader, bytecode interpreter, IR, dispatch table, constexpr, template specialization, concepts, static_assert, opcode randomization, XOR encryption, in-place decryption, context encryption, Windows shellcode loader, VirtualAlloc, VirtualProtect, execution transfer, API hashing (Jenkins OAAT)

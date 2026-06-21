@@ -1,0 +1,26 @@
+Title:
+PoisonX: Terminating Protected Windows Processes via BYOVD
+
+Type:
+Blog Post (with linked GitHub Tool)
+
+Short Summary (4–8 sentences max):
+PoisonX is a research tool demonstrating Bring Your Own Vulnerable Driver (BYOVD) to terminate arbitrary Windows processes, including Protected Process (PP) and Protected Process Light (PPL) targets such as EDR/AV services. It leverages a Microsoft-signed kernel driver that exposes a vulnerable IOCTL interface, allowing user-mode code to request kernel-level process termination via `DeviceIoControl`. The post outlines the driver’s properties (device GUID path, IOCTL `0x22E010`, Microsoft WHCP signature) and the user-mode controller workflow (privilege checks, driver extraction, SCM-based install/uninstall, PID enumeration with protection level detection, and kill primitive). It includes modular code structure and usage examples, including auto-deploying one of multiple embedded driver variants. The write-up is useful for red teams and security researchers validating endpoint resilience, and for defenders modeling detection/mitigation around driver loading and suspicious IOCTL usage. It’s interesting because it shows how trusted signed drivers can bypass Windows process protection boundaries and disable security tooling.
+
+Technical Focus:
+- BYOVD using Microsoft-signed vulnerable drivers
+- IOCTL abuse via `DeviceIoControl` to trigger kernel primitives
+- Terminating PP/PPL processes (EDR/AV tampering)
+- Kernel driver deployment via Service Control Manager (SCM)
+- Process enumeration with PP/PPL level and signer identification
+- Driver blocklists / monitoring kernel driver load events (defensive angle)
+
+Use Cases:
+- Disable or test resilience of EDR/AV services protected by PPL
+- Red-team tradecraft experimentation with BYOVD-based tampering
+- Defensive validation of driver blocklist effectiveness and telemetry coverage
+- Detection engineering for suspicious driver installs and IOCTL patterns
+- Lab research on Windows process protection boundaries and bypasses
+
+Keywords:
+PoisonX, BYOVD, vulnerable driver, Microsoft-signed driver, Windows Hardware Compatibility Publisher, kernel-mode driver, IOCTL, DeviceIoControl, SCM, Service Control Manager, PP, Protected Process, PPL, Protected Process Light, SeDebugPrivilege, EDR bypass, AV tampering, process termination, driver blocklist, Windows Code Integrity

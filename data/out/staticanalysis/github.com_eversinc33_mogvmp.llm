@@ -1,0 +1,26 @@
+Title:
+MogVMP — Static devirtualizer for VMProtect 3.0–3.5 (32-bit) using Remill/LLVM
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+MogVMP is a proof-of-concept static devirtualizer targeting 32-bit binaries protected with VMProtect 3.0–3.5. It lifts the x86 handler code to LLVM IR via Remill, then relies on LLVM optimization passes plus a custom aliasing-aware constant propagation/store-forwarding pass to eliminate junk code and the VM virtualization layer. CFG recovery is designed to be fully static (no opcode traces required): it incrementally lifts from VMENTER, and when the next handler address doesn’t constant-fold, it treats it as a branch and forks the lifting process. It operates on unpacked binaries and focuses only on VMProtect’s virtualization (not unpacking or full deobfuscation). Multi-VM functions (e.g., external API calls) require supplying additional VMENTER addresses via the CLI, and output is intended to be readable LLVM IR rather than a turnkey recompilation pipeline. Useful primarily for reverse engineers/malware analysts and researchers working on devirtualization and VMProtect internals.
+
+Technical Focus:
+- VMProtect 3.x virtualization devirtualization (x86 32-bit)
+- Remill-based instruction lifting to LLVM IR
+- LLVM optimization-driven removal of VM/junk layers
+- Static CFG recovery via incremental handler lifting and branch forking
+- Aliasing-aware constant propagation and store forwarding over allocas
+- VMENTER discovery (optional Intel PIN tracer)
+
+Use Cases:
+- Recover higher-level semantics/IR from VMProtect-virtualized functions for analysis
+- Build and test static devirtualization workflows without dynamic opcode tracing
+- Generate readable LLVM IR to aid manual reversing and patching
+- Research/benchmark devirtualization techniques against VMProtect 3.0–3.5
+- Assist malware triage where VMProtect virtualization blocks static analysis
+
+Keywords:
+VMProtect, devirtualization, VMENTER, opcode handlers, x86 32-bit, PE, Remill, LLVM IR, lifting, CFG recovery, static analysis, constant propagation, store forwarding, alias analysis, junk code elimination, Intel PIN, tracer, virtualization layer, reverse engineering, obfuscation

@@ -1,0 +1,31 @@
+Title:
+OSINT Multi-Agent System (OSINT_AI_Agent)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- A learning-focused multi-agent OSINT reconnaissance framework built with LangGraph that orchestrates multiple specialized AI agents to investigate a target domain.  
+- It automates a passive recon workflow: subdomain enumeration (Subfinder), internet exposure enrichment (Shodan API), and web tech fingerprinting (WhatWeb), then produces an LLM-generated assessment report.  
+- The system uses a supervisor/coordinator agent implemented as a state machine to route phases and manage shared state across agents.  
+- Tool execution is isolated via Docker, with configurable timeouts, basic input sanitization, and optional checkpointing to resume long runs.  
+- Useful for red teamers/pentesters who want a reproducible OSINT pipeline, and for security engineers/researchers learning how to build agentic workflows around existing recon tooling.  
+- Interesting as a reference architecture for combining deterministic tools + LLM reasoning with structured outputs (Pydantic) and LangGraph state management.
+
+Technical Focus:
+- LangGraph multi-agent orchestration (supervisor/state machine)
+- Passive subdomain enumeration (Subfinder)
+- Shodan API enrichment (services, banners, CVE metadata)
+- Web technology fingerprinting (WhatWeb) and live host identification (httpx)
+- Dockerized tool execution and sandboxing
+- Structured state/output modeling (TypedDict, Pydantic) + checkpointing
+
+Use Cases:
+- Automate passive domain reconnaissance and consolidate findings into a single report
+- Enrich discovered assets with Shodan exposure/vulnerability context
+- Rapid tech-stack profiling of web endpoints for attack surface mapping
+- Build/extend custom agent nodes (e.g., WHOIS, GitHub dorking, CT log parsing) in a LangGraph workflow
+- Demonstrate safe tool-running patterns (Docker wrapper, timeouts) for agentic security automation
+
+Keywords:
+OSINT, LangGraph, LangChain, multi-agent, supervisor agent, state machine, DeepSeek API, LLM, Shodan API, Subfinder, WhatWeb, httpx, Docker, passive reconnaissance, subdomain enumeration, technology fingerprinting, CVE enrichment, Pydantic, checkpointing, CLI tool

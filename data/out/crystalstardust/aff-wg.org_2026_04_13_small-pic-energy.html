@@ -1,0 +1,366 @@
+# https://aff-wg.org/2026/04/13/small-pic-energy/
+
+<!DOCTYPE html><html lang="en" class="wf-loading wf-karla-n4-loading wf-karla-i4-loading wf-karla-n7-loading wf-karla-i7-loading">
+
+<body class="wp-singular post-template-default single single-post postid-1743 single-format-standard wp-custom-logo wp-embed-responsive wp-theme-pubpenscratch-2 customizer-styles-applied no-sidebar jetpack-reblog-enabled categories-hidden tags-hidden author-hidden">
+<div id="page" class="hfeed site">
+	<a class="skip-link screen-reader-text" href="https://aff-wg.org/2026/04/13/small-pic-energy/#content">Skip to content</a>
+	<!-- #masthead -->
+
+	<div id="content" class="site-content">
+		
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+			
+<article id="post-1743" class="post-1743 post type-post status-publish format-standard has-post-thumbnail hentry category-culture category-research">
+	<!-- .entry-header -->
+
+	<div class="entry-content">
+		
+<p class="wp-block-paragraph">I have a challenge for you:</p>
+
+
+
+<p class="wp-block-paragraph">How much beaconing agent functionality can you fit into 4KB PIC? How do you do it? This isn’t a shellcode golf challenge. It’s about elegant ways to build common agent stuff in C. I was able to get a WinINet loop, a light command kernel, and a BOF runner in mine. To do this, I relied on BOF inversions (discussed in this post). I did fudge a bit and rely on GCC’s (<a href="https://aff-wg.org/2026/01/13/keeping-bin2bin-out-of-the-bin/">discouraged</a>) -Os to shrink some modules. I didn’t want to though! One caution: if you start on this problem, you might get obsessed, and stop doing other work. That’s what happened to me. You’re warned.</p>
+
+
+
+<p class="wp-block-paragraph">The above is a form of “small PIC” energy. And, with this <a href="https://tradecraftgarden.org/">Tradecraft Garden</a> and Crystal Palace release, I’m hoping to invite this energy into your projects.</p>
+
+
+
+<p class="wp-block-paragraph">The rest of this post is more thought exercise in nature. But, up front, here are the new features:</p>
+
+
+
+<ul class="wp-block-list">
+<li>It’s now OK to merge a <a href="https://tradecraftgarden.org/docs.html#lib">shared library</a> into a project multiple times. Crystal Palace will ignore follow-on merges.</li>
+
+
+
+<li>We now have a <a href="https://tradecraftgarden.org/simplebof.html">Simple BOF runner</a> in the Tradecraft Garden.</li>
+
+
+
+<li>And Crystal Palace is now accessible in a language agnostic way thanks to a new <a href="https://tradecraftgarden.org/sidecar.html">JSON-over-HTTP sidecar</a> service</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Modular PIC Agents, Redux</h3>
+
+
+
+<p class="wp-block-paragraph">I’m seeing <a href="https://tradecraftgarden.org/references.html">some experimentation</a> with Crystal Palace for both capability development (e.g., PIC C2 agents) and as a composition kernel in some projects too. If I were baking Crystal Palace into a C2, here’s what I would do:</p>
+
+
+
+<p class="wp-block-paragraph"><strong>(1) Separate the concerns</strong><br>I would separate the capability (e.g., a C2 agent) assembly and tradecraft combination as concerns</p>
+
+
+
+<p class="wp-block-paragraph"><strong>(2) Assemble the capability</strong><br>To assemble the capability, I would use a .spec file to merge COFFs, patch in configuration, and (possibly) dynamically merge user-selected features [or variant implementations] in the capability.</p>
+
+
+
+<p class="wp-block-paragraph">This capability .spec would:</p>
+
+
+
+<ul class="wp-block-list">
+<li>output a COFF (make coff)</li>
+
+
+
+<li>merge any libraries the capability depends on</li>
+</ul>
+
+
+
+<p class="wp-block-paragraph">This capability.spec would NOT:</p>
+
+
+
+<ul class="wp-block-list">
+<li>use +optimize, +mutate, ised, or other code transformation things</li>
+
+
+
+<li>use linkfunc (the bin2bin may error out re-processing PIC in (3))</li>
+
+
+
+<li>use dfr, fixbss, fixptrs, etc. — these are time-of-use tradecraft choices</li>
+</ul>
+
+
+
+<p class="wp-block-paragraph"><strong>(3) Pair Tradecraft with the Capability<br></strong>To pair tradecraft with a capability, let the user choose a tradecraft .spec file. The .spec accepts a COFF, decides how to turn it into PIC (e.g., apply a <a href="https://tradecraftgarden.org/simplepic.html">PIC services module</a> or pair it with a <a href="https://tradecraftgarden.org/simpleobj.html">PICO loader</a>), brings in any runtime tradecraft, and outputs shellcode. This is also where +optimize, +mutate, ised, and other stuff should happen.</p>
+
+
+
+<p class="wp-block-paragraph">Take the above as a thought exercise rather than a prescriptive. My thought is that this is a logical way to separate concerns, delegate tradecraft to a single .spec (which may orchestrate multiple components), and keep the integration and UX simple. </p>
+
+
+
+<h3 class="wp-block-heading">BOF Inversions</h3>
+
+
+
+<p class="wp-block-paragraph">One of the ideas I’m excited about is using Crystal Palace to apply tradecraft to <a href="https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_main.htm">Beacon Object Files</a> before they’re passed to a C2 agent. Daniel Duggan’s <a href="https://rastamouse.me/bof-cocktails/">BOF Cocktails</a> shares the details.</p>
+
+
+
+<p class="wp-block-paragraph">I love this, because it feeds the use-case agnostic capability and tradecraft separation this project is after.</p>
+
+
+
+<p class="wp-block-paragraph">Pairing research tradecraft directly to BOFs skips C2 entirely for the development, test, and demonstration of that tradecraft. This opens up room for <a href="https://www.elastic.co/security-labs/detonating-beacons-to-illuminate-detection-gaps">detection science</a> that treats naked BOFs as a control and tradecraft-paired BOFs as variables. This separation frees research to thrive alongside but culturally separate from operations.</p>
+
+
+
+<p class="wp-block-paragraph"><a href="https://www.youtube.com/watch?v=26PedM_-zRo">C2 operators</a> benefit too, as it means their BOFs are self-protecting and not dependent on the agent or C2 to bring evasion. And, for C2 engineers—this delegates another piece of your problem set to the BOFs themselves.</p>
+
+
+
+<p class="wp-block-paragraph"><strong>The Chicken and Egg Problem<br></strong>This ideal has a chicken and egg problem though. It makes little sense to integrate Crystal Palace directly or create hooks to intercept and edit BOFs, if there’s no eco-system of BOF cocktails. And, there’s not much incentive to write BOF cocktails, if there’s nowhere to use them yet.</p>
+
+
+
+<p class="wp-block-paragraph"><strong>The Solution: BOF Inversions<br></strong>I have a value proposition for C2 engineers that opens up the door for BOF cocktails and makes it much easier to support BOFs with minimal weight. I call it BOF inversions, as in—we’re inverting the implementation responsibility for BOFs and their API from the agent and into the linker and the BOF itself.</p>
+
+
+
+<p class="wp-block-paragraph">Here’s the idea:</p>
+
+
+
+<ol class="wp-block-list">
+<li>A hypothetical C2 passes every BOF through a user-specified Crystal Palace .spec file</li>
+
+
+
+<li>The .spec file <a href="https://tradecraftgarden.org/simplebof.html?file=loader.spec">turns the BOF into a PICO</a> (via make object).</li>
+
+
+
+<li>The .spec file also <a href="https://tradecraftgarden.org/simplebof.html?file=bofprep.spec">merges</a> (most of) a <a href="https://tradecraftgarden.org/simplebof.html?file=bofapi.c">BOF API implementation</a> into the BOF.</li>
+
+
+
+<li>The agent receives the PICO and uses a <a href="https://tradecraftgarden.org/simplebof.html?file=loader.c">simple PICO runner</a> to execute it.</li>
+</ol>
+
+
+
+<p class="wp-block-paragraph">To support the above, the agent needs a PICO runner function and an implementation of any BOF APIs that must live in the agent. In Tradecraft Garden’s <a href="https://tradecraftgarden.org/simplebof.html">Simple BOF runner</a>, I just needed BeaconOutput and that was it.</p>
+
+
+
+<p class="wp-block-paragraph">The fun of this scheme is that the agent no longer has to implement the Beacon API. These functions live inside of the BOF itself. And, thanks to +optimize, any APIs that aren’t needed are removed before the PICO is shipped to the agent.</p>
+
+
+
+<p class="wp-block-paragraph">Now, let the user configure or edit the .spec responsible for turning BOFs into PICOs and you have a natural integration point for <a href="https://rastamouse.me/bof-cocktails/">BOF cocktails</a> too.</p>
+
+
+
+<h3 class="wp-block-heading">Linker Sidecar Service and API</h3>
+
+
+
+<p class="wp-block-paragraph">Using Crystal Palace as a capability composition kernel or implementing BOF inversions requires low latency time-of-use access to Crystal Palace. Prior to this release, that was only possible via the <a href="https://tradecraftgarden.org/docs.html#javaapi">Java API</a>. To open this project up to other language stacks, I’ve added a <a href="https://tradecraftgarden.org/sidecar.html">Linker Sidecar</a> server to Crystal Palace. The new linkserve command starts this process.</p>
+
+
+
+<p class="wp-block-paragraph">The Linker Sidecar is a localhost-only <a href="https://tradecraftgarden.org/sidecar.html">JSON-over-HTTP server</a> to use Crystal Palace.</p>
+
+
+
+<p class="wp-block-paragraph">The API follows the CLI’s concepts closely. The server accepts a JSON object with parameters and gives back a JSON object with base64 encoded output, yara rules, and messages from the linker. It’s a stateless one transaction POST request.</p>
+
+
+
+<p class="wp-block-paragraph">Here’s a <a href="https://tradecraftgarden.org/download/client.py.txt">Python script</a> to act like ./link:</p>
+
+
+<div class="wp-block-syntaxhighlighter-code "><div><div id="highlighter_281736" class="syntaxhighlighter nogutter  python"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="python keyword">import</code> <code class="python plain">sys</code></div><div class="line number2 index1 alt1"><code class="python keyword">import</code> <code class="python plain">base64</code></div><div class="line number3 index2 alt2"><code class="python keyword">import</code> <code class="python plain">requests</code></div><div class="line number4 index3 alt1"><code class="python keyword">from</code> <code class="python plain">pathlib </code><code class="python keyword">import</code> <code class="python plain">Path</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="python comments"># Handle our arguments</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="python keyword">if</code> <code class="python functions">len</code><code class="python plain">(sys.argv) !</code><code class="python keyword">=</code> <code class="python value">4</code><code class="python plain">:</code></div><div class="line number9 index8 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python functions">print</code><code class="python plain">(</code><code class="python string">"Usage: python client.py &lt;spec_file&gt; &lt;file.dll|.o&gt; &lt;output_file&gt;"</code><code class="python plain">)</code></div><div class="line number10 index9 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">sys.exit(</code><code class="python value">1</code><code class="python plain">)</code></div><div class="line number11 index10 alt2">&nbsp;</div><div class="line number12 index11 alt1"><code class="python plain">spec_file&nbsp; </code><code class="python keyword">=</code> <code class="python functions">str</code><code class="python plain">( Path(sys.argv[</code><code class="python value">1</code><code class="python plain">]).resolve() )</code></div><div class="line number13 index12 alt2"><code class="python plain">capab_file </code><code class="python keyword">=</code> <code class="python functions">str</code><code class="python plain">( Path(sys.argv[</code><code class="python value">2</code><code class="python plain">]).resolve() )</code></div><div class="line number14 index13 alt1"><code class="python plain">out_file&nbsp;&nbsp; </code><code class="python keyword">=</code> <code class="python plain">sys.argv[</code><code class="python value">3</code><code class="python plain">]</code></div><div class="line number15 index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code class="python plain">url </code><code class="python keyword">=</code> <code class="python string">"<a href="http://127.0.0.1:60060/link">http://127.0.0.1:60060/link</a>"</code></div><div class="line number17 index16 alt2">&nbsp;</div><div class="line number18 index17 alt1"><code class="python comments"># Populate our arguments</code></div><div class="line number19 index18 alt2">&nbsp;</div><div class="line number20 index19 alt1"><code class="python plain">linkargs </code><code class="python keyword">=</code> <code class="python plain">{</code></div><div class="line number21 index20 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python string">"action"</code><code class="python plain">: </code><code class="python string">"link"</code><code class="python plain">,</code></div><div class="line number22 index21 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python string">"params"</code><code class="python plain">: {</code></div><div class="line number23 index22 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python string">"spec"</code><code class="python plain">: spec_file,</code></div><div class="line number24 index23 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python string">"file"</code><code class="python plain">: capab_file</code></div><div class="line number25 index24 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">}</code></div><div class="line number26 index25 alt1"><code class="python plain">}</code></div><div class="line number27 index26 alt2">&nbsp;</div><div class="line number28 index27 alt1"><code class="python comments"># Make a request to the Sidecar</code></div><div class="line number29 index28 alt2">&nbsp;</div><div class="line number30 index29 alt1"><code class="python keyword">try</code><code class="python plain">:</code></div><div class="line number31 index30 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">response </code><code class="python keyword">=</code> <code class="python plain">requests.post(url, json</code><code class="python keyword">=</code><code class="python plain">linkargs)</code></div><div class="line number32 index31 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">response.raise_for_status()</code></div><div class="line number33 index32 alt2">&nbsp;</div><div class="line number34 index33 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">data </code><code class="python keyword">=</code> <code class="python plain">response.json()</code></div><div class="line number35 index34 alt2">&nbsp;</div><div class="line number36 index35 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python keyword">if</code> <code class="python plain">data.get(</code><code class="python string">"success"</code><code class="python plain">) </code><code class="python keyword">is</code> <code class="python color1">True</code><code class="python plain">:</code></div><div class="line number37 index36 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python functions">print</code><code class="python plain">(</code><code class="python string">"[*] Success"</code><code class="python plain">)</code></div><div class="line number38 index37 alt1">&nbsp;</div><div class="line number39 index38 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python keyword">if</code> <code class="python plain">data.get(</code><code class="python string">"message"</code><code class="python plain">) !</code><code class="python keyword">=</code> <code class="python plain">"":</code></div><div class="line number40 index39 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python functions">print</code><code class="python plain">(data.get(</code><code class="python string">"message"</code><code class="python plain">))</code></div><div class="line number41 index40 alt2">&nbsp;</div><div class="line number42 index41 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">raw_binary </code><code class="python keyword">=</code> <code class="python plain">base64.b64decode(data[</code><code class="python string">"output_b64"</code><code class="python plain">])</code></div><div class="line number43 index42 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">with </code><code class="python functions">open</code><code class="python plain">(out_file, </code><code class="python string">"wb"</code><code class="python plain">) as f:</code></div><div class="line number44 index43 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python plain">f.write(raw_binary)</code></div><div class="line number45 index44 alt2">&nbsp;</div><div class="line number46 index45 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python keyword">else</code><code class="python plain">:</code></div><div class="line number47 index46 alt2"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python functions">print</code><code class="python plain">(f</code><code class="python string">"[-] Failure {data.get('context')}:\n{data.get('message')}"</code><code class="python plain">)</code></div><div class="line number48 index47 alt1">&nbsp;</div><div class="line number49 index48 alt2"><code class="python keyword">except</code> <code class="python plain">requests.exceptions.RequestException as e:</code></div><div class="line number50 index49 alt1"><code class="python spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="python functions">print</code><code class="python plain">(f</code><code class="python string">"[-] HTTP Connection Error: {e}"</code><code class="python plain">)</code></div></div></td></tr></tbody></table></div></div></div>
+
+
+<p class="wp-block-paragraph">The <a href="https://tradecraftgarden.org/sidecar.html">Linker Sidecar documentation</a> has the API details and example JSON for you. I put special care into the error messages, to make sure you’re not pulling your hair out if there’s a bad or missing parameter. I’m looking forward to seeing what you do with this.</p>
+
+
+
+<h3 class="wp-block-heading">Migration Notes</h3>
+
+
+
+<p class="wp-block-paragraph">None</p>
+
+
+
+<h3 class="wp-block-heading">Closing Thoughts</h3>
+
+
+
+<p class="wp-block-paragraph">I want to close by sharing how our small PIC is a response to another “Small PIC energy”. These thoughts get to the heart of how I see code and individual behavior as our agency to influence culture.</p>
+
+
+
+<p class="wp-block-paragraph">One of the occupational hazards of offensive security is ego. When I say ego, I’m not referring to a “my work speaks for itself” pride. But, instead, a missing something that drives some in the field to disparage other efforts, play word games to erase others’ contributions, and in the worst cases—drive chat and private conference whisper campaigns to stigmatize peers until their very name is irresistible safe red meat.</p>
+
+
+
+<p class="wp-block-paragraph">All of these things come from a zero-sum approach to participation in the profession. That is, if anyone who threatens their self-image continues to exist or worse–gets acknowledgement, it’s a game they’ve somehow lost. Commercial product interests have made these tendencies much worse. These insecure and ego-driven behaviors are “Small PIC energy”.</p>
+
+
+
+<p class="wp-block-paragraph">This passive-aggressive cruelty can look like bold thought leadership because it’s loud and because community leaders and established peers pretend it’s something else. This looks like permission, but it’s discomfort and fear to act when their “friends” throw the punches. In these situations, tribal cliques form that mix uncomfortable participants, eager followers, partners who sell the tribe’s virtue,  and loud leaders that bully “others”. To outsiders, it looks like consensus. To the collective profession, this unchecked dynamic is contagious, divisive, and destructive.</p>
+
+
+
+<p class="wp-block-paragraph">There’s another way. I believe code can shape communities. The secret is to see the ready potential in others. Genuinely want their success. And, work to create space and opportunity for that success. This requires a belief that our success comes with theirs. In this playbook, the collective improvement of our peers and ourselves is <a href="https://www.cobaltstrike.com/blog/raphaels-transition">the product</a>. Not the technology. I <s>was</s> <a href="https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way">am</a> proud to see people <a href="https://aff-wg.org/2025/04/10/post-ex-weaponization-an-oral-history/">build</a> on things I put out there and grateful to learn from them as they do. I remain awed that our niche profession drove the industry’s <a href="https://aff-wg.org/2025/09/26/analysis-of-a-ransomware-breach/">real</a> <a href="https://aff-wg.org/2025/03/13/the-security-conversation/">technical conversation</a> in a way no one else could. Tradecraft Garden is an effort to revive this in a ‘now’ considered way. small PIC &gt; “Small PIC energy”.</p>
+
+
+
+<p class="wp-block-paragraph">To see what’s new, check out the <a href="https://tradecraftgarden.org/releasenotes.txt">release notes</a>.</p>
+			</div><!-- .entry-content -->
+
+	<!-- .entry-footer -->
+
+	</article><!-- #post-## -->
+
+			
+	
+			
+		
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+
+	</div><!-- #content -->
+
+	<!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+
+
+
+
+
+	
+
+		<div style="display:none">
+	</div>
+		<div id="actionbar" dir="ltr" class="actnbr-pub-penscratch-2 actnbr-has-follow actnbr-has-actions">
+		<ul>
+								<li class="actnbr-btn actnbr-hidden">
+								<a class="actnbr-action actnbr-actn-follow " href="https://aff-wg.org/2026/04/13/small-pic-energy/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://aff-wg.org/2026/04/13/small-pic-energy/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+							<div class="actnbr-popover tip tip-top-left actnbr-notice" id="follow-bubble">
+							<div class="tip-arrow"></div>
+							<div class="tip-inner actnbr-follow-bubble">
+															<ul>
+											<li class="actnbr-sitename">
+			<a href="https://aff-wg.org/">
+				<img loading="lazy" alt="" src="https://aff-wg.org/wp-content/uploads/2024/08/cropped-affwgsiteimage_nowreath.png?w=50" class="avatar avatar-50" height="50" width="50">				Adversary Fan Fiction Writers Guild			</a>
+		</li>
+										<div class="actnbr-message no-display"></div>
+									<form method="post" action="https://subscribe.wordpress.com/" accept-charset="utf-8" style="display: none;">
+																						<div class="actnbr-follow-count">Join 105 other subscribers</div>
+																					<div>
+										<input type="email" name="email" placeholder="Enter your email address" class="actnbr-email-field" aria-label="Enter your email address">
+										</div>
+										
+										
+										
+										
+																				<div class="actnbr-button-wrap">
+											<button type="submit" value="Sign me up">
+												Sign me up											</button>
+										</div>
+									</form>
+									<li class="actnbr-login-nudge">
+										<div>
+											Already have a WordPress.com account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Faff-wg.org%252F2026%252F04%252F13%252Fsmall-pic-energy%252F">Log in now.</a>										</div>
+									</li>
+								</ul>
+															</div>
+						</div>
+					</li>
+							<li class="actnbr-ellipsis actnbr-hidden">
+				<svg class="gridicon gridicons-ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M7 12c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm12-2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-7 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z"></path></g></svg>				<div class="actnbr-popover tip tip-top-left actnbr-more">
+					<div class="tip-arrow"></div>
+					<div class="tip-inner">
+						<ul>
+								<li class="actnbr-sitename">
+			<a href="https://aff-wg.org/">
+				<img loading="lazy" alt="" src="https://aff-wg.org/wp-content/uploads/2024/08/cropped-affwgsiteimage_nowreath.png?w=50" class="avatar avatar-50" height="50" width="50">				Adversary Fan Fiction Writers Guild			</a>
+		</li>
+								<li class="actnbr-folded-follow">
+										<a class="actnbr-action actnbr-actn-follow " href="https://aff-wg.org/2026/04/13/small-pic-energy/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://aff-wg.org/2026/04/13/small-pic-energy/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+								</li>
+														<li class="actnbr-signup"><a href="https://wordpress.com/start/">Sign up</a></li>
+							<li class="actnbr-login"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Faff-wg.org%252F2026%252F04%252F13%252Fsmall-pic-energy%252F">Log in</a></li>
+																<li class="actnbr-shortlink">
+										<a href="https://wp.me/pfXSCG-s7">
+											<span class="actnbr-shortlink__text">Copy shortlink</span>
+											<span class="actnbr-shortlink__icon"><svg class="gridicon gridicons-checkmark" height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M9 19.414l-6.707-6.707 1.414-1.414L9 16.586 20.293 5.293l1.414 1.414"></path></g></svg></span>
+										</a>
+									</li>
+																<li class="flb-report">
+									<a href="https://wordpress.com/abuse/?report_url=https://aff-wg.org/2026/04/13/small-pic-energy/" target="_blank" rel="noopener noreferrer">
+										Report this content									</a>
+								</li>
+															<li class="actnbr-reader">
+									<a href="https://wordpress.com/reader/blogs/235916366/posts/1743">
+										View post in Reader									</a>
+								</li>
+															<li class="actnbr-subs">
+									<a href="https://subscribe.wordpress.com/">Manage subscriptions</a>
+								</li>
+																<li class="actnbr-fold"><a href="https://aff-wg.org/2026/04/13/small-pic-energy/">Collapse this bar</a></li>
+														</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+
+
+	
+
+
+	
+
+
+
+
+
+
+
+
+ 
+
+
+		 	
+
+
+<div class="comment-likes-overlay" style="display: none;"></div></body></html>

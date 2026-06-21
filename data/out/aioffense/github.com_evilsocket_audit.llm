@@ -1,0 +1,32 @@
+Title:
+audit — 8-stage vulnerability-discovery agent (Claude Code Agent SDK)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository implements an automated, multi-agent vulnerability discovery pipeline inspired by Cloudflare’s Project Glasswing.  
+- It orchestrates 8 stages (Recon, Hunt, Validate, Gapfill, Dedupe, Trace, Feedback, Report) to reduce LLM “bug-finding noise” by enforcing narrow tasks, deliberate disagreement (cross-model validation), and a reachability gate that proves attacker-controlled input can hit a sink.  
+- The system uses markdown prompts plus JSON Schemas per stage to force shape-stable outputs, with a runner that validates and “repairs” non-compliant responses.  
+- It runs primarily via Claude Pro/Max subscription auth (Claude Code OAuth / `claude login`) but can be pointed at Anthropic-compatible gateways (e.g., OpenRouter) and other providers.  
+- It supports optional live-target reproduction (restricted egress to the target host) to confirm findings via real HTTP interactions and reject non-reproducible claims.  
+- Useful for red teams, pentesters, and security engineers who want a repeatable, stateful LLM-assisted code audit workflow with cost/concurrency controls and structured reporting.
+
+Technical Focus:
+- Multi-agent LLM vulnerability discovery pipeline (Glasswing-style)
+- Deliberate disagreement / adversarial validation across models
+- Reachability tracing (source-to-sink proof) as a gating step
+- Schema-constrained agent outputs (JSON Schema) + repair loop
+- Stateful orchestration with SQLite task/findings tracking and resumability
+- Live-target reproduction with constrained network egress
+
+Use Cases:
+- Automating first-pass vulnerability discovery across large codebases
+- Triage/validation of LLM findings to reduce false positives
+- Generating reachability-backed reports suitable for engineering handoff
+- Pattern-based “feedback loop” hunting (propagate confirmed bug patterns)
+- CI-style auditing using headless OAuth tokens and budget caps
+- Reproducing suspected issues against a running deployment (opt-in)
+
+Keywords:
+Claude Code, Agent SDK, Project Glasswing, LLM agents, vulnerability discovery, recon, reachability trace, source-to-sink, adversarial validation, deliberate disagreement, JSON Schema, prompt orchestration, SQLite state store, OpenRouter, Anthropic Messages API, OAuth token, live-target reproduction, PoC compilation, cost containment, concurrency control

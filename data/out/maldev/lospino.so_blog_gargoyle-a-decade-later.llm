@@ -1,0 +1,26 @@
+Title:
+Gargoyle, a decade later
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This retrospective revisits “Gargoyle,” a Windows proof-of-concept demonstrating that memory protection state is temporal: code can remain non-executable most of the time, briefly flip to executable to do work, then revert, defeating point-in-time “executable private pages” scans. The 2026 refresh reframes the work as a measurement/validation problem rather than “memory scanning evasion,” and adds clearer claim boundaries, documentation, and an acceptance harness. It expands beyond the original 32-bit x86 design with sibling demos for x64, ARM64, and ARM64EC, emphasizing architecture-specific semantics rather than pretending portability. A key technical correction is tightening the timer/APC model: APC completion requires an alertable wait (e.g., `SleepEx(..., TRUE)`), not merely observing a signaled timer handle. It’s useful for defenders and researchers building detection/forensics around protection transitions, timers/APCs, and state history, and for red teamers as a compact educational artifact (not an operational loader). The interesting contribution is the focus on “evidence language” and validation modes that distinguish what is directly observed vs inferred.
+
+Technical Focus:
+- Temporal memory state / protection cycling (RX↔RW/NX transitions)
+- Waitable timers, APC queuing, and alertable waits (`SetWaitableTimer`, `SleepEx`)
+- Windows memory APIs and page protection changes (`VirtualProtectEx`)
+- Architecture-specific execution/ABI constraints (x86, x64, ARM64, ARM64EC dynamic code)
+- Validation methodology: harness modes, artifact checks, runtime identity reporting
+- Defensive evidence surfaces: allocation/protection history, stacks, PTE/CFG residue, telemetry correlation
+
+Use Cases:
+- Build test corpora to evaluate memory scanners/EDR heuristics against short “execute windows”
+- Develop detections for suspicious protection transitions correlated with timers/APCs/alertable waits
+- Teach Windows internals concepts (APCs, waitable timers, page protections, calling conventions) with a small PoC
+- Validate cross-architecture assumptions (x64 vs ARM64 vs ARM64EC dynamic code rules) in lab/CI
+- Forensics research: compare snapshot-based memory views vs timeline/stateful evidence sources
+
+Keywords:
+Gargoyle, temporal memory state, memory scanning, page protection flipping, VirtualProtectEx, SetWaitableTimer, APC, Asynchronous Procedure Call, SleepEx, alertable wait, waitable timer, Windows internals, x86, x64, ARM64, ARM64EC, PIC, ROP, stack pivot, memory forensics, CFG bitmap, PTE, VAD, Volatility plugin, validation harness, Windows-on-Arm, ETW telemetry

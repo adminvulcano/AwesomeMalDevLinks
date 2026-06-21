@@ -23,3 +23,9 @@ https://tradecraftgarden.org/pagestream.html
 https://tradecraftgarden.org/stackcutting.html
 https://github.com/kapla0011/KaplaStrike
 https://lorenzomeacci.com/bypassing-edr-in-a-crystal-clear-way
+https://github.com/k1ng0fn0th1ng/reflectra
+https://aff-wg.org/2026/04/13/small-pic-energy/
+https://github.com/k1ng0fn0th1ng/CrystalForge
+https://github.com/licitrasimone/CrystalSliver
+https://aff-wg.org/2026/05/21/modules-and-monoliths/
+https://memn0ps.github.io/doublepulsar-a-user-defined-reflective-loader-in-the-crystal-palace-and-tradecraft-garden-era/

@@ -1,0 +1,31 @@
+Title:
+WinGet Desired State: Initial Access Established
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- The post describes an initial access technique that abuses Windows Package Manager (winget) “configure” (DSC-based) to execute attacker-controlled configuration steps, including PowerShell script execution, without typical Mark-of-the-Web/SmartScreen friction.  
+- It highlights that `.winget` files are associated with `winget.exe configure "%1" --wait`, enabling double-click execution and often bypassing common attachment blocklists.  
+- To reduce user interaction (avoiding the interactive “Y” prompt and noisy console output), it chains winget with a self-referencing LNK that extracts an appended YAML configuration from itself (via `more`), opens a decoy, enables winget configure features, and runs the configuration silently.  
+- The technique leverages legitimate DSC resources (Script/Archive/WindowsProcess), with execution occurring under `ConfigurationRemotingServer.exe`, and modules auto-downloaded from PowerShell Gallery into the user profile.  
+- It includes practical tradecraft notes for evasion (LNK size/command length constraints, aliasing `winget dsc`, minimizing spawned `powershell.exe`, avoiding common LNK YARA hits) and notes AMSI still applies because `System.Management.Automation` is used.  
+- Defensive guidance includes KQL hunting for winget configure usage, reviewing winget logs/config history, and hardening via Store/AppInstaller/winget configuration policy controls (or WDAC).
+
+Technical Focus:
+- WinGet configuration / Desired State Configuration (DSC) abuse (`winget configure`, `winget dsc`)
+- Self-referencing LNK payloads with appended data extraction (`more +N`)
+- Living-off-the-land execution chain (cmd.exe → winget → DSC resources → PowerShell/WindowsProcess)
+- EDR considerations (MDE sensitivity to LNK size/characteristics, YARA-based LNK detections)
+- Telemetry and hunting (MDE KQL, winget logs, `winget configure list`)
+- Hardening via MDM/Group Policy (EnableAppInstaller, EnableWindowsPackageManagerConfiguration, WDAC)
+
+Use Cases:
+- Phishing-based initial access in Windows environments where Microsoft Store/AppInstaller is enabled
+- Covert execution of configuration/persistence steps via DSC resources (registry/env/process/script)
+- Red team tradecraft for reducing prompts and disguising execution with decoy content
+- Blue team detection engineering for winget/DSC execution chains and LNK-based delivery
+- Security hardening assessments for Store/winget feature exposure and policy enforcement
+
+Keywords:
+winget, Windows Package Manager, AppInstaller, Desired State Configuration, DSC, PSDscResources, ConfigurationRemotingServer.exe, PowerShell Gallery, LNK, self-referencing shortcut, Mark of the Web, SmartScreen, AMSI, Microsoft Defender for Endpoint, KQL, WDAC, EnableAppInstaller, EnableWindowsPackageManagerConfiguration, cmd.exe, initial access, phishing, LOLBIN

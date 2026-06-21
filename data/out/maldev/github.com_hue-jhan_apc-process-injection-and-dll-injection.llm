@@ -1,0 +1,30 @@
+Title:
+Apc Process & DLL injection
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository contains Windows process injection samples that execute shellcode or load a DLL in a remote process using Asynchronous Procedure Calls (APC).  
+- It demonstrates three variants: a simple remote shellcode APC injector, a DLL payload that runs inside the host process (with loader-lock considerations), and a DLL injector that queues `LoadLibraryA` via APC.  
+- The code covers typical injection steps (process/thread discovery, remote memory allocation, writing payload/path, changing protections) and offers two APC queuing strategies: first-thread vs “shotgun” queuing to all threads.  
+- Payloads are stored encrypted and decrypted at runtime (with a referenced simple crypter), and the README discusses AV/EDR detection outcomes and basic obfuscation attempts (e.g., Resource Hacker).  
+- Useful for red teamers/pentesters and malware researchers studying APC-based execution and common detection points; also relevant for defenders building telemetry/detections around APC queuing and remote memory operations.
+
+Technical Focus:
+- APC injection via `QueueUserAPC` and thread enumeration
+- Remote process discovery with Toolhelp snapshots (`CreateToolhelp32Snapshot`, `Process32First/Next`, `Thread32First/Next`)
+- Remote memory operations (`VirtualAllocEx`, `WriteProcessMemory`, `VirtualProtectEx`)
+- DLL injection by queuing `LoadLibraryA` (kernel32 resolution)
+- Loader lock / deadlock avoidance in DLL entry (spawning a new thread)
+- Simple shellcode encryption/decryption staging
+
+Use Cases:
+- Build/modify a basic APC-based shellcode loader for lab testing
+- Demonstrate “shotgun APC” vs single-thread APC queuing behavior
+- Test defensive detections for APC queuing + RWX transitions in remote processes
+- Prototype DLL injection via APC-triggered `LoadLibraryA`
+- Study practical constraints (thread alertable state, DLLMain/loader-lock issues)
+
+Keywords:
+APC injection, QueueUserAPC, asynchronous procedure call, process injection, shellcode loader, DLL injection, LoadLibraryA, kernel32.dll, CreateToolhelp32Snapshot, Process32First, Thread32First, OpenProcess, VirtualAllocEx, WriteProcessMemory, VirtualProtectEx, remote thread enumeration, loader lock, DLLMain, resource extraction, AV detection, Bitdefender ATD, Windows Defender

@@ -1,0 +1,33 @@
+Title:
+Havoc Professional 0.7: K-Noir
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post announces Havoc Professional v0.7 “K-Noir” and summarizes major new offensive C2/implant capabilities.  
+- The release adds a new Linux implant supporting x86_64 and AArch64 with operator-focused features like SOCKS proxying, reverse port forwarding, ELF object execution via a BOF-like API, guardrails, and cross-platform P2P linking.  
+- On Windows, the callstack spoofing system is reworked with per-API/module “callstack rules” and updated to be compatible with Intel CET Shadow Stack, addressing modern anti-spoofing detections.  
+- It introduces a native Registry Manipulation extension (local/remote operations, timestomping/anti-forensics) and demonstrates bootkey extraction via a Python API.  
+- Developer/operator QoL improvements include an in-client Python debug server and better console visibility for UI-driven actions.  
+- The “Inject-Kit” expands modular injection by allowing custom explicit/spawn injection tasks and composable primitives (allocation/write/thread creation), plus new comms channels (direct + P2P TCP) and additional evasion features (e.g., EDR event handler blinding/unregistering).  
+- Useful primarily for red teams and pentesters building stealthier, more modular operations across Windows and Linux; also relevant to defenders tracking emerging tradecraft (CET-aware stack spoofing, injection modularity, registry anti-forensics).
+
+Technical Focus:
+- Linux implant development (x86_64/AArch64), tunneling, and ELF object execution (BOF-like)
+- Callstack/stack spoofing with rule-based per-API contexts
+- Intel CET Shadow Stack compatibility for spoofing/evasion
+- Modular process injection pipeline (allocation/write/thread creation primitives; BOF integration)
+- Windows Registry manipulation, remote registry access, and timestomping/anti-forensics
+- C2 communications: direct TCP and P2P TCP channels; sleep obfuscation integration
+
+Use Cases:
+- Deploying cross-platform implants (Windows + Linux) with consistent operator workflows
+- Building more believable API call telemetry via context-specific callstack spoofing rules
+- Operating on CET-enabled Windows targets while maintaining stack-spoofing-based evasion
+- Implementing/plugging in custom injection techniques for different target/EDR conditions
+- Performing remote registry operations with reduced forensic footprint (timestomp/rollback)
+- Establishing SOCKS/reverse port forwards and P2P links over new TCP channels
+
+Keywords:
+Havoc Professional, Kaine-kit, Linux implant, x86_64, AArch64, BOF API, ELF object execution, SOCKS5, reverse port forwarding, P2P C2, direct TCP channel, callstack spoofing, stack spoofing rules, Intel CET, Shadow Stack, Win32 API, NtCreateThreadEx, process injection, BeaconInjectProcess, Windows Registry, remote registry, timestomping, bootkey extraction, sleep obfuscation, EDR event handler blinding

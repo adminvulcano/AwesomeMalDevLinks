@@ -1,0 +1,1993 @@
+# https://0xv1n.github.io/LOLGlobs/
+
+<!DOCTYPE html><html lang="en">
+<body>
+  
+
+  <main class="site-main">
+    <div class="hero">
+  <div class="hero-inner">
+    <div class="hero-logo">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="12" fill="#161b22"></rect>
+        <text x="6" y="48" font-family="'JetBrains Mono', monospace" font-size="42" font-weight="700" fill="#3fb950">*</text>
+        <text x="32" y="48" font-family="'JetBrains Mono', monospace" font-size="42" font-weight="700" fill="#58a6ff">?</text>
+      </svg>
+    </div>
+    <h1 class="hero-title">LOLGlobs</h1>
+    <p class="hero-tagline">Process execution through wildcard pattern evasion</p>
+    <div class="hero-stats">
+      <span>4 platforms</span>
+      <span class="stat-sep">·</span>
+      <span>11 categories</span>
+    </div>
+  </div>
+</div>
+
+<div class="catalog-section">
+  <div class="sticky-filters">
+  <div class="search-wrap">
+    <div class="search-bar-row">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"></path>
+      </svg>
+      <input type="text" id="search-input" class="search-input" placeholder="Search commands, or type @linux, /download, T1059..." autocomplete="off" spellcheck="false">
+      <kbd class="search-shortcut">/</kbd>
+    </div>
+    <p class="search-hints">
+      <span class="hint"><code>@linux</code> <code>@macos</code> <code>@powershell</code> <code>@windows-cmd</code> — filter by platform</span>
+      <span class="hint-sep">·</span>
+      <span class="hint"><code>/discovery</code> <code>/download</code> <code>/execution</code> — filter by category</span>
+      <span class="hint-sep">·</span>
+      <span class="hint"><code>T1059</code> — search by MITRE ID</span>
+    </p>
+  </div>
+
+  <div class="filter-row">
+    <div class="platform-tabs" role="tablist" aria-label="Platform filter">
+      <button class="tab-btn active" data-platform="all" role="tab" aria-selected="true">All</button>
+      <button class="tab-btn platform-linux" data-platform="linux" role="tab" aria-selected="false">Linux</button>
+      <button class="tab-btn platform-macos" data-platform="macos" role="tab" aria-selected="false">macOS</button>
+      <button class="tab-btn platform-windows-cmd" data-platform="windows-cmd" role="tab" aria-selected="false">Windows CMD</button>
+      <button class="tab-btn platform-powershell" data-platform="powershell" role="tab" aria-selected="false">PowerShell</button>
+    </div>
+  </div>
+
+  <div class="category-chips" id="category-chips">
+    <button class="chip active" data-category="all">All Categories</button>
+    
+    <button class="chip" data-category="discovery">Discovery</button>
+    
+    <button class="chip" data-category="download">Download</button>
+    
+    <button class="chip" data-category="execution">Execution</button>
+    
+    <button class="chip" data-category="upload">Upload</button>
+    
+    <button class="chip" data-category="persistence">Persistence</button>
+    
+    <button class="chip" data-category="lateral-movement">Lateral Movement</button>
+    
+    <button class="chip" data-category="exfiltration">Exfiltration</button>
+    
+    <button class="chip" data-category="credential-access">Credential Access</button>
+    
+    <button class="chip" data-category="encode-decode">Encode/Decode</button>
+    
+    <button class="chip" data-category="compile">Compile</button>
+    
+    <button class="chip" data-category="reconnaissance">Reconnaissance</button>
+    
+  </div>
+
+  <div class="results-meta">
+    <span id="results-count" class="results-count">66 entries</span>
+  </div>
+  </div><!-- /.sticky-filters -->
+
+  <div class="table-wrap">
+    <table class="catalog-table" id="catalog-table">
+      <thead>
+        <tr>
+          <th class="col-name">Command</th>
+          <th class="col-desc">Description</th>
+          <th class="col-platform">Platform</th>
+          <th class="col-patterns">Wildcards</th>
+          <th class="col-category">Category</th>
+          <th class="col-mitre">MITRE</th>
+        </tr>
+      </thead>
+      <tbody id="catalog-tbody">
+        
+        
+        <tr class="entry-row" data-name="add-type" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="compile and load c# or other .net language code at runtime. enables direct windows api access and arbitrary .net code execution without touching disk.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/add-type/" class="entry-link">Add-Type</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Compile and load C# or other .NET language code at runtime. Enables direct Wi...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[c-e]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="copy-item" data-platform="powershell" data-category="exfiltration" data-mitre="T1048" data-desc="copy files and directories. used for staging payloads, copying sensitive data for exfiltration, or lateral file movement.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/copy-item/" class="entry-link">Copy-Item</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Copy files and directories. Used for staging payloads, copying sensitive data...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[n-p]</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">exfiltration</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1048/" target="_blank" class="mitre-link">T1048</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="get-content" data-platform="powershell" data-category="discovery" data-mitre="T1005" data-desc="read file contents. equivalent to cat on linux. used to read sensitive files, credentials, and configuration data.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/get-content/" class="entry-link">Get-Content</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Read file contents. Equivalent to cat on Linux. Used to read sensitive files,...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1005/" target="_blank" class="mitre-link">T1005</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="import-module" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="load powershell modules from disk, unc paths, or the module store. used to load malicious modules containing custom cmdlets or offensive toolkits.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/import-module/" class="entry-link">Import-Module</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Load PowerShell modules from disk, UNC paths, or the module store. Used to lo...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[l-n]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="invoke-command" data-platform="powershell" data-category="lateral-movement" data-mitre="T1021.006" data-desc="run commands on local or remote computers. enables lateral movement via powershell remoting (winrm).">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/invoke-command/" class="entry-link">Invoke-Command</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Run commands on local or remote computers. Enables lateral movement via Power...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">[d-f]</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">lateral-movement</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1021/006/" target="_blank" class="mitre-link">T1021.006</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="invoke-expression" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="execute arbitrary strings as powershell commands. the most direct code execution primitive — equivalent to eval().">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/invoke-expression/" class="entry-link">Invoke-Expression</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Execute arbitrary strings as PowerShell commands. The most direct code execut...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="invoke-restmethod" data-platform="powershell" data-category="download" data-mitre="T1105" data-desc="send http/https requests and receive structured responses. used for c2 communication, api interactions, and payload retrieval.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/invoke-restmethod/" class="entry-link">Invoke-RestMethod</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Send HTTP/HTTPS requests and receive structured responses. Used for C2 commun...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">[d-f]</span><span class="wc-pill">?</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="invoke-webrequest" data-platform="powershell" data-category="download" data-mitre="T1105" data-desc="download files or interact with web services. powershell's built-in http client, commonly used for payload staging.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/invoke-webrequest/" class="entry-link">Invoke-WebRequest</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Download files or interact with web services. PowerShell's built-in HTTP clie...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="new-object" data-platform="powershell" data-category="download" data-mitre="T1105" data-desc="creates .net or com objects. used to instantiate webclient for downloads, create com shells, or access windows apis.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/new-object/" class="entry-link">New-Object</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Creates .NET or COM objects. Used to instantiate WebClient for downloads, cre...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span><span class="wc-pill">-clike</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="out-file" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="send pipeline output to a file. alternative to set-content with pipeline support — used to write payloads, scripts, or exfiltrated data to disk.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/out-file/" class="entry-link">Out-File</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Send pipeline output to a file. Alternative to Set-Content with pipeline supp...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[t-v]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="remove-item" data-platform="powershell" data-category="execution" data-mitre="T1070.004" data-desc="delete files, directories, registry keys, or other powershell provider items. used for log wiping, artifact cleanup, and indicator removal.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/remove-item/" class="entry-link">Remove-Item</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Delete files, directories, registry keys, or other PowerShell provider items....</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1070/004/" target="_blank" class="mitre-link">T1070.004</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="set-content" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="write content to a file. used to drop payloads, modify system files, or write scripts to disk for execution.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/set-content/" class="entry-link">Set-Content</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Write content to a file. Used to drop payloads, modify system files, or write...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="start-process" data-platform="powershell" data-category="execution" data-mitre="T1059.001" data-desc="start one or more processes. can launch executables with specific arguments, working directories, and window styles.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/start-process/" class="entry-link">Start-Process</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Start one or more processes. Can launch executables with specific arguments, ...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[s-u]</span><span class="wc-pill">-match</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="test-connection" data-platform="powershell" data-category="reconnaissance" data-mitre="T1018" data-desc="send icmp echo requests (ping). used for host discovery and network reconnaissance within powershell scripts.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/powershell/test-connection/" class="entry-link">Test-Connection</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Send ICMP echo requests (ping). Used for host discovery and network reconnais...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-powershell">
+              PowerShell
+              
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[d-f]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">reconnaissance</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1018/" target="_blank" class="mitre-link">T1018</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="awk" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="text processing utility. can be used to extract credential data, process file contents, or execute system commands via system() calls.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/awk/" class="entry-link">awk</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Text processing utility. Can be used to extract credential data, process file...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="base64" data-platform="linux" data-category="encode-decode" data-mitre="T1140" data-desc="encode or decode base64 data. widely used to obfuscate payloads, bypass content filters, and encode exfiltrated data.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/base64/" class="entry-link">base64</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Encode or decode base64 data. Widely used to obfuscate payloads, bypass conte...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">encode-decode</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1140/" target="_blank" class="mitre-link">T1140</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="bash" data-platform="linux" data-category="execution" data-mitre="T1059.004" data-desc="gnu bourne again shell. executing bash with -i or -c allows spawning interactive shells or running commands, commonly used in reverse shells.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/bash/" class="entry-link">bash</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">GNU Bourne Again Shell. Executing bash with -i or -c allows spawning interact...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span><span class="wc-pill">{}</span><span class="wc-pill">+()</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/004/" target="_blank" class="mitre-link">T1059.004</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="bitsadmin" data-platform="windows-cmd" data-category="download" data-mitre="T1197" data-desc="background intelligent transfer service admin tool. can download or upload files using bits jobs, bypassing some network controls.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/bitsadmin/" class="entry-link">bitsadmin</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Background Intelligent Transfer Service admin tool. Can download or upload fi...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1197/" target="_blank" class="mitre-link">T1197</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="cat" data-platform="linux" data-category="discovery" data-mitre="T1083" data-desc="concatenate and display file contents. used for reading sensitive files like /etc/passwd, /etc/shadow, ssh keys, and configuration files.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/cat/" class="entry-link">cat</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Concatenate and display file contents. Used for reading sensitive files like ...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1083/" target="_blank" class="mitre-link">T1083</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="certutil" data-platform="windows-cmd" data-category="download" data-mitre="T1105" data-desc="certificate management utility. widely abused for base64 encoding/decoding and downloading files from the internet.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/certutil/" class="entry-link">certutil</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Certificate management utility. Widely abused for base64 encoding/decoding an...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="chmod" data-platform="linux" data-category="execution" data-mitre="T1222.002" data-desc="change file permissions. used post-exploitation to make dropped payloads executable.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/chmod/" class="entry-link">chmod</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Change file permissions. Used post-exploitation to make dropped payloads exec...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1222/002/" target="_blank" class="mitre-link">T1222.002</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="chown" data-platform="linux" data-category="persistence" data-mitre="T1222.002" data-desc="change file owner and group. used to reassign ownership of files, directories, or setuid binaries.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/chown/" class="entry-link">chown</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Change file owner and group. Used to reassign ownership of files, directories...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">persistence</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1222/002/" target="_blank" class="mitre-link">T1222.002</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="cmd" data-platform="windows-cmd" data-category="execution" data-mitre="T1059.003" data-desc="windows command processor. spawning cmd.exe is a common technique for executing commands, creating shells, and chaining operations.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/cmd/" class="entry-link">cmd</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Windows Command Processor. Spawning cmd.exe is a common technique for executi...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/003/" target="_blank" class="mitre-link">T1059.003</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="cscript" data-platform="windows-cmd" data-category="execution" data-mitre="T1059.005" data-desc="windows script host console runner for jscript and vbscript. executes script files from disk or unc paths.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/cscript/" class="entry-link">cscript</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Windows Script Host console runner for JScript and VBScript. Executes script ...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/005/" target="_blank" class="mitre-link">T1059.005</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="curl" data-platform="linux" data-category="download" data-mitre="T1105" data-desc="transfer data to or from a server. commonly used for downloading payloads, exfiltration, and c2 communication.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/curl/" class="entry-link">curl</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Transfer data to or from a server. Commonly used for downloading payloads, ex...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span><span class="wc-pill">{}</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="curl" data-platform="macos" data-category="download" data-mitre="T1105" data-desc="transfer data from servers. macos ships with curl by default. used for c2, payload download, and exfiltration.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/macos/curl/" class="entry-link">curl</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Transfer data from servers. macOS ships with curl by default. Used for C2, pa...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-macos">
+              macOS
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="dd" data-platform="linux" data-category="exfiltration" data-mitre="T1005" data-desc="convert and copy files or block devices. used for disk imaging, raw data exfiltration, and overwriting disk regions.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/dd/" class="entry-link">dd</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Convert and copy files or block devices. Used for disk imaging, raw data exfi...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">exfiltration</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1005/" target="_blank" class="mitre-link">T1005</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="esentutl" data-platform="windows-cmd" data-category="download" data-mitre="T1105" data-desc="extensible storage engine utility. can copy locked or in-use files (e.g., ntds.dit, sam) and is used for credential access and file staging.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/esentutl/" class="entry-link">esentutl</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Extensible Storage Engine utility. Can copy locked or in-use files (e.g., NTD...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="expand" data-platform="windows-cmd" data-category="execution" data-mitre="T1140" data-desc="expands compressed cab archive files. can extract payloads from cab containers to disk.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/expand/" class="entry-link">expand</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Expands compressed CAB archive files. Can extract payloads from CAB container...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1140/" target="_blank" class="mitre-link">T1140</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="extrac32" data-platform="windows-cmd" data-category="execution" data-mitre="T1218" data-desc="cab extraction utility bundled with internet explorer. less monitored than expand.exe, can extract payloads from cab archives.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/extrac32/" class="entry-link">extrac32</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">CAB extraction utility bundled with Internet Explorer. Less monitored than ex...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1218/" target="_blank" class="mitre-link">T1218</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="find" data-platform="linux" data-category="discovery" data-mitre="T1083" data-desc="search for files in directory hierarchy. pivotal for discovery — finding suid binaries, writable directories, config files with credentials, and more.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/find/" class="entry-link">find</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Search for files in directory hierarchy. Pivotal for discovery — finding SUID...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1083/" target="_blank" class="mitre-link">T1083</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="finger" data-platform="windows-cmd" data-category="download" data-mitre="T1105" data-desc="legacy user info protocol client. can retrieve arbitrary text from an attacker-controlled finger server, enabling data exfiltration and payload staging.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/finger/" class="entry-link">finger</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Legacy user info protocol client. Can retrieve arbitrary text from an attacke...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="forfiles" data-platform="windows-cmd" data-category="execution" data-mitre="T1059.003" data-desc="execute a command for each file matching a wildcard mask. the /m flag accepts glob patterns, and @file expands to the matched filename — enabling indirect execution of binaries.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/forfiles/" class="entry-link">forfiles</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Execute a command for each file matching a wildcard mask. The /m flag accepts...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/003/" target="_blank" class="mitre-link">T1059.003</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="gdb" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="gnu debugger. can execute arbitrary shell commands via the 'shell' command, call library functions directly, and load shared libraries — making it a code execution primitive.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/gdb/" class="entry-link">gdb</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">GNU debugger. Can execute arbitrary shell commands via the 'shell' command, c...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="id" data-platform="linux" data-category="discovery" data-mitre="T1033" data-desc="print user and group information. confirms current user uid, gid, and group memberships for privilege assessment.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/id/" class="entry-link">id</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Print user and group information. Confirms current user UID, GID, and group m...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">[]</span><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1033/" target="_blank" class="mitre-link">T1033</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="mshta" data-platform="windows-cmd" data-category="execution" data-mitre="T1218.005" data-desc="microsoft html application host. executes hta files or inline vbscript/jscript — commonly used for payload execution and initial access.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/mshta/" class="entry-link">mshta</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Microsoft HTML Application host. Executes HTA files or inline VBScript/JScrip...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1218/005/" target="_blank" class="mitre-link">T1218.005</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="nc" data-platform="linux" data-category="execution" data-mitre="T1059.004" data-desc="netcat — the tcp/ip swiss army knife. used for port scanning, reverse shells, file transfers, and network pivoting.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/nc/" class="entry-link">nc</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Netcat — the TCP/IP Swiss army knife. Used for port scanning, reverse shells,...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/004/" target="_blank" class="mitre-link">T1059.004</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="nmap" data-platform="linux" data-category="reconnaissance" data-mitre="T1046" data-desc="network mapper and port scanner. used for network reconnaissance, host discovery, service enumeration, and os detection.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/nmap/" class="entry-link">nmap</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Network mapper and port scanner. Used for network reconnaissance, host discov...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">reconnaissance</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1046/" target="_blank" class="mitre-link">T1046</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="node" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="node.js javascript runtime. can execute arbitrary javascript, spawn reverse shells, and make network connections.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/node/" class="entry-link">node</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Node.js JavaScript runtime. Can execute arbitrary JavaScript, spawn reverse s...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="open" data-platform="macos" data-category="execution" data-mitre="T1218" data-desc="open files, urls, or applications. can launch applications, execute scripts via -a flag, or open urls that trigger protocol handlers.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/macos/open/" class="entry-link">open</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Open files, URLs, or applications. Can launch applications, execute scripts v...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-macos">
+              macOS
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1218/" target="_blank" class="mitre-link">T1218</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="openssl" data-platform="linux" data-category="encode-decode" data-mitre="T1573" data-desc="cryptography toolkit and tls client. can encrypt/decrypt data, create reverse shells over tls, and act as a generic tcp client.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/openssl/" class="entry-link">openssl</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Cryptography toolkit and TLS client. Can encrypt/decrypt data, create reverse...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">encode-decode</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1573/" target="_blank" class="mitre-link">T1573</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="osascript" data-platform="macos" data-category="execution" data-mitre="T1059.002" data-desc="execute applescript or javascript for automation (jxa). can control applications, access keychain, display prompts, and run system commands.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/macos/osascript/" class="entry-link">osascript</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Execute AppleScript or JavaScript for Automation (JXA). Can control applicati...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-macos">
+              macOS
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/002/" target="_blank" class="mitre-link">T1059.002</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="perl" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="perl interpreter. supports arbitrary code execution, file i/o, network operations — useful for one-liner payloads and reverse shells.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/perl/" class="entry-link">perl</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Perl interpreter. Supports arbitrary code execution, file I/O, network operat...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="php" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="php cli interpreter. can execute arbitrary php code, spawn reverse shells, read/write files, and make network connections.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/php/" class="entry-link">php</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">PHP CLI interpreter. Can execute arbitrary PHP code, spawn reverse shells, re...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="pip" data-platform="linux" data-category="execution" data-mitre="T1059.006" data-desc="python package installer. installing packages with malicious setup.py executes arbitrary code. can also download and run python scripts directly.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/pip/" class="entry-link">pip</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Python package installer. Installing packages with malicious setup.py execute...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/006/" target="_blank" class="mitre-link">T1059.006</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="powershell.exe" data-platform="windows-cmd" data-category="execution" data-mitre="T1059.001" data-desc="powershell executable launched from cmd. bypasses cmd-level restrictions by delegating to powershell runtime.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/powershell-exe/" class="entry-link">powershell.exe</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">PowerShell executable launched from CMD. Bypasses CMD-level restrictions by d...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre-link">T1059.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="python3" data-platform="linux" data-category="execution" data-mitre="T1059.006" data-desc="python 3 interpreter. enables arbitrary code execution, file operations, network connections, and more.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/python3/" class="entry-link">python3</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Python 3 interpreter. Enables arbitrary code execution, file operations, netw...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/006/" target="_blank" class="mitre-link">T1059.006</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="python3" data-platform="macos" data-category="execution" data-mitre="T1059.006" data-desc="python 3 interpreter on macos. available via xcode cli tools or homebrew. enables arbitrary code execution and network operations.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/macos/python3/" class="entry-link">python3</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Python 3 interpreter on macOS. Available via Xcode CLI tools or Homebrew. Ena...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-macos">
+              macOS
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/006/" target="_blank" class="mitre-link">T1059.006</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="regsvr32" data-platform="windows-cmd" data-category="execution" data-mitre="T1218.010" data-desc="registers and unregisters ole controls. can execute remote scriptlets (scrobj.dll) — the 'squiblydoo' technique.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/regsvr32/" class="entry-link">regsvr32</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Registers and unregisters OLE controls. Can execute remote scriptlets (scrobj...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1218/010/" target="_blank" class="mitre-link">T1218.010</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="replace" data-platform="windows-cmd" data-category="execution" data-mitre="T1105" data-desc="replaces (copies) files from a source to a destination directory. can be used to stage payloads by copying files into target directories.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/replace/" class="entry-link">replace</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Replaces (copies) files from a source to a destination directory. Can be used...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="rsync" data-platform="linux" data-category="exfiltration" data-mitre="T1048" data-desc="fast, versatile file copying tool. supports remote file sync over ssh — useful for exfiltration, payload staging, and lateral file movement.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/rsync/" class="entry-link">rsync</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Fast, versatile file copying tool. Supports remote file sync over SSH — usefu...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">exfiltration</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1048/" target="_blank" class="mitre-link">T1048</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="ruby" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="ruby interpreter. can be used for arbitrary code execution, reverse shells, and file operations.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/ruby/" class="entry-link">ruby</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Ruby interpreter. Can be used for arbitrary code execution, reverse shells, a...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="rundll32" data-platform="windows-cmd" data-category="execution" data-mitre="T1218.011" data-desc="loads and runs dlls. used to execute malicious dll exports directly, bypassing application whitelisting.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/rundll32/" class="entry-link">rundll32</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Loads and runs DLLs. Used to execute malicious DLL exports directly, bypassin...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1218/011/" target="_blank" class="mitre-link">T1218.011</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="scp" data-platform="linux" data-category="exfiltration" data-mitre="T1048.002" data-desc="secure copy protocol. used for file transfer between hosts over ssh — exfiltration, payload staging, or lateral file movement.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/scp/" class="entry-link">scp</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Secure Copy Protocol. Used for file transfer between hosts over SSH — exfiltr...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">exfiltration</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1048/002/" target="_blank" class="mitre-link">T1048.002</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="screen" data-platform="linux" data-category="execution" data-mitre="T1059.004" data-desc="terminal multiplexer. can create persistent sessions that survive logout, run background processes, and escape restricted shells.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/screen/" class="entry-link">screen</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Terminal multiplexer. Can create persistent sessions that survive logout, run...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/004/" target="_blank" class="mitre-link">T1059.004</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="sed" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="stream editor for filtering and transforming text. can read arbitrary files, extract credentials from configs, or serve as a code execution vector via -e flag.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/sed/" class="entry-link">sed</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Stream editor for filtering and transforming text. Can read arbitrary files, ...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="socat" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="multipurpose relay tool. more powerful than netcat — supports ssl, udp, and complex socket operations. commonly used for encrypted reverse shells and port forwarding.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/socat/" class="entry-link">socat</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Multipurpose relay tool. More powerful than netcat — supports SSL, UDP, and c...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="ssh" data-platform="linux" data-category="lateral-movement" data-mitre="T1021.004" data-desc="secure shell client. used for lateral movement, remote command execution, tunneling, and persistence via authorized_keys.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/ssh/" class="entry-link">ssh</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Secure Shell client. Used for lateral movement, remote command execution, tun...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">lateral-movement</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1021/004/" target="_blank" class="mitre-link">T1021.004</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="strace" data-platform="linux" data-category="discovery" data-mitre="T1057" data-desc="system call tracer. can monitor running processes, extract secrets from memory, and trace file/network operations for reconnaissance.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/strace/" class="entry-link">strace</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">System call tracer. Can monitor running processes, extract secrets from memor...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">*</span><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1057/" target="_blank" class="mitre-link">T1057</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="tar" data-platform="linux" data-category="exfiltration" data-mitre="T1560.001" data-desc="archive utility. used to compress and exfiltrate data, or extract attacker-controlled archives that may include path traversal payloads.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/tar/" class="entry-link">tar</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Archive utility. Used to compress and exfiltrate data, or extract attacker-co...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">exfiltration</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1560/001/" target="_blank" class="mitre-link">T1560.001</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="vim" data-platform="linux" data-category="execution" data-mitre="T1059" data-desc="vi improved text editor. can execute shell commands via :!cmd, spawn interactive shells, read and write arbitrary files, and is a common sudo escape vector.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/vim/" class="entry-link">vim</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Vi Improved text editor. Can execute shell commands via :!cmd, spawn interact...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/" target="_blank" class="mitre-link">T1059</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="wget" data-platform="linux" data-category="download" data-mitre="T1105" data-desc="non-interactive network downloader. used to fetch files from http/ftp servers, download payloads, or stage tools.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/wget/" class="entry-link">wget</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Non-interactive network downloader. Used to fetch files from HTTP/FTP servers...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span><span class="wc-pill">{}</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">download</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1105/" target="_blank" class="mitre-link">T1105</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="whoami" data-platform="linux" data-category="discovery" data-mitre="T1033" data-desc="prints the current user's username. useful for confirming privilege level after exploitation.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/whoami/" class="entry-link">whoami</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Prints the current user's username. Useful for confirming privilege level aft...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span><span class="wc-pill">[]</span><span class="wc-pill">{}</span><span class="wc-pill">@()</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">discovery</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1033/" target="_blank" class="mitre-link">T1033</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="wmic" data-platform="windows-cmd" data-category="execution" data-mitre="T1047" data-desc="wmi command-line interface. used for system information gathering, remote execution, process creation, and persistence.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/wmic/" class="entry-link">wmic</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">WMI command-line interface. Used for system information gathering, remote exe...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1047/" target="_blank" class="mitre-link">T1047</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="wscript" data-platform="windows-cmd" data-category="execution" data-mitre="T1059.005" data-desc="windows script host gui runner for jscript and vbscript. executes scripts without a visible console window.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/windows-cmd/wscript/" class="entry-link">wscript</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Windows Script Host GUI runner for JScript and VBScript. Executes scripts wit...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-windows-cmd">
+              Windows CMD
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">execution</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1059/005/" target="_blank" class="mitre-link">T1059.005</a>
+            
+          </td>
+        </tr>
+        
+        <tr class="entry-row" data-name="xxd" data-platform="linux" data-category="encode-decode" data-mitre="T1140" data-desc="hex dump and reverse hex dump utility. can convert binaries to hex and reconstruct binaries from hex — useful for payload staging and encoding.">
+          <td class="col-name">
+            <a href="https://0xv1n.github.io/LOLGlobs/globs/linux/xxd/" class="entry-link">xxd</a>
+          </td>
+          <td class="col-desc">
+            <span class="col-desc-text">Hex dump and reverse hex dump utility. Can convert binaries to hex and recons...</span>
+          </td>
+          <td class="col-platform">
+            <span class="badge platform-badge platform-linux">
+              Linux
+                
+            </span>
+          </td>
+          <td class="col-patterns">
+            
+            
+            <div class="wc-pills"><span class="wc-pill">?</span><span class="wc-pill">[]</span><span class="wc-pill">*</span></div>
+          </td>
+          <td class="col-category">
+            <span class="badge category-badge">encode-decode</span>
+          </td>
+          <td class="col-mitre">
+            
+            <a href="https://attack.mitre.org/techniques/T1140/" target="_blank" class="mitre-link">T1140</a>
+            
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <div id="no-results" class="no-results" style="display:none">
+    <p>No entries match your search. <a href="https://0xv1n.github.io/LOLGlobs/#" id="clear-search">Clear filters</a></p>
+  </div>
+</div>
+
+
+
+  </main>
+  
+
+  
+  
+  
+
+  <!-- Command Palette (Ctrl+K / Cmd+K) -->
+  <div class="cmd-palette-overlay" id="cmd-palette">
+    <div class="cmd-palette">
+      <div class="cmd-palette-header">
+        <svg class="cmd-palette-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"></path>
+        </svg>
+        <input type="text" class="cmd-palette-input" id="cmd-palette-input" placeholder="Jump to a command..." autocomplete="off" spellcheck="false">
+        <kbd class="cmd-palette-esc">ESC</kbd>
+      </div>
+      <div class="cmd-palette-results" id="cmd-palette-results"></div>
+      <div class="cmd-palette-footer">
+        <span><kbd>↑↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
+  
+
+  
+
+
+</body></html>

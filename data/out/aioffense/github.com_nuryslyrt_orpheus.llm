@@ -1,0 +1,30 @@
+Title:
+ORPHEUS — Orchestrated Runtime Protocol for Hierarchical Execution Unified Skills
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- ORPHEUS is a “skills not agents” orchestration framework for building multi-step AI workflows inside a single coding-agent runtime (Claude Code), avoiding multi-agent infrastructure.  
+- It solves the overhead of running multiple LLM instances/services by using filesystem-based state, markdown-defined skills, and generated self-contained project folders (`.orpheus/`).  
+- The repo defines a meta-orchestrator with four expert roles (Builder, Runner, Doctor, Auditor, Surgeon) to generate, execute, debug, validate, and structurally modify skill systems via natural language.  
+- It emphasizes typed contracts between skills, decision-level logging (reasoning trails), and preserved error chains for root-cause debugging.  
+- The Auditor includes a “Provable Assurance” model: claim-based checks, evidence packages, and renewal triggers to detect staleness/regressions.  
+- Useful for practitioners building repeatable AI pipelines (engineering, security automation, research ops) who want traceability and portability without deploying agent frameworks.
+
+Technical Focus:
+- Skill-based orchestration (single-runtime “agentless” design)
+- Filesystem as state bus (`.orpheus/` layout, logs, scripts)
+- Typed I/O contracts and registries (YAML schemas)
+- Decision transparency logging + reasoning trails
+- Error chain preservation across orchestrator/expert/worker layers
+- Claim-based assurance/auditing with evidence packages (Provable Assurance)
+
+Use Cases:
+- Build repeatable AI pipelines (research → analyze → write → review → publish) without standing up agent infrastructure
+- Create project-local automation systems that can be validated, debugged, and evolved through NL prompts
+- Generate portable, self-contained workflow bundles for teams (including scripts, contracts, and logs)
+- Add governance/assurance to AI workflows via structured health checks and evidence artifacts
+
+Keywords:
+ORPHEUS, Claude Code, skill orchestration, meta-orchestrator, Builder, Runner, Doctor, Auditor, Surgeon, workers, experts, contracts, YAML schema, registry, filesystem state, decision logs, reasoning trails, error chain preservation, DAG validation, Provable Assurance, evidence package, AGPL-3.0

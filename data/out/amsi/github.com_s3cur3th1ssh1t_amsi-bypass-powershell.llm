@@ -1,0 +1,30 @@
+Title:
+Amsi-Bypass-Powershell
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository is a collection of PowerShell-based AMSI (Antimalware Scan Interface) bypass/avoidance techniques aggregated from public research and blog posts.  
+- It targets the common problem of PowerShell payloads being scanned and blocked at runtime by AMSI-integrated AV/EDR engines.  
+- Techniques include in-memory patching of AMSI-related functions (e.g., `AmsiScanBuffer`, `AmsiOpenSession`), CLR/.NET method pointer manipulation and hooking, provider-level interception/patching (e.g., `MpOav.dll`), ScriptBlock AST manipulation (“ScriptBlock Smuggling”), and logging bypasses.  
+- The README notes many snippets are signature-detected and suggests modifying triggers via renaming/encoding/obfuscation and using tools like AMSITrigger/Invoke-Obfuscation to regain execution.  
+- Useful primarily for red teams, pentesters, and offensive security researchers studying AMSI internals and bypass tradecraft; secondarily for defenders to understand common bypass primitives and detection opportunities.  
+- Interesting because it consolidates multiple bypass classes (patching, hooking, AST tricks, provider tampering) and references original sources for deeper technical context.
+
+Technical Focus:
+- AMSI internals and patch points (`AmsiScanBuffer`, `AmsiOpenSession`, `AmsiUtils.ScanContent`)
+- In-memory patching via `VirtualProtect`/`WriteProcessMemory` and shellcode stubs
+- .NET/CLR method hooking and reflection-based pointer swapping
+- ScriptBlock AST manipulation / ScriptBlock Smuggling
+- AMSI provider interception and patching (e.g., `MpOav.dll`, provider vtables)
+- PowerShell logging bypasses (ScriptBlock logging, WMF autologging)
+
+Use Cases:
+- Evaluate AMSI resilience and bypass detection in controlled red team engagements
+- Research and compare multiple AMSI bypass primitives and their prerequisites (x86/x64, PS versions)
+- Build defensive detections for memory patching, AMSI tampering, and suspicious reflection/AST behavior
+- Reproduce and validate public AMSI bypass research techniques for training/lab environments
+
+Keywords:
+AMSI, Antimalware Scan Interface, PowerShell, AmsiScanBuffer, AmsiOpenSession, System.Management.Automation, AmsiUtils, ScanContent, VirtualProtect, WriteProcessMemory, ReadProcessMemory, CLR hooking, reflection, RuntimeHelpers.PrepareMethod, ScriptBlock, AST, ScriptBlock Smuggling, MpOav.dll, provider interception, ScriptBlockLogging, WMF5 autologging

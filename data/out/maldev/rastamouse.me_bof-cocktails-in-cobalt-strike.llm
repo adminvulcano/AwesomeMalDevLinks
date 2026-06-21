@@ -1,0 +1,30 @@
+Title:
+BOF Cocktails in Cobalt Strike
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how to integrate the “BOF Cocktails” execution pattern into Cobalt Strike using the new Aggressor hook `BEACON_INLINE_EXECUTE` (CS 4.13).  
+- The goal is to intercept Beacon Object File (BOF) execution and transform/augment the BOF payload before it is sent to Beacon, enabling embedded tradecraft without relying on an external agent/loader for evasion.  
+- It demonstrates using Crystal Palace to process raw BOF bytes through a spec file that converts the BOF into a COFF-exporter object, merges additional hook objects and libraries, and re-exports the final BOF.  
+- A concrete example instruments (hooks) `ADVAPI32!OpenProcessToken` by attaching a wrapper function that logs parameters and then calls the original API.  
+- This is useful for red team operators and tool developers who want consistent pre-execution BOF modification, API instrumentation, or tradecraft composition directly in Cobalt Strike’s workflow.  
+- It’s interesting because it replaces prior hacky interception methods (e.g., `alias_clear` overrides) with a first-class, reliable hook point.
+
+Technical Focus:
+- Cobalt Strike Aggressor scripting hook: `BEACON_INLINE_EXECUTE`
+- BOF (Beacon Object File) byte-level interception and transformation
+- Crystal Palace spec-driven BOF/COFF manipulation (merge/attach/export)
+- API hooking via import redirection/wrapper functions (e.g., `OpenProcessToken`)
+- x86/x64 build pipelines and merged object/library composition
+
+Use Cases:
+- Pre-processing BOFs to embed evasion/tradecraft before execution
+- Instrumenting sensitive WinAPI calls for debugging/telemetry during ops
+- Automatically merging common helper libraries into every executed BOF
+- Enforcing standardized BOF hardening/obfuscation steps at execution time
+- Rapid prototyping of inline hooks across a BOF fleet without changing each BOF
+
+Keywords:
+Cobalt Strike, Aggressor Script, BEACON_INLINE_EXECUTE, Beacon, BOF, Beacon Object File, COFF, Crystal Palace, spec file, inline execute hook, API hooking, ADVAPI32, OpenProcessToken, dprintf, x86, x64, merge, attach, export, post-exploitation

@@ -1,0 +1,31 @@
+Title:
+Writing Self‑Mutating Malware: Building Polymorphic (Veil64) and Metamorphic (Morpheus) Engines on Linux x86_64
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post explains how self-mutating malware defeats signature-based detection by generating functionally equivalent but bytewise-different code across executions/infections.  
+- It contrasts oligomorphic, polymorphic (mutating decryptor stubs/engines), and metamorphic (rewriting the whole body without relying on encryption) approaches, with historical context and practical implementation notes.  
+- The author presents two concrete implementations: **Veil64**, a polymorphic x64 Linux code generator that emits many variants of a decryptor + stub (mmap/syscall setup, RIP-relative addressing, runtime keying), and **Morpheus**, an ELF infector that mutates its own code by scanning/replacing predefined “junk” patterns and rewriting targets on disk.  
+- Techniques covered include register randomization, multiple equivalent decrypt algorithms, structured garbage insertion, control-flow disruption via random jumps, entropy collection (RDTSC/RSP/RIP), and on-the-fly machine-code emission (ModRM encoding).  
+- It’s most useful for malware researchers, red teamers studying AV/EDR evasion mechanics, and defenders wanting to understand mutation-driven signature breakage and analysis friction.  
+- Interesting because it provides low-level assembly examples showing how polymorphic engines are built byte-by-byte and how a simple metamorphic loop can be implemented without full disassembly.
+
+Technical Focus:
+- Polymorphic decryptor generation (register renaming, algorithm variants, stub/engine layering)
+- Runtime entropy & key derivation (RDTSC, stack pointer, RIP/ASLR effects)
+- Dynamic machine-code emission (opcode/ModRM construction, RIP-relative addressing)
+- Garbage/junk code injection and control-flow obfuscation (random jumps, dummy blocks)
+- Linux x86_64 syscall-only loaders (mmap/munmap, getdents64, execve, fork/wait)
+- ELF infection mechanics and on-disk rewriting with backup markers (.morph8)
+
+Use Cases:
+- Build/test polymorphic loaders to evaluate signature resilience of static scanners
+- Create mutation-heavy samples for reverse-engineering training and tooling validation
+- Study detection opportunities around runtime decryption, entropy sources, and syscall patterns
+- Prototype metamorphic “rewrite-on-execution” concepts for research (pattern-based mutation)
+- Develop YARA/heuristics focusing on behavioral invariants vs. byte signatures
+
+Keywords:
+polymorphic engine, metamorphic malware, oligomorphic, self-mutating code, decryptor stub, runtime decryption, x86_64 assembly, Linux syscalls, mmap, munmap, getdents64, execve, fork, RDTSC, ASLR, RIP-relative addressing, ModRM encoding, register renaming, junk code injection, control-flow obfuscation, ELF infector, signature evasion, XorShift PRNG, XOR string encryption

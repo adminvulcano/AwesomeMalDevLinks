@@ -1,0 +1,24 @@
+Title:
+EDRChoker
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+EDRChoker is a Windows tool that abuses Policy-based Quality of Service (QoS) to apply hard bandwidth caps to specific EDR/AV agent processes, forcing their telemetry/network communications to time out. It leverages Windows’ built-in QoS infrastructure backed by the `pacer.sys` driver, so the throttling rules take effect immediately and persist across reboots. The operator supplies a list of target process names to create QoS policies, or runs the tool without arguments to remove installed policies. The project is positioned as a defense-bypass technique by “choking” the telemetry stream rather than killing or tampering with the agent. It’s primarily useful for red teams/pentesters evaluating EDR resilience and for blue teams to understand and detect policy-based network interference against security tooling. It’s interesting because it uses legitimate OS networking policy controls to degrade EDR visibility with minimal direct interaction with the EDR process.
+
+Technical Focus:
+- Windows Policy-based QoS (QoS Policy) manipulation
+- Bandwidth throttling to induce telemetry timeouts
+- `pacer.sys` (QoS Packet Scheduler) dependency
+- Persistence via system policy rules across reboot
+- Process-name–based targeting of network restrictions
+
+Use Cases:
+- Degrade/disable EDR cloud connectivity without terminating the agent
+- Test SOC/EDR detection of QoS policy tampering and telemetry loss scenarios
+- Simulate adversary tradecraft that relies on “living off the land” network controls
+- Incident response validation: identify and remove malicious QoS policies
+
+Keywords:
+Windows QoS, Policy-based QoS, pacer.sys, QoS Packet Scheduler, bandwidth throttling, telemetry disruption, EDR bypass, network timeout, persistent policy, process name targeting, Windows networking, endpoint agent connectivity, Microsoft Defender for Endpoint, Elastic Defend, Cortex XDR, Tanium, Trend Micro Deep Security, HarfangLab, defensive evasion, living-off-the-land (LOTL)

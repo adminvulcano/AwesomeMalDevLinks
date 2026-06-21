@@ -1,0 +1,27 @@
+Title:
+DoublePulsar: A User-Defined Reflective Loader in the Crystal Palace and Tradecraft Garden Era
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post is a deep technical walkthrough of “DoublePulsar,” an open-source Cobalt Strike User-Defined Reflective Loader (UDRL) written in Rust that implements a prepended reflective loader architecture. It explains how the loader decrypts and manually maps an encrypted Beacon payload, then applies multiple evasion layers including module stomping into a legitimate DLL’s `.text`, IAT hooking for runtime control, heap isolation, sleep obfuscation, and synthetic call stack/return address spoofing. The article contrasts monolithic UDRLs (TitanLdr/AceLdr/BokuLoader style) with the newer Crystal Palace/Tradecraft Garden modular PICO approach, outlining tradeoffs in development effort, flexibility, and detection response. It details implementation specifics (no_std Rust PIC, custom linker script, objcopy extraction, ACE thread context hijack, `.pdata` unwind parsing for stack spoofing, NtContinue-based sleep chains, optional direct syscalls). For defenders, it provides detection angles (ETWTI, call stack validation, module content mismatch, IAT integrity checks), plus YARA rules and a MITRE ATT&CK mapping focused on the loader’s artifacts rather than the encrypted payload. It’s most useful to red team tool builders and detection engineers who need concrete loader internals, IoCs, and behavioral detection opportunities for modern in-memory tradecraft.
+
+Technical Focus:
+- Cobalt Strike UDRL (prepended reflective loader) and manual PE mapping
+- Module stomping / MEM_IMAGE vs MEM_PRIVATE evasion and CoW side effects
+- Synthetic call stack & return address spoofing via `.pdata` unwind parsing (SilentMoonwalk/uwd-style)
+- Sleep obfuscation chains using `NtContinue` + timers/APCs/waits (Ekko/FOLIAGE/Zilean) and fiber stacks
+- IAT hooking for API interception (sleep, heap, network) and heap isolation/encryption
+- Optional direct syscall dispatch (Hell’s Gate / Halo’s Gate / Tartarus Gate) and CFG bypass (`SetProcessValidCallTargets`)
+
+Use Cases:
+- Build or customize a Cobalt Strike UDRL to control allocation, mapping, permissions, and runtime hooks
+- Implement module-stomped in-memory implants to reduce “unbacked RX” detections
+- Add sleep masking/encryption and heap isolation to reduce memory-scanner signature windows
+- Develop or test call-stack spoofing/return-address spoofing against ETW/call-stack-based detections
+- Create defensive detections for reflective loaders (IAT integrity, module mismatch scanning, ETWTI patterns)
+- Write YARA signatures targeting loader artifacts and validate against memory-resident samples
+
+Keywords:
+DoublePulsar, UDRL, Cobalt Strike, reflective loader, sRDI, manual PE mapping, Rust no_std, position-independent code, module stomping, LoadLibraryExA, DONT_RESOLVE_DLL_REFERENCES, NtProtectVirtualMemory, IAT hooking, heap isolation, RtlCreateHeap, RtlWalkHeap, sleep obfuscation, Ekko, FOLIAGE, Zilean, NtContinue, fibers, call stack spoofing, .pdata, UNWIND_INFO, SilentMoonwalk, Hell’s Gate, Halo’s Gate, Tartarus Gate, SetProcessValidCallTargets, ETWTI, PE-sieve, Moneta, YARA, MITRE ATT&CK

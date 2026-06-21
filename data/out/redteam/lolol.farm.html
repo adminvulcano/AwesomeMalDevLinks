@@ -1,0 +1,448 @@
+# https://lolol.farm/
+
+<!DOCTYPE html><html lang="en"><body data-accent="amber" data-density="compact" data-cardstyle="terminal" data-scanlines="off" data-crt="off" data-logo="tractor" data-affiliate-card="off" data-affiliate-banner="on" data-affiliate-foot="on"><svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#070807"></rect>
+      <g font-family="ui-monospace, Menlo, monospace" font-weight="700" fill="#e0b93e">
+        <text x="600" y="380" text-anchor="middle" font-size="140" letter-spacing="-4">lolol</text>
+        <text x="600" y="470" text-anchor="middle" font-size="48" fill="#9aa59d" font-weight="500">.farm</text>
+      </g>
+      <rect x="590" y="520" width="20" height="40" fill="#e0b93e"></rect>
+    </svg>
+  
+
+
+  
+
+  <!-- ========= TOP NAV ========= -->
+  
+
+  <!-- ========= HERO ========= -->
+  
+
+  <!-- ========= COMMAND BAR ========= -->
+  <div class="cmd-wrap">
+    <div class="cmd">
+      <div class="prompt"><span>λ</span><span>search</span></div>
+      <input id="q" type="search" placeholder="filter by name, url, description, or tag…" autocomplete="off" spellcheck="false">
+      <div class="kbd"><kbd>/</kbd> to focus · <kbd>Esc</kbd> to clear</div>
+    </div>
+
+    <div class="toolbar">
+      <span>→</span>
+      <span class="count" id="countPill">31 results</span>
+      <span class="sep">·</span>
+      <button id="toggleExpand">expand all</button>
+      <button id="copyFiltered">copy as markdown</button>
+      <button id="clearFilters">clear filters</button>
+
+      <!-- ========= AFFILIATE CHIP (was banner) ========= -->
+      <div id="affiliateBanner" class="affiliate-banner affiliate-chip">
+        <div class="affiliate-banner-inner">
+          <img class="affiliate-banner-logo" src="https://lolol.farm/assets/magicsword-logo.png" alt="MagicSword">
+          <span class="affiliate-banner-text"><b>Protect your assets from these attacks</b> — try free, up to 100 endpoints</span>
+          <a class="affiliate-banner-cta" href="https://www.magicsword.io/?utm_source=lolol&amp;utm_medium=affiliate&amp;utm_campaign=community-widget" target="_blank" rel="noopener sponsored">try free →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========= RESULTS HEAD ========= -->
+  <div class="results-head">
+    <span>// projects</span>
+    <div class="line"></div>
+    <span class="sort">sorted by relevance</span>
+  </div>
+
+  <!-- ========= FILTERS ========= -->
+  <div class="filters" id="filterBar">
+    <div class="filter-dd" data-group="platform">
+      <button class="dd-trigger" aria-expanded="false" aria-controls="dd-platform">
+        <span class="dd-label">Platform</span>
+        <span class="dd-count" data-count="">8</span>
+        <span class="dd-caret">▼</span>
+      </button>
+      <div class="dd-popover" id="dd-platform"><button class="chip" aria-pressed="false" data-tag="cross-platform"><span class="dot"></span>cross-platform</button><button class="chip" aria-pressed="false" data-tag="windows"><span class="dot"></span>windows</button><button class="chip" aria-pressed="false" data-tag="linux"><span class="dot"></span>linux</button><button class="chip" aria-pressed="false" data-tag="macos"><span class="dot"></span>macos</button><button class="chip" aria-pressed="false" data-tag="esxi"><span class="dot"></span>esxi</button><button class="chip" aria-pressed="false" data-tag="cloud"><span class="dot"></span>cloud</button><button class="chip" aria-pressed="false" data-tag="active-directory"><span class="dot"></span>active-directory</button><button class="chip" aria-pressed="false" data-tag="hardware"><span class="dot"></span>hardware</button></div>
+    </div>
+    <div class="filter-dd" data-group="tags">
+      <button class="dd-trigger" aria-expanded="false" aria-controls="dd-tags">
+        <span class="dd-label">Tags</span>
+        <span class="dd-count" data-count="">21</span>
+        <span class="dd-caret">▼</span>
+      </button>
+      <div class="dd-popover" id="dd-tags"><button class="chip" aria-pressed="false" data-tag="APIs"><span class="dot"></span>APIs</button><button class="chip" aria-pressed="false" data-tag="C2"><span class="dot"></span>C2</button><button class="chip" aria-pressed="false" data-tag="CI/CD"><span class="dot"></span>CI/CD</button><button class="chip" aria-pressed="false" data-tag="DLL-hijacking"><span class="dot"></span>DLL-hijacking</button><button class="chip" aria-pressed="false" data-tag="RMM"><span class="dot"></span>RMM</button><button class="chip" aria-pressed="false" data-tag="SaaS"><span class="dot"></span>SaaS</button><button class="chip" aria-pressed="false" data-tag="applications"><span class="dot"></span>applications</button><button class="chip" aria-pressed="false" data-tag="binaries"><span class="dot"></span>binaries</button><button class="chip" aria-pressed="false" data-tag="bootloaders"><span class="dot"></span>bootloaders</button><button class="chip" aria-pressed="false" data-tag="certificates"><span class="dot"></span>certificates</button><button class="chip" aria-pressed="false" data-tag="detection"><span class="dot"></span>detection</button><button class="chip" aria-pressed="false" data-tag="drivers"><span class="dot"></span>drivers</button><button class="chip" aria-pressed="false" data-tag="exfiltration"><span class="dot"></span>exfiltration</button><button class="chip" aria-pressed="false" data-tag="file-extensions"><span class="dot"></span>file-extensions</button><button class="chip" aria-pressed="false" data-tag="persistence"><span class="dot"></span>persistence</button><button class="chip" aria-pressed="false" data-tag="phishing"><span class="dot"></span>phishing</button><button class="chip" aria-pressed="false" data-tag="red-team"><span class="dot"></span>red-team</button><button class="chip" aria-pressed="false" data-tag="security-tools"><span class="dot"></span>security-tools</button><button class="chip" aria-pressed="false" data-tag="threat-intel"><span class="dot"></span>threat-intel</button><button class="chip" aria-pressed="false" data-tag="tunnels"><span class="dot"></span>tunnels</button><button class="chip" aria-pressed="false" data-tag="webhooks"><span class="dot"></span>webhooks</button></div>
+    </div>
+  </div>
+
+  <!-- ========= GRID ========= -->
+  <section class="grid" id="grid">
+
+    <article class="card" data-tags="cross-platform,detection" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://br0k3nlab.com/LoFP/" target="_blank" rel="noopener noreferrer" aria-label="LoFP"><img src="https://lolol.farm/assets/lofp-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://br0k3nlab.com/LoFP/" target="_blank" rel="noopener noreferrer">LoFP<span class="ext">↗</span></a></h3>
+          <div class="card-url">br0k3nlab.com/LoFP</div>
+          <p class="card-desc">Living off the False Positive — an autogenerated collection of false positives sourced from popular rule sets, categorized by ATT&amp;CK techniques, rule source, and data source.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">detection</span></div></div>
+      </div>
+    </article>
+
+
+
+    <article class="card" data-tags="windows,drivers" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://loldrivers.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLDrivers"><img src="https://lolol.farm/assets/loldrivers.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://loldrivers.io/" target="_blank" rel="noopener noreferrer">LOLDrivers<span class="ext">↗</span></a></h3>
+          <div class="card-url">loldrivers.io</div>
+          <p class="card-desc">Living Off The Land Drivers — a curated list of Windows drivers used by adversaries to bypass security controls and carry out attacks.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">drivers</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="linux,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://gtfobins.github.io/" target="_blank" rel="noopener noreferrer" aria-label="GTFOBins"><img src="https://lolol.farm/assets/gtfobins.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://gtfobins.github.io/" target="_blank" rel="noopener noreferrer">GTFOBins<span class="ext">↗</span></a></h3>
+          <div class="card-url">gtfobins.github.io</div>
+          <p class="card-desc">A curated list of Unix binaries that can be used to bypass local security restrictions in misconfigured systems.</p>
+        <div class="card-meta"><span class="tag platform">linux</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolbas-project.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLBAS"><img src="https://lolol.farm/assets/lolbas.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolbas-project.github.io/" target="_blank" rel="noopener noreferrer">LOLBAS<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolbas-project.github.io</div>
+          <p class="card-desc">The goal of the LOLBAS project is to document every binary, script, and library that can be used for Living Off The Land techniques.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,C2,exfiltration" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lots-project.com/" target="_blank" rel="noopener noreferrer" aria-label="LOTS Project"><img src="https://lolol.farm/assets/lots.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lots-project.com/" target="_blank" rel="noopener noreferrer">LOTS Project<span class="ext">↗</span></a></h3>
+          <div class="card-url">lots-project.com</div>
+          <p class="card-desc">Attackers use popular legitimate domains for phishing, C&amp;C, exfiltration and tool downloads to evade detection. This list catalogs domains that allow user-controlled subdomains.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">C2</span><span class="tag">exfiltration</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,file-extensions" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://filesec.io/" target="_blank" rel="noopener noreferrer" aria-label="FileSec"><img src="https://lolol.farm/assets/filesec.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://filesec.io/" target="_blank" rel="noopener noreferrer">FileSec<span class="ext">↗</span></a></h3>
+          <div class="card-url">filesec.io</div>
+          <p class="card-desc">File extensions being used by attackers — a reference for defenders tracking evolving delivery techniques.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">file-extensions</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,APIs" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://malapi.io/" target="_blank" rel="noopener noreferrer" aria-label="MalAPI.io"><img src="https://lolol.farm/assets/malapi.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://malapi.io/" target="_blank" rel="noopener noreferrer">MalAPI.io<span class="ext">↗</span></a></h3>
+          <div class="card-url">malapi.io</div>
+          <p class="card-desc">Maps Windows APIs to common techniques used by malware.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">APIs</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,DLL-hijacking" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://hijacklibs.net/" target="_blank" rel="noopener noreferrer" aria-label="HijackLibs"><img src="https://lolol.farm/assets/hijacklibs.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://hijacklibs.net/" target="_blank" rel="noopener noreferrer">HijackLibs<span class="ext">↗</span></a></h3>
+          <div class="card-url">hijacklibs.net</div>
+          <p class="card-desc">A curated list of DLL Hijacking candidates for Windows environments.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">DLL-hijacking</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,active-directory,red-team" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://wadcoms.github.io/" target="_blank" rel="noopener noreferrer" aria-label="WADComs"><img src="https://lolol.farm/assets/wadcoms.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://wadcoms.github.io/" target="_blank" rel="noopener noreferrer">WADComs<span class="ext">↗</span></a></h3>
+          <div class="card-url">wadcoms.github.io</div>
+          <p class="card-desc">An interactive cheat sheet of offensive security tools and commands for Windows/AD environments.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag platform">active-directory</span><span class="tag">red-team</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="macos,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://www.loobins.io/" target="_blank" rel="noopener noreferrer" aria-label="LOOBins"><img src="https://lolol.farm/assets/loobins.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://www.loobins.io/" target="_blank" rel="noopener noreferrer">LOOBins<span class="ext">↗</span></a></h3>
+          <div class="card-url">loobins.io</div>
+          <p class="card-desc">Living Off the Orchard: macOS Binaries — detailed information on built-in macOS binaries and how threat actors abuse them.</p>
+        <div class="card-meta"><span class="tag platform">macos</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,applications" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolapps-project.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLApps"><img src="https://lolol.farm/assets/lolapps-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolapps-project.github.io/" target="_blank" rel="noopener noreferrer">LOLApps<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolapps-project.github.io</div>
+          <p class="card-desc">Exploitation isn't limited to command-line binaries — built-in and third-party applications get abused too. This project catalogs those techniques.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">applications</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,bootloaders" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://www.bootloaders.io/" target="_blank" rel="noopener noreferrer" aria-label="Bootloaders"><img src="https://lolol.farm/assets/bootloaders-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://www.bootloaders.io/" target="_blank" rel="noopener noreferrer">Bootloaders<span class="ext">↗</span></a></h3>
+          <div class="card-url">bootloaders.io</div>
+          <p class="card-desc">A curated list of known malicious bootloaders across operating systems, helping defenders stay informed on bootloader-based threats.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">bootloaders</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,red-team" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://www.mandiant.com/resources/blog/bring-your-own-land-novel-red-teaming-technique" target="_blank" rel="noopener noreferrer" aria-label="Bring Your Own Land"><img src="https://lolol.farm/assets/mandiant.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://www.mandiant.com/resources/blog/bring-your-own-land-novel-red-teaming-technique" target="_blank" rel="noopener noreferrer">Bring Your Own Land<span class="ext">↗</span></a></h3>
+          <div class="card-url">mandiant.com</div>
+          <p class="card-desc">BYOL — a red-teaming technique where operators carry their own tools instead of relying on what's present on the target.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">red-team</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="hardware" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lothardware.com.tr/" target="_blank" rel="noopener noreferrer" aria-label="Living Off The Hardware"><img src="https://lolol.farm/assets/lothardware.svg" alt="" width="26" height="26"></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lothardware.com.tr/" target="_blank" rel="noopener noreferrer">Living Off The Hardware<span class="ext">↗</span></a></h3>
+          <div class="card-url">lothardware.com.tr</div>
+          <p class="card-desc">A resource collection for identifying and utilizing malicious hardware and devices.</p>
+        <div class="card-meta"><span class="tag platform">hardware</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://wtfbins.wtf/" target="_blank" rel="noopener noreferrer" aria-label="WTFBins"><img src="https://lolol.farm/assets/wtfbins.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://wtfbins.wtf/" target="_blank" rel="noopener noreferrer">WTFBins<span class="ext">↗</span></a></h3>
+          <div class="card-url">wtfbins.wtf</div>
+          <p class="card-desc">A WTFBin is a binary that behaves exactly like malware — except, somehow, it's not.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lofl-project.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOFL Project"><img src="https://lolol.farm/assets/loflcab.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lofl-project.github.io/" target="_blank" rel="noopener noreferrer">LOFL Project<span class="ext">↗</span></a></h3>
+          <div class="card-url">lofl-project.github.io</div>
+          <p class="card-desc">Living Off the Foreign Land — Cmdlets and Binaries (LOFLCABs) that perform activities from the local Windows system against a remote system.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,persistence" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://persistence-info.github.io/" target="_blank" rel="noopener noreferrer" aria-label="Persistence Info"><img src="https://lolol.farm/assets/tractor.webp" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://persistence-info.github.io/" target="_blank" rel="noopener noreferrer">Persistence Info<span class="ext">↗</span></a></h3>
+          <div class="card-url">persistence-info.github.io</div>
+          <p class="card-desc">Information on Windows persistence mechanisms, organized to make protection and detection more efficient.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">persistence</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,certificates" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://github.com/WithSecureLabs/lolcerts" target="_blank" rel="noopener noreferrer" aria-label="lolcerts"><img src="https://lolol.farm/assets/github.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://github.com/WithSecureLabs/lolcerts" target="_blank" rel="noopener noreferrer">lolcerts<span class="ext">↗</span></a></h3>
+          <div class="card-url">github.com/WithSecureLabs/lolcerts</div>
+          <p class="card-desc">Details of code-signing certificates known to be abused in the wild — stolen or legally-acquired, then used to sign malware.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">certificates</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,CI/CD" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://boostsecurityio.github.io/lotp/" target="_blank" rel="noopener noreferrer" aria-label="LOTP"><img src="https://lolol.farm/assets/github.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://boostsecurityio.github.io/lotp/" target="_blank" rel="noopener noreferrer">LOTP<span class="ext">↗</span></a></h3>
+          <div class="card-url">boostsecurityio.github.io/lotp</div>
+          <p class="card-desc">Catalogs CI/CD tools with lesser-known RCE-by-design features ("foot guns") that enable arbitrary code execution through untrusted changes or workflow injection.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">CI/CD</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,binaries,threat-intel" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolbins-ctidriven.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="lolbins-cti driven"><img src="https://lolol.farm/assets/lolbins-cti.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolbins-ctidriven.vercel.app/" target="_blank" rel="noopener noreferrer">lolbins-cti driven<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolbins-ctidriven.vercel.app</div>
+          <p class="card-desc">Helps cyber defenders understand how LOLBin binaries are used by threat actors during an intrusion, in a graphical and digestible format.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag">binaries</span><span class="tag">threat-intel</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="esxi,binaries" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolesxi-project.github.io/LOLESXi/" target="_blank" rel="noopener noreferrer" aria-label="LOLESXi"><img src="https://lolol.farm/assets/lolesxi-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolesxi-project.github.io/LOLESXi/" target="_blank" rel="noopener noreferrer">LOLESXi<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolesxi-project.github.io</div>
+          <p class="card-desc">A comprehensive list of binaries and scripts natively available in VMware ESXi that adversaries have used in their operations.</p>
+        <div class="card-meta"><span class="tag platform">esxi</span><span class="tag">binaries</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,RMM" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolrmm.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLRMM"><img src="https://lolol.farm/assets/lolrmm-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolrmm.io/" target="_blank" rel="noopener noreferrer">LOLRMM<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolrmm.io</div>
+          <p class="card-desc">A curated list of Remote Monitoring and Management (RMM) tools that could potentially be abused by threat actors.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">RMM</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,webhooks,C2,exfiltration" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lotwebhooks.github.io/index.html" target="_blank" rel="noopener noreferrer" aria-label="LOT Webhooks"><img src="https://lolol.farm/assets/lol-webhooks-logo.jpg" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lotwebhooks.github.io/index.html" target="_blank" rel="noopener noreferrer">LOT Webhooks<span class="ext">↗</span></a></h3>
+          <div class="card-url">lotwebhooks.github.io</div>
+          <p class="card-desc">A community-driven project documenting webhooks that may be exploited for data exfiltration and C2 communications.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">webhooks</span><span class="tag">C2</span><span class="tag">exfiltration</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,security-tools" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://0xanalyst.github.io/Project-Lost/" target="_blank" rel="noopener noreferrer" aria-label="Project-Lost"><img src="https://lolol.farm/assets/github.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://0xanalyst.github.io/Project-Lost/" target="_blank" rel="noopener noreferrer">Project-Lost<span class="ext">↗</span></a></h3>
+          <div class="card-url">0xanalyst.github.io/Project-Lost</div>
+          <p class="card-desc">A curated list of security tools used by adversaries to bypass security controls and carry out attacks.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">security-tools</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,tunnels,exfiltration" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lottunnels.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOT Tunnels"><img src="https://lolol.farm/assets/lol-tunnels-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lottunnels.github.io/" target="_blank" rel="noopener noreferrer">LOT Tunnels<span class="ext">↗</span></a></h3>
+          <div class="card-url">lottunnels.github.io</div>
+          <p class="card-desc">Documents digital tunnels that can be abused by threat actors or insiders for data exfiltration, persistence, and shell access.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">tunnels</span><span class="tag">exfiltration</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,active-directory,red-team" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolad-project.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLAD"><img src="https://lolol.farm/assets/lol-ad-logo.jpg" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolad-project.github.io/" target="_blank" rel="noopener noreferrer">LOLAD<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolad-project.github.io</div>
+          <p class="card-desc">A comprehensive collection of Active Directory techniques, commands, and functions usable natively for offensive security operations and red team exercises.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag platform">active-directory</span><span class="tag">red-team</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,C2" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolc2.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLC2"><img src="https://lolol.farm/assets/lol-c2-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolc2.github.io/" target="_blank" rel="noopener noreferrer">LOLC2<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolc2.github.io</div>
+          <p class="card-desc">A collection of C2 frameworks that leverage legitimate services to evade detection.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">C2</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="windows,cloud,APIs" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://themagicclaw.github.io/LOLAPI/" target="_blank" rel="noopener noreferrer" aria-label="LOLAPI"><img src="https://lolol.farm/assets/magicclaw.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://themagicclaw.github.io/LOLAPI/" target="_blank" rel="noopener noreferrer">LOLAPI<span class="ext">↗</span></a></h3>
+          <div class="card-url">themagicclaw.github.io/LOLAPI</div>
+          <p class="card-desc">Real-world abused APIs across Windows, cloud, and browser platforms — with detection strategies, mitigation guidance, and red-team POCs.</p>
+        <div class="card-meta"><span class="tag platform">windows</span><span class="tag platform">cloud</span><span class="tag">APIs</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,exfiltration" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolexfil.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLEXFIL"><img src="https://lolol.farm/assets/lolexfil-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolexfil.github.io/" target="_blank" rel="noopener noreferrer">LOLEXFIL<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolexfil.github.io</div>
+          <p class="card-desc">A comprehensive catalog of data exfiltration methods with detection patterns, simulation examples, IOC artifacts, and ATT&amp;CK mappings.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">exfiltration</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,SaaS,C2,exfiltration" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lolfsaas.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOLFSaaS"><img src="https://lolol.farm/assets/lolfsaas-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lolfsaas.github.io/" target="_blank" rel="noopener noreferrer">LOLFSaaS<span class="ext">↗</span></a></h3>
+          <div class="card-url">lolfsaas.github.io</div>
+          <p class="card-desc">Living Off Free SaaS — a directory of free SaaS platforms used for C2, exfiltration, and adversary tooling, with ATT&amp;CK mappings and detection logic.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">SaaS</span><span class="tag">C2</span><span class="tag">exfiltration</span></div></div>
+      </div>
+    </article>
+
+    <article class="card" data-tags="cross-platform,phishing" data-search="">
+      <div class="card-row">
+        <a class="logo" href="https://lote-project.github.io/" target="_blank" rel="noopener noreferrer" aria-label="LOTE"><img src="https://lolol.farm/assets/lote-logo.png" alt=""></a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="https://lote-project.github.io/" target="_blank" rel="noopener noreferrer">LOTE<span class="ext">↗</span></a></h3>
+          <div class="card-url">lote-project.github.io</div>
+          <p class="card-desc">Living Off Trusted Email — a quick-reference for leveraging trusted platforms' email features to deliver phishing during social engineering campaigns.</p>
+        <div class="card-meta"><span class="tag platform">cross-platform</span><span class="tag">phishing</span></div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ========= EMPTY STATE ========= -->
+  <div class="empty hidden" id="empty">
+    <div>no projects match your filters</div>
+    <pre>$ clear-filters --all
+$ retry</pre>
+  </div>
+
+  <!-- ========= AFFILIATE FOOTER BLOCK ========= -->
+  <section id="affiliateFoot" class="affiliate-foot">
+    <span class="affiliate-foot-eyebrow">// affiliate</span>
+    <img class="affiliate-foot-logo" src="https://lolol.farm/assets/magicsword-logo.png" alt="MagicSword">
+    <p class="affiliate-foot-text">Want to see how you can protect your assets from these attacks? Try free for up to 100 endpoints with this affiliate link.</p>
+    <a class="affiliate-foot-cta" href="https://www.magicsword.io/?utm_source=lolol&amp;utm_medium=affiliate&amp;utm_campaign=community-widget" target="_blank" rel="noopener sponsored">start free trial →</a>
+  </section>
+
+  <!-- ========= FOOTER ========= -->
+  
+
+  <button id="toTop" class="to-top" aria-label="Scroll to top">↑</button>
+
+
+  
+
+
+</body></html>

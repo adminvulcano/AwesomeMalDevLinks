@@ -1,0 +1,24 @@
+Title:
+DSCourier — WinGet Configuration COM API abuse to apply DSC via Microsoft-signed binaries
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+DSCourier is a proof-of-concept that leverages the WinGet Configuration COM API to apply Desired State Configuration (DSC) on a target system using Microsoft-signed components. It targets the problem of executing configuration-driven actions (and potentially payload-like changes) through trusted, signed binaries/interfaces rather than custom tooling. The repo focuses on using WinGet’s `Microsoft.Management.Configuration` interfaces and `winget configure` feature-flagged functionality to drive DSC resource application. It is positioned as an operator-modifiable research PoC, with value in crafting custom configuration files and extending the workflow. The author claims the technique has bypassed multiple EDR products (CrowdStrike Falcon, MDE, Elastic) in testing. It’s primarily useful for red teamers and offensive researchers exploring signed-binary/COM-based tradecraft and defensive gaps around WinGet/DSC telemetry.
+
+Technical Focus:
+- WinGet Configuration (winget configure) internals and feature enablement
+- COM API usage via `Microsoft.Management.Configuration` interop
+- DSC (Desired State Configuration) execution and resource application (e.g., PSDscResources)
+- Living-off-the-land via Microsoft-signed binaries/components
+- .NET 8 / Windows SDK interop and build pipeline (PowerShell + C#)
+
+Use Cases:
+- Execute system configuration changes through WinGet/DSC pathways to reduce custom tool footprint
+- Research and validate EDR detection gaps around WinGet Configuration and DSC activity
+- Build/modify custom DSC configurations for controlled post-exploitation actions
+- Develop detections by mapping COM/WinGet/DSC execution artifacts and dependencies
+
+Keywords:
+DSCourier, WinGet, winget configure, WinGet Configuration, COM API, Microsoft.Management.Configuration, DSC, Desired State Configuration, PSDscResources, PowerShell, .NET 8, Windows 10, Windows 11, Server 2025, signed binary proxy, LOLBAS, EDR bypass, CrowdStrike Falcon, Microsoft Defender for Endpoint, Elastic Security, proof-of-concept

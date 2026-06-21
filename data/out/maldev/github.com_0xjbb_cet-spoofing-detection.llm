@@ -1,0 +1,24 @@
+Title:
+CET Spoofing Detection
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+This repository provides a proof-of-concept Windows tool to detect call stack/stack spoofing in Intel CET-enabled processes. It snapshots threads, identifies CET processes, and compares the user-mode stack against the CET shadow stack to find missing or inconsistent frames indicative of spoofed call stacks. The goal is to catch techniques used to evade EDR/userland stack-walking by manipulating return addresses or unwinding metadata while CET maintains a protected shadow stack. The author notes false positives with some .NET scenarios due to different stack/unwind behaviors. It’s primarily useful for Blue Teams/SOC and EDR engineers validating detections, and for Red Teams to understand CET-based detection surfaces. It’s interesting because it leverages CET’s shadow stack as a ground-truth signal against user stack tampering.
+
+Technical Focus:
+- Intel CET shadow stack vs user stack comparison
+- Thread snapshotting and per-thread stack inspection
+- Stack unwinding / frame validation (missing frames detection)
+- Detection of stack spoofing / call stack manipulation
+- Windows process/thread introspection in C++
+
+Use Cases:
+- Detect stack spoofing in CET-protected processes during incident response
+- Validate/benchmark EDR detections against call stack spoofing techniques
+- Red team tradecraft testing to see whether spoofing survives CET-based scrutiny
+- Research on CET’s defensive value and limitations (e.g., .NET false positives)
+
+Keywords:
+Intel CET, shadow stack, stack spoofing, call stack spoofing, stack unwinding, missing frames, Windows threads, thread snapshot, user stack, CET processes, EDR evasion, detection engineering, BYOUD, process introspection, C++, .NET false positives, unwind metadata, SOC tooling

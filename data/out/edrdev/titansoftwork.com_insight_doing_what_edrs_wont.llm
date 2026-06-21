@@ -1,0 +1,26 @@
+Title:
+Blackbird: Doing What EDRs Won’t (Kernel Hook Engine)
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+This post explains the design and hardening of Blackbird’s Windows kernel hook engine, built to provide syscall-level telemetry and control that most commercial EDRs avoid due to stability risk. It focuses on reliably inline-hooking selected `ntoskrnl.exe` `Nt*` routines (memory, section, and process inspection APIs) while preserving exact execution semantics to prevent crashes. The author details real failure modes encountered (truncated prologues, register-clobbering jump stubs, unsafe rollback) and the engineering changes that made hooks safe across SMP systems. Key implementation points include descriptor-driven hook definitions, trampoline construction in `NonPagedPoolExecute`, MDL-based remapping to write read-only kernel text, and cross-core synchronization via IPIs plus serializing instructions for self-modifying code correctness. Hook execution is gated (armed state, monitored PIDs, IRQL checks) and emits ETW telemetry with careful unload/rundown handling. It’s most useful for malware analysts, kernel developers, and red team/maldev researchers who need deep visibility or controlled kernel instrumentation, and for defenders studying how kernel-level monitoring can be implemented (or attacked) safely.
+
+Technical Focus:
+- Windows kernel inline hooking of `ntoskrnl.exe` `Nt*` routines
+- Trampoline building and prologue “stolen bytes” correctness
+- MDL-based writable mappings of read-only kernel code (`IoAllocateMdl`, `MmMapLockedPagesSpecifyCache`, `MmProtectMdlSystemAddress`)
+- SMP-safe patching with IPIs (`KeIpiGenericCall`) and serialization (`KeMemoryBarrier`, `CPUID`)
+- Hook lifecycle safety: verification, rollback, rundown protection, in-flight tracking
+- ETW-based telemetry emission from kernel hooks
+
+Use Cases:
+- Kernel-level telemetry for memory allocation/protection, section mapping, and process inspection syscalls
+- Building robust research instrumentation that avoids BSODs during inline patching
+- Studying EDR/anti-cheat style kernel monitoring tradeoffs and implementation pitfalls
+- Developing or evaluating syscall monitoring/anti-evasion techniques in controlled environments
+- Creating targeted per-process syscall tracing with minimal system-wide overhead
+
+Keywords:
+Blackbird, Windows kernel, ntoskrnl.exe, kernel hooking, inline hook, trampoline, NtAllocateVirtualMemory, NtWriteVirtualMemory, NtProtectVirtualMemory, NtCreateSection, NtMapViewOfSection, NtQuerySystemInformation, ETW, MDL, IoAllocateMdl, MmMapLockedPagesSpecifyCache, KeIpiGenericCall, SMP, instruction cache coherency, PatchGuard (KPP), NonPagedPoolExecute, WinDbg, IRQL

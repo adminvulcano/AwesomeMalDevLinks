@@ -1,0 +1,1128 @@
+# https://whiteknightlabs.com/2024/02/09/a-technical-deep-dive-comparing-anti-cheat-bypass-and-edr-bypass/
+
+<!DOCTYPE html><html lang="en-US" prefix="og: https://ogp.me/ns#" dir="ltr">
+
+<body class="wp-singular post-template-default single single-post postid-26155 single-format-standard wp-embed-responsive wp-theme-hello-elementor ehf-template-hello-elementor ehf-stylesheet-hello-elementor et_monarch hello-elementor-default elementor-default elementor-template-canvas elementor-kit-27292 chrome e--ua-blink e--ua-chrome e--ua-webkit" data-elementor-device-mode="none">
+	<!-- start Simple Custom CSS and JS -->
+<!-- Add HTML code to the header or the footer.
+
+For example, you can use the following code for loading the jQuery library from Google CDN:
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+or the following one for loading the Bootstrap library from jsDelivr:
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+-- End of the comment --> 
+
+<!-- Google Tag Manager (noscript) -->
+
+<!-- End Google Tag Manager (noscript) --><!-- end Simple Custom CSS and JS -->
+		<div data-elementor-type="wpr-theme-builder" data-elementor-id="29780" class="elementor elementor-29780 post-26155 post type-post status-publish format-standard hentry category-uncategorized">
+				<div class="elementor-element elementor-element-1942ca1 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="1942ca1" data-element_type="container">
+				<div class="elementor-element elementor-element-d4867ca elementor-widget__width-inherit elementor-widget elementor-widget-shortcode" data-id="d4867ca" data-element_type="widget" data-widget_type="shortcode.default">
+				<div class="elementor-widget-container">
+							<div class="elementor-shortcode">		<div data-elementor-type="container" data-elementor-id="29841" class="elementor elementor-29841">
+				<div class="elementor-element elementor-element-ff046b7 elementor-hidden-desktop elementor-hidden-laptop elementor-hidden-tablet_extra elementor-hidden-tablet elementor-hidden-mobile_extra elementor-hidden-mobile e-flex e-con-boxed wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="ff046b7" data-element_type="container">
+					<div class="e-con-inner">
+				<div class="elementor-element elementor-element-85f582a elementor-hidden-desktop elementor-hidden-laptop elementor-hidden-tablet_extra elementor-hidden-tablet elementor-hidden-mobile_extra elementor-hidden-mobile elementor-widget elementor-widget-html" data-id="85f582a" data-element_type="widget" data-widget_type="html.default">
+				<div class="elementor-widget-container">
+					<!-- Responsive Container -->
+<div class="wkl-banner-container">
+    
+    <!-- The Image -->
+    <img src="https://whiteknightlabs.com/wp-content/uploads/2025/12/WKL_Click-Here_R1-01.jpg" alt="White Knight Labs Training Bundle" class="wkl-banner-image">
+
+    <!-- Area 1: Full Bundle -->
+    <a href="https://buy.stripe.com/5kQcN55DFb5K8Rggfg9IQ0t" target="_blank" title="Full Bundle" class="wkl-link link-full-bundle"></a>
+
+    <!-- Area 2: 2 Class Bundle -->
+    <a href="https://buy.stripe.com/5kQbJ14zB7Ty8Rg9QS9IQ0y" target="_blank" title="2 Class Bundle" class="wkl-link link-2-class"></a>
+
+    <!-- Area 3: 3 Class Bundle -->
+    <a href="https://buy.stripe.com/fZu8wPc235Lq3wW0gi9IQ0x" target="_blank" title="3 Class Bundle" class="wkl-link link-3-class"></a>
+
+</div>				</div>
+				</div>
+				<div class="elementor-element elementor-element-20d51c5 elementor-widget__width-inherit elementor-widget elementor-widget-image" data-id="20d51c5" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img width="1520" height="200" src="https://whiteknightlabs.com/wp-content/uploads/2024/08/Memorial-Day-sale-live.png" class="attachment-full size-full wp-image-34778" alt="">															</div>
+				</div>
+					</div>
+				</div>
+		<div class="elementor-element elementor-element-7e163265 z-header e-flex e-con-boxed wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="7e163265" data-element_type="container">
+					<div class="e-con-inner">
+		<div class="elementor-element elementor-element-1d40857e e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="1d40857e" data-element_type="container">
+				<div class="elementor-element elementor-element-1b9885cb z-logo elementor-widget elementor-widget-image" data-id="1b9885cb" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://whiteknightlabs.com/">
+							<img width="202" height="70" src="https://whiteknightlabs.com/wp-content/uploads/2024/08/Logo-v2.png" class="attachment-full size-full wp-image-27321" alt="White Knight Labs Logo">								</a>
+															</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-109d0bc6 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="109d0bc6" data-element_type="container">
+				<div class="elementor-element elementor-element-3d2d14f6 elementor-widget__width-auto hfe-submenu-icon-classic hfe-submenu-animation-slide_up z-menu elementor-widget-tablet__width-initial hfe-nav-menu__align-left hfe-link-redirect-child hfe-nav-menu__breakpoint-tablet elementor-widget elementor-widget-navigation-menu" data-id="3d2d14f6" data-element_type="widget" data-settings="{&quot;padding_horizontal_menu_item&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:0,&quot;sizes&quot;:[]},&quot;menu_space_between&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:44,&quot;sizes&quot;:[]},&quot;distance_from_menu_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:0,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:14,&quot;sizes&quot;:[]},&quot;padding_horizontal_menu_item_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_menu_item_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_menu_item_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_menu_item_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_menu_item_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:15,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_menu_item_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_space_between_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_space_between_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_space_between_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_space_between_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_space_between_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;menu_row_space_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;dropdown_border_radius&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;dropdown_border_radius_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;dropdown_border_radius_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;dropdown_border_radius_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;dropdown_border_radius_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;dropdown_border_radius_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;top&quot;:&quot;&quot;,&quot;right&quot;:&quot;&quot;,&quot;bottom&quot;:&quot;&quot;,&quot;left&quot;:&quot;&quot;,&quot;isLinked&quot;:true},&quot;width_dropdown_item&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;220&quot;,&quot;sizes&quot;:[]},&quot;width_dropdown_item_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;width_dropdown_item_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;width_dropdown_item_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;width_dropdown_item_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;width_dropdown_item_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_horizontal_dropdown_item_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;padding_vertical_dropdown_item_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;distance_from_menu&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;distance_from_menu_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;distance_from_menu_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;distance_from_menu_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;distance_from_menu_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_size_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_width_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_border_radius_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]}}" data-widget_type="navigation-menu.default">
+				<div class="elementor-widget-container">
+								<div class="hfe-nav-menu hfe-layout-horizontal hfe-nav-menu-layout horizontal hfe-pointer__none" data-layout="horizontal">
+				<div role="button" class="hfe-nav-menu__toggle elementor-clickable" aria-haspopup="true" aria-expanded="false">
+					<span class="screen-reader-text">Menu</span>
+					<div class="hfe-nav-menu-icon">
+						<svg aria-hidden="true" class="e-font-icon-svg e-fas-align-justify" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M432 416H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path></svg>					</div>
+				</div>
+				
+			</div>
+							</div>
+				</div>
+				<div class="elementor-element elementor-element-2ce86a3 hfe-search-layout-icon elementor-hidden-tablet elementor-hidden-mobile_extra elementor-hidden-mobile elementor-widget elementor-widget-hfe-search-button" data-id="2ce86a3" data-element_type="widget" data-settings="{&quot;toggle_icon_size&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:20,&quot;sizes&quot;:[]},&quot;input_icon_size&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:200,&quot;sizes&quot;:[]},&quot;input_icon_size_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;input_icon_size_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;input_icon_size_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;input_icon_size_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;input_icon_size_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_icon_size_laptop&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_icon_size_tablet_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_icon_size_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_icon_size_mobile_extra&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;toggle_icon_size_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]}}" data-widget_type="hfe-search-button.default">
+				<div class="elementor-widget-container">
+							<form class="hfe-search-button-wrapper" role="search" action="https://whiteknightlabs.com/" method="get">
+
+						<div class="hfe-search-icon-toggle">
+				<input placeholder="" class="hfe-search-form__input" type="search" name="s" title="Search" value="" style="padding-right: 20px;">
+				<i class="fas fa-search" aria-hidden="true"></i>
+			</div>
+					</form>
+						</div>
+				</div>
+				</div>
+					</div>
+				</div>
+				</div>
+		<span class="wpr-template-edit-btn" data-permalink="https://whiteknightlabs.com/?elementor_library=z-header">Edit Template</span></div>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-5aa7457 e-flex e-con-boxed wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="5aa7457" data-element_type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div class="elementor-element elementor-element-5ee8ea2 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="5ee8ea2" data-element_type="container">
+		<div class="elementor-element elementor-element-0708fe0 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="0708fe0" data-element_type="container">
+				<div class="elementor-element elementor-element-0d1c8bf elementor-widget elementor-widget-wpr-post-title" data-id="0d1c8bf" data-element_type="widget" data-widget_type="wpr-post-title.default">
+				<div class="elementor-widget-container">
+					<h1 class="wpr-post-title">A Technical Deep Dive: Comparing Anti-Cheat Bypass and EDR Bypass&nbsp;</h1>				</div>
+				</div>
+				</div>
+				</div>
+					</div>
+				</div>
+		<div class="elementor-element elementor-element-96821df e-flex e-con-boxed wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="96821df" data-element_type="container">
+					<div class="e-con-inner">
+		<div class="elementor-element elementor-element-7ede4ff e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="7ede4ff" data-element_type="container">
+				<div class="elementor-element elementor-element-f03e909 wpr-post-info-align-left elementor-widget__width-inherit elementor-widget elementor-widget-wpr-post-info" data-id="f03e909" data-element_type="widget" data-widget_type="wpr-post-info.default">
+				<div class="elementor-widget-container">
+					<ul class="wpr-post-info wpr-post-info-horizontal"><li class="wpr-post-info-author"><span>Mark Lester Dampios</span></li><li class="wpr-post-info-date"><span>February 9, 2024</span></li><li class="wpr-post-info-taxonomy"><span>Uncategorized</span></li><li class="wpr-post-info-comments"></li></ul>				</div>
+				</div>
+				<div class="elementor-element elementor-element-c933496 elementor-widget__width-auto elementor-widget elementor-widget-wpr-post-media" data-id="c933496" data-element_type="widget" data-widget_type="wpr-post-media.default">
+				<div class="elementor-widget-container">
+					<div class="wpr-featured-media-wrap" data-caption="standard"></div>				</div>
+				</div>
+				<div class="elementor-element elementor-element-450bc4c elementor-widget__width-inherit z-post-content elementor-widget elementor-widget-wpr-post-content" data-id="450bc4c" data-element_type="widget" data-widget_type="wpr-post-content.default">
+				<div class="elementor-widget-container">
+					<div class="wpr-post-content">
+<p class="wp-block-paragraph">In the evolving landscape of digital security, two prominent challenges emerge that pose significant threats to the integrity of online systems and user data: anti-cheat bypass and EDR bypass. These concepts revolve around circumventing protective measures designed to ensure fair play in the realm of online gaming and to safeguard computer systems against malicious software, respectively. This post will delve into the goals of anti-cheat bypass and EDR bypass, exploring the motivations behind these activities and their implications, and will draw a distinction between legitimate security research and illicit activities.&nbsp;<br></p>
+
+
+
+<figure class="wp-block-table is-style-stripes"><table><tbody><tr><td><strong>Aspect</strong>&nbsp;</td><td><strong>Anti-Cheat Bypass</strong>&nbsp;</td><td><strong>EDR Bypass</strong>&nbsp;</td></tr><tr><td>Target Environment&nbsp;</td><td>Gaming applications and platforms&nbsp;</td><td>General computing environments and systems&nbsp;</td></tr><tr><td>Objective&nbsp;</td><td>Evade detection in multiplayer games&nbsp;</td><td>Circumvent EDR software detection&nbsp;</td></tr><tr><td>Techniques&nbsp;</td><td>Code injection, hooking, packet manipulation&nbsp;</td><td>Polymorphic malware, rootkits, code obfuscation&nbsp;</td></tr><tr><td>Detection Mechanisms&nbsp;</td><td>Heuristic analysis, behavior monitoring&nbsp;</td><td>Signature-based detection, heuristics, sandboxing&nbsp;</td></tr><tr><td>Impact on Users&nbsp;</td><td>Unfair advantages in games, potential for game exploitation&nbsp;</td><td>Compromised system integrity, data theft, and malware infections&nbsp;</td></tr><tr><td>Legal Implications&nbsp;</td><td>Violation of terms of service in gaming platforms&nbsp;</td><td>Unlawful activities, data breaches, and legal consequences&nbsp;</td></tr><tr><td>Ecosystem Impact&nbsp;</td><td>Degraded gaming experience, loss of revenue for developers&nbsp;</td><td>Widespread malware outbreaks, compromised user data&nbsp;</td></tr><tr><td>Countermeasures&nbsp;</td><td>Regular updates, server-side validation, player reporting&nbsp;</td><td>Regular EDR updates, intrusion detection systems, user education&nbsp;</td></tr></tbody></table><figcaption class="wp-element-caption">Quick Comparison</figcaption></figure>
+
+
+
+<div style="height:28px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h1 class="wp-block-heading">Anti-Cheat Bypass</h1>
+
+
+
+<p class="wp-block-paragraph">Anti-cheat bypass refers to the process of evading or overcoming security mechanisms implemented in online games to detect and prevent cheating. The primary goal of individuals attempting to bypass anti-cheat systems is to gain an unfair advantage over other players, disrupting the balance and integrity of the gaming experience. Cheating in online games can take various forms, including aimbots, wallhacks, speed hacks, and other modifications that provide an unfair advantage.</p>
+
+
+
+<h2 class="wp-block-heading">Motivations Behind Anti-Cheat Bypass</h2>
+
+
+
+<p class="wp-block-paragraph">The motivations behind individuals engaging in anti-cheat bypass activities are multifaceted. Some seek the thrill of outsmarting security systems, driven by the challenge of breaking through digital barriers. Others may be motivated by a desire for recognition within hacking communities or to monetize their exploits by selling cheat tools and services. In some cases, players may resort to cheating as a form of rebellion against perceived unfairness in the gaming environment.</p>
+
+
+
+<h2 class="wp-block-heading">Legitimate Security Research vs. Illicit Activities in Anti-Cheat Bypass</h2>
+
+
+
+<p class="wp-block-paragraph">It is essential to distinguish between legitimate security research and illicit activities when discussing anti-cheat bypass. Ethical hackers may engage in responsible disclosure, helping game developers identify vulnerabilities and strengthen their anti-cheat measures. However, individuals who exploit these vulnerabilities for personal gain or to disrupt online communities fall into the category of illicit actors, threatening the stability of online ecosystems.</p>
+
+
+
+<h1 class="wp-block-heading">EDR Bypass</h1>
+
+
+
+<p class="wp-block-paragraph">On the other hand, EDR bypass involves evading or circumventing the detection mechanisms employed by EDR software to identify and neutralize malicious software. Malware developers and cybercriminals employ various techniques to create and distribute malware that can go undetected by EDR programs, allowing them to compromise systems, steal sensitive information, or launch other malicious activities.</p>
+
+
+
+<h2 class="wp-block-heading">Motivations Behind EDR Bypass</h2>
+
+
+
+<p class="wp-block-paragraph">The motivations behind EDR bypass are predominantly malicious, driven by the desire to evade detection and ensure the successful deployment of malware. Cybercriminals aim to compromise the security of individual users, businesses, and organizations for financial gain, espionage, or other nefarious purposes. The constantly evolving nature of cybersecurity requires malware developers to stay one step ahead of security solutions, leading to a perpetual arms race between attackers and defenders.</p>
+
+
+
+<h2 class="wp-block-heading">Legitimate Security Research vs. Illicit Activities in EDR Bypass</h2>
+
+
+
+<p class="wp-block-paragraph">Legitimate security research and illicit activities in EDR bypass highlight a fine line between enhancing cybersecurity and exploiting vulnerabilities for malicious purposes. Ethical researchers aim to strengthen security postures through responsible disclosure and adherence to legal frameworks, contrasting sharply with attackers who operate with malicious intent, outside legal boundaries. This dynamic underscores the critical need for continuous investment in security research and collaboration within the cybersecurity community to stay ahead of evolving threats.</p>
+
+
+
+<h1 class="wp-block-heading">Anti-Cheat Bypass and EDR Bypass</h1>
+
+
+
+<p class="wp-block-paragraph">The goals of anti-cheat bypass and EDR bypass differ in their focus and impact. Anti-cheat bypass aims to undermine fair play in online gaming, while EDR bypass seeks to compromise the security of computer systems for malicious purposes. Distinguishing between legitimate security research and illicit activities is crucial in addressing these challenges and fostering a secure digital environment. As technology continues to advance, the need for innovative and adaptive security measures becomes increasingly apparent to counteract the persistent efforts of those seeking to exploit vulnerabilities for their gain.</p>
+
+
+
+<p class="wp-block-paragraph">In the ever-evolving landscape of cybersecurity, the perpetual battle between attackers and defenders has given rise to sophisticated tools and techniques on both sides. While anti-cheat bypass and EDR bypass both involve circumventing security measures, they target different domains, with anti-cheat focusing on gaming environments and EDR on overall system protection.</p>
+
+
+
+<figure class="wp-block-table is-style-stripes"><table><tbody><tr><td><strong>Windows API</strong>&nbsp;</td><td><strong>Category</strong>&nbsp;</td><td><strong>Anti-Cheat Bypass</strong>&nbsp;</td><td><strong>EDR Bypass</strong>&nbsp;</td></tr><tr><td><strong>Execution</strong>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>CreateRemoteThread&nbsp;</td><td>Code Injection&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td>VirtualAllocEx&nbsp;</td><td>Code Injection&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td>WriteProcessMemory&nbsp;</td><td>Code Injection&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td>CreateProcess&nbsp;</td><td>Process Creation&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td>LoadLibrary&nbsp;</td><td>Dynamic Link Library (DLL) Load&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td>ShellExecute&nbsp;</td><td>Process Execution&nbsp;</td><td>X&nbsp;</td><td>X&nbsp;</td></tr><tr><td><strong>Persistence</strong>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>RegSetValueEx&nbsp;</td><td>Registry Modification&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>CreateService&nbsp;</td><td>Service Creation&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>ChangeServiceConfig&nbsp;</td><td>Service Configuration&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>Privilege Escalation&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>AdjustTokenPrivileges&nbsp;</td><td>Token Privilege Modification&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>OpenProcessToken&nbsp;</td><td>Token Manipulation&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>EnablePrivilege&nbsp;</td><td>Enable Specific Privilege&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td><strong>Defense Evasion and Anti-Analysis</strong>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>NtQuerySystemInformation&nbsp;</td><td>System Information Query&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>NtSetInformationProcess&nbsp;</td><td>Process Information Setting&nbsp;</td><td>&nbsp;</td><td>X&nbsp;</td></tr><tr><td>SetThreadContext&nbsp;</td><td>Thread Context Modification&nbsp;</td><td>X&nbsp;</td><td>&nbsp;</td></tr><tr><td>ZwUnmapViewOfSection&nbsp;</td><td>Memory Section Unmapping&nbsp;</td><td>X&nbsp;</td><td>&nbsp;</td></tr><tr><td>OutputDebugString&nbsp;</td><td>Debug Output&nbsp;</td><td>X&nbsp;</td><td>&nbsp;</td></tr></tbody></table><figcaption class="wp-element-caption">Comparison of Windows API Commonly Used in Bypass Techniques</figcaption></figure>
+
+
+
+<div style="height:28px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h1 class="wp-block-heading">Anti-Cheat Bypass Techniques</h1>
+
+
+
+<h2 class="wp-block-heading">Code Injection and Hooking</h2>
+
+
+
+<p class="wp-block-paragraph">Consider a scenario where an attacker aims to gain an unfair advantage in an online game by injecting custom DLLs into the game process. These DLLs may contain cheats, such as aimbots or wallhacks, allowing the player to manipulate the game environment and gain an upper hand.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;Windows.h&gt; 
+
+void InjectDLL(DWORD processId, const char* dllPath) { 
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId); 
+    LPVOID dllPathAddr = VirtualAllocEx(hProcess, NULL, strlen(dllPath) + 1, MEM_COMMIT, PAGE_READWRITE); 
+    WriteProcessMemory(hProcess, dllPathAddr, dllPath, strlen(dllPath) + 1, NULL); 
+  
+    LPVOID loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"); 
+
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, dllPathAddr, 0, NULL);
+
+    WaitForSingleObject(hThread, INFINITE);
+
+    CloseHandle(hThread);
+    VirtualFreeEx(hProcess, dllPathAddr, 0, MEM_RELEASE);
+    CloseHandle(hProcess);
+}
+
+int main() {
+    InjectDLL(1234, "C:\\Path\\To\\Your\\Hack.dll");
+    return 0;
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading">Function Hooking in Multiplayer Games</h2>
+
+
+
+<p class="wp-block-paragraph">In the realm of multiplayer games, attackers may employ function hooking techniques to intercept and modify functions responsible for player health or ammunition. This manipulation can provide an illicit advantage by making the attacker’s character invulnerable or granting infinite ammunition.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;Windows.h&gt; 
+#include &lt;iostream&gt; 
+
+// Original function 
+int OriginalFunction(int a, int b) { 
+    return a + b; 
+} 
+
+// Hooked function 
+int HookedFunction(int a, int b) { 
+    std::cout &lt;&lt; "HookedFunction is called!" &lt;&lt; std::endl; 
+    return OriginalFunction(a, b); 
+} 
+
+int main() { 
+    // Replace the original function with the hooked function 
+    DetourTransactionBegin(); 
+    DetourUpdateThread(GetCurrentThread()); 
+    DetourAttach(&amp;(PVOID&amp;)OriginalFunction, HookedFunction); 
+    DetourTransactionCommit(); 
+
+    // Call the hooked function 
+    int result = OriginalFunction(10, 20); 
+
+    // Cleanup 
+    DetourTransactionBegin(); 
+    DetourUpdateThread(GetCurrentThread()); 
+    DetourDetach(&amp;(PVOID&amp;)OriginalFunction, HookedFunction); 
+    DetourTransactionCommit(); 
+
+    return 0; 
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading">Packet Manipulation</h2>
+
+
+
+<p class="wp-block-paragraph">Cheaters often manipulate network packets using tools like Scapy to alter the information sent between the game client and server. For instance, an attacker could modify the coordinates of their character in the game world, creating the illusion of teleportation or superhuman speed.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;WinSock2.h&gt; 
+
+int main() { 
+    // Initialize Winsock 
+    WSADATA wsaData; 
+    WSAStartup(MAKEWORD(2, 2), &amp;wsaData); 
+
+    // Create a socket 
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); 
+
+    // Connect to the game server 
+    sockaddr_in serverAddr; 
+    serverAddr.sin_family = AF_INET; 
+    serverAddr.sin_port = htons(1234); 
+    inet_pton(AF_INET, "127.0.0.1", &amp;serverAddr.sin_addr); 
+    connect(sock, (struct sockaddr*)&amp;serverAddr, sizeof(serverAddr)); 
+
+    // Manipulate outgoing packet 
+    const char* modifiedData = "ModifiedPacketData"; 
+    send(sock, modifiedData, strlen(modifiedData), 0); 
+
+    // Cleanup 
+    closesocket(sock); 
+    WSACleanup(); 
+    return 0; 
+} </code></pre>
+
+
+
+<h2 class="wp-block-heading">Code Obfuscation</h2>
+
+
+
+<p class="wp-block-paragraph">To avoid detection, cheat developers may employ code obfuscation techniques when creating game cheats. This involves transforming the cheat code into a more complex and convoluted form, making it challenging for anti-cheat systems to recognize and analyze the malicious code.</p>
+
+
+
+<pre class="wp-block-code"><code>// Example of basic code obfuscation 
+
+void ObfuscatedFunction() { 
+    int a = 5; 
+    int b = 10; 
+
+    // Unnecessary instructions for obfuscation 
+    a = a + 1; 
+    b = b - 1; 
+
+    int result = a + b; 
+    // ... 
+} </code></pre>
+
+
+
+<div style="height:28px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h1 class="wp-block-heading">EDR Bypass Techniques</h1>
+
+
+
+<h2 class="wp-block-heading">Polymorphic Malware</h2>
+
+
+
+<p class="wp-block-paragraph">Imagine a scenario where a polymorphic malware variant is distributed through a phishing campaign. The malware constantly mutates its code to evade signature-based detection, making it difficult for traditional EDR solutions to recognize and block the malicious payload.</p>
+
+
+
+<p class="wp-block-paragraph">The example below is an application with the very same functionality but with noticeable differences with opcodes. The sample demonstrates a lot of junk codes between each jump to bypass signature scanning.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-large"><a href="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-1.png"><img fetchpriority="high" decoding="async" width="1024" height="565" src="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-1-1024x565.png" alt="" class="wp-image-26183"></a><figcaption class="wp-element-caption">Basic Polymorphism</figcaption></figure>
+
+
+
+<h2 class="wp-block-heading">Rootkit Techniques</h2>
+
+
+
+<p class="wp-block-paragraph">In a real-world scenario, an advanced persistent threat (APT) may deploy a kernel-mode rootkit to hide its presence on compromised systems. This rootkit operates at a deep level within the operating system, making it challenging for EDR solutions to detect and remove.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;ntddk.h&gt; 
+
+NTSTATUS MyNtQuerySystemInformation( 
+    SYSTEM_INFORMATION_CLASS SystemInformationClass, 
+    PVOID SystemInformation, 
+    ULONG SystemInformationLength, 
+    PULONG ReturnLength 
+) { 
+    NTSTATUS status = OriginalNtQuerySystemInformation( 
+        SystemInformationClass, 
+        SystemInformation, 
+        SystemInformationLength, 
+        ReturnLength 
+    ); 
+
+    // Modify SystemInformation to hide specific processes 
+    // ... 
+    return status; 
+} </code></pre>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;Windows.h&gt; 
+
+BOOL HideFile(const wchar_t* filePath) { 
+    return SetFileAttributes(filePath, FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM); 
+} </code></pre>
+
+
+
+<div style="height:28px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h1 class="wp-block-heading">Additional Techniques</h1>
+
+
+
+<h2 class="wp-block-heading">Exploiting Vulnerabilities</h2>
+
+
+
+<p class="wp-block-paragraph">Threat actors may exploit heap overflow vulnerabilities to compromise high-value targets. By manipulating memory allocation, attackers can execute arbitrary code, bypassing traditional EDR defenses and gaining persistent access to sensitive systems.&nbsp;</p>
+
+
+
+<pre class="wp-block-code"><code>// Example of a heap overflow vulnerability 
+#include &lt;stdlib.h&gt; 
+
+void HeapOverflowVulnerability() { 
+    char* buffer = (char*)malloc(10); 
+    // Vulnerable code allowing heap overflow 
+    free(buffer); 
+} </code></pre>
+
+
+
+<h2 class="wp-block-heading">Shellcode Bypass Techniques</h2>
+
+
+
+<p class="wp-block-paragraph">In real-world ransomware campaigns, attackers may use encoded shellcode to obfuscate their malicious payload. This encoding helps the ransomware evade signature-based detection, allowing it to encrypt files and demand ransoms without immediate detection.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;Windows.h&gt; 
+
+int main() { 
+    // Encoded shellcode 
+    unsigned char encodedShellcode[] = { /* Encoded shellcode bytes */ }; 
+
+    // Allocate executable memory 
+    LPVOID execMem = VirtualAlloc(NULL, sizeof(encodedShellcode), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE); 
+
+    // Decode shellcode 
+    // ... 
+    // Copy decoded shellcode to executable memory 
+    memcpy(execMem, decodedShellcode, sizeof(decodedShellcode)); 
+
+    // Execute decoded shellcode 
+    ((void(*)())execMem)(); 
+
+    // Cleanup 
+    VirtualFree(execMem, 0, MEM_RELEASE); 
+    return 0; 
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading">String Obfuscation</h2>
+
+
+
+<p class="wp-block-paragraph">Malware often employs string obfuscation techniques, such as XOR-ing strings, to avoid signature scans and heuristic analysis. By XOR-ing critical strings, attackers make it challenging for EDR solutions to identify specific patterns associated with malware.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;iostream&gt; 
+#include &lt;string&gt; 
+
+std::string xorString(const std::string&amp; input, const std::string&amp; key) { 
+    std::string result = input; 
+    for (size_t i = 0; i &lt; input.size(); ++i) { 
+        result[i] = input[i] ^ key[i % key.size()]; 
+    } 
+
+    return result; 
+} 
+
+int main() { 
+    std::string encryptedString = "YourEncryptedString"; 
+    std::string decryptionKey = "YourSecretKey"; 
+    std::string decryptedString = xorString(encryptedString, decryptionKey); 
+    std::cout &lt;&lt; "Decrypted String: " &lt;&lt; decryptedString &lt;&lt; std::endl; 
+
+    return 0; 
+} </code></pre>
+
+
+
+<h2 class="wp-block-heading">Anti-Debugging Techniques</h2>
+
+
+
+<p class="wp-block-paragraph">Malware campaigns frequently use anti-debugging techniques to thwart analysis by security researchers. This includes detecting the presence of a debugger, dynamically altering code behavior, and employing complex conditional breakpoints to evade detection during analysis.</p>
+
+
+
+<pre class="wp-block-code"><code>#include &lt;windows.h&gt; 
+
+// Function to detect debugger presence 
+bool isDebuggerPresent() { 
+    return IsDebuggerPresent(); 
+} 
+
+// Function with conditional breakpoints to hinder analysis 
+void antiDebuggingFunction() { 
+    __asm { 
+        // Check if debugger is present 
+        call isDebuggerPresent 
+        test eax, eax 
+        jnz debuggerDetected 
+
+        // Normal code execution 
+        // ... 
+        jmp endAntiDebugging 
+
+    debuggerDetected: 
+        // Code to execute when debugger is detected 
+        // This can include anti-analysis measures 
+        // ... 
+
+    endAntiDebugging: 
+    } 
+} 
+
+int main() { 
+    // Main program logic 
+    // ... 
+
+    // Call the anti-debugging function 
+    antiDebuggingFunction(); 
+
+    return 0; 
+} </code></pre>
+
+
+
+<div style="height:28px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h1 class="wp-block-heading">Demo</h1>
+
+
+
+<p class="wp-block-paragraph">The following demonstration compares a non-obfuscated versus an obfuscated DLL for our <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/issues/13964" data-type="link" data-id="https://github.com/notepad-plus-plus/notepad-plus-plus/issues/13964" target="_blank" rel="noopener">sideloading attack on Notepad++ v8.5.4 and earlier</a> with an EDR installed.</p>
+
+
+
+<figure class="wp-block-video"><video height="1080" style="aspect-ratio: 1920 / 1080;" width="1920" controls="" src="https://whiteknightlabs.com/wp-content/uploads/2024/02/unprotected_demo.mp4"></video></figure>
+
+
+
+<p class="wp-block-paragraph">The video above shows that the EDR detected the malicious DLL. But let’s see how the EDR reacts to an obfuscated DLL.</p>
+
+
+
+<figure class="wp-block-video"><video height="1080" style="aspect-ratio: 1920 / 1080;" width="1920" controls="" src="https://whiteknightlabs.com/wp-content/uploads/2024/02/protected.mp4"></video></figure>
+
+
+
+<h2 class="wp-block-heading">Static Analysis</h2>
+
+
+
+<p class="wp-block-paragraph">It is very easy to spot the DLL without obfuscation. We can see the direct calls on the Windows API. Meanwhile, the obfuscated DLL does not directly reveal the Windows API calls on the first glance and needs deeper analysis.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-full"><a href="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-2.png"><img decoding="async" width="1024" height="494" src="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-2.png" alt="" class="wp-image-26186"></a><figcaption class="wp-element-caption">Static Analysis – Non-Obfuscated DLL</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">In the obfuscated version, we have some XOR decryption happening first to get the function names we are interested in. We then used <strong>GetModuleHandle</strong> and <strong>GetProcAddress </strong>to target the addresses of those functions. Lastly, we did typedef declarations to the functions so that the compiler knows what type of call and parameters are needed for those functions.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-full"><a href="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-3.png"><img decoding="async" width="1024" height="515" src="https://whiteknightlabs.com/wp-content/uploads/2024/02/image-3.png" alt="" class="wp-image-26188"></a><figcaption class="wp-element-caption">Static Analysis – Obfuscated DLL</figcaption></figure>
+
+
+
+<h2 class="wp-block-heading">XORed</h2>
+
+
+
+<p class="wp-block-paragraph">In the obfuscated version, we cannot directly see the function names that we are interested in to call. This is because the application must decrypt the correct function names during runtime. Meanwhile, on the non-obfuscated version, we can immediately see the WinAPIs that are possibly used by the DLL.</p>
+
+
+
+<figure class="wp-block-image aligncenter size-full"><a href="https://whiteknightlabs.com/wp-content/uploads/2024/01/image-3.png"><img loading="lazy" decoding="async" width="495" height="428" src="https://whiteknightlabs.com/wp-content/uploads/2024/01/image-3.png" alt="" class="wp-image-26161"></a><figcaption class="wp-element-caption">XORed – Non-Obfuscated vs. Obfuscated</figcaption></figure>
+
+
+
+<h1 class="wp-block-heading">Conclusion</h1>
+
+
+
+<p class="wp-block-paragraph">In the realm of cybersecurity, the comparison between anti-cheat bypass and EDR bypass highlights the diverse strategies employed by attackers to circumvent security measures. While anti-cheat bypass primarily focuses on exploiting vulnerabilities in gaming environments, EDR bypass techniques extend their reach to compromise overall system security. Despite their distinct targets, there are notable similarities in the underlying methodologies employed by attackers in both domains. For instance, code injection, obfuscation, and evasion of detection mechanisms are prevalent in both anti-cheat and EDR bypass techniques. However, the specific nuances and challenges associated with each domain necessitate tailored defense mechanisms. </p>
+
+
+
+<p class="wp-block-paragraph">The common thread of utilizing Windows API functions for execution, persistence, and privilege escalation underscores the interconnected nature of these security challenges. As defenders continue to adapt and innovate, understanding these parallels and differences becomes essential for building comprehensive security postures that safeguard diverse computing environments. By recognizing the shared tactics and unique challenges presented by anti-cheat and EDR bypass techniques, cybersecurity professionals can better prepare for the ever-evolving landscape of digital threats.</p>
+</div>				</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-0c49398 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="0c49398" data-element_type="container">
+				<div class="elementor-element elementor-element-62f14cd elementor-widget__width-inherit wpr-search-form-style-inner wpr-search-form-position-right elementor-widget elementor-widget-wpr-search" data-id="62f14cd" data-element_type="widget" data-widget_type="wpr-search.default">
+				<div class="elementor-widget-container">
+					
+		<form role="search" method="get" class="wpr-search-form" action="https://whiteknightlabs.com/" autocomplete="off">
+
+			<div class="wpr-search-form-input-wrap elementor-clearfix">
+				<input class="wpr-search-form-input" placeholder="Search..." aria-label="Search" type="search" name="s" title="Search" value="" wpr-query-type="all" wpr-taxonomy-type="" number-of-results="2" ajax-search="yes" show-description="" number-of-words="30" show-ajax-thumbnails="yes" show-view-result-btn="yes" show-product-price="no" view-result-text="View Results" no-results="No Results Found" exclude-without-thumb="" link-target="_blank" password-protected="no" attachments="no">
+				
+		<button class="wpr-search-form-submit" aria-label="Search" type="submit">
+							<i class="fas fa-search"></i>
+					</button>
+
+					</div>
+
+					</form>
+		<div class="wpr-data-fetch">
+			<span class="wpr-close-search"></span>
+			<ul></ul>
+					</div>
+		
+						</div>
+				</div>
+				<div class="elementor-element elementor-element-2b851b1 elementor-widget__width-initial elementor-widget elementor-widget-heading" data-id="2b851b1" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Recent Posts</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-9dfaca4 elementor-widget elementor-widget-elementskit-post-list" data-id="9dfaca4" data-element_type="widget" data-widget_type="elementskit-post-list.default">
+				<div class="elementor-widget-container">
+					<div class="ekit-wid-con">		<ul class="elementor-icon-list-items ekit-post-list-wrapper ">
+						<li class="elementor-icon-list-item   ">
+				<a href="https://whiteknightlabs.com/2026/06/15/harnessing-the-power-of-cobalt-strike-profiles-for-edr-evasion-part-3/">
+													<span class="elementor-icon-list-icon">
+									<svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-right" viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>								</span>
+												<div class="ekit_post_list_content_wraper">
+						
+						<span class="elementor-icon-list-text">Harnessing the Power of Cobalt Strike Profiles for EDR Evasion – Part 3</span>
+
+											</div>
+				</a>
+			</li>
+					<li class="elementor-icon-list-item   ">
+				<a href="https://whiteknightlabs.com/2026/01/20/backdooring-electron-applications/">
+													<span class="elementor-icon-list-icon">
+									<svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-right" viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>								</span>
+												<div class="ekit_post_list_content_wraper">
+						
+						<span class="elementor-icon-list-text">Backdooring Electron Applications</span>
+
+											</div>
+				</a>
+			</li>
+					<li class="elementor-icon-list-item   ">
+				<a href="https://whiteknightlabs.com/2026/01/13/uefi-vulnerability-analysis-using-ai-part-3-scaling-understanding-not-just-context/">
+													<span class="elementor-icon-list-icon">
+									<svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-right" viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>								</span>
+												<div class="ekit_post_list_content_wraper">
+						
+						<span class="elementor-icon-list-text">UEFI Vulnerability Analysis Using AI Part 3: Scaling Understanding, Not Just Context</span>
+
+											</div>
+				</a>
+			</li>
+					<li class="elementor-icon-list-item   ">
+				<a href="https://whiteknightlabs.com/2026/01/06/the-new-chapter-of-egress-communication-with-cobalt-strike-user-defined-c2/">
+													<span class="elementor-icon-list-icon">
+									<svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-right" viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>								</span>
+												<div class="ekit_post_list_content_wraper">
+						
+						<span class="elementor-icon-list-text">The New Chapter of Egress Communication with Cobalt Strike User-Defined C2</span>
+
+											</div>
+				</a>
+			</li>
+					<li class="elementor-icon-list-item   ">
+				<a href="https://whiteknightlabs.com/2025/12/30/uefi-vulnerability-analysis-using-ai-part-2-breaking-the-token-barrier/">
+													<span class="elementor-icon-list-icon">
+									<svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-right" viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>								</span>
+												<div class="ekit_post_list_content_wraper">
+						
+						<span class="elementor-icon-list-text">UEFI Vulnerability Analysis using AI Part 2: Breaking the Token Barrier</span>
+
+											</div>
+				</a>
+			</li>
+				</ul>
+		</div>				</div>
+				</div>
+				<div class="elementor-element elementor-element-8bf564f elementor-widget__width-initial elementor-hidden-desktop elementor-hidden-laptop elementor-hidden-tablet_extra elementor-hidden-tablet elementor-hidden-mobile_extra elementor-hidden-mobile elementor-widget elementor-widget-heading" data-id="8bf564f" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Recent Comments</h4>				</div>
+				</div>
+				</div>
+					</div>
+				</div>
+		<div class="elementor-element elementor-element-6d888cf e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="6d888cf" data-element_type="container">
+				<div class="elementor-element elementor-element-cc439d8 elementor-widget__width-inherit elementor-widget elementor-widget-shortcode" data-id="cc439d8" data-element_type="widget" data-widget_type="shortcode.default">
+				<div class="elementor-widget-container">
+							<div class="elementor-shortcode">		<div data-elementor-type="container" data-elementor-id="29844" class="elementor elementor-29844">
+				<div class="elementor-element elementor-element-1ce5d837 e-flex e-con-boxed wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-parent e-lazyloaded" data-id="1ce5d837" data-element_type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+					<div class="e-con-inner">
+		<div class="elementor-element elementor-element-7eab5b5b e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="7eab5b5b" data-element_type="container">
+		<div class="elementor-element elementor-element-58fceb5d e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="58fceb5d" data-element_type="container" id="chat" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+		<div class="elementor-element elementor-element-101eed42 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="101eed42" data-element_type="container">
+				<div class="elementor-element elementor-element-6858cb7b elementor-widget elementor-widget-heading" data-id="6858cb7b" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h3 class="elementor-heading-title elementor-size-default">Let’s Chat</h3>				</div>
+				</div>
+				<div class="elementor-element elementor-element-48f9184f elementor-widget elementor-widget-heading" data-id="48f9184f" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Strengthen your digital stronghold.</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-4c26ee5a elementor-widget elementor-widget-image" data-id="4c26ee5a" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img width="42" height="7" src="https://whiteknightlabs.com/wp-content/uploads/2024/08/desigen-1.png" class="attachment-full size-full wp-image-27367" alt="desigen">															</div>
+				</div>
+				<div class="elementor-element elementor-element-427c13a4 elementor-widget elementor-widget-text-editor" data-id="427c13a4" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Reach out to us today and discover the potential of bespoke cybersecurity solutions designed to reduce your business risk.</p>								</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-63003e38 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="63003e38" data-element_type="container">
+				<div class="elementor-element elementor-element-3b4eaecd elementor-widget elementor-widget-shortcode" data-id="3b4eaecd" data-element_type="widget" data-widget_type="shortcode.default">
+				<div class="elementor-widget-container">
+							<div class="elementor-shortcode">
+<div class="wpcf7 js" id="wpcf7-f27543-o1" lang="en-US" dir="ltr" data-wpcf7-id="27543">
+<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
+<form action="https://whiteknightlabs.com/2024/02/09/a-technical-deep-dive-comparing-anti-cheat-bypass-and-edr-bypass/#wpcf7-f27543-o1" method="post" class="wpcf7-form init" aria-label="Contact form" novalidate="novalidate" data-status="init">
+<div style="display: none;">
+
+
+
+
+
+
+</div>
+<div class="z-form main">
+	<div class="z-input z-50">
+		<p><span class="wpcf7-form-control-wrap" data-name="first-name"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="First Name *" value="" type="text" name="first-name"></span>
+		</p>
+	</div>
+	<div class="z-input z-50">
+		<p><span class="wpcf7-form-control-wrap" data-name="last-name"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Last Name *" value="" type="text" name="last-name"></span>
+		</p>
+	</div>
+	<div class="z-input z-50">
+		<p><span class="wpcf7-form-control-wrap" data-name="your-email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="Email Address *" value="" type="email" name="your-email"></span>
+		</p>
+	</div>
+	<div class="z-input z-50">
+		<p><span class="wpcf7-form-control-wrap" data-name="company-name"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Company *" value="" type="text" name="company-name"></span>
+		</p>
+	</div>
+	<div class="z-input z-100">
+		<p><span class="wpcf7-form-control-wrap" data-name="phone-number"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-tel wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-tel" aria-required="true" aria-invalid="false" placeholder="Phone Number *" value="" type="tel" name="phone-number"></span>
+		</p>
+	</div>
+	<div class="z-input z-100">
+		<p><span class="wpcf7-form-control-wrap" data-name="your-message"><textarea cols="5" rows="1" maxlength="2000" class="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required" id="myTextarea" aria-required="true" aria-invalid="false" placeholder="Message *" name="your-message"></textarea></span>
+		</p>
+	</div>
+	<div class="z-input z-100 z_mathcaptcha">
+		<p></p><div class="dscf7-captcha-container"><div class="dscf7-question-container"><span class="dscf7_lt">What is 4 + 2 ? <a id="tag-generator-panel-dscf7captcha" class="dscf7_refresh_captcha" aria-label="Refresh captcha"><img class="dscf7_captcha_icon" src="https://whiteknightlabs.com/wp-content/plugins/ds-cf7-math-captcha/assets/img/icons8-refresh-30.png" alt="Refresh icon"><img class="dscf7_captcha_reload_icon" src="https://whiteknightlabs.com/wp-content/plugins/ds-cf7-math-captcha/assets/img/446bcd468478f5bfb7b4e5c804571392_w200.gif" alt="Refreshing captcha" style="display:none; width:30px"></a></span></div><div class="dscf7-answer-container"><label for="tag-generator-panel-dscf7captcha-input" class="screen-reader-text">Answer for 4 + 2</label><span class="wpcf7-form-control-wrap" data-name="tag-generator-panel-dscf7captcha"><input type="text" id="tag-generator-panel-dscf7captcha-input" aria-label="Answer for 4 + 2" aria-invalid="false" aria-required="true" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" size="5" value="" name="tag-generator-panel-dscf7captcha" placeholder="Type your answer" style=""></span></div></div>
+		<p></p>
+	</div>
+	<div class="z-input z-100 recaptcha">
+		<p></p><div id="cf7sr-6a37de6dbbc3d" class="cf7sr-g-recaptcha" data-theme="light" data-type="image" data-size="normal" data-sitekey="6Lf5uk4qAAAAADW8LDQroQXmnKEJ9v6E92gR0Rn9"><div style="width: 304px; height: 78px;"><div><div title="reCAPTCHA" width="304" height="78" role="presentation" name="a-149mv0ahgrp8" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Lf5uk4qAAAAADW8LDQroQXmnKEJ9v6E92gR0Rn9&amp;co=aHR0cHM6Ly93aGl0ZWtuaWdodGxhYnMuY29tOjQ0Mw..&amp;hl=en&amp;type=image&amp;v=MerVUtRoajKEbP7pLiGXkL28&amp;theme=light&amp;size=normal&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=1f93nynl5eqm" data-original-tag="iframe">
+
+<title>reCAPTCHA</title>
+
+<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/MerVUtRoajKEbP7pLiGXkL28/styles__ltr.css">
+
+
+<div id="rc-anchor-alert" class="rc-anchor-alert"></div>
+
+<div id="rc-anchor-container" class="rc-anchor rc-anchor-normal rc-anchor-light"><div id="recaptcha-accessible-status" class="rc-anchor-aria-status" aria-hidden="true">Recaptcha requires verification. </div><div class="rc-anchor-error-msg-container" style="display:none"><span class="rc-anchor-error-msg" aria-hidden="true"></span></div><div class="rc-anchor-content"><div class="rc-inline-block"><div class="rc-anchor-center-container"><div class="rc-anchor-center-item rc-anchor-checkbox-holder"><span class="recaptcha-checkbox goog-inline-block recaptcha-checkbox-unchecked rc-anchor-checkbox" role="checkbox" aria-checked="false" id="recaptcha-anchor" tabindex="0" dir="ltr" aria-labelledby="recaptcha-anchor-label"><div class="recaptcha-checkbox-border" role="presentation"></div><div class="recaptcha-checkbox-borderAnimation" role="presentation"></div><div class="recaptcha-checkbox-spinner" role="presentation"><div class="recaptcha-checkbox-spinner-overlay"></div></div><div class="recaptcha-checkbox-checkmark" role="presentation"></div></span></div></div></div><div class="rc-inline-block"><div class="rc-anchor-center-container"><label class="rc-anchor-center-item rc-anchor-checkbox-label" aria-hidden="true" role="presentation" id="recaptcha-anchor-label"><span aria-live="polite" aria-labelledby="recaptcha-accessible-status"></span>I'm not a robot</label></div></div></div><div class="rc-anchor-normal-footer"><div class="rc-anchor-logo-portrait" aria-hidden="true" role="presentation"><div class="rc-anchor-logo-img rc-anchor-logo-img-portrait"></div><div class="rc-anchor-logo-text">reCAPTCHA</div></div><div class="rc-anchor-pt"></div></div></div><div style="display: none;" data-original-tag="iframe"></div></div></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><div style="display: none;" data-original-tag="iframe"></div></div><span class="wpcf7-form-control-wrap cf7sr-recaptcha" data-name="cf7sr-recaptcha"></span>
+		<p></p>
+	</div>
+	<div class="z-input submit">
+		<p><input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value="Submit"><span class="wpcf7-spinner"></span>
+		</p>
+	</div>
+</div><div class="wpcf7-response-output" aria-hidden="true"></div>
+</form>
+</div>
+</div>
+						</div>
+				</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-1c22b186 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="1c22b186" data-element_type="container">
+				<div class="elementor-element elementor-element-33cf1247 elementor-widget elementor-widget-image" data-id="33cf1247" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://whiteknightlabs.com/">
+							<img width="216" height="199" src="https://whiteknightlabs.com/wp-content/uploads/2024/08/footer-logo.png" class="attachment-full size-full wp-image-27553" alt="footer logo">								</a>
+															</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-37cf010d e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="37cf010d" data-element_type="container">
+				<div class="elementor-element elementor-element-4aaeaa0f e-grid-align-left elementor-shape-rounded elementor-grid-0 elementor-widget elementor-widget-social-icons" data-id="4aaeaa0f" data-element_type="widget" data-widget_type="social-icons.default">
+				<div class="elementor-widget-container">
+							<div class="elementor-social-icons-wrapper elementor-grid" role="list">
+							<span class="elementor-grid-item" role="listitem">
+					<a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin-in elementor-repeater-item-24943ce" href="https://www.linkedin.com/company/white-knight-labs/" target="_blank">
+						<span class="elementor-screen-only">Linkedin-in</span>
+						<svg class="e-font-icon-svg e-fab-linkedin-in" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"></path></svg>					</a>
+				</span>
+							<span class="elementor-grid-item" role="listitem">
+					<a class="elementor-icon elementor-social-icon elementor-social-icon-x-twitter elementor-repeater-item-0648e80" href="https://twitter.com/WKL_cyber" target="_blank">
+						<span class="elementor-screen-only">X-twitter</span>
+						<svg class="e-font-icon-svg e-fab-x-twitter" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg>					</a>
+				</span>
+							<span class="elementor-grid-item" role="listitem">
+					<a class="elementor-icon elementor-social-icon elementor-social-icon-discord elementor-repeater-item-a00d66c" href="https://discord.gg/qRGBT2TcEV" target="_blank">
+						<span class="elementor-screen-only">Discord</span>
+						<svg class="e-font-icon-svg e-fab-discord" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z"></path></svg>					</a>
+				</span>
+					</div>
+						</div>
+				</div>
+				<div class="elementor-element elementor-element-2ebf3ca1 elementor-widget__width-inherit elementor-widget-mobile__width-inherit word-break elementor-widget elementor-widget-heading" data-id="2ebf3ca1" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default"><a href="tel:877-864-4204"><span class="z-sm-txt">Call:</span> 877-864-4204</a></h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-7b256e3 elementor-widget__width-inherit elementor-widget-mobile__width-inherit word-break elementor-widget elementor-widget-heading" data-id="7b256e3" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default"><a href="mailto:sales@whiteknightlabs.com"><span class="z-sm-txt">Email:</span> sales@whiteknightlabs.com</a></h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-4f60bd52 elementor-widget__width-auto elementor-widget-mobile__width-inherit elementor-widget elementor-widget-heading" data-id="4f60bd52" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default"><a href="https://whiteknightlabs.com/2024/02/09/a-technical-deep-dive-comparing-anti-cheat-bypass-and-edr-bypass/#chat">Send us a message</a></h4>				</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-2bc54d9f e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="2bc54d9f" data-element_type="container">
+				<div class="elementor-element elementor-element-553d18bf elementor-widget elementor-widget-heading" data-id="553d18bf" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Assessment</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-2d71046c elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="2d71046c" data-element_type="widget" data-widget_type="icon-list.default">
+				<div class="elementor-widget-container">
+							<ul class="elementor-icon-list-items">
+							<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/vip-home-cybersecurity-assessments">
+
+											<span class="elementor-icon-list-text">VIP Home Security</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/password-audit-service">
+
+											<span class="elementor-icon-list-text">Password Audit</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/embedded-security-testing">
+
+											<span class="elementor-icon-list-text">Embedded Devices</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/osint-services">
+
+											<span class="elementor-icon-list-text">OSINT</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/active-directory-security-assessment">
+
+											<span class="elementor-icon-list-text">AD Assessment</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/dark-web-scanning">
+
+											<span class="elementor-icon-list-text">Dark Web Scanning</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/smart-contract-audit">
+
+											<span class="elementor-icon-list-text">Smart Contract Audit</span>
+											</a>
+									</li>
+						</ul>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-33adade e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="33adade" data-element_type="container">
+				<div class="elementor-element elementor-element-6e5c9881 elementor-widget elementor-widget-heading" data-id="6e5c9881" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Penetration Testing</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-7e0b5fa6 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="7e0b5fa6" data-element_type="widget" data-widget_type="icon-list.default">
+				<div class="elementor-widget-container">
+							<ul class="elementor-icon-list-items">
+							<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/network-penetration-testing-services">
+
+											<span class="elementor-icon-list-text">Network Penetration Test</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/web-application-penetration-testing">
+
+											<span class="elementor-icon-list-text">Web App Penetration Test</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/mobile-application-penetration-testing">
+
+											<span class="elementor-icon-list-text">Mobile App Penetration Test</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/wireless-penetration-testing">
+
+											<span class="elementor-icon-list-text">Wireless Penetration Test</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/cloud-penetration-testing">
+
+											<span class="elementor-icon-list-text">Cloud Penetration Test</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/physical-penetration-testing/">
+
+											<span class="elementor-icon-list-text">Physical Penetration Testing</span>
+											</a>
+									</li>
+						</ul>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-7c47117b e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="7c47117b" data-element_type="container">
+				<div class="elementor-element elementor-element-c6209e2 elementor-widget elementor-widget-heading" data-id="c6209e2" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Simulation and Emulation</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-4c4cbd23 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="4c4cbd23" data-element_type="widget" data-widget_type="icon-list.default">
+				<div class="elementor-widget-container">
+							<ul class="elementor-icon-list-items">
+							<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/red-team-engagements">
+
+											<span class="elementor-icon-list-text">Red Team – Adversarial Emulation</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/social-engineering-testing">
+
+											<span class="elementor-icon-list-text">Social Engineering Attack Simulation</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/ransomware-attack-simulation">
+
+											<span class="elementor-icon-list-text">Ransomware Attack Simulation</span>
+											</a>
+									</li>
+						</ul>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-4de94cfd e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="4de94cfd" data-element_type="container">
+				<div class="elementor-element elementor-element-5b571d67 elementor-widget elementor-widget-heading" data-id="5b571d67" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Compliance and Advisory</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-6870f4aa elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="6870f4aa" data-element_type="widget" data-widget_type="icon-list.default">
+				<div class="elementor-widget-container">
+							<ul class="elementor-icon-list-items">
+							<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/framework-consulting">
+
+											<span class="elementor-icon-list-text">Framework Consulting</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/gap-assessments">
+
+											<span class="elementor-icon-list-text">Gap Assessments</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/compliance-as-a-service-caas">
+
+											<span class="elementor-icon-list-text">Compliance-as-a-Service</span>
+											</a>
+									</li>
+								<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/devsecops-engineering">
+
+											<span class="elementor-icon-list-text">DevSecOps Engineering</span>
+											</a>
+									</li>
+						</ul>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-f113810 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="f113810" data-element_type="container">
+				<div class="elementor-element elementor-element-5020e699 elementor-widget elementor-widget-heading" data-id="5020e699" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Incident Response</h4>				</div>
+				</div>
+				<div class="elementor-element elementor-element-6374f95f elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list" data-id="6374f95f" data-element_type="widget" data-widget_type="icon-list.default">
+				<div class="elementor-widget-container">
+							<ul class="elementor-icon-list-items">
+							<li class="elementor-icon-list-item">
+											<a href="https://whiteknightlabs.com/incident-response">
+
+											<span class="elementor-icon-list-text">Incident Response</span>
+											</a>
+									</li>
+						</ul>
+						</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-667852e4 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="667852e4" data-element_type="container">
+				<div class="elementor-element elementor-element-18d18b57 elementor-widget-mobile__width-inherit elementor-widget elementor-widget-heading" data-id="18d18b57" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default">Copyright © <span class="z-date">2026</span> White Knight Labs | All rights reserved</h4>				</div>
+				</div>
+				</div>
+		<div class="elementor-element elementor-element-6e54881 e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child" data-id="6e54881" data-element_type="container">
+				<div class="elementor-element elementor-element-d52ea8f elementor-widget-mobile__width-inherit elementor-widget elementor-widget-heading" data-id="d52ea8f" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h4 class="elementor-heading-title elementor-size-default"><a href="https://whiteknightlabs.com/contact-us/">Contact Us</a></h4>				</div>
+				</div>
+				</div>
+				</div>
+					</div>
+				</div>
+				</div>
+		<span class="wpr-template-edit-btn" data-permalink="https://whiteknightlabs.com/?elementor_library=z-footer">Edit Template</span></div>
+						</div>
+				</div>
+				</div>
+				</div>
+		
+    
+    
+    	<div class="ald_laser_loader">
+		<div class="ald_loader_progress"></div>
+	</div>
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span id="elementor-device-mode" class="elementor-screen-only"></span>
+
+
+
+
+
+
+
+
+
+
+<!-- start Simple Custom CSS and JS -->
+
+<!-- end Simple Custom CSS and JS -->
+
+
+<!-- start Simple Custom CSS and JS -->
+
+
+<!-- end Simple Custom CSS and JS -->
+	
+
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><div title="reCAPTCHA" width="256" height="60" role="presentation" name="a-41mf31cbobmz" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Ld41o8nAAAAADAuJxe8J3eOEGgDXu8elQwOe0yA&amp;co=aHR0cHM6Ly93aGl0ZWtuaWdodGxhYnMuY29tOjQ0Mw..&amp;hl=en&amp;v=MerVUtRoajKEbP7pLiGXkL28&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=w6iovqedrpnc" data-original-tag="iframe">
+
+<title>reCAPTCHA</title>
+
+<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/MerVUtRoajKEbP7pLiGXkL28/styles__ltr.css">
+
+
+<div id="rc-anchor-alert" class="rc-anchor-alert"></div>
+
+<div class="rc-anchor rc-anchor-invisible rc-anchor-light  rc-anchor-invisible-hover"><div id="recaptcha-accessible-status" class="rc-anchor-aria-status" aria-hidden="true">Recaptcha requires verification. </div><div class="rc-anchor-error-msg-container" style="display:none"><span class="rc-anchor-error-msg" aria-hidden="true"></span></div><div class="rc-anchor-normal-footer"><div class="rc-anchor-logo-large" role="presentation"><div class="rc-anchor-logo-img rc-anchor-logo-img-large"></div></div><div class="rc-anchor-pt"></div></div><div class="rc-anchor-invisible-text"><span>protected by <strong>reCAPTCHA</strong></span><div class="rc-anchor-pt"></div></div></div><div style="display: none;" data-original-tag="iframe"></div></div></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div></div><link rel="stylesheet" href="https://whiteknightlabs.com/wp-content/uploads/elementor/css/custom-lightbox.min.css?ver=3.29.2"><svg style="display: none;" class="e-font-icon-svg-symbols"></svg><div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility linear 0.3s, opacity 0.3s linear; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div class="g-recaptcha-bubble-arrow" style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;"></div><div class="g-recaptcha-bubble-arrow" style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;"></div><div style="z-index: 2000000000; position: relative;"><div title="recaptcha challenge expires in two minutes" name="c-149mv0ahgrp8" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/bframe?hl=en&amp;v=MerVUtRoajKEbP7pLiGXkL28&amp;k=6Lf5uk4qAAAAADW8LDQroQXmnKEJ9v6E92gR0Rn9&amp;bft=0dAFcWeA7fGQcaM-hScyWbfAy7KY6JNN3HFZTIEir7LiZgZdSH8bD55Api3EGxm7hVvZh3X_QyI_twE-UdyvI87bVnB8Ddh_cwCQ" style="width: 100%; height: 100%;" data-original-tag="iframe">
+
+
+<title>reCAPTCHA</title>
+
+<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/MerVUtRoajKEbP7pLiGXkL28/styles__ltr.css">
+
+
+
+<div></div></div></div></div></body></html>

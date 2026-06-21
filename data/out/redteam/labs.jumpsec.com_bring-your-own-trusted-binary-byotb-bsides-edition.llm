@@ -1,0 +1,32 @@
+Title:
+Bring Your Own Trusted Binary (BYOTB) – BSides Edition
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post summarizes a BSides London 2024 talk on abusing “trusted” third-party binaries (primarily Cloudflare’s `cloudflared` and Win32-OpenSSH) for stealthy tunneling and access in compromised environments.  
+- It focuses on using `cloudflared` as an SSH `ProxyCommand` to egress over TCP/443 as HTTPS, enabling reverse port forwards and SOCKS proxies without relying on typical tunneling tools (e.g., Ligolo) and with reduced EDR friction.  
+- The author shows how to bring your own `ssh.exe` (plus required DLLs) and optionally deploy `sshd` for persistent command-line access, as well as port-forwarding for scenarios like coercion/NTLM relay workflows.  
+- A key section explores Cloudflare WARP + `cloudflared` for tool-native access (e.g., NetExec) and introduces a “double tunnel” technique leveraging an undocumented `edge` feature to avoid outbound port 7844 restrictions by chaining through an Access listener over 443.  
+- Defensive guidance is included: process/command-line telemetry, DNS monitoring for `argotunnel.com`, firewall logging/blocks for 7844, and file/download monitoring for `cloudflared` artifacts.  
+- Useful for red teams and pentesters building firewall-friendly egress and pivoting paths, and for blue teams looking to detect Cloudflare-tunnel-based tradecraft.
+
+Technical Focus:
+- BYOTB / living-off-trusted-binaries (Cloudflare `cloudflared`, Win32-OpenSSH)
+- SSH `ProxyCommand`, reverse (`-R`) and local (`-L`) port forwarding, SOCKS proxying
+- Cloudflare Tunnel / Access SSH and TCP forwarding over HTTPS (443)
+- WARP client as VPN-like access path for operator tooling (e.g., NetExec)
+- “Double tunnel” chaining to bypass port 7844 egress constraints (TCP/http2)
+- Detection opportunities: process args, DNS (`argotunnel.com`), firewall telemetry, file integrity
+
+Use Cases:
+- Establish stealthy egress over 443 using `cloudflared` to carry SSH traffic as HTTPS
+- Create SOCKS proxies and port forwards for internal pivoting without custom implants
+- Deploy portable OpenSSH (`ssh.exe`/`sshd`) on targets lacking an SSH client
+- Forward SMB/HTTP to support relay/coercion workflows (e.g., NTLM relay/RBCD-style paths)
+- Operate in restrictive networks by avoiding direct outbound 7844 via chained tunneling
+- Build detections for Cloudflare-tunnel abuse via DNS/process/firewall/file monitoring
+
+Keywords:
+cloudflared, Cloudflare Tunnel, Cloudflare Access, WARP, BYOTB, trusted binary abuse, SSH ProxyCommand, reverse port forward, local port forward, SOCKS proxy, Proxychains, NetExec, argotunnel.com, port 7844, TCP 443, HTTP/2, Win32-OpenSSH, sshd, NTLM relay, RBCD

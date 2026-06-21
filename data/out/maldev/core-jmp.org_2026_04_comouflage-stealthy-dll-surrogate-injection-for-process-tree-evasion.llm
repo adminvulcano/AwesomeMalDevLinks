@@ -1,0 +1,30 @@
+Title:
+COMouflage: Stealthy DLL Surrogate Injection for Process Tree Evasion
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This write-up describes “COMouflage,” a Windows code-execution/injection technique that abuses COM’s DLL Surrogate feature to run an attacker-controlled DLL inside `dllhost.exe`.  
+- The attacker creates per-user COM registration under `HKCU\Software\Classes\AppID\{GUID}` and `HKCU\Software\Classes\CLSID\{GUID}`, avoiding admin rights.  
+- Setting `AppID\DllSurrogate` to an empty string forces Windows to use the default surrogate host (`dllhost.exe`), and `CLSID\...\InprocServer32` points to the malicious DLL path.  
+- Triggering `CoCreateInstance` with `CLSCTX_LOCAL_SERVER` causes COM SCM to spawn the surrogate via COM services (`svchost.exe` → `dllhost.exe`), making the attacker process disappear from the visible process lineage.  
+- It’s primarily useful for red teams and malware developers focused on parent/process-tree evasion and “living off the land” execution via legitimate COM plumbing.  
+- The post also includes a C++ PoC and a basic YARA rule aimed at detecting the registry/API patterns associated with this technique.
+
+Technical Focus:
+- COM registration hijacking via HKCU (`Software\Classes\AppID` / `Software\Classes\CLSID`)
+- DLL Surrogate mechanism (`DllSurrogate` → default `dllhost.exe`)
+- COM activation and instantiation (`CoInitializeEx`, `CoCreateInstance`, `CLSCTX_LOCAL_SERVER`)
+- Process tree / parent masquerading (`svchost.exe` spawning `dllhost.exe`)
+- WinAPI registry manipulation (`RegCreateKeyExW`, `RegSetValueExW`)
+- Detection ideas (static indicators + YARA)
+
+Use Cases:
+- Execute payload DLLs inside `dllhost.exe` without classic remote-thread injection
+- Evade simplistic EDR detections relying on suspicious parent-child process chains
+- User-level (non-admin) COM-based execution and potential persistence via registry
+- Build detections for anomalous per-user COM surrogate registrations and activations
+
+Keywords:
+COM, DllSurrogate, dllhost.exe, svchost.exe, COM SCM, CoCreateInstance, CLSCTX_LOCAL_SERVER, CLSID, AppID, HKCU, Software\Classes, InprocServer32, ThreadingModel, RegCreateKeyExW, RegSetValueExW, process tree evasion, parent PID masquerading, COM hijacking, T1546.015, YARA

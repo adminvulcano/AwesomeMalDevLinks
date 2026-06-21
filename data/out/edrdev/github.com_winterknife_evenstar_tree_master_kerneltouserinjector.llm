@@ -1,0 +1,28 @@
+Title:
+EVENSTAR – KernelToUserInjector (v3.0.0)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- This repository contains sample Windows kernel-mode driver code that injects code into a user-mode process using Asynchronous Procedure Calls (APCs).  
+- It focuses on performing kernel-to-user injection by locating a target process/thread (including a thread in an alertable wait state), mapping/providing a user virtual address (UVA) payload buffer, and queueing both a special kernel APC and a regular user-mode APC.  
+- The project explicitly targets modern Windows (tested on Windows 11 25H2) and is updated to evade additional ETW “Threat Intelligence” sensors related to kernel APC injection telemetry.  
+- It is primarily useful for red team operators, malware developers, and security researchers studying kernel-assisted injection and EDR/ETW detection surfaces.  
+- It’s interesting because it demonstrates a kernel-originated injection path and references known work on bypassing Microsoft-Windows-Threat-Intelligence APC injection sensors.
+
+Technical Focus:
+- Windows kernel-mode driver development (C, CPL0)  
+- APC internals (special kernel APC vs user-mode APC)  
+- Kernel-to-user code injection workflow (PID/TID targeting, alertable threads)  
+- ETW / Microsoft-Windows-Threat-Intelligence sensor evasion considerations  
+- Windows 11 injection/detection behavior validation
+
+Use Cases:
+- Implementing and testing kernel-assisted user-mode payload execution via APCs  
+- Researching/replicating ETW Threat Intelligence detections for APC injection  
+- Building lab PoCs to evaluate EDR visibility into kernel-originated injection  
+- Studying thread state requirements (alertable waits) for user APC delivery
+
+Keywords:
+Windows kernel driver, kernel-to-user injection, APC injection, Asynchronous Procedure Call, special kernel APC, user-mode APC, KeInsertQueueApc, alertable wait, PID, TID, user virtual address, ETW, Microsoft-Windows-Threat-Intelligence, EDR evasion, Windows 11, Defender for Endpoint, telemetry bypass, Blackbone, KernelInjector

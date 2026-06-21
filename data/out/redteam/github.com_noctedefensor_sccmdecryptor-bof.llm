@@ -1,0 +1,24 @@
+Title:
+SCCMDecryptor BOF
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+SCCMDecryptor-BOF is a Cobalt Strike Beacon Object File that decrypts Microsoft SCCM/MECM “encrypted password blobs” extracted from the SCCM site database. It ports Adam Chester (@_xpn_)’s original C# decryptor into a BOF for in-memory execution within Beacon. The tool must be executed on an SCCM server that has the “Microsoft Systems Management Server” CSP available, typically requiring local administrator context. It targets a common post-compromise scenario where an operator has obtained SCCM DB credential blobs and needs to recover plaintext credentials for lateral movement or privilege escalation. It’s primarily useful for red teams and pentesters assessing SCCM abuse paths and credential exposure.
+
+Technical Focus:
+- SCCM/MECM credential blob decryption
+- Windows CSP usage (“Microsoft Systems Management Server”)
+- Cobalt Strike BOF development and in-memory execution
+- Post-exploitation credential recovery from SCCM site DB artifacts
+- x86/x64 cross-compilation with MinGW-w64 and Make
+
+Use Cases:
+- Decrypt credentials stored/encrypted in SCCM site database after DB access
+- Recover service/account passwords used by SCCM for deployment/management tasks
+- Validate and demonstrate SCCM credential exposure/misconfiguration impact (e.g., Cred-5)
+- Integrate SCCM credential decryption into Cobalt Strike tradecraft/workflows
+
+Keywords:
+SCCM, MECM, ConfigMgr, site database, credential blob, decrypt, Microsoft Systems Management Server CSP, CSP, Cobalt Strike, Beacon Object File, BOF, MinGW-w64, x86, x64, local administrator, post-exploitation, Misconfiguration Manager, Cred-5, @_xpn_

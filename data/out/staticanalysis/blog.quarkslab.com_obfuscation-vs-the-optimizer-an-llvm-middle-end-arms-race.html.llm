@@ -1,0 +1,30 @@
+Title:
+Obfuscation vs the Optimizer: An LLVM Middle-End Arms Race
+
+Type:
+Blog Post
+
+Short Summary (4–8 sentences max):
+- This post examines the inherent conflict between code obfuscation (making semantics hard to recover) and compiler optimization (making code simpler/faster), focusing on LLVM’s middle-end.  
+- Using a small “mystery” function, it demonstrates how LLVM optimization passes quickly collapse naive arithmetic/bitwise obfuscation into a constant return value via constant folding and CSE.  
+- It then upgrades the obfuscation into a Mixed Boolean-Arithmetic (MBA) style expression by mixing in an input variable, initially resisting LLVM 18’s pipeline.  
+- A version change to LLVM 19 breaks the obfuscation: a small InstCombine commit enabling De Morgan–style inversion propagation allows the optimizer to normalize the expression and fold it to `x - x = 0`.  
+- The post highlights how obfuscation techniques can be brittle against evolving compiler algebraic reasoning, and why understanding optimization passes benefits both obfuscator authors and reverse engineers/deobfuscator builders.  
+
+Technical Focus:
+- LLVM compilation stages (front-end / middle-end / back-end) and LLVM IR
+- Optimization passes: InstCombine, EarlyCSE, Reassociate, GVN, BDCE, SimplifyCFG
+- Constant propagation/folding and common subexpression elimination
+- Boolean algebra canonicalization (De Morgan’s law, NOT-pushing/inversion)
+- Mixed Boolean-Arithmetic (MBA) constant obfuscation
+- Tooling workflow: `clang`, `opt`, `llc`, Compiler Explorer pipelines
+
+Use Cases:
+- Evaluate whether an LLVM-based obfuscation survives real optimization pipelines
+- Build more robust obfuscation passes by anticipating optimizer canonical forms
+- Create deobfuscation strategies by reusing compiler-style simplification logic
+- Diff LLVM versions/commits to understand why protected code suddenly deobfuscates
+- Improve reverse-engineering workflows by leveraging “const-ness”/value-range reasoning
+
+Keywords:
+LLVM, Clang, LLVM IR, middle-end, optimizer, opt, InstCombine, EarlyCSE, Reassociate, GVN, BDCE, constant folding, constant propagation, common subexpression elimination, De Morgan’s law, boolean algebra, MBA, mixed boolean arithmetic, obfuscation, deobfuscation, reverse engineering, Compiler Explorer

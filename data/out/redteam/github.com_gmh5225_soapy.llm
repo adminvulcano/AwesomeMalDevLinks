@@ -1,0 +1,27 @@
+Title:
+SoaPy — Offensive ADWS (Active Directory Web Services) interaction from Linux via custom .NET SOAP protocol implementations
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+SoaPy is a proof-of-concept Python tool that enables offensive enumeration and targeted attribute modification of Active Directory objects by talking to Active Directory Web Services (ADWS) from Linux. It implements several Microsoft/.NET transport and serialization protocols (e.g., NegotiateStream, Message Framing, and .NET Binary SOAP extensions) to communicate with ADWS without relying on Windows tooling. The main problem it addresses is performing stealthier AD enumeration and select write operations over ADWS (often reachable where LDAP may be monitored/blocked), including use through proxies into internal networks. It supports enumeration presets (users, computers, groups, delegation flags, SPNs, ASREP-roastable accounts, admins, RBCD-enabled objects) and raw query/attribute filtering. It also supports exploitation-oriented writes: setting `servicePrincipalName` (targeted Kerberoasting), enabling `DONT_REQ_PREAUTH` (targeted ASREP roasting), and writing `msDs-AllowedToActOnBehalfOfOtherIdentity` (RBCD). Useful primarily for red teams and pentesters operating from Linux who want ADWS-based tradecraft and for defenders researching ADWS abuse paths.
+
+Technical Focus:
+- Active Directory Web Services (ADWS) SOAP interaction
+- Custom implementations of NNS (NegotiateStream), NMF (Message Framing), NBFSE (.NET Binary Format: SOAP Extension)
+- AD object enumeration via queries and attribute selection
+- AD attribute modification for SPN, `userAccountControl` (DONT_REQ_PREAUTH), and RBCD
+- Kerberoasting / ASREP roasting enablement primitives
+- Resource-Based Constrained Delegation (RBCD) manipulation
+
+Use Cases:
+- Enumerate AD users/computers/groups over ADWS from a Linux foothold
+- Proxy-based, lower-friction AD reconnaissance when LDAP tooling is constrained
+- Identify delegation misconfigurations (constrained/unconstrained, RBCD)
+- Perform targeted Kerberoasting by writing controlled SPNs to chosen accounts
+- Make specific accounts ASREP-roastable by setting `DONT_REQ_PREAUTH`
+- Configure/remove `msDs-AllowedToActOnBehalfOfOtherIdentity` for RBCD attack setup
+
+Keywords:
+ADWS, Active Directory Web Services, SOAP, LDAP query, Windows domain, NegotiateStream, NNS, .NET Message Framing, NMF, NBFSE, NTLM, Kerberos, servicePrincipalName, SPN, Kerberoasting, ASREP roasting, DONT_REQ_PREAUTH, userAccountControl, msDs-AllowedToActOnBehalfOfOtherIdentity, RBCD, constrained delegation, unconstrained delegation, proxy enumeration, Python, offensive AD enumeration

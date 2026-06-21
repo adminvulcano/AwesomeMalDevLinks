@@ -1,0 +1,31 @@
+Title:
+Hecate — Custom WhisperGate-themed Web UI for Mythic C2 (v3)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- Hecate is an alternative operator web interface for Mythic C2 v3 that replaces Mythic’s default React UI without requiring any Mythic server modifications.  
+- It connects directly to Mythic’s existing GraphQL and WebSocket subscription APIs and is deployed as a Dockerized HTTPS-only nginx-served frontend.  
+- The UI focuses on operator workflow improvements: live callback management, multi-select tasking with tab completion, snippet library, interactive output rendering (file/process browsers), and fleet-wide beacon health.  
+- It adds visualization and reporting features such as pivot graphs (SOCKS/P2P edges), timeline views, session replay, and MITRE ATT&CK coverage overlays with Navigator JSON export.  
+- Useful primarily for red teams and penetration testers running Mythic who want better operational visibility, tasking ergonomics, and reporting artifacts.  
+- Interesting because it demonstrates a full-featured third-party Mythic UI built purely on the public API surface (GraphQL/subscriptions) and packaged for reproducible deployment.
+
+Technical Focus:
+- Mythic C2 GraphQL queries/mutations and WebSocket subscriptions (`graphql-ws`)
+- React 19 + Vite 6 frontend architecture (TypeScript)
+- Apollo Client integration and real-time state handling (Zustand)
+- Operator workflow UX: tasking, output parsing, callback health telemetry
+- Pivoting/topology visualization (SOCKS, P2P links) and session replay
+- Docker + nginx HTTPS reverse proxying to `mythic_nginx:7443`
+
+Use Cases:
+- Deploy a custom operator UI for Mythic C2 operations (lab or team server)
+- Improve multi-callback tasking efficiency (snippets, command palette, batching)
+- Visualize pivots/tunnels and track lateral movement paths during ops
+- Generate ATT&CK-mapped activity summaries and export Navigator layers
+- Review operations via timeline/session replay for debriefs and reporting
+
+Keywords:
+Mythic C2, GraphQL, WebSocket subscriptions, graphql-ws, Apollo Client, React 19, Vite 6, TypeScript, Zustand, Docker Compose, nginx, HTTPS, self-signed certificate, callback management, tasking UI, SOCKS pivoting, P2P routing, MITRE ATT&CK, ATT&CK Navigator JSON, session replay, timeline visualization

@@ -47,3 +47,11 @@ https://blog.talosintelligence.com/qilin-edr-killer/
 https://medium.com/@s12deff/bypassing-code-integrity-using-byovd-for-kernel-r-w-primitives-8135087e1c1e
 https://arth.imbeddex.com/Kernel_stuff/Windows/Fake-DriverObject/
 https://adhdmurky.github.io/posts/post3/
+https://medium.com/@sushant.m.mane/byovd-process-termination-understanding-the-pattern-by-reversing-tcvinprocterm-driver-5c431d9d578b
+https://github.com/V-i-x-x/win11-kernel-execution-syscall-hijack
+https://git.redteamfortress.com/j3h4ck/PPLShade
+https://git.redteamfortress.com/j3h4ck/PhantomKiller
+https://github.com/aaron-kidwell/goLoL
+https://github.com/redteamfortress/PhantomKiller
+https://github.com/0xDbgMan/DrvEye
+https://zonifer.dev/posts/byovd-kernel-driver-hardware-primitives.html

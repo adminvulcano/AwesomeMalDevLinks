@@ -1,0 +1,112 @@
+# https://luke.yt/pi-checker/
+
+<!DOCTYPE html><html lang="en">
+<body>
+  <a href="https://luke.yt/" class="back-arrow" aria-label="Back to home">←</a>
+  <div class="container">
+
+    <h1 id="top">PI Checker</h1>
+    <p class="tagline">Prompt Injection Checker - Eight categories of prompt injection tests. Pick a category, run the test levels, and check each response against the <span class="verdict-fail">vulnerable if</span> criteria on the card. Summarization includes a baseline page - run that first to see what a clean response looks like.</p>
+    <p class="tagline"><strong>For research and educational use only. These tests do not guarantee that your AI tool is safe against prompt injection attacks.</strong></p>
+
+    <div class="entry">
+      <p>Most test pages are a fictional sushi restaurant called "Evil Sushi". The financial sector demo uses a separate fictional company, Arcturus Capital Holdings - see category 8 below for full context on the financial attack surface.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/wiki.html">Methodology &amp; reference →</a>
+      </div>
+    </div>
+
+    <!-- TOC -->
+    
+
+    <div class="entry" id="summarization">
+      <h2><a href="https://luke.yt/pi-checker/summarization/">1. Summarization Poisoning</a></h2>
+      <p class="date">7 levels + baseline</p>
+      <p>Feed each "Evil Sushi" page URL to your AI tool and ask it to summarize the page. Each level uses a different technique to hide the injection.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/summarization/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="rag">
+      <h2><a href="https://luke.yt/pi-checker/rag/">2. RAG / Document Poisoning</a></h2>
+      <p class="date">3 levels</p>
+      <p>Feed a poisoned document into your agent's knowledge base or RAG pipeline and ask it a question about the contents.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/rag/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="cli">
+      <h2><a href="https://luke.yt/pi-checker/cli/">3. CLI / Agentic</a></h2>
+      <p class="date">2 levels</p>
+      <p>Feed a poisoned file to an AI coding assistant or agent with file system access and see whether it follows the embedded instructions.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/cli/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="chained">
+      <h2><a href="https://luke.yt/pi-checker/chained/">4. Multi-step / Chained Injection</a></h2>
+      <p class="date">2 pages</p>
+      <p>Page 1 is clean. The payload is on page 2, linked from page 1. Tests whether an injection encountered late in a session can corrupt the agent's entire report.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/chained/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="narrative">
+      <h2><a href="https://luke.yt/pi-checker/narrative/">5. Fictional / Narrative Injection</a></h2>
+      <p class="date">3 levels</p>
+      <p>Payloads wrapped in character dialogue or story formatting. Spans text-extraction and raw-HTML pipelines. Tests whether your AI follows instructions framed as fiction or hidden in markup.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/narrative/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="translation">
+      <h2><a href="https://luke.yt/pi-checker/translation/">6. Translation Attacks</a></h2>
+      <p class="date">4 languages</p>
+      <p>Evil Sushi recreated in French, German, Japanese, and Italian. Tests whether injections embedded in foreign-language content survive translation into English.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/translation/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="jailbreak">
+      <h2><a href="https://luke.yt/pi-checker/jailbreak/">7. Jailbreak Attacks</a></h2>
+      <p class="date">3 levels</p>
+      <p>Payloads that attempt to convince a model it has no safety policies, replace its identity, or abandon its system prompt entirely. Uses persona establishment, RTL Unicode obfuscation, and Base64 encoding.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/jailbreak/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" id="financial">
+      <h2><a href="https://luke.yt/pi-checker/financial-demo/">8. Financial Sector Demo</a></h2>
+      <p class="date">3 levels</p>
+      <p>A fictional investor relations page for a company with mixed financials. Tests whether hidden injections can manipulate an AI analyst's investment recommendation - overriding visible data, suppressing risk disclosures, or fabricating an acquisition.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/pi-checker/financial-demo/">View tests →</a>
+      </div>
+    </div>
+
+    <div class="entry" style="border-left: 4px solid #39d96c;">
+      <h2>Local LLMs vs Frontier Models</h2>
+      <p class="date">A preliminary look at Prompt Injection resistance</p>
+      <p>A full report comparing 8 different local models and 2 frontier models using various tests from this site.</p>
+      <div class="nav-buttons">
+        <a href="https://luke.yt/reports/Local-LLMs-vs-Frontier-Models.pdf" download="">Download report (PDF) →</a>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="https://luke.yt/">⌂</a>
+      <a href="https://luke.yt/pi-checker/#top">↑</a>
+    </div>
+
+  </div>
+  
+
+
+</body></html>

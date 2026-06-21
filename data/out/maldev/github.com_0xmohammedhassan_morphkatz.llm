@@ -1,0 +1,31 @@
+Title:
+MorphKatz — Windows x64 polymorphic machine-code rewriter
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+- MorphKatz is a Windows x64 polymorphic rewriter that mutates x86-64 machine code inside PE executables and raw shellcode into semantically equivalent but byte-different variants.  
+- It targets the problem of brittle byte-pattern detections (e.g., YARA/Defender signature atoms) by applying CFG-aware instruction rewrites while preserving control flow and EFLAGS behavior.  
+- The tool uses YAML rule packs for equivalence-preserving transformations, supports seeded/reproducible polymorphism, and can optionally verify correctness via re-disassembly and Unicorn basic-block emulation.  
+- It includes detection feedback loops such as YARA-targeted prioritization and a Microsoft Defender (MpCmdRun) scan+bisect workflow to isolate signature anchors and drive rewrite selection.  
+- It also supports “data-section morphing” that XOR-encodes signature-bearing bytes in .rdata/.data and adds a runtime decoder stub (with an anti-emulation gate) to defeat static signature hits.  
+- Useful for both red teams (authorized evasion testing with reproducible diffs/reports) and blue teams (measuring rule durability, triaging signature anchors, generating polymorphic corpora for research/ML).  
+
+Technical Focus:
+- PE (Portable Executable) rewriting and hygiene (checksum, Authenticode stripping, Rich header handling)
+- CFG-aware recursive disassembly and jump-table recovery (Zydis)
+- Semantics-preserving instruction substitution with EFLAGS liveness/dataflow analysis
+- Rule-driven rewriting via YAML packs + targeted raw-byte patch pairs
+- Verification via re-disassembly and Unicorn Engine emulation
+- Defender feedback loop (MpCmdRun scanning, multi-anchor bisection) and YARA-aware targeting
+
+Use Cases:
+- Generate polymorphic variants of a known binary to test AV/EDR signature robustness
+- Quantify YARA rule durability across many semantically identical mutations
+- Bisect and identify the exact byte windows responsible for Defender detections
+- Produce reproducible “before/after” diff reports for engagement documentation
+- Create controlled corpora for binary-similarity evaluation or ML classifier training
+
+Keywords:
+Windows x64, PE rewriting, polymorphic engine, x86-64, semantic equivalence, EFLAGS liveness, CFG recovery, Zydis, Unicorn Engine, LIEF, libyara, YAML rule packs, YARA targeting, Microsoft Defender, MpCmdRun.exe, signature bisection, data-section morphing, TLS callback, entry-point thunk, shellcode rewriting

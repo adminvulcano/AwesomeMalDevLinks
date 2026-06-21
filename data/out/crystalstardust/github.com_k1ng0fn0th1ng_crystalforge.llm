@@ -1,0 +1,26 @@
+Title:
+CrystalForge (AdaptixC2 agent extender with Crystal Palace UDRL pipeline)
+
+Type:
+GitHub Tool
+
+Short Summary (4–8 sentences max):
+CrystalForge is a custom AdaptixC2 agent/extender that modifies the default beacon build pipeline to integrate Crystal Palace’s UDRL (User-Defined Reflective Loader) workflow. It aims to make it easier to generate Adaptix payloads that are post-processed through Crystal Palace using selectable `.spec` files, enabling custom loader techniques for evasion and experimentation. The tool supports generating DLL and shellcode outputs, where shellcode is produced by taking an intermediate DLL and linking/transforming it via Crystal Palace according to the chosen spec. It preserves the standard Adaptix beacon feature set and multi-transport support while adding a flexible loader integration layer. Limitations noted include lack of EXE/service outputs and incomplete coverage for dynamically resolved APIs (focus is on IAT-resolved functions). It’s primarily useful for red teams, offensive security researchers, and malware tradecraft developers working on loader customization and C2 payload generation workflows.
+
+Technical Focus:
+- AdaptixC2 extender/agent plugin architecture
+- Crystal Palace UDRL pipeline and `.spec`-driven loader selection
+- DLL-to-shellcode transformation via intermediate DLL processing
+- Windows reflective loading / PE loader concepts
+- API hooking constraints (IAT vs dynamically resolved APIs)
+- Loader development workflow (precompiled external loader components)
+
+Use Cases:
+- Integrate custom Crystal Palace loaders into AdaptixC2 payload generation
+- Produce shellcode variants from a standard beacon DLL using different UDRL specs
+- Rapidly test/iterate loader techniques (evasion-focused) within a C2 workflow
+- Standardize operator workflow for selecting loader specs during build time
+- Research and prototype reflective loader/PE loading tradecraft
+
+Keywords:
+AdaptixC2, CrystalForge, Crystal Palace, UDRL, reflective loader, PE loader, shellcode generation, DLL payload, beacon, C2 agent, spec file, loader pipeline, IAT hooking, Windows internals, MinGW, C, C++, Go, stack spoofing, Crystal-Kit
