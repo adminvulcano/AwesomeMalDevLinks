@@ -17,7 +17,7 @@ import requests
 GITHUB_REPO_REGEX = re.compile(
     r"https?://(?:www\.)?github\.com/([a-zA-Z0-9-_.]+)/([a-zA-Z0-9-_.]+)"
 )
-DEFAULT_DB_PATH = "githublinks.csv"
+DEFAULT_DB_PATH = "scripts/githublinks.csv"
 VALID_STATUSES = {"valid", "invalid", "unchecked"}
 
 
@@ -25,6 +25,8 @@ def load_repo_db(csv_path=DEFAULT_DB_PATH):
     """Loads repository status information from a CSV database."""
     repo_status = {}
     if not os.path.exists(csv_path):
+        print(f"⚠️ CSV database not found at {os.path.abspath(csv_path)}")
+        print(f"   Creating new database...")
         return repo_status
 
     try:
@@ -90,7 +92,7 @@ def extract_github_repos(directory, max=0):
 
                             if repo_url not in found_repos:
                                 found_repos[repo_url] = []
-                                print(f"  🔗 Found: {repo_url}")
+                                #print(f"  🔗 Found: {repo_url}")
                             found_repos[repo_url].append(file_path)
                             repos_found_count += 1
                             if max > 0 and repos_found_count >= max:
@@ -109,9 +111,19 @@ def check_repo_status(repo_urls, csv_path=DEFAULT_DB_PATH, delay=0.5):
     repo_db = load_repo_db(csv_path)
     results = {"valid": [], "invalid": []}
 
-    print(
-        f"\n📡 Validating {len(repo_urls)} unique repositories (with a {delay}s delay between requests)..."
-    )
+    # Count how many repos need to be checked
+    urls_to_check = 0
+    for url in repo_urls:
+        existing_data = repo_db.get(url, {"status": "unchecked", "mirrored": ""})
+        if existing_data["status"] == "unchecked":
+            urls_to_check += 1
+
+    cached_count = len(repo_urls) - urls_to_check
+    print(f"\n📡 Found {len(repo_urls)} unique repositories:")
+    print(f"   ✓ {cached_count} already checked (cached)")
+    print(f"   🔄 {urls_to_check} need to be validated")
+    if urls_to_check > 0:
+        print(f"   ⏱️  Estimated time: ~{urls_to_check * delay / 60:.1f} minutes (with {delay}s delay between requests)\n")
 
     with requests.Session() as session:
         session.headers.update(
@@ -124,9 +136,13 @@ def check_repo_status(repo_urls, csv_path=DEFAULT_DB_PATH, delay=0.5):
             existing_data = repo_db.get(url, {"status": "unchecked", "mirrored": ""})
             existing_status = existing_data["status"]
             
-            if existing_status in ("valid", "invalid"):
-                print(f"  Skipping already checked URL: {url} [{existing_status}]")
-                results[existing_status].append((url, existing_status))
+            if existing_status == "valid":
+                print(f"  Skipping already checked URL: {url} [valid]")
+                results["valid"].append((url, "Cached"))
+                continue
+            elif existing_status == "invalid":
+                print(f"  Skipping already checked URL: {url} [invalid]")
+                results["invalid"].append((url, "Cached", "Previously marked invalid"))
                 continue
 
             if url.startswith("https://github.com/topics/") or url.startswith("https://github.com/users/") or url.startswith("https://github.com/orgs/"):
