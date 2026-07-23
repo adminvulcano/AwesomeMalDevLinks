@@ -141,16 +141,16 @@ Note: It cannot handle more than 50 source files lol.
 ## Scripts
 
 Generate an RSS feed for all URLs in `links.md`. Each item's publish time is
-the timestamp of the first Git commit that added the URL. Descriptions are
-based on scraped Markdown in `data/out/` when available:
+the timestamp of the first Git commit that added the URL. Descriptions use
+the matching LLM summary in `data/out/` when available:
 
 ```
 python scripts/generate_rss.py
 ```
 
-This writes `rss.xml`. Use `--source`, `--scraped-dir`, `--output`, `--title`,
-`--link`, or `--description` to customize the input, scraped content, output,
-or feed metadata.
+This writes `data/rss/rss.xml`. Use `--source`, `--scraped-dir`, `--output`,
+`--title`, `--link`, or `--description` to customize the input, summary
+directory, output, or feed metadata.
 
 Define the keys in command line, or in .env:
 ```

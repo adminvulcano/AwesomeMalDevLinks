@@ -2,11 +2,9 @@
 """Generate an Atom feed for the URLs in links.md."""
 
 import argparse
-import html
 import re
 import subprocess
 from datetime import datetime
-from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
 from xml.etree import ElementTree
@@ -19,7 +17,6 @@ DEFAULT_TITLE = "Awesome Mega MalDev Links"
 DEFAULT_LINK = "https://github.com/dobin/AwesomeMalDevLinks"
 DEFAULT_DESCRIPTION = "Curated offensive security, malware development, and red-team links."
 DEFAULT_SCRAPED_DIR = "data/out"
-DESCRIPTION_LIMIT = 500
 
 
 def extract_urls(source):
@@ -70,113 +67,13 @@ def url_to_filename(url):
     return filename[:144]
 
 
-class GithubAboutParser(HTMLParser):
-    """Extract the repository About paragraph from GitHub HTML."""
-
-    def __init__(self):
-        super().__init__()
-        self.heading = []
-        self.in_about = False
-        self.in_paragraph = False
-        self.paragraph = []
-        self.description = ""
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "h2":
-            self.heading = []
-        elif tag == "p" and self.in_about and not self.description:
-            self.in_paragraph = True
-            self.paragraph = []
-
-    def handle_endtag(self, tag):
-        if tag == "h2":
-            self.in_about = "".join(self.heading).strip().lower() == "about"
-        elif tag == "p" and self.in_paragraph:
-            self.description = " ".join("".join(self.paragraph).split())
-            self.in_paragraph = False
-
-    def handle_data(self, data):
-        if self.heading is not None and not self.in_paragraph:
-            self.heading.append(data)
-        if self.in_paragraph:
-            self.paragraph.append(data)
-
-
-def clean_description(text):
-    text = re.sub(r"\s+", " ", html.unescape(text)).strip()
-    if len(text) > DESCRIPTION_LIMIT:
-        text = text[:DESCRIPTION_LIMIT].rsplit(" ", 1)[0] + "..."
-    return text
-
-
-def github_html_description(url, scraped_dir):
-    """Extract GitHub's repository About paragraph from scraped HTML."""
-    matches = list(scraped_dir.rglob(f"{url_to_filename(url)}.html"))
+def llm_description(url, scraped_dir):
+    """Return the complete LLM summary for a URL, if available."""
+    matches = list(scraped_dir.rglob(f"{url_to_filename(url)}.llm"))
     if not matches:
         return ""
-    parser = GithubAboutParser()
-    parser.feed(matches[0].read_text(encoding="utf-8", errors="ignore"))
-    return clean_description(parser.description) if parser.description else ""
-
-
-def markdown_description(url, scraped_dir):
-    """Extract a paragraph after GitHub's repository-content marker."""
-    matches = list(scraped_dir.rglob(f"{url_to_filename(url)}.md"))
-    if not matches:
-        return ""
-
-    markdown = matches[0].read_text(encoding="utf-8", errors="ignore")
-    marker = re.search(r"^## Repository files navigation\s*$", markdown, re.MULTILINE)
-    if not marker:
-        return ""
-
-    paragraphs = re.split(r"\n\s*\n", markdown[marker.end() :])
-    for paragraph in paragraphs:
-        text = re.sub(r"^#+\s*", "", paragraph.strip())
-        if "[Permalink:" in text:
-            continue
-        text = re.sub(r"!\[[^]]*\]\([^)]*\)", "", text)
-        text = re.sub(r"\[([^]]+)\]\([^)]*\)", r"\1", text)
-        text = re.sub(r"[*_`~]", "", text)
-        text = re.sub(r"\s+", " ", text).strip()
-        if len(text) >= 40 and not text.startswith("http"):
-            return clean_description(text)
-
-    return ""
-
-
-def general_markdown_description(url, scraped_dir):
-    """Extract a short description from a non-GitHub Markdown file."""
-    matches = list(scraped_dir.rglob(f"{url_to_filename(url)}.md"))
-    if not matches:
-        return ""
-
-    paragraphs = re.split(r"\n\s*\n", matches[0].read_text(encoding="utf-8", errors="ignore"))
-    for paragraph in paragraphs:
-        text = re.sub(r"^#+\s*", "", paragraph.strip())
-        text = re.sub(r"!\[[^]]*\]\([^)]*\)", "", text)
-        text = re.sub(r"\[([^]]+)\]\([^)]*\)", r"\1", text)
-        text = re.sub(r"[*_`~]", "", text)
-        text = re.sub(r"\s+", " ", text).strip()
-        if len(text) >= 40 and not text.startswith("http"):
-            return clean_description(text)
-    return ""
-
-
-def scraped_description(url, scraped_dir):
-    """Use GitHub About, then marked repository Markdown, then a fallback."""
-    if urlparse(url).netloc.lower() in {"github.com", "www.github.com"}:
-        description = github_html_description(url, scraped_dir)
-        if description:
-            return description
-        description = markdown_description(url, scraped_dir)
-        if description:
-            return description
-    else:
-        description = general_markdown_description(url, scraped_dir)
-        if description:
-            return description
-    return "Added to the link collection."
+    summary = matches[0].read_text(encoding="utf-8", errors="ignore")
+    return "\n".join(line.rstrip() for line in summary.splitlines()).strip()
 
 
 def title_for(url):
@@ -242,7 +139,7 @@ def main():
             "url": url,
             "title": title_for(url),
             "published": timestamps[url],
-            "description": scraped_description(url, scraped_dir),
+            "description": llm_description(url, scraped_dir) or "Added to the link collection.",
         }
         for url in extract_urls(source)
     ]
