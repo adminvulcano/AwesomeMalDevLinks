@@ -45,17 +45,21 @@ def git_url_timestamps(source):
         capture_output=True,
         text=True,
     )
-    timestamps = {}
+    metadata = {}
     commit_time = None
+    author = None
     for line in result.stdout.splitlines():
+        if line.startswith("author "):
+            author = line.removeprefix("author ")
         if line.startswith("committer-time "):
             commit_time = datetime.fromtimestamp(int(line.split()[1])).astimezone()
         elif line.startswith("\t") and commit_time:
             for url in URL_RE.findall(line[1:]):
                 url = url.rstrip(".,;:!?)]}")
-                timestamps.setdefault(url, commit_time)
+                metadata.setdefault(url, {"published": commit_time, "author": author or ""})
             commit_time = None
-    return timestamps
+            author = None
+    return metadata
 
 
 def url_to_filename(url):
@@ -73,7 +77,7 @@ def llm_description(url, scraped_dir):
     if not matches:
         return ""
     summary = matches[0].read_text(encoding="utf-8", errors="ignore")
-    return "\n".join(line.rstrip() for line in summary.splitlines()).strip()
+    return "<p>" + "<br>".join(line.rstrip() for line in summary.splitlines()).strip() + "</p>"
 
 
 def title_for(url):
@@ -84,21 +88,27 @@ def title_for(url):
     return title or url
 
 
-def add_text(entry, namespace, name, value):
+def add_text(entry, namespace, name, *, text=None, attributes=None):
     """Add a namespaced Atom element containing text."""
-    ElementTree.SubElement(entry, f"{{{namespace}}}{name}").text = value
+    if attributes is None:
+        attributes = {}
+    element = ElementTree.SubElement(entry, f"{{{namespace}}}{name}", attributes)
+    if text is not None:
+        element.text = text
 
 
 def render_item(feed, item, namespace):
     """Add one Atom entry to the feed."""
     entry = ElementTree.SubElement(feed, f"{{{namespace}}}entry")
-    add_text(entry, namespace, "title", item["title"])
-    ElementTree.SubElement(entry, f"{{{namespace}}}link", {"href": item["url"]})
-    add_text(entry, namespace, "id", item["url"])
+    add_text(entry, namespace, "title", text = item["title"])
+    add_text(entry, namespace, "link", attributes = {"href": item["url"]})
+    add_text(entry, namespace, "id", text = item["url"])
+    author = ElementTree.SubElement(entry, f"{{{namespace}}}author")
+    add_text(author, namespace, "name", text = item["author"])
     published = item["published"].isoformat()
-    add_text(entry, namespace, "published", published)
-    add_text(entry, namespace, "updated", published)
-    add_text(entry, namespace, "summary", item["description"])
+    add_text(entry, namespace, "published", text = published)
+    add_text(entry, namespace, "updated", text = published)
+    add_text(entry, namespace, "summary", text = item["description"], attributes = { "type": "html"})
 
 
 def render_feed(items, title, link, description):
@@ -106,11 +116,11 @@ def render_feed(items, title, link, description):
     namespace = "http://www.w3.org/2005/Atom"
     ElementTree.register_namespace("", namespace)
     feed = ElementTree.Element(f"{{{namespace}}}feed")
-    add_text(feed, namespace, "title", title)
-    ElementTree.SubElement(feed, f"{{{namespace}}}link", {"href": link})
-    add_text(feed, namespace, "id", link)
-    add_text(feed, namespace, "updated", latest.isoformat())
-    add_text(feed, namespace, "subtitle", description)
+    add_text(feed, namespace, "title", text = title)
+    add_text(feed, namespace, "link", attributes = {"href": link})
+    add_text(feed, namespace, "id", text = link)
+    add_text(feed, namespace, "updated", text = latest.isoformat())
+    add_text(feed, namespace, "subtitle", text = description)
 
     for item in sorted(items, key=lambda item: item["published"], reverse=True):
         render_item(feed, item, namespace)
@@ -133,12 +143,13 @@ def main():
 
     source = Path(args.source)
     scraped_dir = Path(args.scraped_dir)
-    timestamps = git_url_timestamps(source)
+    metadata = git_url_timestamps(source)
     items = [
         {
             "url": url,
             "title": title_for(url),
-            "published": timestamps[url],
+            "published": metadata[url]["published"],
+            "author": metadata[url]["author"],
             "description": llm_description(url, scraped_dir) or "Added to the link collection.",
         }
         for url in extract_urls(source)
