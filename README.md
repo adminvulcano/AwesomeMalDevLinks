@@ -138,7 +138,19 @@ Note: It cannot handle more than 50 source files lol.
 * [AnythingLLM](https://anythingllm.com/)
 
 
-## Scripts 
+## Scripts
+
+Generate an RSS feed for all URLs in `links.md`. Each item's publish time is
+the timestamp of the first Git commit that added the URL. Descriptions are
+based on scraped Markdown in `data/out/` when available:
+
+```
+python scripts/generate_rss.py
+```
+
+This writes `rss.xml`. Use `--source`, `--scraped-dir`, `--output`, `--title`,
+`--link`, or `--description` to customize the input, scraped content, output,
+or feed metadata.
 
 Define the keys in command line, or in .env:
 ```
